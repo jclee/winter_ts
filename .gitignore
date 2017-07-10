@@ -1,0 +1,13 @@
+# editor temp files
+*.swp
+*.swo
+*~
+
+# external dependencies
+/node_modules/
+
+# build artifacts
+/build/
+
+# runtime artifacts
+/npm-debug.log
