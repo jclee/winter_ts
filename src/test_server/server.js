@@ -2,7 +2,10 @@
 
 const child_process = require('child_process');
 const express = require('express');
+const http = require('http');
+const reload = require('reload');
 const path = require('path');
+const watch = require('watch');
 
 const port = (process.env.PORT || 9001);
 
@@ -39,6 +42,19 @@ const openBrowser = (url) => {
 }
 openBrowser('http://localhost:' + port + '/');
 
-const server = app.listen(port, function() {
+const server = http.createServer(app);
+
+const reloadServer = reload(app, { verbose: true });
+
+for (const p of [
+    path.join(__dirname, 'static'),
+    path.join(root, 'build'),
+]) {
+    watch.watchTree(p, (f, curr, prev) => {
+        reloadServer.reload();
+    });
+}
+
+server.listen(port, () => {
     console.log("started on port", port);
 });
