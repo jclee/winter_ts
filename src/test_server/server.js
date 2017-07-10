@@ -17,6 +17,41 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.static(path.join(root, 'build')));
 
+const server = http.createServer(app);
+
+const rebuildTypescript = () => {
+    console.log("Running typescript compiler...");
+    const result = child_process.spawnSync('tsc');
+    if (result.status != 0) {
+        console.error();
+        console.error(
+            result.stdout.toString('utf8'),
+            result.stderr.toString('utf8')
+        );
+        if (result.error !== undefined) {
+            console.error("error:", result.error);
+        }
+        return false;
+    }
+    return true;
+};
+if (!rebuildTypescript()) {
+    // May want non-zero return code here for some applications...
+    process.exit(0);
+}
+
+const reloadServer = reload(app, { verbose: true });
+
+watch.watchTree(path.join(__dirname, 'static'), (f, curr, prev) => {
+    reloadServer.reload();
+});
+
+watch.watchTree(path.join(root, 'src/winter'), (f, curr, prev) => {
+    if (rebuildTypescript()) {
+        reloadServer.reload();
+    }
+});
+
 // Open Local Dev Server in Browser
 const openBrowser = (url) => {
     if (process.platform === 'darwin') {
@@ -41,19 +76,6 @@ const openBrowser = (url) => {
     opn(url);
 }
 openBrowser('http://localhost:' + port + '/');
-
-const server = http.createServer(app);
-
-const reloadServer = reload(app, { verbose: true });
-
-for (const p of [
-    path.join(__dirname, 'static'),
-    path.join(root, 'build'),
-]) {
-    watch.watchTree(p, (f, curr, prev) => {
-        reloadServer.reload();
-    });
-}
 
 server.listen(port, () => {
     console.log("started on port", port);
