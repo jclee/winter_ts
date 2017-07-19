@@ -16,6 +16,8 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.static(path.join(root, 'build')));
+app.use(express.static(path.join(__dirname, '../python')));
+app.use('/brython.js', express.static(path.join(root, 'node_modules/brython/brython.js')));
 
 const server = http.createServer(app);
 
@@ -43,6 +45,10 @@ if (!rebuildTypescript()) {
 const reloadServer = reload(app, { verbose: true });
 
 watch.watchTree(path.join(__dirname, 'static'), (f, curr, prev) => {
+    reloadServer.reload();
+});
+
+watch.watchTree(path.join(root, 'src/python'), (f, curr, prev) => {
     reloadServer.reload();
 });
 
