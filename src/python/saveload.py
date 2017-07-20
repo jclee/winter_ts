@@ -140,8 +140,8 @@ def test():
     bleh.setCurrent()
     s = StatSet.STAT_NAMES
 
-    print `savedata.test1`
-    print `savedata.test8`
-    print `savedata.test1337`
+    print(`savedata.test1`)
+    print(`savedata.test8`)
+    print(`savedata.test1337`)
 
 #test()

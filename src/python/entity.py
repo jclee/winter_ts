@@ -30,7 +30,7 @@ class Entity(object):
         self.state = self.defaultState()
 
     #def __del__(self):
-    #    print 'deleting ', self
+    #    print('deleting ', self)
 
     def destroy(self):
         for k in self.__dict__.keys():

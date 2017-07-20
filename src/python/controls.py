@@ -70,7 +70,7 @@ def writeConfig(f, config):
     if isinstance(f, str):
         f = file(f, 'wt')
     for k, v in config.iteritems():
-        print >> f, '%s %s' % (k, v)
+        f.write('%s %s\n' % (k, v))
 
 def setConfig(config=None):
     class PosControl(object):

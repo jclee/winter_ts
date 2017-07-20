@@ -180,7 +180,7 @@ def credits():
         adjust = int(y) % font.height
         length = (ika.Video.yres / font.height) + 1
 
-        print firstLine
+        print(firstLine)
 
         Y = -adjust
         while Y < ika.Video.yres and firstLine < len(_text):

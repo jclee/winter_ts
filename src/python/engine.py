@@ -349,7 +349,7 @@ class Engine(object):
             try:
                 self.addEntity(spawnMap[ent.sprite](ent))
             except KeyError:
-                print 'Unknown entity sprite %s.  Ignoring.' % ent.sprite
+                print('Unknown entity sprite %s.  Ignoring.' % ent.sprite)
 
     def clearKillQueue(self):
         # it's a bad idea to tweak the entity list in the middle of an iteration,
