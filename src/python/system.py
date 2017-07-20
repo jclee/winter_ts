@@ -1,5 +1,5 @@
 import ika
-from engine import Engine
+import engine
 from intro import intro, menu
 import sound
 
@@ -27,14 +27,14 @@ while True:
     introMusic.position = 0
     introMusic.Play()
     result = menu()
-    engine = Engine()
+    engineObj = engine.Engine()
 
     if result == 0:
         introMusic.Pause()
-        engine.beginNewGame()
+        engineObj.beginNewGame()
     elif result == 1:
         introMusic.Pause()
-        engine.loadGame()
+        engineObj.loadGame()
     elif result == 2:
         break
     else:

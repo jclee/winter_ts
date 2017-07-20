@@ -125,7 +125,7 @@ class Null:
         return 0
 
     def __long__(self):
-        return 0L
+        return 0
 
     def __lshift__(self, other):
         return other

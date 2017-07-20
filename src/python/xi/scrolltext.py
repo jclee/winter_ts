@@ -1,6 +1,6 @@
 
-import gui
 import ika
+import xi.gui as gui
 
 class ScrollableTextLabel(gui.StaticText):
     '''

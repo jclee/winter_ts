@@ -1,16 +1,16 @@
 import ika
-import system
 import savedata
+import snow
+import system
 
 from carnivore import Carnivore
-from snow import Snow
 
 spawned = 0
 
 def AutoExec():
     global spawned
     spawned = 0
-    system.engine.mapThings.append(Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
+    system.engine.mapThings.append(snow.Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
     system.engine.background = ika.Image('gfx/mountains.png')
     
 def to36():

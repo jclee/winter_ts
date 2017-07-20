@@ -1,7 +1,7 @@
 
 import ika
 import sound
-from snow import Snow
+import snow
 
 _text = '''\
 Winter
@@ -168,7 +168,7 @@ def credits():
     sound.fader.reset(m)
 
     bg = ika.Image('gfx/mountains.png')
-    snow = Snow(velocity=(0, 1))
+    snowObj = snow.Snow(velocity=(0, 1))
     y = -ika.Video.yres
     font = ika.Font('system.fnt')
 
@@ -200,7 +200,7 @@ def credits():
             (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
             (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
 
-        snow.draw()
+        snowObj.draw()
 
     now = ika.GetTime()
     while True:
@@ -208,7 +208,7 @@ def credits():
         delta = (t - now) / 10.0
         y += delta
         now = t
-        snow.update()
+        snowObj.update()
 
         draw()
         ika.Video.ShowPage()

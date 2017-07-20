@@ -1,7 +1,7 @@
 
 import ika
 
-import gui
+import xi.gui as gui
 import scrolltext
 import cursor
 

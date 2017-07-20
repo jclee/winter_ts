@@ -4,11 +4,11 @@ import savedata
 import cabin
 
 from yeti import Yeti
-from snow import Snow
+import snow
 
 
 def AutoExec():
-    system.engine.mapThings.append(Snow(velocity=(0, 0.5)))
+    system.engine.mapThings.append(snow.Snow(velocity=(0, 0.5)))
     if 'cowardrune' not in savedata.__dict__:
         system.engine.things.append(RuneListener())
 

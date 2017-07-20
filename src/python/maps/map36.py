@@ -1,10 +1,9 @@
 import ika
 import system
-
-from snow import Snow
+import snow
 
 def AutoExec():
-    system.engine.mapThings.append(Snow(600, velocity=(.4, 1), colour=ika.RGB(192,192,255)))
+    system.engine.mapThings.append(snow.Snow(600, velocity=(.4, 1), colour=ika.RGB(192,192,255)))
     system.engine.background = ika.Image('gfx/mountains.png')
 
 def to35():

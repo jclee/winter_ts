@@ -1,11 +1,11 @@
 
 import system
 import ika
-from snow import Snow
+import snow
 
 def AutoExec():
     system.engine.background = ika.Image('gfx/mountains.png')
-    system.engine.mapThings.append(Snow(velocity=(0, 0.5)))
+    system.engine.mapThings.append(snow.Snow(velocity=(0, 0.5)))
 
 def to2():
     offset_from = 16 * 16  # first vertical pos possible

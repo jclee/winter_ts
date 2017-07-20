@@ -1,9 +1,9 @@
 
 import system
-from snow import Snow
+import snow
 
 def AutoExec():
-    system.engine.mapThings.append(Snow(velocity=(0, 0.5)))
+    system.engine.mapThings.append(snow.Snow(velocity=(0, 0.5)))
     
 def to6():
     offset_from = 29 * 16  # first vertical pos possible

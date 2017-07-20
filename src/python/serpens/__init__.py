@@ -5,18 +5,18 @@
 
 # modules #####################################################################
 
-from AbstractFactory import *
-from AutoProperty import *
-from ChildList import *
-from ClassPolicies import *
-from Null import *
-from Observer import *
-#from Prototype import *
-from Proxy import *
-from Singleton import *
-from StatelessProxy import *
-from StateMachine import *
-#from WeakMethod import *
+from .AbstractFactory import *
+from .AutoProperty import *
+from .ChildList import *
+from .ClassPolicies import *
+from .Null import *
+from .Observer import *
+#from .Prototype import *
+from .Proxy import *
+from .Singleton import *
+from .StatelessProxy import *
+from .StateMachine import *
+#from .WeakMethod import *
 
 def issequence(obj):
     return hasattr(obj, '__getitem__')

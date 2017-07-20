@@ -6,10 +6,10 @@ from thing import Thing
 from yeti import Yeti
 from soulreaver import SoulReaver
 
-from snow import Snow
+import snow
 
 def AutoExec():
-    system.engine.mapThings.append(Snow(8000, velocity=(-.2, 3)))
+    system.engine.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
     if 'waterrune' not in savedata.__dict__:
         system.engine.things.append(RuneListener())
     if 'nearend' in savedata.__dict__:

@@ -12,8 +12,9 @@ class PolicyClass(type):                      # All metaclasses inherit type.
             try:                              #     T* = Bases of new class.
                 this = cls.__dict[(name, T)]  # Make the class doesn't already
             except KeyError:                  #     exist.
-                L = [C for C in (bases + T)   # Add policies to original bases.
-                    if C is not type]         # Remove <type> from bases.
+                # Add policies to original bases.
+                # Remove <type> from bases.
+                L = [C for C in (bases + T) if C is not type]
                 L.sort(lambda x, y:           #
                     cmp(id(x), id(y)))        #
                 this = type(name,             # Construct new class using type.

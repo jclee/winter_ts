@@ -1,16 +1,16 @@
 import ika
-from snow import Snow
+import snow
 
 import controls
 
 class _DoneException(Exception):
     pass
 
-def delay(draw, count, snow):
+def delay(draw, count, snowObj):
     while count > 0:
         draw()
-        snow.update()
-        snow.draw()
+        snowObj.update()
+        snowObj.draw()
         ika.Delay(1)
         count -= 1
         ika.Video.ShowPage()
@@ -20,7 +20,7 @@ def delay(draw, count, snow):
             raise _DoneException()
 
 def intro():
-    snow = Snow(velocity=(0,0.5))
+    snowObj = snow.Snow(velocity=(0,0.5))
     gba = ika.Image('gfx/gba.png')
     yourmom = ika.Image('gfx/yourmother.png')
     isabitch = ika.Image('gfx/isabigfatbitch.png')
@@ -35,24 +35,24 @@ def intro():
         v.Blit(gba, (v.xres - gba.width) / 2, (v.yres - gba.height) / 2)
 
     try:
-        delay(showGba, 300, snow)
+        delay(showGba, 300, snowObj)
 
-        delay(lambda: v.ClearScreen(), d, snow)
+        delay(lambda: v.ClearScreen(), d, snowObj)
 
         for x in range(3):
-            delay(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snow)
-            delay(lambda: v.ClearScreen(), d, snow)
+            delay(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snowObj)
+            delay(lambda: v.ClearScreen(), d, snowObj)
 
-        delay(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d / 2, snow)
-        delay(lambda: v.ClearScreen(), d, snow)
+        delay(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d / 2, snowObj)
+        delay(lambda: v.ClearScreen(), d, snowObj)
     except _DoneException:
         return
 
 def menu():
     bg = ika.Image('gfx/title.png')
     cursor = ika.Image('gfx/ui/pointer.png')
-    snow = Snow(velocity=(0, 0.5))
-    snow.update()
+    snowObj = snow.Snow(velocity=(0, 0.5))
+    snowObj.update()
     result = None
     cursorPos = 0
     FADE_TIME = 60
@@ -64,8 +64,8 @@ def menu():
     for i in range(FADE_TIME - 1, -1, -1):
         draw()
         ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
-        snow.update()
-        snow.draw()
+        snowObj.update()
+        snowObj.draw()
         ika.Video.ShowPage()
         ika.Input.Update()
         ika.Delay(1)
@@ -74,8 +74,8 @@ def menu():
 
     while result == None:
         draw()
-        snow.update()
-        snow.draw()
+        snowObj.update()
+        snowObj.draw()
         ika.Video.ShowPage()
         ika.Input.Update()
         ika.Delay(1)
@@ -95,14 +95,14 @@ def menu():
 
     # one last draw.  Later on, there's a blurfade that can take advantage of this:
     draw()
-    snow.draw()
+    snowObj.draw()
     return result
 
     for i in range(FADE_TIME):
         draw()
         ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
-        snow.update()
-        snow.draw()
+        snowObj.update()
+        snowObj.draw()
         ika.Video.ShowPage()
         ika.Input.Update()
         ika.Delay(1)
