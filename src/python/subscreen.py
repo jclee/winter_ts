@@ -3,7 +3,8 @@ import ika
 
 from xi.menu import Menu, Cancel
 from xi.scrolltext import ScrollableTextFrame
-from xi import gui, layout
+import xi.gui as gui
+import xi.layout as layout
 from xi.transition import Transition
 from xi.window import ImageWindow
 from xi.cursor import ImageCursor

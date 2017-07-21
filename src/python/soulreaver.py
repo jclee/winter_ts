@@ -69,6 +69,7 @@ class SoulReaver(Yeti):
                         e.hurt(d, 350, self.direction)
                         yield None
                         break
+                    brython_generator_bug_workaround = 'blah'
 
                 yield None
 
@@ -91,6 +92,7 @@ class SoulReaver(Yeti):
         #            e.hurt(d, 350, self.direction)
         #            yield None
         #            break
+        #        brython_generator_bug_workaround = 'blah'
 
         #    yield None
 

@@ -10,10 +10,10 @@
 
 import ika
 
-import window
-import cursor
+import xi.window as window
+import xi.cursor as cursor
 
-from proxy import Proxy
+from xi.proxy import Proxy
 
 default_font = None
 default_cursor = None
@@ -69,7 +69,8 @@ class Widget(object):
     def setPosition(self, value):
         self.X, self.Y = value
 
-    def setRect(self, (x, y, width, height)):
+    def setRect(self, rect):
+        (x, y, width, height) = rect
         self.Position = (x, y)
         self.Size = (width, height)
 

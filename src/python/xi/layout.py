@@ -38,7 +38,8 @@ class Layout(object):
             child.Y += value - self.y
         self.y = value
 
-    def setPosition(self, (x, y)):
+    def setPosition(self, p):
+        (x, y) = p
         for child in self.children:
             child.X += x - self.x
             child.Y += y - self.y

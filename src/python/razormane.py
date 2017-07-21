@@ -191,7 +191,7 @@ class RazorMane(Enemy):
                 self.mood = self.stalkMood
                 yield self.idleState()
                 break
-
+            brython_generator_bug_workaround = 'blah'
 
     def idleState(self, *args):
         self._animator.kill = True

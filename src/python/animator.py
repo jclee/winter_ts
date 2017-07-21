@@ -11,13 +11,13 @@ class Animator(object):
         self.kill = anim is None
 
     def __repr__(self):
-        return `(
+        return repr((
             self._anim,
             self.count,
             self.curFrame,
             self.index,
             self.loop,
-            self.kill)`
+            self.kill))
 
     anim = property(lambda self: self._anim)
 

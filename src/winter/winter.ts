@@ -28,7 +28,7 @@ interface BrythonOptions {
 declare var brython: (options: BrythonOptions) => void;
 
 removeChildren(document.body);
-addPythonScript('system.py');
+addPythonScript('main.py');
 brython({
     debug: BrythonDebugLevel.ShowErrors,
 });

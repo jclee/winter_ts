@@ -16,7 +16,7 @@ class GenWrapper(object):
         return self.iter.next()
 
     def __repr__(self):
-        return `(self.fun, self.iter)`
+        return repr((self.fun, self.iter))
 
 class Enemy(Entity):
     '''

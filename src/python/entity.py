@@ -73,7 +73,7 @@ class Entity(object):
             elif newState is None:
                 self._state = None
             else:
-                assert False, 'Entity.state property *must* be a generator!!! (got %s)' % `newState`
+                assert False, 'Entity.state property *must* be a generator!!! (got %s)' % repr(newState)
 
     state = property(fset=_setState)
 

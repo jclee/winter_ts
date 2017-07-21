@@ -21,7 +21,7 @@ class SaveGame(object):
 
     def getFlags(self):
         self.flags = {}
-        for k, v in savedata.__dict__.iteritems():
+        for k, v in savedata.__dict__.items():
             if isinstance(v, (int, str, list, tuple)):
                 self.flags[k] = v
 
@@ -30,12 +30,12 @@ class SaveGame(object):
 
     def setFlags(self):
         self.clearSaveFlags()
-        for k, v in self.flags.iteritems():
+        for k, v in self.flags.items():
             savedata.__dict__[k] = v
 
     def clearSaveFlags():
         destroy = []
-        for var, val in savedata.__dict__.iteritems():
+        for var, val in savedata.__dict__.items():
             if not var.startswith('_') and isinstance(val, (str, int, list, tuple)):
                 destroy.append(var)
         for d in destroy:
@@ -72,7 +72,7 @@ class SaveGame(object):
         s += 'FLAGS\n'
         s += 'MAPNAME=\'%s\'\n' % self.mapName
         s += 'POS=\'%s\'\n' % ','.join([str(x) for x in self.pos])
-        for var, val in savedata.__dict__.iteritems():
+        for var, val in savedata.__dict__.items():
             if not var.startswith('_'):
                 if isinstance(val, (int, str)):
                     s += '%s=%r\n' % (var, val)
@@ -80,7 +80,7 @@ class SaveGame(object):
                 elif isinstance(val, (list, tuple)):
                     s += '%s=LIST\n' % var
                     for el in val:
-                        s += '  %s\n' % `el`
+                        s += '  %s\n' % repr(el)
                     s += 'END\n'
         return s
 
@@ -140,8 +140,8 @@ def test():
     bleh.setCurrent()
     s = StatSet.STAT_NAMES
 
-    print(`savedata.test1`)
-    print(`savedata.test8`)
-    print(`savedata.test1337`)
+    print(repr(savedata.test1))
+    print(repr(savedata.test8))
+    print(repr(savedata.test1337))
 
 #test()

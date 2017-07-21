@@ -5,11 +5,12 @@ class Cursor(object):
     def __init__(self):
         self.hotspot = 0,0
 
-    def setHotSpot(self, (x, y)):
+    def setHotSpot(self, p):
+        (x, y) = p
         self.hotspot = int(x), int(y)
 
-    Width = property()
-    Height = property()
+    Width = property(lambda self: None)
+    Height = property(lambda self: None)
     Size = property(lambda self: (self.Width, self.Height))
     HotSpot = property(lambda self: self.hotspot, setHotSpot)
 

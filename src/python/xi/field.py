@@ -2,7 +2,7 @@
 # Coded by Andy Friesen
 # 2 November 2003
 import ika
-import effects
+import xi.effects
 
 player = None
 

@@ -143,6 +143,7 @@ class Yeti(Enemy):
                 self.mood = self.attackMood
                 yield self.idleState()
                 break
+            brython_generator_bug_workaround = 'blah'
 
     def deathState(self, *args, **kwargs):
         sound.yetiDie[self.stats.ind].Play()
@@ -187,6 +188,7 @@ class Yeti(Enemy):
                     e.hurt(d, 350, self.direction)
                     yield None
                     break
+                brython_generator_bug_workaround = 'blah'
 
             yield None
 

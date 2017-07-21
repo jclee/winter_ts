@@ -5,6 +5,7 @@ Input abstraction and so on.
 import ika
 
 from keynames import keyNames
+import virtualfile
 import controls
 import xi.controls
 
@@ -57,7 +58,7 @@ def init():
 # returns a dict
 def readConfig(f):
     if isinstance(f, str):
-        f = file(f, 'rt')
+        f = virtualfile.open(f, 'rt')
 
     config = dict()
     for line in f.readlines():
@@ -68,8 +69,8 @@ def readConfig(f):
 
 def writeConfig(f, config):
     if isinstance(f, str):
-        f = file(f, 'wt')
-    for k, v in config.iteritems():
+        f = virtualfile.open(f, 'wt')
+    for k, v in config.items():
         f.write('%s %s\n' % (k, v))
 
 def setConfig(config=None):

@@ -86,8 +86,8 @@ class Gauge(Thing):
         'Used to draw in the filled part of the gauge.'
         ika.Video.DrawRect(x, y, w, h, ika.RGB(*(self.colour + (opacity,))), True)
 
-    curVal = property() # ditto
-    curMax = property() # override.  Needs to be readable.
+    curVal = property(lambda self: None) # ditto
+    curMax = property(lambda self: None) # override.  Needs to be readable.
 
 class HPBar(Gauge):
     def __init__(self):

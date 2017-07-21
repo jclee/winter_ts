@@ -2,11 +2,11 @@
 import ika
 
 import xi.gui as gui
-import scrolltext
-import cursor
+import xi.scrolltext
+import xi.cursor
 
-import sound
-import controls
+import xi.sound
+import xi.controls
 
 # unique object returned when the user cancels a menu.
 # this object's identity is its only attribute, like None.
