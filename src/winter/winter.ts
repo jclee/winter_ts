@@ -1,7 +1,3 @@
-const greet = () => {
-    return "Hello, world";
-}
-
 const removeChildren = (node : HTMLElement) => {
     while (node.firstChild) {
         node.removeChild(node.firstChild);

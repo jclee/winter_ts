@@ -16,7 +16,8 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.static(path.join(root, 'build')));
-app.use(express.static(path.join(__dirname, '../python')));
+app.use(express.static(path.join(root, 'data')));
+app.use(express.static(path.join(root, 'src/python')));
 app.use('/brython.js', express.static(path.join(root, 'node_modules/brython/brython.js')));
 
 const server = http.createServer(app);

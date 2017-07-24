@@ -6,12 +6,12 @@ import controls
 class _DoneException(Exception):
     pass
 
-def delay(draw, count, snowObj):
+def delayTask(draw, count, snowObj):
     while count > 0:
         draw()
         snowObj.update()
         snowObj.draw()
-        ika.Delay(1)
+        yield from ika.DelayTask(1)
         count -= 1
         ika.Video.ShowPage()
 
@@ -19,7 +19,7 @@ def delay(draw, count, snowObj):
         if controls.attack():
             raise _DoneException()
 
-def intro():
+def introTask():
     snowObj = snow.Snow(velocity=(0,0.5))
     gba = ika.Image('gfx/gba.png')
     yourmom = ika.Image('gfx/yourmother.png')
@@ -35,20 +35,20 @@ def intro():
         v.Blit(gba, (v.xres - gba.width) / 2, (v.yres - gba.height) / 2)
 
     try:
-        delay(showGba, 300, snowObj)
+        yield from delayTask(showGba, 300, snowObj)
 
-        delay(lambda: v.ClearScreen(), d, snowObj)
+        yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
 
         for x in range(3):
-            delay(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snowObj)
-            delay(lambda: v.ClearScreen(), d, snowObj)
+            yield from delayTask(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snowObj)
+            yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
 
-        delay(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d / 2, snowObj)
-        delay(lambda: v.ClearScreen(), d, snowObj)
+        yield from delayTask(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d / 2, snowObj)
+        yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
     except _DoneException:
         return
 
-def menu():
+def menuTask():
     bg = ika.Image('gfx/title.png')
     cursor = ika.Image('gfx/ui/pointer.png')
     snowObj = snow.Snow(velocity=(0, 0.5))
