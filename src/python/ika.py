@@ -25,6 +25,9 @@ def GetTime():
     deltaMsec = window.Date.now() - _engine.startMsec
     return (deltaMsec * 10)
 
+def Random(low, high):
+    return window.Math.floor(window.Math.random() * (high - low)) + low
+
 def RGB(r, g, b, a = 255):
     return (
         (int(r) & 0xff)
@@ -139,6 +142,14 @@ class _VideoClass(object):
         global _engine
         _engine.ctx.fillStyle = 'rgb(0, 0, 0)'
         _engine.ctx.fillRect(0, 0, _engine.width, _engine.height)
+
+    @staticmethod
+    def DrawPixel(x, y, colour, blendmode=None):
+        global _engine
+        if blendmode not in [None, Opaque, Matte]:
+            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
+        _engine.ctx.fillStyle = 'rgba(255, 255, 255, 1)' # use actual color
+        _engine.ctx.fillRect(x, y, 1, 1)
 
     @staticmethod
     def DrawRect(x1, y1, x2, y2, colour, fill=None, blendmode=None):
