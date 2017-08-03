@@ -20,6 +20,10 @@ def DelayTask(time):
 def Exit():
     pass # TODO
 
+def GetCanvasEl():
+    global _engine
+    return _engine.canvasEl
+
 def GetTime():
     global _engine
     deltaMsec = window.Date.now() - _engine.startMsec
