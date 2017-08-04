@@ -4,7 +4,7 @@
   "description": "Winter ika game",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "s/build",
     "start": "node ./src/test_server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

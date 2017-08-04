@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import os
+import subprocess
+import sys
+
+_PROJ_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+os.chdir(_PROJ_ROOT)
+sys.path.append(os.path.join(_PROJ_ROOT))
+
+from tool.export_font import export_font
+from tool.export_sprite import export_sprite
+from tool.export_tile_lib import export_tile_lib
+
+def get_data_paths(exts):
+    d = dict(map(lambda ext: (ext, []), exts))
+    for root, dirs, files in os.walk('./data'):
+        for file in files:
+            (_, ext) = os.path.splitext(file)
+            if ext in exts:
+                d[ext].append(os.path.join(root, file))
+    return d
+
+def make_dest_path(path, new_ext):
+    rel_path, file_name = os.path.split(os.path.relpath(path, './data'))
+    base_name, ext = os.path.splitext(file_name)
+    return os.path.join('build/winter', rel_path, base_name + new_ext)
+
+def main():
+    # Compile Typescript
+    env = dict(os.environ)
+    env['PATH'] = os.pathsep.join(['./node_modules/.bin', env['PATH']])
+    subprocess.check_call(['tsc'], env=env)
+
+    data_paths = get_data_paths(['.fnt', '.ika-sprite', '.vsp'])
+
+    for path in data_paths['.fnt']:
+        export_font(path, make_dest_path(path, '.png'))
+
+    for path in data_paths['.ika-sprite']:
+        export_sprite(path, make_dest_path(path, '.png'))
+
+    for path in data_paths['.vsp']:
+        export_tile_lib(path, make_dest_path(path, '.png'))
+
+if __name__ == '__main__':
+    main()

@@ -9,5 +9,9 @@
 # build artifacts
 /build/
 
+# python artifacts
+*.pyc
+*.pyo
+
 # runtime artifacts
 /npm-debug.log
