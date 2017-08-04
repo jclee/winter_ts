@@ -40,13 +40,22 @@ def RGB(r, g, b, a = 255):
         | ((int(a) & 0xff) << 24)
     )
 
+def _RGBAToCSS(colorValue):
+    r = colorValue & 0xff
+    g = (colorValue >> 8) & 0xff
+    b = (colorValue >> 16) & 0xff
+    a = ((colorValue >> 24) & 0xff) / 255.0
+    return "rgba(" + str(r) + ", " + str(g) + ", " + str(b) + ", " + str(a) + ")"
+
 class _ControlClass(object):
     def __init__(self):
-        self._pressed = False
+        self._pressed = 0
         self._position = 0
 
     def Pressed(self):
-        return self._pressed
+        p = self._pressed
+        self._pressed = 0
+        return p
 
     def Position(self):
         return self._position
@@ -91,15 +100,16 @@ class Image(object):
 
 class _InputClass(object):
     def __init__(self):
-        self.up = _ControlClass()
-        self.down = _ControlClass()
-        self.left = _ControlClass()
-        self.right = _ControlClass()
-        self.enter = _ControlClass()
-        self.cancel = _ControlClass()
-
         self.keyboard = _KeyboardClass()
         self.joysticks = [_JoystickClass()]
+
+        # Not sure this is a good idea...
+        self.up = self.keyboard['UP']
+        self.down = self.keyboard['DOWN']
+        self.left = self.keyboard['LEFT']
+        self.right = self.keyboard['RIGHT']
+        self.enter = self.keyboard['ENTER']
+        self.cancel = self.keyboard['ESCAPE']
 
     @staticmethod
     def Update():
@@ -122,6 +132,9 @@ class Sound(object):
         self._file_name = file_name
 
     def Play(self):
+        pass # TODO
+
+    def Pause(self):
         pass # TODO
     # TODO other members...
 
@@ -152,12 +165,20 @@ class _VideoClass(object):
         global _engine
         if blendmode not in [None, Opaque, Matte]:
             raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        _engine.ctx.fillStyle = 'rgba(255, 255, 255, 1)' # use actual color
+        _engine.ctx.fillStyle = _RGBAToCSS(colour)
         _engine.ctx.fillRect(x, y, 1, 1)
 
     @staticmethod
     def DrawRect(x1, y1, x2, y2, colour, fill=None, blendmode=None):
-        pass # TODO
+        global _engine
+        if blendmode not in [None, Opaque, Matte]:
+            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
+        if fill is True:
+            _engine.ctx.fillStyle = _RGBAToCSS(colour)
+            # TODO: Maybe check on negative dimension behavior?
+            _engine.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
+        else:
+            raise NotImplementedError() # TODO
 
     @staticmethod
     def ScaleBlit(image, x, y, width, height, blendmode=None):
@@ -171,6 +192,30 @@ class _VideoClass(object):
     # TODO other members...
 
 Video = _VideoClass()
+
+_KeycodeMap = {
+    'ArrowUp': 'UP',
+    'ArrowDown': 'DOWN',
+    'ArrowRight': 'RIGHT',
+    'ArrowLeft': 'LEFT',
+    'Enter': 'ENTER',
+    'Escape': 'ESCAPE',
+    ' ': 'SPACE',
+    'Z': 'Z',
+    'z': 'Z',
+    'X': 'X',
+    'x': 'X',
+    'C': 'C',
+    'c': 'C',
+    'V': 'V',
+    'v': 'V',
+    'B': 'B',
+    'b': 'B',
+    'N': 'N',
+    'n': 'N',
+    'M': 'M',
+    'm': 'M',
+}
 
 class _Engine(object):
     def __init__(self):
@@ -233,6 +278,30 @@ class _Engine(object):
                 window.document.body.appendChild(imageEl)
             promise = window.Promise.new(loadImage)
             promises.append(promise)
+
+        def onKeyDown(event):
+            global _KeycodeMap
+            if event.defaultPrevented:
+                return
+            if event.key not in _KeycodeMap:
+                return
+            control = Input.keyboard[_KeycodeMap[event.key]]
+            control._pressed = 1
+            control._position = 1
+            event.preventDefault()
+
+        def onKeyUp(event):
+            global _KeycodeMap
+            if event.defaultPrevented:
+                return
+            if event.key not in _KeycodeMap:
+                return
+            control = Input.keyboard[_KeycodeMap[event.key]]
+            control._position = 0
+            event.preventDefault()
+
+        window.addEventListener('keydown', onKeyDown, True)
+        window.addEventListener('keyup', onKeyUp, True)
 
         def drawFrame(timestamp):
             nonlocal task

@@ -48,12 +48,12 @@ def introTask():
     except _DoneException:
         return
 
-def menuTask():
+def menuTask(resultRef):
     bg = ika.Image('gfx/title.png')
     cursor = ika.Image('gfx/ui/pointer.png')
     snowObj = snow.Snow(velocity=(0, 0.5))
     snowObj.update()
-    result = None
+    resultRef[0] = None
     cursorPos = 0
     FADE_TIME = 60
 
@@ -68,17 +68,17 @@ def menuTask():
         snowObj.draw()
         ika.Video.ShowPage()
         ika.Input.Update()
-        ika.Delay(1)
+        yield from ika.DelayTask(1)
 
     u = 0 # gay unpress hack
 
-    while result == None:
+    while resultRef[0] == None:
         draw()
         snowObj.update()
         snowObj.draw()
         ika.Video.ShowPage()
         ika.Input.Update()
-        ika.Delay(1)
+        yield from ika.DelayTask(1)
 
         if controls.up() and cursorPos > 0:
             if not u:
@@ -89,20 +89,19 @@ def menuTask():
                 cursorPos += 1
                 u = 1
         elif controls.attack():
-            result = cursorPos
+            resultRef[0] = cursorPos
         else:
             u = 0
 
     # one last draw.  Later on, there's a blurfade that can take advantage of this:
     draw()
     snowObj.draw()
-    return result
 
-    for i in range(FADE_TIME):
-        draw()
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
-        snowObj.update()
-        snowObj.draw()
-        ika.Video.ShowPage()
-        ika.Input.Update()
-        ika.Delay(1)
+    #for i in range(FADE_TIME):
+    #    draw()
+    #    ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
+    #    snowObj.update()
+    #    snowObj.draw()
+    #    ika.Video.ShowPage()
+    #    ika.Input.Update()
+    #    yield from ika.DelayTask(1)

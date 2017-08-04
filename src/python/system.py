@@ -6,7 +6,10 @@ import sound
 import controls
 import subscreen
 
+engineObj = None
+
 def mainTask():
+    global engineObj
     controls.init()
     subscreen.init()
 
@@ -19,25 +22,30 @@ def mainTask():
 
     introMusic = ika.Sound('music/Existing.s3m')
 
-    yield from intro.introTask()
+    engineObj = engine.Engine()
 
-    # TODO make work
+    # TODO: Reenable
+    #yield from intro.introTask()
+    #
     #while True:
     #    sound.fader.kill()
     #    introMusic.position = 0
     #    introMusic.Play()
-    #    result = intro.menu()
-    #    engineObj = engine.Engine()
-    #
-    #    if result == 0:
+    #    # Workaround for Brython "yield from" expression bugs:
+    #    resultRef = [None]
+    #    yield from intro.menuTask(resultRef)
+
+    #    if resultRef[0] == 0:
     #        introMusic.Pause()
-    #        engineObj.beginNewGame()
-    #    elif result == 1:
+    #        yield from engineObj.beginNewGameTask()
+    #    elif resultRef[0] == 1:
     #        introMusic.Pause()
-    #        engineObj.loadGame()
-    #    elif result == 2:
+    #        yield from engineObj.loadGameTask()
+    #    elif resultRef[0] == 2:
     #        break
     #    else:
-    #        assert False, 'Wacky intro menu result %i! :o' % result
+    #        assert False, 'Wacky intro menu result %i! :o' % resultRef[0]
+    yield from engineObj.beginNewGameTask()
 
     ika.Exit()
+

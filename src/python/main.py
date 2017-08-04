@@ -14,7 +14,7 @@ def main():
             'gfx/gba.png',
             'gfx/isabigfatbitch.png',
             #'gfx/mountains.png',
-            #'gfx/title.png',
+            'gfx/title.png',
             #'gfx/ui/barhp0.png',
             #'gfx/ui/barhp1.png',
             #'gfx/ui/barhp2.png',
