@@ -1,0 +1,507 @@
+(ika-map 
+	(version 1.0)
+	(information 
+		(title )
+		(meta 
+			(entityLayer B1)
+			(music winter.ogg)
+		)
+	)
+	(header 
+		(dimensions 
+			(width 480)
+			(height 480)
+		)
+		(tileset snowy.vsp)
+	)
+	(waypoints 
+	)
+	(zones 
+		(zone 
+			(label to39)
+			(script to39)
+		)
+	)
+	(layers 
+		(layer 
+			(label B0)
+			(dimensions 
+				(width 30)
+				(height 30)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJx0ll1P20AQRSdRKlVK7EBJC6EgHOUJVCFUtX+HPvWR
+jxaogBYpeWn+dnfEHPl66jxcrWPHPnvvzo69MrNN0Sp0
+UtQUHRRNioZFdVEVo2uazjEOinbi/qMYXWt5/mbL8UnI
+ue+K9oI9jbGKYx/fCHNU9L7oQ7AWwV70MFR/5fhA2POi
+w+DjtwqNQn7uYwhWH3MjrLWMOg/Y5D4Pn3gla3LfCRZa
+WL+nrL4cYPo4EcYoZVwnLsy8rn2MtXX5/IYNl7Wuk+DC
+VI8vRb+LnuXZzylrrm/k3sa6dUuNj6xd6zr+l/34834U
+3cYI+1bY/vuh6Eaur8QTXjXfLPXqzKdg/Cy6C/avomth
+w3H2fXieWHcP4ZNs8TyVczDx6HqMOeCZOdzHPJkrI3tY
+a9fFXuW882fimbn/CT2Ex5vgPYm3vl7idTUPNp6c6Xt1
+IXOhj6hn5q5rSAb3ci3X+dt4HuzDkDOX9lq/lfjkWLm5
+LzwEl9/5+plk7H72re232o9q8TlIftUzjHWw87VVzPvc
+2j4Jm3WFSQ+pwyd570RWqr556DH1C1d7NBnDZL2pKa1z
+sr+0br2hvKaT+N9F0Wfr9uhG5k++Vc8xXGd+j5FMVls0
+kfvd82nwpjLvqXAGySv7C+Y3YQ+tu/baJ+GyxqfW7lGv
+ta/BmQV7JtfZX2PJGKb2Fmdqj8z96Vx+O/OTtTXOnqkS
+c9dea59cL637PYJneuRLKOc8sW7meS/nemOPMXf47G++
+heiTSN+zF9atb+fyPbAMX+6vScz8rsBnZe36XycuOc6s
+rZnattf3OPjKnMrIWpAhufBuhL+MHMmF2sX/l+DSv46t
+7Zl14mkPU6/OfQzeVWQ+tu47iHzUe/ak5/T/Q2trn7pj
+jv4+urH2PbEf7Lmw6YFTOaZmBuk/2a8yqQfN2dlnkduu
+detW+ewZamBoXd95P2utH1tbC1extvoumFrbm3N/5jl9
+e2nb3jqKDMfW1gH50hf2Yp767d7EujDSG5bxLK411v02
+aYI7lny5dmfd/TmPeSqXvdLIfeQIbxwj66K1e2z/7+tK
+vNIXjnr8urTOtS9qHgeSMX79efQj9A8AAP//
+			)
+			(obstructions 
+				(format tile)
+				eJxiYBgFo2AUDCQAAAAA//8=
+			)
+			(entities 
+			)
+			(zones 
+			)
+		)
+		(layer 
+			(label B1)
+			(dimensions 
+				(width 30)
+				(height 30)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJzkVkkOwjAMzKmoPIIDAso7eoYzu8Qisf3/AdRSI03d
+JHbaFA6MZIW4KUPi8QRj/huTju+NPfmp8v2Zhzvr8FuI
+cxmx3sftwisRp497JKzPE3BybokTuftyWoTqilp6O3Ip
+8Rae58LzWKyqWCvXDrXnIUFaotpK/bRJzIno6mEx8Ol3
+XsWiigJyGg+0ukilN6lPy3q8Qk7L7TpfvkefTxL29XiA
+nEbr6Fd0zkV4eQMnNj/Wo3bPvN44Rw8pTRvnerywfGjP
+ki9pcYv8zlDdvgHtXYTQ/sdICd5f2yp2MOe1vcNnqx06
+a16TkHelunt9sN6FwXtMq4+HaetdQl/tEd9NXOVGn35D
+HyP9Dn3/kA6eJv58Q8B7y+VLVnsxnJlpairGr5HzF7D3
+8QcAAP//
+			)
+			(obstructions 
+				(format tile)
+				eJyskssWgCAIRLn//9OdQ2k8RtrEJuMC46hmHliI9PNN
+DfpKdUg4U8RKpsSuwmemyrA7kRRulyjqjV5BF+Y9IPYo
+OFJPEGmoT/KUWd2evEIiXbUM1Dj0LvVG0yGMlMdU2vqa
+rI3VaEISimdaEuSQWj/GBQAA//8=
+			)
+			(entities 
+				(entity 
+					(label guardin40)
+					(x 388)
+					(y 257)
+					(sprite guardrune.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a2)
+					(x 362)
+					(y 258)
+					(sprite carnivore.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a3)
+					(x 382)
+					(y 281)
+					(sprite carnivore.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a4)
+					(x 406)
+					(y 273)
+					(sprite carnivore.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a1)
+					(x 411)
+					(y 250)
+					(sprite carnivore.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a0)
+					(x 390)
+					(y 234)
+					(sprite devourer.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a5)
+					(x 168)
+					(y 128)
+					(sprite carnivore.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a6)
+					(x 274)
+					(y 148)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a7)
+					(x 304)
+					(y 154)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a8)
+					(x 281)
+					(y 178)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a9)
+					(x 311)
+					(y 183)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a10)
+					(x 293)
+					(y 129)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a11)
+					(x 278)
+					(y 209)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a12)
+					(x 302)
+					(y 207)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a13)
+					(x 223)
+					(y 252)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a14)
+					(x 246)
+					(y 250)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a15)
+					(x 280)
+					(y 241)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a16)
+					(x 308)
+					(y 238)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a17)
+					(x 246)
+					(y 275)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a18)
+					(x 254)
+					(y 225)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a19)
+					(x 269)
+					(y 266)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label a20)
+					(x 257)
+					(y 196)
+					(sprite anklebiter.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label r0)
+					(x 91)
+					(y 264)
+					(sprite dragonpup.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+				(entity 
+					(label r1)
+					(x 260)
+					(y 381)
+					(sprite dragonpup.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+			)
+			(zones 
+				(zone 
+					(label to39)
+					(x 128)
+					(y 0)
+					(width 192)
+					(height 16)
+				)
+			)
+		)
+		(layer 
+			(label A0)
+			(dimensions 
+				(width 30)
+				(height 30)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJxiYBgFo2DkASsgth4Aex2A2HEA7HUDYvcBsHewgUAC
+8iMlXZhBaXqnCxs62jUQwIywEpqA4R6uowA7CALi4IF2
+xCgYBTQCI6U+hoGBbqcBAAAA//8=
+			)
+			(obstructions 
+				(format tile)
+				eJxiYBgFo2AUDCQAAAAA//8=
+			)
+			(entities 
+			)
+			(zones 
+			)
+		)
+	)
+)

@@ -1,0 +1,172 @@
+(ika-map 
+	(version 1.0)
+	(information 
+		(title )
+		(meta 
+			(entityLayer B1)
+			(music winter.ogg)
+		)
+	)
+	(header 
+		(dimensions 
+			(width 320)
+			(height 240)
+		)
+		(tileset snowy.vsp)
+	)
+	(waypoints 
+	)
+	(zones 
+		(zone 
+			(label to21)
+			(script to21)
+		)
+		(zone 
+			(label to50)
+			(script to50)
+		)
+	)
+	(layers 
+		(layer 
+			(label B0)
+			(dimensions 
+				(width 20)
+				(height 15)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJzMktsKg0AMRPfigk9SWixVSy/Q///GRpiBadhd8K2B
+gdVNTjLREP47xoqO1mpMpsGU3LnHH5FXTBF1jOx4E3Ii
+8vluFA7vBrk/gZfcbAXPPBdXG8Ovj+J4F+TovbL8nEly
+s9SSt5hWyLM5Dz1Euc9Qcryn6QUtYE5SV6SOXulX90Ne
+EB6Za0Ocf9dsuoLNcy10Xi/ttZnu4PHs44PeLZ72eoNV
+nFeNMzzxu/HbcndJeNxjz+sttPfHPvofzR2vezxCe3+1
+Pht8a3wBAAD//w==
+			)
+			(obstructions 
+				(format tile)
+				eJxiYBgFxAIAAAAA//8=
+			)
+			(entities 
+			)
+			(zones 
+			)
+		)
+		(layer 
+			(label B1)
+			(dimensions 
+				(width 20)
+				(height 15)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJxiYBh6gJMINexA7E2Eeh8g9sVjPjsONVxI7Ew85nvj
+kUPWy4VHTRYJctjcSgwgVx+6XlxhQUyckWoXtjCTo5I9
+MKACxGpQjGy2BxB7ArEXEWbgils2JDP9gNgfiAPwmKOE
+g40MQO6NAOJIIA4F4jAGTPfLQfXjS1eEQCYDathoUGAW
+IYDsVwAAAAD//w==
+			)
+			(obstructions 
+				(format tile)
+				eJxsT4ENACAIkv+frpwozNxyqIQYsQMZWjm+7+XqVE6A
+0fggUbGKPIrPP5iA722TUApH2mqe0XjMtuWOZ9EBAAD/
+/w==
+			)
+			(entities 
+				(entity 
+					(label a0)
+					(x 168)
+					(y 80)
+					(sprite devourer.ika-sprite)
+					(speed 100)
+					(direction up)
+					(move_script )
+					(obstructs_entities true)
+					(obstructed_by_entities true)
+					(obstructed_by_map true)
+					(adj_activate_script )
+					(activate_script )
+				)
+			)
+			(zones 
+				(zone 
+					(label to21)
+					(x 0)
+					(y 32)
+					(width 16)
+					(height 80)
+				)
+				(zone 
+					(label to50)
+					(x 112)
+					(y 168)
+					(width 16)
+					(height 16)
+				)
+			)
+		)
+		(layer 
+			(label A0)
+			(dimensions 
+				(width 20)
+				(height 15)
+			)
+			(position 
+				(x 0)
+				(y 0)
+			)
+			(parallax 
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap 
+				(x false)
+				(y false)
+			)
+			(data 
+				(format zlib)
+				eJxiYEAFVkBszYAfEKMGBhyA2JEKamDADYjdSVBDiluR
+AS59DgyE3YpNLy59xPgHm16YPnL8h89ObHZRAojx30gH
+QUAcPNCOGCIAAAAA//8=
+			)
+			(obstructions 
+				(format tile)
+				eJxiYBgFxAIAAAAA//8=
+			)
+			(entities 
+			)
+			(zones 
+			)
+		)
+	)
+)

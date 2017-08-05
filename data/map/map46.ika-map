@@ -1,0 +1,199 @@
+(ika-map
+	(version 1.0)
+	(information
+		(title )
+		(meta
+			(entityLayer B1)
+                        (music winter.ogg)
+		)
+	)
+	(header
+		(dimensions
+			(width 480)
+			(height 240)
+		)
+		(tileset snowy.vsp)
+	)
+	(waypoints
+	)
+	(zones
+		(zone
+			(label to44)
+			(script to44)
+		)
+		(zone
+			(label to47)
+			(script to47)
+		)
+	)
+	(layers
+		(layer
+			(label B0)
+			(dimensions
+				(width 30)
+				(height 15)
+			)
+			(position
+				(x 0)
+				(y 0)
+			)
+			(parallax
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap
+				(x false)
+				(y false)
+			)
+			(data
+				(format zlib)
+				eJx0VNFug0AMu1F4Wu/QyjpBh9RDfWKaprXqvmP//zcL
+ki1Mdn2wrg2XOHYCOYQwGZLhaHg3XAwZOBg6w7fhZpgN
+vcRfkfdmGFEnST7zzgDjtePM6CPLvQH3voS3R/yEvBE4
+IsbeO8ljPfZGzkm0692S5jO4MzhG5LJ3YnCayct+yUeQ
+lxyDcN9dHXo0yf9fnHvDh+ETdW9uDpN4Xof/82TvJ/Dz
+Lv0aBdr3Hr/VM+VljRZnU9Ccw3aunZuR7pXnnZ1nSXhq
+nAt2TvMc1l1T/boXI/Ki42Ud9SyCL4rHKWz95jxV+0U8
+8Fo5zxkantAH+1V/qZNe1+idfXjt/n1Mkk+t+o6r5iz+
+Ul/jaiTwk/suuMInPo9huxc9POUuMK56lVO9VjRh3bvK
+ebSDnzpb3cdB4r6m16m+J1f/UV+lmSy83OtSXgltWHfP
+P1v258fFqgfcz+BOOKPoKdXx77W/0wqX7kJ03C/wenl2
+kDtaO0pMn+v3LhY41e8KPXCmi15+c5bzDwAA//8=
+			)
+			(obstructions
+				(format tile)
+				eJxiYBgFQxsAAAAA//8=
+			)
+			(entities
+			)
+			(zones
+			)
+		)
+		(layer
+			(label B1)
+			(dimensions
+				(width 30)
+				(height 15)
+			)
+			(position
+				(x 0)
+				(y 0)
+			)
+			(parallax
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap
+				(x false)
+				(y false)
+			)
+			(data
+				(format zlib)
+				eJzEkt0OwjAIhblq79UL48XUplXf/wlXokRyAqPOTL+E
+bGOUw0+JnhQaYwr+F4jBbyZ3u3W7B7mSeq9B7MPwVaXN
+uQ7O2fKqx+st6vnc7dLtSu+aWZv73HU7GXq6d10nDfgt
+XUH0+dwR4r0ZeTSy91Qcv+TD/XtEc0VNq36doy7URRA3
+qo2aWeVYSwv0cWbJjFqH17s3X80n+/KQOzWyJ0FqzlHg
+l+j+ZOZbazK4kwTPrWk/0lli/ydd2e8MAAD//w==
+			)
+			(obstructions
+				(format tile)
+				eJyEkEkOACAIA53/f9poFKEocgHTpout/YcKQ2HkJNIR
+nqezn0YTMU1iatkpeVxaMOcBZpka3Qv9j+OAdYAY3TWO
+iR7WK/lAOwAAAP//
+			)
+			(entities
+			)
+			(zones
+				(zone
+					(label to47)
+					(x 400)
+					(y 238)
+					(width 16)
+					(height 2)
+				)
+				(zone
+					(label to44)
+					(x 0)
+					(y 96)
+					(width 16)
+					(height 80)
+				)
+			)
+		)
+		(layer
+			(label A0)
+			(dimensions
+				(width 30)
+				(height 15)
+			)
+			(position
+				(x 0)
+				(y 0)
+			)
+			(parallax
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap
+				(x false)
+				(y false)
+			)
+			(data
+				(format zlib)
+				eJxiYBgFo2AUjIJRgA8w4ZFjgWJGGtnNikWMmQHhJiYG
+7O7jQ5LD535CAGQXC9Q8bHIgzAi1A6YGxuaAYnSwFYpp
+CRihmBPN3t1Y1AIAAAD//w==
+			)
+			(obstructions
+				(format tile)
+				eJxiYBgFQxsAAAAA//8=
+			)
+			(entities
+			)
+			(zones
+			)
+		)
+		(layer
+			(label A1)
+			(dimensions
+				(width 30)
+				(height 15)
+			)
+			(position
+				(x 0)
+				(y 0)
+			)
+			(parallax
+				(mulx 1)
+				(muly 1)
+				(divx 1)
+				(divy 1)
+			)
+			(wrap
+				(x false)
+				(y false)
+			)
+			(data
+				(format zlib)
+				eJxiYBgFo2AUjIKhATjxyLEDMQcBNZTYi24uG9Q+dHW4
+3EWu2ziR9MMwNoBNDTuSnVxk2A1zMzF+QFYDA1w43E9s
+OKCrQ+ez49AngGQ/IxrGZjcAAAD//w==
+			)
+			(obstructions
+				(format tile)
+				eJxiYBgFQxsAAAAA//8=
+			)
+			(entities
+			)
+			(zones
+			)
+		)
+	)
+)

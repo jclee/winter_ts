@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import json
 import os
 import subprocess
 import sys
@@ -13,6 +14,7 @@ sys.path.append(os.path.join(_PROJ_ROOT))
 from tool.export_font import export_font
 from tool.export_sprite import export_sprite
 from tool.export_tile_lib import export_tile_lib
+from tool.export_map import readMap
 
 def get_data_paths(exts):
     d = dict(map(lambda ext: (ext, []), exts))
@@ -34,7 +36,8 @@ def main():
     env['PATH'] = os.pathsep.join(['./node_modules/.bin', env['PATH']])
     subprocess.check_call(['tsc'], env=env)
 
-    data_paths = get_data_paths(['.fnt', '.ika-sprite', '.vsp'])
+    # Convert data
+    data_paths = get_data_paths(['.fnt', '.ika-map', '.ika-sprite', '.vsp'])
 
     for path in data_paths['.fnt']:
         export_font(path, make_dest_path(path, '.png'))
@@ -44,6 +47,13 @@ def main():
 
     for path in data_paths['.vsp']:
         export_tile_lib(path, make_dest_path(path, '.png'))
+
+    maps = {}
+    for path in data_paths['.ika-map']:
+        map_name = os.path.splitext(os.path.split(path)[1])[0]
+        maps[map_name] = readMap(path)
+    with open('build/winter/maps.json', 'wt') as f:
+        f.write(json.dumps(maps, separators=(',',':')))
 
 if __name__ == '__main__':
     main()
