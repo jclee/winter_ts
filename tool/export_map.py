@@ -139,7 +139,11 @@ def readMap(path):
         height = dimensions['height']
         value_count = width * height
         byte_data = decompressor.decompress(compressed_data, value_count)
-        return list(struct.unpack('<%dB' % value_count, byte_data))
+        obs_data = list(struct.unpack('<%dB' % value_count, byte_data))
+        if sum(obs_data) == 0:
+            return []
+        else:
+            return obs_data
 
     parsers = {
         'array': parseArray,
