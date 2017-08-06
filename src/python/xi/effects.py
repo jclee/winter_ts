@@ -39,6 +39,9 @@ def rotateBlit(img, cx, cy, angle, scale = 1.0, blendmode = ika.AlphaBlend):
     ika.Video.DistortBlit(img, p1, p2, p3, p4, blendmode)
 
 def fade(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 0, 255), draw = ika.Map.Render):
+    raise NotImplementedError("use fadeTask instead")
+
+def fadeTask(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 0, 255), draw = ika.Map.Render):
     startColour = ika.GetRGB(startColour)
     endColour   = ika.GetRGB(endColour)
     deltaColour = [ s - e for e, s in zip(startColour, endColour) ]
@@ -59,16 +62,19 @@ def fade(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 0, 2
             True)
 
         ika.Video.ShowPage()
-        ika.Input.Update()
-
-        while t == ika.GetTime():
-            ika.Input.Update()
+        yield from ika.Input.UpdateTask()
 
 def fadeIn(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    fade(time, colour, ika.RGB(0, 0, 0, 0), draw)
+    raise NotImplementedError("use fadeInTask instead")
+
+def fadeInTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
+    yield from fadeTask(time, colour, ika.RGB(0, 0, 0, 0), draw)
 
 def fadeOut(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    fade(time, ika.RGB(0, 0, 0, 0), colour, draw)
+    raise NotImplementedError("use fadeInTask instead")
+
+def fadeOutTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
+    yield from fadeTask(time, ika.RGB(0, 0, 0, 0), colour, draw)
 
 def effect1(curTime, startScale, scaleRange, scr):
     b = 9

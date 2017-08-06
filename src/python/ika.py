@@ -13,7 +13,7 @@ def Delay(time):
 
 def DelayTask(time):
     targetEnd = window.Date.now() + (time * 10)
-    # Busy waiting... :(
+    # Busy waiting, sort of... :(
     while targetEnd > window.Date.now():
         yield None
 
@@ -24,10 +24,17 @@ def GetCanvasEl():
     global _engine
     return _engine.canvasEl
 
+def GetRGB(colorValue):
+    r = colorValue & 0xff
+    g = (colorValue >> 8) & 0xff
+    b = (colorValue >> 16) & 0xff
+    a = ((colorValue >> 24) & 0xff)
+    return (r, g, b, a)
+
 def GetTime():
     global _engine
     deltaMsec = window.Date.now() - _engine.startMsec
-    return (deltaMsec * 10)
+    return (deltaMsec // 10)
 
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
@@ -79,11 +86,47 @@ class _JoystickClass(object):
 
     # TODO other members...
 
+class Entity(object):
+    def __init__(self, label, x, y, sprite):
+        self._label = label
+        self.x = x
+        self.y = y
+        # TODO DO NOT COMMIT - handle other sprite sizes
+        self.width = 32
+        self.height = 32
+        self.hotwidth = 32
+        self.hotheight = 32
+        self._sprite = sprite
+
+    # TODO other members...
+
 class Font(object):
     def __init__(self, file_name):
         self._file_name = file_name
+        self.height = 10
+
+        self._glyphIndexes = [0] * 256
+        for i in range(0, 96):
+            self._glyphIndexes[i + 32] = i
 
     # TODO other members...
+    def StringWidth(self, s):
+        # Not handling variable-width font for now.
+        return len(s) * 9
+
+    def Print(self, x, y, text):
+        imageEl = _engine.getImageEl('winter/system_font.png')
+        cursorX = x
+        cursorY = y
+        for (i, ch) in enumerate(text):
+            if ch in ['\n', '\t', '~']:
+                raise NotImplementedError() # TODO
+            index = self._glyphIndexes[ord(ch)]
+            tileX = (index % 16) * 9
+            tileY = (index // 16) * 10
+            _engine.ctx.drawImage(imageEl, tileX, tileY, 8, 8, cursorX, cursorY, 8, 8)
+            cursorX += 8
+        pass # TODO DO NOT COMMIT
 
 class Image(object):
     def __init__(self, init_arg):
@@ -113,15 +156,65 @@ class _InputClass(object):
 
     @staticmethod
     def Update():
-        pass # TODO
+        raise RuntimeError("Use UpdateTask instead.")
+
+    @staticmethod
+    def UpdateTask():
+        # Input update is automatic, but Input.Update() is used to signify
+        # waiting for the next frame.
+        yield None
 
     # TODO other members...
 
 Input = _InputClass()
 
 class _MapClass(object):
-    def Render():
-        raise NotImplementedError() # TODO
+    def __init__(self):
+        self.entities = {}
+        self._currentMapName = None
+        self.xwin = 0
+        self.ywin = 0
+
+    def Render(self):
+        global _engine
+        mapData = _engine.maps[self._currentMapName]
+
+        # This game only uses a single tile map:
+        imageEl = _engine.getImageEl('winter/snowy.png')
+
+        for layer in mapData.layers:
+            w = layer.dimensions.width
+            h = layer.dimensions.height
+            # TODO: only draw visible
+            # TODO: handle offset, parallax, etc.
+            # TODO: draw entities
+            for y in range(h):
+                for x in range(w):
+                    index = y * w + x
+                    tileIndex = layer.data[index]
+                    tileX = (tileIndex % 16) * 16
+                    tileY = (tileIndex // 16) * 16
+                    _engine.ctx.drawImage(imageEl, tileX, tileY, 16, 16, x * 16, y * 16, 16, 16)
+
+    def Switch(self, path):
+        global _engine
+        self.entities = {}
+
+        assert path.startswith('maps/')
+        assert path.endswith('.ika-map')
+        self._currentMapName = path[len('maps/'):-len('.ika-map')]
+        self.xwin = 0
+        self.ywin = 0
+
+        mapData = _engine.maps[self._currentMapName]
+        for layer in mapData.layers:
+            for entity in layer.entities:
+                self.entities[entity.label] = Entity(
+                    label=entity.label,
+                    x=entity.x,
+                    y=entity.y,
+                    sprite=entity.sprite,
+                )
 
     # TODO other members...
 
@@ -139,12 +232,12 @@ class Sound(object):
     # TODO other members...
 
 class _VideoClass(object):
-    xres = None
-    yres = None
-    #colours = None # TODO
+    def __init__(self):
+        self.xres = None
+        self.yres = None
+        #colours = None # TODO
 
-    @staticmethod
-    def Blit(image, x, y, blendmode=None):
+    def Blit(self, image, x, y, blendmode=None):
         global _engine
         # Theoretically, we should be discarding the alpha channel of anything
         # that we blit as "opaque", but it's likely that any such graphics
@@ -154,22 +247,28 @@ class _VideoClass(object):
         imageEl = _engine.getImageEl(image._path)
         _engine.ctx.drawImage(imageEl, x, y)
 
-    @staticmethod
-    def ClearScreen():
+    def ClearScreen(self):
         global _engine
         _engine.ctx.fillStyle = 'rgb(0, 0, 0)'
         _engine.ctx.fillRect(0, 0, _engine.width, _engine.height)
 
-    @staticmethod
-    def DrawPixel(x, y, colour, blendmode=None):
+    def ClipScreen(self, left=None, top=None, right=None, bottom=None):
+        global _engine
+        # Pop and immediately save pristine state
+        _engine.ctx.restore()
+        _engine.ctx.save()
+        if not all(x is None for x in [left, top, right, bottom]):
+            _engine.ctx.rect(left, top, right - left, bottom - top)
+            _engine.ctx.clip()
+
+    def DrawPixel(self, x, y, colour, blendmode=None):
         global _engine
         if blendmode not in [None, Opaque, Matte]:
             raise NotImplementedError() # TODO: Handle more complicated blendmodes.
         _engine.ctx.fillStyle = _RGBAToCSS(colour)
         _engine.ctx.fillRect(x, y, 1, 1)
 
-    @staticmethod
-    def DrawRect(x1, y1, x2, y2, colour, fill=None, blendmode=None):
+    def DrawRect(self, x1, y1, x2, y2, colour, fill=None, blendmode=None):
         global _engine
         if blendmode not in [None, Opaque, Matte]:
             raise NotImplementedError() # TODO: Handle more complicated blendmodes.
@@ -180,14 +279,18 @@ class _VideoClass(object):
         else:
             raise NotImplementedError() # TODO
 
-    @staticmethod
-    def ScaleBlit(image, x, y, width, height, blendmode=None):
-        raise NotImplementedError() # TODO
+    def ScaleBlit(self, image, x, y, width, height, blendmode=None):
+        global _engine
+        if blendmode not in [None, Opaque, Matte]:
+            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
+        imageEl = _engine.getImageEl(image._path)
+        _engine.ctx.drawImage(imageEl, 0, 0, image.width, image.height, x, y, width, height)
 
-    @staticmethod
-    def ShowPage():
+    def ShowPage(self):
         global _engine
         _engine.displayCtx.drawImage(_engine.canvasEl, 0, 0)
+        # Pretty sure any clipping gets reset here...
+        #self.ClipScreen()
 
     # TODO other members...
 
@@ -227,11 +330,12 @@ class _Engine(object):
         self.imageEls = {}
         self.startMsec = None
         self.width = None
+        self.maps = None
 
     def getImageEl(self, imagePath):
         return self.imageEls[imagePath]
 
-    def run(self, task, imagePaths):
+    def run(self, task, mapsPath, imagePaths):
         self.startMsec = window.Date.now()
         self.width = 320
         self.height = 240
@@ -248,6 +352,9 @@ class _Engine(object):
             ctx.webkitImageSmoothingEnabled = False
             ctx.msImageSmoothingEnabled = False
             ctx.imageSmoothingEnabled = False
+            # We maintain one pristine state on the stack for resetting
+            # clipping.
+            ctx.save()
             return (el, ctx)
 
         self.canvasEl, self.ctx = makeCanvasAndContext()
@@ -276,8 +383,19 @@ class _Engine(object):
                 imageEl.style.left = "0"
                 imageEl.style.opacity = "0"
                 window.document.body.appendChild(imageEl)
-            promise = window.Promise.new(loadImage)
-            promises.append(promise)
+            promises.append(window.Promise.new(loadImage))
+
+        def loadJson(resolve, reject):
+            xhr = window.XMLHttpRequest.new()
+            def onLoad(*args):
+                self.maps = window.JSON.parse(xhr.responseText)
+                # TODO: Error handling?
+                resolve()
+            xhr.addEventListener('load', onLoad)
+            # TODO: Error handling?
+            xhr.open('GET', mapsPath)
+            xhr.send()
+        promises.append(window.Promise.new(loadJson))
 
         def onKeyDown(event):
             global _KeycodeMap
@@ -303,7 +421,7 @@ class _Engine(object):
         window.addEventListener('keydown', onKeyDown, True)
         window.addEventListener('keyup', onKeyUp, True)
 
-        def drawFrame(timestamp):
+        def runFrame(timestamp):
             nonlocal task
             try:
                 value = next(task)
@@ -311,19 +429,19 @@ class _Engine(object):
                 print("Engine done.")
                 task = None
             else:
-                window.requestAnimationFrame(drawFrame)
+                window.requestAnimationFrame(runFrame)
 
         def startEngine(obj):
             print("Starting engine...")
-            window.requestAnimationFrame(drawFrame)
+            window.requestAnimationFrame(runFrame)
 
         window.Promise.all(promises).then(startEngine)
 
 _engine = None
 
-def Run(task, imagePaths):
+def Run(task, mapsPath, imagePaths):
     global _engine
     if _engine is not None:
         raise RuntimeError("Already started")
     _engine = _Engine()
-    _engine.run(task, imagePaths)
+    _engine.run(task, mapsPath, imagePaths)

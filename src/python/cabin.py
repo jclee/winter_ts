@@ -73,7 +73,7 @@ def textBox(where, txt):
 
 #------------------------------------------------------------------------------
 
-def text(where, txt):
+def textTask(where, txt):
     """Displays a text frame.
 
     Where can be either a point or an ika entity.
@@ -84,41 +84,40 @@ def text(where, txt):
         draw()
         frame.draw()
         ika.Video.ShowPage()
-        ika.Input.Update()
+        yield from ika.Input.UpdateTask()
 
 #------------------------------------------------------------------------------
 
+def animateHelper(ent, frames, delay, loop):
+    while True:
+        for frame in frames:
+            ent.specframe = frame
+            d = delay
+            while d > 0:
+                d -= 1
+                draw()
+                ika.Video.ShowPage()
+                yield from ika.DelayTask(1)
+                if controls.attack():
+                    return
+        if not loop:
+            return
+
 def animate(ent, frames, delay, thing=None, loop=True, text=None):
-    class AnimException(Exception):
-        pass
     # frames should be a list of (frame, delay) pairs.
     if thing is not None:
         crap.append(thing)
     if text is not None:
         text = textBox(ent, text)
         crap.append(text)
-    try:
-        while True:
-            for frame in frames:
-                ent.specframe = frame
-                d = delay
-                while d > 0:
-                    d -= 1
-                    draw()
-                    ika.Video.ShowPage()
-                    ika.Delay(1)
-                    ika.Input.Update()
-                    if controls.attack():
-                        loop = False
-                        raise AnimException
-            if not loop:
-                raise AnimException
-    except:  #except what?
-        if thing:
-            crap.remove(thing)
-        if text:
-            crap.remove(text)
-        ent.specframe = 0
+
+    yield from animateHelper(ent, frames, delay, loop)
+
+    if thing is not None:
+        crap.remove(thing)
+    if text is not None:
+        crap.remove(text)
+    ent.specframe = 0
 
 #------------------------------------------------------------------------------
 # Scene code
@@ -127,11 +126,11 @@ def animate(ent, frames, delay, thing=None, loop=True, text=None):
 _scenes = {}
 
 # TODO: transitions
-def scene(name):
+def sceneTask(name):
     global grandpa, kid1, kid2, kid3
-    savedPos = [(e.x, e.y) for e in system.engine.entities]
+    savedPos = [(e.x, e.y) for e in system.engineObj.entities]
     # hide 'em all
-    for e in system.engine.entities:
+    for e in system.engineObj.entities:
         e.x, e.y = -100, -100
 
     ika.Map.Switch('maps/cabinmap.ika-map')
@@ -140,20 +139,20 @@ def scene(name):
     kid2 = ika.Map.entities['kid2']
     kid3 = ika.Map.entities['kid3']
 
-    xi.effects.fadeIn(100)
+    yield from xi.effects.fadeInTask(100)
 
-    _scenes[name]()
+    yield from _scenes[name]()
     setattr(savedata, name, 'True')
 
-    xi.effects.fadeOut(100)
+    yield from xi.effects.fadeOutTask(100)
 
-    grandpa = kid1 = kid2 = kid3 = None
+    #grandpa = kid1 = kid2 = kid3 = None
 
-    # FIXME? AutoExec will be called when you do this!
-    if system.engine.mapName:
-        ika.Map.Switch('maps/' + system.engine.mapName)
-        for e, pos in zip(system.engine.entities, savedPos):
-            e.x, e.y = pos
+    ## FIXME? AutoExec will be called when you do this!
+    #if system.engineObj.mapName:
+    #    ika.Map.Switch('maps/' + system.engineObj.mapName)
+    #    for e, pos in zip(system.engineObj.entities, savedPos):
+    #        e.x, e.y = pos
 
 # name : function pairs
 def addScene(function):
@@ -176,115 +175,73 @@ TALKING = (
     [NOD]
 )
 
-speech = text
-narration = lambda t: animate(grandpa, TALKING, 25, text=t)
+speech = textTask
+def narration(t):
+    yield from animate(grandpa, TALKING, 25, text=t)
 
 #------------------------------------------------------------------------------
 # Scenes
 #------------------------------------------------------------------------------
 
-def fake_scene_1():
-    speech(grandpa, "Listen kids, for in my drunken stupour, I shall tell a tale like none you've ever heard!")
-    speech(grandpa, '*hic*')
-    speech(kid1, 'All right!  Alchohol induced ranting!')
-    speech(kid2, 'COCKS')
-    speech(kid3, 'POTTYMOUTH')
-    speech(kid2, 'You just shut the fuck up, freak!')
-    speech(kid3, ':(')
-    speech(grandpa, 'And thus, the world exploded.')
-
-
-def fake_intro():
-    speech(grandpa, 'Heeeeey kids!')
-    speech(grandpa, "Sit back, fuckers, 'cause I'm gonna tell you a story, and you're going enjoy it whether you want to or not.")
-    speech(kid1, '....')
-    speech(kid2, 'Who are you, and what are you doing in our house?')
-    animate(kid3, (0, 1), delay=20,
-        text="PLEASE DON'T RAPE ME"
-    )
-    animate(grandpa, (6, 0, 7, 0), delay=100,
-        text='The curse compels me to rant about shit you do not care about to atone for my previous child molestations.'
-    )
-    speech(kid2, 'HURRAY STORY TIME')
-    speech(kid1, 'Tell us a story about ramming your old wrinkly dick in baby orofices!')
-
-    speech(grandpa, 'It was a dark and stormy night!')
-    speech(grandpa, 'Perfect for a night on the town.')
-    speech(grandpa, 'Except that, as a child molester, I had to live far away from town.')
-    speech(kid3, 'OMG')
-    speech(grandpa, 'So, anyway, there I was in the middle of nowhere, off to town so I could find somewhere cozy to hide my cock....')
-
-
 def intro():
-    speech(kid1, 'Tell us a story!')
-    animate(kid2, (1,), delay=10, text='Yeah, the one about the ice man!')
-    animate(kid3, (0, 1), delay=20, text="Yeah!!")
-    speech(grandpa, "Isn't that story a little scary?")
-    speech(kid1, 'No!')
-    speech(kid2, 'Please tell us!')
-    speech(grandpa, 'Oh all right.  Ahem.')
-    animate(kid3, (0, 1), delay=20, text="I'm scared!!")
+    yield from speech(kid1, 'Tell us a story!')
+    yield from animate(kid2, (1,), delay=10, text='Yeah, the one about the ice man!')
+    yield from animate(kid3, (0, 1), delay=20, text="Yeah!!")
+    yield from speech(grandpa, "Isn't that story a little scary?")
+    yield from speech(kid1, 'No!')
+    yield from speech(kid2, 'Please tell us!')
+    yield from speech(grandpa, 'Oh all right.  Ahem.')
+    yield from animate(kid3, (0, 1), delay=20, text="I'm scared!!")
 
     tint.tint = 200
 
-    narration("""\
+    yield from narration("""\
 Across the frozen hills of Kuladriat, hunters pursue a man like any other \
 prey.  Ever-northward their prey runs, till at last, at the foot of Mount \
 Durinar, a chasm of ice confronts him.""")
 
-    narration("""\
+    yield from narration("""\
 The crack of a bow sounds across the vale; an instant later its arrow burying \
 itself in the leg of the hunted man.  His legs buckle beneath him, and he \
 tumbles down the cold ravine--""")
 
-    narration("""--the sound of stone 'gainst stone resounding.""")
+    yield from narration("""--the sound of stone 'gainst stone resounding.""")
     
     tint.tint = 0
 
-    narration("""\
+    yield from narration("""\
 A sharp whistle signifies the hunt's end.  The hunters will not bother \
 to claim their prize, for it is far too cold--his fate is come.""")
-
-
-
-def impasse():
-    narration("""\
-The stone walls seemed to draw in closer, choking the very breath \
-from him; the way was sealed.  However, as despair welled within \
-him, a glint of hope shone through as light through the gelid rock.  \
-If only there were some way to breach it...""")
-
 
 
 def nearend():
     
     tint.tint = 200
     
-    narration("""\
+    yield from narration("""\
 As he neared his journey's end, he grew tired, and cold, and hungry.""")
 
-    narration("""He was willing to do anything to make such neverending \
+    yield from narration("""He was willing to do anything to make such neverending \
 misery cease, once and for all.""")
 
-    narration("""\
+    yield from narration("""\
 He considered... going back from whence he came, then.""")
 
-    narration("""But, if he were to do so, he would then have to face the \
+    yield from narration("""But, if he were to do so, he would then have to face the \
 same trials which had taken such a weary toll on his spirit to begin with.""")
 
     tint.tint = 0
     
-    speech(kid1, 'Did he go back?')
-    speech(kid2, 'Yeah!')
-    speech(kid3, "No way! He's way too brave!! Yeah!!")
+    yield from speech(kid1, 'Did he go back?')
+    yield from speech(kid2, 'Yeah!')
+    yield from speech(kid3, "No way! He's way too brave!! Yeah!!")
     
-    narration("""\
+    yield from narration("""\
 In the end, no one knows whether he attempted to return... all that is important \
 is the outcome.""")
 
-    narration("""But should he have gone back, he would have found the greatest reward \
+    yield from narration("""But should he have gone back, he would have found the greatest reward \
 of all.  Not peace... and not relief... but courage.  The courage to continue again.""")
-
 
 
 #------------------------------------------------------------------------------
@@ -292,10 +249,4 @@ of all.  Not peace... and not relief... but courage.  The courage to continue ag
 #------------------------------------------------------------------------------
 
 addScene(intro)
-#addScene(rune_of_water)
-#addScene(rune_of_fire)
-#addScene(rune_of_wind)
-#addScene(impasse)
 addScene(nearend)
-#addScene(forebattle)
-#addScene(epilogue)

@@ -132,32 +132,36 @@ class Engine(object):
         self.camera.center()
         self.things.append(self.camera)
 
-    def beginNewGame(self):
+    def beginNewGameTask(self):
         saveload.SaveGame.clearSaveFlags()
-        cabin.scene('intro')
+        yield from cabin.sceneTask('intro')
 
-        self.mapSwitch(START_MAP, START_POS, fade = False)
-        lay = ika.Map.GetMetaData()['entityLayer']
+        # TODO DO NOT COMMIT - make work
+        #self.mapSwitch(START_MAP, START_POS, fade = False)
+        #lay = ika.Map.GetMetaData()['entityLayer']
 
-        self.init()
+        #self.init()
 
-        # insanely inefficient:
-        bleh = effects.createBlurImages()
-        self.draw()
-        effects.blurFade(50, bleh, effects.createBlurImages())
-        self.run()
+        ## insanely inefficient:
+        #bleh = effects.createBlurImages()
+        #self.draw()
+        #effects.blurFade(50, bleh, effects.createBlurImages())
+        #self.run()
 
-    def loadGame(self):
-        import saveloadmenu
-        result = saveloadmenu.loadMenu(fadeOut=False)
-        if result:
-            bleh = effects.createBlurImages()
-            saveload.SaveGame.clearSaveFlags()
-            self.mapSwitch(result.mapName, result.pos,  fade=False)
-            self.init(result)
-            self.draw()
-            effects.blurFade(50, bleh, effects.createBlurImages())
-            self.run()
+    def loadGameTask(self):
+        while False:
+            yield None
+        raise NotImplementedError() # TODO - make work
+        #import saveloadmenu
+        #result = saveloadmenu.loadMenu(fadeOut=False)
+        #if result:
+        #    bleh = effects.createBlurImages()
+        #    saveload.SaveGame.clearSaveFlags()
+        #    self.mapSwitch(result.mapName, result.pos,  fade=False)
+        #    self.init(result)
+        #    self.draw()
+        #    effects.blurFade(50, bleh, effects.createBlurImages())
+        #    self.run()
 
     def mapSwitch(self, mapName, dest = None, fade = True):
         if fade:

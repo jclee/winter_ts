@@ -10,6 +10,7 @@ import system
 def main():
     ika.Run(
         task=system.mainTask(),
+        mapsPath='winter/maps.json',
         imagePaths=[
             'gfx/gba.png',
             'gfx/isabigfatbitch.png',
@@ -70,6 +71,8 @@ def main():
             'gfx/ui/win_top_left.png',
             'gfx/ui/win_top_right.png',
             'gfx/yourmother.png',
+            'winter/snowy.png',
+            'winter/system_font.png',
         ],
     )
 

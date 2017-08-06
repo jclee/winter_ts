@@ -38,8 +38,8 @@ class ScrollableTextLabel(gui.StaticText):
         y = self.y + yoffset
         ika.Video.ClipScreen(x, y, x + self.width, y + self.height)
 
-        firstLine = self.ywin / self.font.height
-        lastLine = (self.height + self.ywin) / self.font.height + 1
+        firstLine = self.ywin // self.font.height
+        lastLine = (self.height + self.ywin) // self.font.height + 1
 
         curY = y - self.ywin % self.font.height
         for line in self.text[firstLine:lastLine]:
