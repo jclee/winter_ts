@@ -105,28 +105,37 @@ class Font(object):
         self._file_name = file_name
         self.height = 10
 
-        self._glyphIndexes = [0] * 256
-        for i in range(0, 96):
-            self._glyphIndexes[i + 32] = i
-
     # TODO other members...
     def StringWidth(self, s):
-        # Not handling variable-width font for now.
-        return len(s) * 9
+        global _engine
+        w = 0
+        subset = _engine.systemFontData['subsets'][0]
+        widths = _engine.systemFontData['widths']
+        for ch in s:
+            if ch in ['\n', '\t', '~']:
+                raise NotImplementedError() # TODO
+            index = subset[ord(ch)]
+            w += widths[index] + 1
+        return w
 
     def Print(self, x, y, text):
+        global _engine
         imageEl = _engine.getImageEl('winter/system_font.png')
         cursorX = x
         cursorY = y
+        subset = _engine.systemFontData['subsets'][0]
+        widths = _engine.systemFontData['widths']
+        heights = _engine.systemFontData['heights']
         for (i, ch) in enumerate(text):
             if ch in ['\n', '\t', '~']:
                 raise NotImplementedError() # TODO
-            index = self._glyphIndexes[ord(ch)]
+            index = subset[ord(ch)]
+            w = widths[index] + 1
+            h = heights[index]
             tileX = (index % 16) * 9
             tileY = (index // 16) * 10
-            _engine.ctx.drawImage(imageEl, tileX, tileY, 8, 8, cursorX, cursorY, 8, 8)
-            cursorX += 8
-        pass # TODO DO NOT COMMIT
+            _engine.ctx.drawImage(imageEl, tileX, tileY, w, h, cursorX, cursorY, w, h)
+            cursorX += w
 
 class Image(object):
     def __init__(self, init_arg):
@@ -335,10 +344,11 @@ class _Engine(object):
     def getImageEl(self, imagePath):
         return self.imageEls[imagePath]
 
-    def run(self, task, mapsPath, imagePaths):
+    def run(self, task, mapsPath, imagePaths, systemFontData):
         self.startMsec = window.Date.now()
         self.width = 320
         self.height = 240
+        self.systemFontData = systemFontData
 
         Video.xres = self.width
         Video.yres = self.height
@@ -439,9 +449,9 @@ class _Engine(object):
 
 _engine = None
 
-def Run(task, mapsPath, imagePaths):
+def Run(task, mapsPath, imagePaths, systemFontData):
     global _engine
     if _engine is not None:
         raise RuntimeError("Already started")
     _engine = _Engine()
-    _engine.run(task, mapsPath, imagePaths)
+    _engine.run(task, mapsPath, imagePaths, systemFontData)

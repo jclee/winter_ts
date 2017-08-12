@@ -20,6 +20,7 @@ def export_font(source_path, dest_path):
     ensure_dir_path_exists(dest_path)
     font = readFont(source_path)
     writeFontImage(font, dest_path)
+    #dumpFontInfo(font)
 
 def readFont(path):
     with open(path, 'rb') as f:
@@ -67,6 +68,15 @@ def writeFontImage(font, path):
         y = (i // 16) * max_height
         font_im.paste(im, (x, y))
     font_im.save(path)
+
+def dumpFontInfo(font):
+    obj = {
+        'subsets': font.subsets,
+        'widths': [x[0] for x in font.glyphs],
+        'heights': [x[1] for x in font.glyphs],
+    }
+    with open('fontdata.py', 'wt') as f:
+        f.write(repr(obj))
 
 class Font(object):
     def __init__(self, subsets, glyphs):
