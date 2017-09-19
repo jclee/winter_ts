@@ -12,7 +12,7 @@ os.chdir(_PROJ_ROOT)
 sys.path.append(os.path.join(_PROJ_ROOT))
 
 from tool.export_font import export_font
-from tool.export_sprite import export_sprite
+from tool.export_sprite import readSprite, writeSpriteImage
 from tool.export_tile_lib import export_tile_lib
 from tool.export_map import readMap
 
@@ -42,8 +42,22 @@ def main():
     for path in data_paths['.fnt']:
         export_font(path, make_dest_path(path, '.png'))
 
+    sprites = {}
     for path in data_paths['.ika-sprite']:
-        export_sprite(path, make_dest_path(path, '.png'))
+        sprite_name = os.path.splitext(os.path.split(path)[1])[0]
+        sprite = readSprite(path)
+        writeSpriteImage(sprite, make_dest_path(path, '.png'))
+        sprites[sprite_name] = {
+            'width': sprite.width,
+            'height': sprite.height,
+            'count': len(sprite.frames),
+            'hotspotX': sprite.hotspotX,
+            'hotspotY': sprite.hotspotY,
+            'hotspotWidth': sprite.hotspotWidth,
+            'hotspotHeight': sprite.hotspotHeight,
+        }
+    with open('build/winter/sprites.json', 'wt') as f:
+        f.write(json.dumps(sprites, separators=(',',':')))
 
     for path in data_paths['.vsp']:
         export_tile_lib(path, make_dest_path(path, '.png'))

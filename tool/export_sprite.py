@@ -65,7 +65,15 @@ def readSprite(path):
     for i in range(frame_count):
         frames.append(pix_data[i * frame_data_size:(i+1) * frame_data_size])
 
-    sprite = Sprite(width, height, frames)
+    sprite = Sprite(
+        width=width,
+        height=height,
+        frames=frames,
+        hotspotX=hotspotX,
+        hotspotY=hotspotY,
+        hotspotWidth=hotspotWidth,
+        hotspotHeight=hotspotHeight,
+    )
     return sprite
 
 def writeSpriteImage(sprite, path):
@@ -82,10 +90,23 @@ def writeSpriteImage(sprite, path):
     sprite_im.save(path)
 
 class Sprite(object):
-    def __init__(self, width, height, frames):
+    def __init__(
+        self,
+        width,
+        height,
+        frames,
+        hotspotX,
+        hotspotY,
+        hotspotWidth,
+        hotspotHeight,
+    ):
         self.width = width
         self.height = height
         self.frames = frames
+        self.hotspotX = hotspotX
+        self.hotspotY = hotspotY
+        self.hotspotWidth = hotspotWidth
+        self.hotspotHeight = hotspotHeight
 
 if __name__ == '__main__':
     main()
