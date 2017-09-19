@@ -87,16 +87,16 @@ class _JoystickClass(object):
     # TODO other members...
 
 class Entity(object):
-    def __init__(self, label, x, y, sprite):
-        self._label = label
+    def __init__(self, x, y, layer, spritename):
         self.x = x
         self.y = y
+        self.layer = layer
+        self.spritename = spritename
         # TODO DO NOT COMMIT - handle other sprite sizes
         self.width = 32
         self.height = 32
         self.hotwidth = 32
         self.hotheight = 32
-        self._sprite = sprite
 
     # TODO other members...
 
@@ -216,13 +216,13 @@ class _MapClass(object):
         self.ywin = 0
 
         mapData = _engine.maps[self._currentMapName]
-        for layer in mapData.layers:
+        for (i, layer) in enumerate(mapData.layers):
             for entity in layer.entities:
                 self.entities[entity.label] = Entity(
-                    label=entity.label,
                     x=entity.x,
                     y=entity.y,
-                    sprite=entity.sprite,
+                    layer=i,
+                    spritename=entity.sprite,
                 )
 
     # TODO other members...
