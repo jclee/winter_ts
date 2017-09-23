@@ -223,8 +223,9 @@ class _MapClass(object):
         #
         # SetRenderList is not used by the game.
         for (i, layer) in enumerate(mapData.layers):
-            xw = (self.xwin * layer.parallax.mulx // layer.parallax.divx) - layer.position.x
-            yw = (self.ywin * layer.parallax.muly // layer.parallax.divy) - layer.position.y
+            # This game doesn't use layer position
+            xw = (self.xwin * layer.parallax.mulx // layer.parallax.divx)
+            yw = (self.ywin * layer.parallax.muly // layer.parallax.divy)
             firstX = xw // tileW
             firstY = yw // tileH
             adjustX = xw % tileW
@@ -267,6 +268,29 @@ class _MapClass(object):
                         tileW,
                         tileH
                     )
+
+            for (_, ent) in layerEnts[i]:
+                # This game doesn't seem to use custom renderscripts
+
+                spritePath = 'sprite/' + ent.spritename[:-len('.ika-sprite')] + '.png'
+                spriteImageEl = _engine.getImageEl(spritePath)
+
+                frameIndex = max(0, ent.specframe)
+                frameX = (frameIndex % 8) * ent.spritewidth
+                frameY = (frameIndex // 8) * ent.spriteheight
+
+                # This game doesn't use sprite visibility toggling.
+                _engine.ctx.drawImage(
+                    spriteImageEl,
+                    frameX,
+                    frameY,
+                    ent.spritewidth,
+                    ent.spriteheight,
+                    ent.x - ent.hotx - xw,
+                    ent.y - ent.hoty - yw,
+                    ent.spritewidth,
+                    ent.spriteheight
+                )
 
     def Switch(self, path):
         global _engine
