@@ -14,7 +14,7 @@ def finalBattle():
     else:
         savedata['finalbattle'] = 'True'
 
-        p = system.engine.player
+        p = system.engineObj.player
 
         def walkUp():
             p.move(dir.UP, 128)
@@ -25,8 +25,8 @@ def finalBattle():
         p.state = walkUp()
 
         for n in range(128):
-            system.engine.tick()
-            system.engine.draw()
+            system.engineObj.tick()
+            system.engineObj.draw()
             ika.Video.ShowPage()
             ika.Input.Update()
 
@@ -41,8 +41,8 @@ def finalBattle():
             # teh earthquake
             ika.Map.xwin += ika.Random(-4, 5)
             ika.Map.ywin += ika.Random(-4, 5)
-            system.engine.tick()
-            system.engine.draw()
+            system.engineObj.tick()
+            system.engineObj.draw()
             ika.Video.ShowPage()
             ika.Input.Update()
 
@@ -50,22 +50,22 @@ def finalBattle():
             ika.Entity(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
             )
         s.anim = 'appear'
-        system.engine.addEntity(s)
+        system.engineObj.addEntity(s)
 
         for n in range(19, 32):
             # close off the way back
             ika.Map.SetTile(n, 38, p.layer, 26)
             ika.Map.SetTile(n, 39, p.layer, 32)
             ika.Map.SetObs(n, 38, p.layer, True)
-            system.engine.tick()
-            system.engine.draw()
+            system.engineObj.tick()
+            system.engineObj.draw()
             ika.Video.ShowPage()
             ika.Input.Update()
 
         p.state = p.defaultState()
 
         s.state = s.roarState()
-        system.engine.synchTime()
+        system.engineObj.synchTime()
 
 def to31():
     pass

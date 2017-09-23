@@ -12,11 +12,11 @@ class Dynamite(Entity):
 
         if self.flagName in savedata.__dict__:
             ent.x = ent.y = -100
-            system.engine.destroyEntity(self)
+            system.engineObj.destroyEntity(self)
 
     def update(self):
         assert self.flagName not in self.__dict__, 'Already have this.  Why are we updating?'
-        if self.touches(system.engine.player):
+        if self.touches(system.engineObj.player):
             setattr(savedata, self.flagName, 'True')
-            system.engine.destroyEntity(self)
-            system.engine.things.append(Caption('~1Got a stick of dynamite!'))
+            system.engineObj.destroyEntity(self)
+            system.engineObj.things.append(Caption('~1Got a stick of dynamite!'))

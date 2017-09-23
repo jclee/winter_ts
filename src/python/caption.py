@@ -5,7 +5,7 @@ from thing import Thing
 class Caption(Thing):
 
     def __init__(self, text, x = None, y = None, duration=200):
-        font = system.engine.font
+        font = system.engineObj.font
 
         width = font.StringWidth(text)
         height = font.height

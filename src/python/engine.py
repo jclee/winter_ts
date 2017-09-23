@@ -136,10 +136,10 @@ class Engine(object):
         saveload.SaveGame.clearSaveFlags()
         yield from cabin.sceneTask('intro')
 
-        # TODO DO NOT COMMIT - make work
-        #self.mapSwitch(START_MAP, START_POS, fade = False)
-        #lay = ika.Map.GetMetaData()['entityLayer']
+        self.mapSwitch(START_MAP, START_POS, fade = False)
+        lay = ika.Map.GetMetaData()['entityLayer']
 
+        # TODO DO NOT COMMIT - make work
         #self.init()
 
         ## insanely inefficient:
@@ -349,11 +349,11 @@ class Engine(object):
             self.killList.remove(self.player)
             self.clearKillQueue()
 
-        for ent in ika.Map.entities.itervalues():
+        for ent in ika.Map.entities.values():
             try:
-                self.addEntity(spawnMap[ent.sprite](ent))
+                self.addEntity(spawnMap[ent.spritename](ent))
             except KeyError:
-                print('Unknown entity sprite %s.  Ignoring.' % ent.sprite)
+                print('Unknown entity sprite %s.  Ignoring.' % ent.spritename)
 
     def clearKillQueue(self):
         # it's a bad idea to tweak the entity list in the middle of an iteration,

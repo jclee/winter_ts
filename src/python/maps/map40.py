@@ -3,11 +3,11 @@ import snow
 import system
 
 def AutoExec():
-    #system.engine.mapThings.append(snow.Snow(600, velocity=(.4, 1), colour=ika.RGB(192,192,255)))
-    system.engine.background = ika.Image('gfx/mountains.png')
+    #system.engineObj.mapThings.append(snow.Snow(600, velocity=(.4, 1), colour=ika.RGB(192,192,255)))
+    system.engineObj.background = ika.Image('gfx/mountains.png')
 
 def to39():
     offset_from = 8 * 16  # first vertical pos possible
     offset_to = 5 * 16  # first vertical pos possible
-    x = system.engine.player.x - offset_from + offset_to
-    system.engine.mapSwitch('map39.ika-map', (x, 38 * 16))
+    x = system.engineObj.player.x - offset_from + offset_to
+    system.engineObj.mapSwitch('map39.ika-map', (x, 38 * 16))

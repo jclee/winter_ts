@@ -14,12 +14,12 @@ class SavePoint(Entity):
         self.invincible = True
 
     def update(self):
-        t = self.touches(system.engine.player)
+        t = self.touches(system.engineObj.player)
         if t and not self.isTouching:
             # bump the player backward, so he's not touching us anymore.
-            xi.effects.fadeOut(50, draw=system.engine.draw)
+            xi.effects.fadeOut(50, draw=system.engineObj.draw)
 
-            p = system.engine.player
+            p = system.engineObj.player
             p.stats.hp = 999
             p.stats.mp = 999
 
@@ -30,10 +30,10 @@ class SavePoint(Entity):
             # "Do you wish to save?" "Yes/No"
 
             self.isTouching = True
-            system.engine.draw()
+            system.engineObj.draw()
             saveloadmenu.saveMenu()
-            xi.effects.fadeIn(50, draw=system.engine.draw)
-            system.engine.synchTime()
+            xi.effects.fadeIn(50, draw=system.engineObj.draw)
+            system.engineObj.synchTime()
 
         elif not t:
             self.isTouching = False

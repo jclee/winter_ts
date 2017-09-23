@@ -17,7 +17,7 @@ class SaveGame(object):
             self.load(fileName)
 
     def getStats(self):
-        self.stats = system.engine.player.stats.clone()
+        self.stats = system.engineObj.player.stats.clone()
 
     def getFlags(self):
         self.flags = {}
@@ -26,7 +26,7 @@ class SaveGame(object):
                 self.flags[k] = v
 
     def setStats(self):
-        system.engine.player.stats = self.stats.clone()
+        system.engineObj.player.stats = self.stats.clone()
 
     def setFlags(self):
         self.clearSaveFlags()
@@ -47,8 +47,8 @@ class SaveGame(object):
         s = SaveGame()
         s.getStats()
         s.getFlags()
-        s.mapName = system.engine.mapName
-        p = system.engine.player
+        s.mapName = system.engineObj.mapName
+        p = system.engineObj.player
         s.pos = (p.x, p.y, p.layer)
         return s
 

@@ -113,9 +113,9 @@ class AnkleBiter(Enemy):
     def die(self, *args):
         # When one dies, the others scatter
 
-        ents = [system.engine.entFromEnt[x] for x in
+        ents = [system.engineObj.entFromEnt[x] for x in
             ika.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
-            if x in system.engine.entFromEnt]
+            if x in system.engineObj.entFromEnt]
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
         for a in allies:
@@ -127,7 +127,7 @@ class AnkleBiter(Enemy):
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
         # for now fuckit.  Attack the player!!
-        p = system.engine.player
+        p = system.engineObj.player
         for q in range(5):
             d = dir.fromDelta(p.x - self.x, p.y - self.y)
             dist = math.hypot(p.x - self.x, p.y - self.y)
@@ -139,7 +139,7 @@ class AnkleBiter(Enemy):
 
     def fleeMood(self):
         MIN_DIST = 150
-        p = system.engine.player
+        p = system.engineObj.player
         for q in range(5):
             d = dir.fromDelta(p.x - self.x, p.y - self.y)
             dist = math.hypot(p.x - self.x, p.y - self.y)
@@ -153,7 +153,7 @@ class AnkleBiter(Enemy):
         yield self.idleState()
 
     def passiveMood(self):
-        p = system.engine.player
+        p = system.engineObj.player
         self._animator.kill = True
         while True:
             dist = math.hypot(p.x - self.x, p.y - self.y)

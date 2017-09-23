@@ -114,7 +114,7 @@ class Yeti(Enemy):
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
         # for now fuckit.  Attack the player!!
-        p = system.engine.player
+        p = system.engineObj.player
         for q in range(5):
             # compensate for the yeti's gigantic sprite:
             sx = self.x + 16
@@ -129,7 +129,7 @@ class Yeti(Enemy):
                 yield self.walkState(d, min(90, dist))
 
     def passiveMood(self):
-        p = system.engine.player
+        p = system.engineObj.player
         self._animator.kill = True
         while True:
             # compensate for the yeti's gigantic sprite:

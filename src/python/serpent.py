@@ -56,7 +56,7 @@ class Serpent(Enemy):
         self.bleh = self.watchMood()
 
     def die(self):
-        xi.effects.fadeOut(200, draw=system.engine.draw)
+        xi.effects.fadeOut(200, draw=system.engineObj.draw)
         ending.credits()
 
     def think(self):
@@ -82,7 +82,7 @@ class Serpent(Enemy):
         then try to bite.
         Roar every now and again.
         '''
-        p = system.engine.player
+        p = system.engineObj.player
 
         while True:
             # why is this necessary? O_o
@@ -116,7 +116,7 @@ class Serpent(Enemy):
             r = _biteRange[self._animator.index] + (self.layer,)
             ents = self.detectCollision(r)
             for e in ents:
-                d = max(1, self.stats.att - system.engine.player.stats.pres)
+                d = max(1, self.stats.att - system.engineObj.player.stats.pres)
                 e.hurt(d, 350, dir.DOWN)
             yield None
 
@@ -151,13 +151,13 @@ class Serpent(Enemy):
                     e = Carnivore(ika.Entity(x, y, self.layer, 'carnivore.ika-sprite'))
                 else:
                     e = AnkleBiter(ika.Entity(x, y, self.layer, 'anklebiter.ika-sprite'))
-                system.engine.addEntity(e)
+                system.engineObj.addEntity(e)
                 e.mood = e.attackMood
 
         # need to destroy old corpses (a first!)
-        for e in system.engine.entities:
+        for e in system.engineObj.entities:
             if e.stats.hp == 0 and isinstance(e, Enemy):
-                system.engine.destroyEntity(e)
+                system.engineObj.destroyEntity(e)
 
         while not self._animator.kill:
             n = self._animator.curFrame - 12

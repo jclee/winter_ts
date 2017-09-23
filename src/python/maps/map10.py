@@ -9,7 +9,7 @@ import savedata
 import sound
 
 def AutoExec():
-    engine = system.engine
+    engine = system.engineObj
 
     if 'fireguard' not in savedata.__dict__:
         engine.mapThings.append(RuneListener())
@@ -20,7 +20,7 @@ def AutoExec():
         engine.mapThings.append(DeathListener())
 
 def to9():
-    system.engine.mapSwitch('map09.ika-map', (system.engine.player.x, 1 * 16))
+    system.engineObj.mapSwitch('map09.ika-map', (system.engineObj.player.x, 1 * 16))
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the fire rune.'
@@ -33,14 +33,14 @@ class DeathListener(Thing):
             # in AutoExec. (if we had more time, I'd fix that problem instead of
             # doing this)
             sound.playMusic("music/Competative.xm")
-            self.yeti = system.engine.entFromEnt[
+            self.yeti = system.engineObj.entFromEnt[
                 ika.Map.entities['demiyeti']
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in savedata.__dict__:
                 e = ika.Entity(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
-                system.engine.addEntity(
+                system.engineObj.addEntity(
                     FireRune(e)
                     )
             else:
@@ -57,8 +57,8 @@ class RuneListener(object):
         if 'nearend' in savedata.__dict__:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
-            system.engine.addEntity(y)
-            system.engine.mapThings.append(DeathListener(y))
+            system.engineObj.addEntity(y)
+            system.engineObj.mapThings.append(DeathListener(y))
             return True
 
     def draw(self):

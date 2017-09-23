@@ -198,6 +198,7 @@ class _MapClass(object):
         self._currentMapName = None
         self.xwin = 0
         self.ywin = 0
+        self.layercount = None
 
     def Render(self):
         global _engine
@@ -303,6 +304,8 @@ class _MapClass(object):
         self.ywin = 0
 
         mapData = _engine.maps[self._currentMapName]
+        self.layercount = len(mapData.layers)
+
         for (i, layer) in enumerate(mapData.layers):
             for entity in layer.entities:
                 self.entities[entity.label] = Entity(
@@ -312,7 +315,31 @@ class _MapClass(object):
                     spritename=entity.sprite,
                 )
 
-    # TODO other members...
+    def GetMetaData(self):
+        global _engine
+        return dict(_engine.maps[self._currentMapName]['information']['meta'])
+
+    def GetZones(self, layerIndex):
+        global _engine
+        mapData = _engine.maps[self._currentMapName]
+        zoneMetadatas = mapData['zones']
+
+        zoneTuples = []
+        for zone in mapData['layers'][layerIndex].zones:
+            scriptName = None
+            for zoneMetadata in zoneMetadatas:
+                if zoneMetadata.label == zone.label:
+                    scriptName = zoneMetadata.script
+                    break
+
+            zoneTuples.append((
+                zone['x'],
+                zone['y'],
+                zone['width'],
+                zone['height'],
+                scriptName
+            ))
+        return zoneTuples
 
 Map = _MapClass()
 

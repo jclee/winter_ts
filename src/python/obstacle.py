@@ -20,7 +20,7 @@ class _Obstacle(Entity):
 
     def remove(self):
         self.x = self.y = -100
-        system.engine.destroyEntity(self)
+        system.engineObj.destroyEntity(self)
 
     def update(self):
         pass
@@ -83,7 +83,7 @@ class Boulder(_Obstacle):
         _Obstacle.__init__(self, *args)
 
     def update(self):
-        t = self.touches(system.engine.player)
+        t = self.touches(system.engineObj.player)
         if t and not self.isTouching:
             self.isTouching = True
 
@@ -96,8 +96,8 @@ class Boulder(_Obstacle):
                 # TODO: explode animation here
                 setattr(savedata, tnt[0], 'False')
                 setattr(savedata, self.flagName, 'Broken')
-                system.engine.destroyEntity(self)
-                system.engine.things.append(Caption('Blew the rock apart!'))
+                system.engineObj.destroyEntity(self)
+                system.engineObj.things.append(Caption('Blew the rock apart!'))
 
         else:
             self.isTouching = False

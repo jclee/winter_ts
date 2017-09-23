@@ -76,8 +76,8 @@ class Enemy(Entity):
         self.brain = None
         self.interruptable = True
         self.state = self.deathState(recoilSpeed, recoilDir)
-        system.engine.player.giveXP(self.stats.exp)
-        #system.engine.player.stats.mp += self.stats.exp # MP Regen for the player.
+        system.engineObj.player.giveXP(self.stats.exp)
+        #system.engineObj.player.stats.mp += self.stats.exp # MP Regen for the player.
 
     def deathState(self, recoilSpeed, recoilDir):
         self.invincible = True

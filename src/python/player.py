@@ -250,7 +250,7 @@ class Player(Entity):
             self.stats.exp -= self.stats.next
             self.stats.next = self.stats.level * (self.stats.level + 1) * 5
 
-        system.engine.things.append(Caption('Level %i!' % self.stats.level))
+        system.engineObj.things.append(Caption('Level %i!' % self.stats.level))
 
     def calcSpells(self):
         '''
@@ -363,7 +363,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.EntitiesAt(*rect)
             for e in ents:
-                x = system.engine.entFromEnt[e]
+                x = system.engineObj.entFromEnt[e]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 120, self.direction)
@@ -411,7 +411,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.EntitiesAt(*rect)
             for e in ents:
-                x = system.engine.entFromEnt[e]
+                x = system.engineObj.entFromEnt[e]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 130, self.direction)
@@ -461,7 +461,7 @@ class Player(Entity):
                 rect[1] = r[1] + self.y
                 ents = ika.EntitiesAt(*rect)
                 for e in ents:
-                    x = system.engine.entFromEnt[e]
+                    x = system.engineObj.entFromEnt[e]
                     if isinstance(x, Enemy) and not x.invincible:
                         x.hurt(int(self.stats.att * 1.5), 300, self.direction)
                         self.giveMPforHit()
@@ -569,8 +569,8 @@ class Player(Entity):
                     # TODO: some sort of nice animation.
                     setattr(savedata, e.flagName, 'Broken')
 
-                    system.engine.destroyEntity(e)
-                    system.engine.things.append(Caption('~1The ice melted!'))
+                    system.engineObj.destroyEntity(e)
+                    system.engineObj.things.append(Caption('~1The ice melted!'))
 
             yield None
 
@@ -586,12 +586,12 @@ class Player(Entity):
                 _self.speed = self.speed
                 _self.o = self.ent.entobs
                 _self.i = self.invincible
-                _self.l = system.engine.camera.locked
+                _self.l = system.engineObj.camera.locked
             def __del__(_self):
                 self.speed = _self.speed
                 self.ent.entobs = _self.o
                 self.invincible = _self.i
-                system.engine.camera.locked = _self.l
+                system.engineObj.camera.locked = _self.l
 
         saver = Saver()
 
@@ -609,7 +609,7 @@ class Player(Entity):
 
         self.stats.mp -= 15
 
-        camera = system.engine.camera
+        camera = system.engineObj.camera
 
         camera.locked = True
         dx, dy = dir.delta[self.direction]
@@ -685,8 +685,8 @@ class Player(Entity):
         for e in ents:
             if isinstance(e, IceChunks):
                 e.freeze()
-                system.engine.things.append(Caption('~1The ice froze over!'))
-                system.engine.destroyEntity(e)
+                system.engineObj.things.append(Caption('~1The ice froze over!'))
+                system.engineObj.destroyEntity(e)
                 break
 
         for i in range(45):

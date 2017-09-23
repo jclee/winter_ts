@@ -112,9 +112,9 @@ class RazorMane(Enemy):
     def die(self, *args):
         # When one dies, the others scatter
 
-        ents = [system.engine.entFromEnt[x] for x in
+        ents = [system.engineObj.entFromEnt[x] for x in
             ika.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
-            if x in system.engine.entFromEnt]
+            if x in system.engineObj.entFromEnt]
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 
         for a in allies:
@@ -124,11 +124,11 @@ class RazorMane(Enemy):
         super(RazorMane, self).die(*args)
 
     def playerDir(self):
-        p = system.engine.player
+        p = system.engineObj.player
         return dir.fromDelta(p.x - self.x - 10, p.y - self.y - 7)
 
     def playerDist(self):
-        p = system.engine.player
+        p = system.engineObj.player
         return math.hypot(p.x - self.x - 10, p.y - self.y - 7)
 
     def attackMood(self):
@@ -143,7 +143,7 @@ class RazorMane(Enemy):
 
     def stalkMood(self):
         DIST = 0
-        p = system.engine.player
+        p = system.engineObj.player
         # be DIST away, if at all possible
         while True:
             d = self.playerDir()
@@ -180,7 +180,7 @@ class RazorMane(Enemy):
         yield self.idleState()
 
     def passiveMood(self):
-        p = system.engine.player
+        p = system.engineObj.player
         self._animator.kill = True
         while True:
             dist = self.playerDist()

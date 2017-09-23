@@ -140,8 +140,8 @@ def playMusic(fname):
         music[fname] = m
 
     fader.reset(m)
-    if fader not in system.engine.things:
-        system.engine.things.append(fader)
+    if fader not in system.engineObj.things:
+        system.engineObj.things.append(fader)
 
 def killMusic():
     global musicName

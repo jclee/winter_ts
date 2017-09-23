@@ -10,11 +10,11 @@ spawned = 0
 def AutoExec():
     global spawned
     spawned = 0
-    system.engine.mapThings.append(snow.Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
-    system.engine.background = ika.Image('gfx/mountains.png')
+    system.engineObj.mapThings.append(snow.Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
+    system.engineObj.background = ika.Image('gfx/mountains.png')
     
 def to36():
-    system.engine.mapSwitch('map36.ika-map', (system.engine.player.x, 1 * 16))
+    system.engineObj.mapSwitch('map36.ika-map', (system.engineObj.player.x, 1 * 16))
     
 def releaseAnklebiters():
 
@@ -26,6 +26,6 @@ def releaseAnklebiters():
                    (4,11), (14, 11))
                    
         for i in indeces:
-            system.engine.addEntity(Carnivore(ika.Entity(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
+            system.engineObj.addEntity(Carnivore(ika.Entity(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
             
         spawned = 1

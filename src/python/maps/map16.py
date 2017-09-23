@@ -9,7 +9,7 @@ from thing import Thing
 from rune import WindRune
 
 def AutoExec():
-    system.engine.background = ika.Image('gfx/mountains.png')
+    system.engineObj.background = ika.Image('gfx/mountains.png')
 
     if 'bridge_broken' not in savedata.__dict__:
         for x in range(19, 22):
@@ -19,7 +19,7 @@ def AutoExec():
             ika.Map.entities['break_gap'].x = -100
 
     if 'windguard' not in savedata.__dict__ and 'nearend' in savedata.__dict__:
-        system.engine.things.append(RuneListener())
+        system.engineObj.things.append(RuneListener())
 
 
 def bridge_break():
@@ -44,7 +44,7 @@ def bridge_break():
         # This is really cheap.  Probably fragile too.  I'm stepping beyond
         # the game engine and directly twiddling with ika.
 
-        engine = system.engine
+        engine = system.engineObj
         p = engine.player
         p.stop()
         p.layer = 2
@@ -94,25 +94,25 @@ def bridge_break():
 
 def manaPool():
     if 'windrune' in savedata.__dict__ and ('nearend' not in savedata.__dict__ or 'windguard' in savedata.__dict__):
-        system.engine.player.stats.mp += 1
+        system.engineObj.player.stats.mp += 1
 
 def to13():
-    system.engine.mapSwitch('map13.ika-map', (78 * 16, system.engine.player.y))
+    system.engineObj.mapSwitch('map13.ika-map', (78 * 16, system.engineObj.player.y))
 
 def to17():
-    system.engine.mapSwitch('map17.ika-map', (1 * 16, system.engine.player.y))
+    system.engineObj.mapSwitch('map17.ika-map', (1 * 16, system.engineObj.player.y))
 
 def to19():
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 44 * 16  # first vertical pos possible
-    y = system.engine.player.y - offset_from + offset_to
-    system.engine.mapSwitch('map19.ika-map', (48 * 16, y))
+    y = system.engineObj.player.y - offset_from + offset_to
+    system.engineObj.mapSwitch('map19.ika-map', (48 * 16, y))
 
 def toLowerLayer():
-    system.engine.player.layer = 1
+    system.engineObj.player.layer = 1
 
 def toUpperLayer():
-    system.engine.player.layer = 3
+    system.engineObj.player.layer = 3
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the wind rune.'
@@ -124,7 +124,7 @@ class DeathListener(Thing):
             if 'windrune' not in savedata.__dict__:
                 e = ika.Entity(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
-                system.engine.addEntity(
+                system.engineObj.addEntity(
                     WindRune(e)
                     )
             else:
@@ -141,8 +141,8 @@ class RuneListener(object):
         if 'nearend' in savedata.__dict__:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
-            system.engine.addEntity(y)
-            system.engine.mapThings.append(DeathListener(y))
+            system.engineObj.addEntity(y)
+            system.engineObj.mapThings.append(DeathListener(y))
             return True
 
     def draw(self):

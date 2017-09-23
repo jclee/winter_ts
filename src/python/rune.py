@@ -12,15 +12,15 @@ class _Rune(Entity):
 
         if self.name in savedata.__dict__:
             self.x = -100
-            system.engine.destroyEntity(self)
+            system.engineObj.destroyEntity(self)
 
     def apply(self):
-        system.engine.player.calcSpells()
+        system.engineObj.player.calcSpells()
 
     def update(self):
-        if self.touches(system.engine.player):
-            system.engine.destroyEntity(self)
-            system.engine.addThing(Caption('~1You got the %s Rune!' % self.element))
+        if self.touches(system.engineObj.player):
+            system.engineObj.destroyEntity(self)
+            system.engineObj.addThing(Caption('~1You got the %s Rune!' % self.element))
             setattr(savedata, self.name, 'True')
             self.apply()
 
@@ -48,7 +48,7 @@ class BindingRune(_Rune):
 class StrengthRune(_Rune):
 
     def apply(self):
-        system.engine.player.stats.att += 2
+        system.engineObj.player.stats.att += 2
 
     element = property(lambda self: 'Strength')
 
@@ -56,8 +56,8 @@ class StrengthRune(_Rune):
 class GuardRune(_Rune):
 
     def apply(self):
-        system.engine.player.stats.pres += 2
-        system.engine.player.stats.mres += 2
+        system.engineObj.player.stats.pres += 2
+        system.engineObj.player.stats.mres += 2
 
     element = property(lambda self: 'Guard')
 
@@ -65,6 +65,6 @@ class GuardRune(_Rune):
 class PowerRune(_Rune):
 
     def apply(self):
-        system.engine.player.stats.mag += 2
+        system.engineObj.player.stats.mag += 2
 
     element = property(lambda self: 'Power')

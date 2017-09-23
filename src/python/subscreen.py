@@ -45,7 +45,7 @@ class SubScreenWindow(gui.Frame):
         return layout.VerticalBoxLayout()
 
     def update(self):
-        stats = system.engine.player.stats
+        stats = system.engineObj.player.stats
 
         self.layout.setChildren(self.createContents())
         self.layout.layout()
@@ -53,7 +53,7 @@ class SubScreenWindow(gui.Frame):
 
 class StatWindow(SubScreenWindow):
     def createContents(self):
-        stats = system.engine.player.stats
+        stats = system.engineObj.player.stats
         return (
             gui.StaticText(text='Level %02i' % stats.level),
             gui.StaticText(text='Exp'), gui.StaticText(text=' %06i/' % stats.exp),
@@ -77,7 +77,7 @@ class AttribWindow(SubScreenWindow):
         return layout.FlexGridLayout(cols=2, pad=0)
 
     def createContents(self):
-        stats = system.engine.player.stats
+        stats = system.engineObj.player.stats
         return (
             self.icons['att'], gui.StaticText(text='...%03i' % stats.att),
             self.icons['mag'], gui.StaticText(text='...%03i' % stats.mag),
@@ -94,7 +94,7 @@ class MagicWindow(SubScreenWindow):
 
     def createContents(self):
         txt = ['Magic:']
-        p = system.engine.player.stats
+        p = system.engineObj.player.stats
         if p.rend:
             txt.append('Z...Hearth Rend')
         if p.gale:

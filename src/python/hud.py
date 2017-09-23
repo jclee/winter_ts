@@ -95,8 +95,8 @@ class HPBar(Gauge):
         self.y = ika.Video.yres - self.left.height - 1
         self.colour = (255, 0, 0)
 
-    curVal = property(lambda self: system.engine.player.stats.hp)
-    curMax = property(lambda self: system.engine.player.stats.maxhp)
+    curVal = property(lambda self: system.engineObj.player.stats.hp)
+    curMax = property(lambda self: system.engineObj.player.stats.maxhp)
 
 class MPBar(Gauge):
     def __init__(self):
@@ -106,8 +106,8 @@ class MPBar(Gauge):
         self.oldMax = self.curMax
         self.oldVal = self.curVal
 
-    curVal = property(lambda self: system.engine.player.stats.mp)
-    curMax = property(lambda self: system.engine.player.stats.maxmp)
+    curVal = property(lambda self: system.engineObj.player.stats.mp)
+    curMax = property(lambda self: system.engineObj.player.stats.maxmp)
 
 class EXPBar(Gauge):
     def __init__(self):
@@ -121,5 +121,5 @@ class EXPBar(Gauge):
     def drawRect(self, x, y, w, h, opacity):
         super(EXPBar, self).drawRect(x, y, w, h - 1, opacity)
 
-    curVal = property(lambda self: system.engine.player.stats.exp * self.width / system.engine.player.stats.next)
+    curVal = property(lambda self: system.engineObj.player.stats.exp * self.width / system.engineObj.player.stats.next)
     curMax = property(lambda self: self.width)

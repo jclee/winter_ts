@@ -9,20 +9,20 @@ from soulreaver import SoulReaver
 import snow
 
 def AutoExec():
-    system.engine.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
+    system.engineObj.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
     if 'waterrune' not in savedata.__dict__:
-        system.engine.things.append(RuneListener())
+        system.engineObj.things.append(RuneListener())
     if 'nearend' in savedata.__dict__:
-        system.engine.things.append(RuneListener())
+        system.engineObj.things.append(RuneListener())
 
 def to3():
     offset_from = 11 * 16  # first horizontal pos possible
     offset_to = 8 * 16  # first horizontal pos possible
-    x = system.engine.player.x - offset_from + offset_to
-    system.engine.mapSwitch('map03.ika-map', (x, 1 * 16))
+    x = system.engineObj.player.x - offset_from + offset_to
+    system.engineObj.mapSwitch('map03.ika-map', (x, 1 * 16))
 
 def to5():
-    system.engine.mapSwitch('map05.ika-map', (10 * 16, 19 * 16))
+    system.engineObj.mapSwitch('map05.ika-map', (10 * 16, 19 * 16))
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the fire rune.'
@@ -42,13 +42,13 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in savedata.__dict__ and 'waterguard' not in savedata.__dict__:
             sound.playMusic("music/resurrection.it")
-            y = SoulReaver(ika.Entity(15* 16, 17 * 16, system.engine.player.layer, 'soulreaver.ika-sprite'))
-            system.engine.addEntity(y)
-            system.engine.mapThings.append(DeathListener(y))
+            y = SoulReaver(ika.Entity(15* 16, 17 * 16, system.engineObj.player.layer, 'soulreaver.ika-sprite'))
+            system.engineObj.addEntity(y)
+            system.engineObj.mapThings.append(DeathListener(y))
             return True
         elif 'waterrune' in savedata.__dict__ and 'nearend' not in savedata.__dict__:
-            system.engine.addEntity(
-                Yeti(ika.Entity(15* 16, 32 * 16, system.engine.player.layer, 'yeti.ika-sprite'))
+            system.engineObj.addEntity(
+                Yeti(ika.Entity(15* 16, 32 * 16, system.engineObj.player.layer, 'yeti.ika-sprite'))
                 )
             return True
 
