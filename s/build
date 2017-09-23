@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -15,6 +16,7 @@ from tool.export_font import export_font
 from tool.export_sprite import readSprite, writeSpriteImage
 from tool.export_tile_lib import export_tile_lib
 from tool.export_map import readMap
+from tool.util import ensure_dir_path_exists
 
 def get_data_paths(exts):
     d = dict(map(lambda ext: (ext, []), exts))
@@ -37,7 +39,7 @@ def main():
     subprocess.check_call(['tsc'], env=env)
 
     # Convert data
-    data_paths = get_data_paths(['.fnt', '.ika-map', '.ika-sprite', '.vsp'])
+    data_paths = get_data_paths(['.fnt', '.ika-map', '.ika-sprite', '.png', '.vsp'])
 
     for path in data_paths['.fnt']:
         export_font(path, make_dest_path(path, '.png'))
@@ -68,6 +70,11 @@ def main():
         maps[map_name] = readMap(path)
     with open('build/winter/maps.json', 'wt') as f:
         f.write(json.dumps(maps, separators=(',',':')))
+
+    for path in data_paths['.png']:
+        dest_path = make_dest_path(path, '.png')
+        ensure_dir_path_exists(dest_path)
+        shutil.copyfile(path, dest_path)
 
 if __name__ == '__main__':
     main()

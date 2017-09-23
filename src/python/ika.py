@@ -135,7 +135,7 @@ class Font(object):
 
     def Print(self, x, y, text):
         global _engine
-        imageEl = _engine.getImageEl('winter/system_font.png')
+        imageEl = _engine.getImageEl('system_font.png')
         cursorX = x
         cursorY = y
         subset = _engine.systemFontData['subsets'][0]
@@ -216,7 +216,7 @@ class _MapClass(object):
             ents.sort()
 
         # This game only uses a single tile map:
-        imageEl = _engine.getImageEl('winter/snowy.png')
+        imageEl = _engine.getImageEl('snowy.png')
 
         # SetCameraTarget (and SetPlayer, which calls it) are not used by the
         # game.
@@ -406,7 +406,7 @@ class _Engine(object):
         self.sprites = None
 
     def getImageEl(self, imagePath):
-        return self.imageEls[imagePath]
+        return self.imageEls['winter/' + imagePath]
 
     def run(self, task, mapsPath, spritesPath, imagePaths, systemFontData):
         self.startMsec = window.Date.now()
