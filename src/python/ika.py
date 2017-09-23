@@ -90,15 +90,30 @@ class Entity(object):
     def __init__(self, x, y, layer, spritename):
         self.x = x
         self.y = y
+
+        # Theoretically, we should turn these members into properties and do
+        # stuff when the client changes them, but the game in question does not
+        # modify them.
         self.layer = layer
         self.spritename = spritename
-        # TODO DO NOT COMMIT - handle other sprite sizes
-        self.width = 32
-        self.height = 32
-        self.hotwidth = 32
-        self.hotheight = 32
 
-    # TODO other members...
+        self.specframe = -1
+        self.name = None
+        self.movescript = None
+
+        self.speed = 100
+        self.isobs = True
+        self.mapobs = True
+        self.entobs = True
+
+        spriteData = _engine.sprites[spritename]
+
+        self.spritewidth = spriteData.width
+        self.spriteheight = spriteData.height
+        self.hotx = spriteData.hotspotX
+        self.hoty = spriteData.hotspotY
+        self.hotwidth = spriteData.hotspotWidth
+        self.hotheight = spriteData.hotspotHeight
 
 class Font(object):
     def __init__(self, file_name):
@@ -191,12 +206,11 @@ class _MapClass(object):
         # This game only uses a single tile map:
         imageEl = _engine.getImageEl('winter/snowy.png')
 
-        for layer in mapData.layers:
+        for (i, layer) in enumerate(mapData.layers):
             w = layer.dimensions.width
             h = layer.dimensions.height
             # TODO: only draw visible
             # TODO: handle offset, parallax, etc.
-            # TODO: draw entities
             for y in range(h):
                 for x in range(w):
                     index = y * w + x
@@ -340,11 +354,12 @@ class _Engine(object):
         self.startMsec = None
         self.width = None
         self.maps = None
+        self.sprites = None
 
     def getImageEl(self, imagePath):
         return self.imageEls[imagePath]
 
-    def run(self, task, mapsPath, imagePaths, systemFontData):
+    def run(self, task, mapsPath, spritesPath, imagePaths, systemFontData):
         self.startMsec = window.Date.now()
         self.width = 320
         self.height = 240
@@ -395,17 +410,27 @@ class _Engine(object):
                 window.document.body.appendChild(imageEl)
             promises.append(window.Promise.new(loadImage))
 
-        def loadJson(resolve, reject):
-            xhr = window.XMLHttpRequest.new()
-            def onLoad(*args):
-                self.maps = window.JSON.parse(xhr.responseText)
+        def loadJson(path):
+            def fn(resolve, reject):
+                xhr = window.XMLHttpRequest.new()
+                def onLoad(*args):
+                    # TODO: Error handling?
+                    json = window.JSON.parse(xhr.responseText)
+                    resolve(json)
+                xhr.addEventListener('load', onLoad)
                 # TODO: Error handling?
-                resolve()
-            xhr.addEventListener('load', onLoad)
-            # TODO: Error handling?
-            xhr.open('GET', mapsPath)
-            xhr.send()
-        promises.append(window.Promise.new(loadJson))
+                xhr.open('GET', path)
+                xhr.send()
+            return window.Promise.new(fn)
+
+        def setMapJson(json):
+            self.maps = json
+
+        def setSpriteJson(json):
+            self.sprites = json
+
+        promises.append(loadJson(mapsPath).then(setMapJson))
+        promises.append(loadJson(spritesPath).then(setSpriteJson))
 
         def onKeyDown(event):
             global _KeycodeMap
@@ -449,9 +474,15 @@ class _Engine(object):
 
 _engine = None
 
-def Run(task, mapsPath, imagePaths, systemFontData):
+def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine
     if _engine is not None:
         raise RuntimeError("Already started")
     _engine = _Engine()
-    _engine.run(task, mapsPath, imagePaths, systemFontData)
+    _engine.run(
+        task=task,
+        mapsPath=mapsPath,
+        spritesPath=spritesPath,
+        imagePaths=imagePaths,
+        systemFontData=systemFontData
+    )

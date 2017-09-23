@@ -79,6 +79,7 @@ def main():
     ika.Run(
         task=system.mainTask(),
         mapsPath='winter/maps.json',
+        spritesPath='winter/sprites.json',
         imagePaths=[
             'gfx/gba.png',
             'gfx/isabigfatbitch.png',

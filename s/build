@@ -44,7 +44,7 @@ def main():
 
     sprites = {}
     for path in data_paths['.ika-sprite']:
-        sprite_name = os.path.splitext(os.path.split(path)[1])[0]
+        sprite_name = os.path.split(path)[1]
         sprite = readSprite(path)
         writeSpriteImage(sprite, make_dest_path(path, '.png'))
         sprites[sprite_name] = {
