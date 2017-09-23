@@ -201,23 +201,72 @@ class _MapClass(object):
 
     def Render(self):
         global _engine
+        global Video
         mapData = _engine.maps[self._currentMapName]
+
+        # This game only uses the single tile map with this fixed size:
+        tileW = 16
+        tileH = 16
+        tilesPerRow = 16
+
+        layerEnts = [[] for x in mapData.layers]
+        for ent in self.entities.values():
+            layerEnts[ent.layer].append((ent.y, ent))
+        for ents in layerEnts:
+            ents.sort()
 
         # This game only uses a single tile map:
         imageEl = _engine.getImageEl('winter/snowy.png')
 
+        # SetCameraTarget (and SetPlayer, which calls it) are not used by the
+        # game.
+        #
+        # SetRenderList is not used by the game.
         for (i, layer) in enumerate(mapData.layers):
+            xw = (self.xwin * layer.parallax.mulx // layer.parallax.divx) - layer.position.x
+            yw = (self.ywin * layer.parallax.muly // layer.parallax.divy) - layer.position.y
+            firstX = xw // tileW
+            firstY = yw // tileH
+            adjustX = xw % tileW
+            adjustY = yw % tileH
+            # This game doesn't use wrapped layers.
+
             w = layer.dimensions.width
             h = layer.dimensions.height
-            # TODO: only draw visible
-            # TODO: handle offset, parallax, etc.
-            for y in range(h):
-                for x in range(w):
+            lenX = (Video.xres + tileW - 1) // tileW
+            lenY = (Video.yres + tileH - 1) // tileH
+
+            if firstX < 0:
+                lenX -= -firstX
+                adjustX += firstX * tileW
+                firstX = 0
+            if firstY < 0:
+                lenY -= -firstY
+                adjustY += firstY * tileH
+                firstY = 0
+            if firstX + lenX > w:
+                lenX = w - firstX
+            if firstY + lenY > h:
+                lenY = h - firstY
+
+            for y in range(firstY, firstY + lenY):
+                for x in range(firstX, firstX + lenX):
                     index = y * w + x
+                    # This game doesn't use tile animations
                     tileIndex = layer.data[index]
-                    tileX = (tileIndex % 16) * 16
-                    tileY = (tileIndex // 16) * 16
-                    _engine.ctx.drawImage(imageEl, tileX, tileY, 16, 16, x * 16, y * 16, 16, 16)
+                    tileX = (tileIndex % tilesPerRow) * tileW
+                    tileY = (tileIndex // tilesPerRow) * tileH
+                    _engine.ctx.drawImage(
+                        imageEl,
+                        tileX,
+                        tileY,
+                        tileW,
+                        tileH,
+                        x * tileW - adjustX,
+                        y * tileH - adjustY,
+                        tileW,
+                        tileH
+                    )
 
     def Switch(self, path):
         global _engine
