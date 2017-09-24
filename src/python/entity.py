@@ -27,6 +27,7 @@ class Entity(object):
         self.direction = dir.DOWN # as good as any
         self.interruptable = True # if false, no state changes will occur
         self.invincible = False
+        self._state = None
         self.state = self.defaultState()
 
     #def __del__(self):
@@ -39,11 +40,17 @@ class Entity(object):
     def updateTask(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()
+        if self._state is None:
+            self.state = self.defaultState()
+            self._state()
+            return
         try:
-            return self._state()
+            self._state()
+            return
         except StopIteration:
             self.state = self.defaultState()
-            return self._state()
+            self._state()
+            return
         if False:
             yield None
 
@@ -80,7 +87,7 @@ class Entity(object):
             else:
                 assert False, 'Entity.state property *must* be a generator!!! (got %s)' % repr(newState)
 
-    state = property(fset=_setState)
+    state = property(None, _setState)
 
     def defaultState(self):
         while True:

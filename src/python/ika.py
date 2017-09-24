@@ -11,6 +11,8 @@ PreserveBlend = 6
 #def Delay(time):
 #    raise RuntimeError("Use DelayTask instead.")
 
+_TIME_RATE = 100
+
 def DelayTask(time):
     targetEnd = window.Date.now() + (time * 10)
     # Busy waiting, sort of... :(
@@ -35,6 +37,15 @@ def GetTime():
     global _engine
     deltaMsec = window.Date.now() - _engine.startMsec
     return (deltaMsec // 10)
+
+def ProcessEntities():
+    global _engine
+    global Map
+    for ent in Map.entities.values():
+        ent._speedCount += ent.speed
+        while ent._speedCount >= _TIME_RATE:
+            ent.Update()
+            ent._speedCount -= _TIME_RATE
 
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
@@ -123,9 +134,14 @@ class Entity(object):
         self.hotwidth = spriteData.hotspotWidth
         self.hotheight = spriteData.hotspotHeight
 
+        self._speedCount = 0
+
     def __hash__(self):
         # Hashability workaround
         return id(self)
+
+    def Update(self):
+        pass
 
     def Stop(self):
         self.destLocation.x = self.x
