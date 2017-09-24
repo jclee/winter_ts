@@ -5,7 +5,6 @@
 # 2 Nov 2003
 
 import ika
-from xi.fps import FPSManager
 
 class WidgetManager(object):
     def __init__(self):
