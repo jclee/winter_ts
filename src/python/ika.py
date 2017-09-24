@@ -103,7 +103,8 @@ class _Point(object):
         self.y = y
 
 class Entity(object):
-    def __init__(self, x, y, layer, spritename):
+    def __init__(self, x, y, layer, spritename, name=None):
+        global Map
         self.x = x
         self.y = y
 
@@ -114,10 +115,11 @@ class Entity(object):
         # stuff when the client changes them, but the game in question does not
         # modify them.
         self.layer = layer
+
         self.spritename = spritename
 
         self.specframe = -1
-        self.name = None
+        self.name = name
         self.movescript = None
 
         self.speed = 100
@@ -135,6 +137,8 @@ class Entity(object):
         self.hotheight = spriteData.hotspotHeight
 
         self._speedCount = 0
+
+        Map._entityList.append(self)
 
     def __hash__(self):
         # Hashability workaround
@@ -239,6 +243,7 @@ Input = _InputClass()
 class _MapClass(object):
     def __init__(self):
         self.entities = {}
+        self._entityList = []
         self._currentMapName = None
         self._xwin = 0
         self._ywin = 0
@@ -288,7 +293,7 @@ class _MapClass(object):
         tilesPerRow = 16
 
         layerEnts = [[] for x in mapData.layers]
-        for ent in self.entities.values():
+        for ent in self._entityList:
             layerEnts[ent.layer].append((ent.y, ent))
         for ents in layerEnts:
             ents.sort()
@@ -373,6 +378,7 @@ class _MapClass(object):
     def Switch(self, path):
         global _engine
         self.entities = {}
+        self._entityList = []
 
         assert path.startswith('maps/')
         assert path.endswith('.ika-map')
@@ -385,12 +391,15 @@ class _MapClass(object):
 
         for (i, layer) in enumerate(mapData.layers):
             for entity in layer.entities:
-                self.entities[entity.label] = Entity(
+                ent = Entity(
                     x=entity.x,
                     y=entity.y,
                     layer=i,
                     spritename=entity.sprite,
+                    name=entity.label,
                 )
+                self._entityList.append(ent)
+                self.entities[entity.label] = ent
 
     def GetMetaData(self):
         global _engine
