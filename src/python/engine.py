@@ -141,9 +141,9 @@ class Engine(object):
 
         self.init()
 
+        # insanely inefficient:
+        bleh = effects.createBlurImages()
         # TODO DO NOT COMMIT - make work
-        ## insanely inefficient:
-        #bleh = effects.createBlurImages()
         #self.draw()
         #effects.blurFade(50, bleh, effects.createBlurImages())
         #self.run()

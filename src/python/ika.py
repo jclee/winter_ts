@@ -172,14 +172,21 @@ class Font(object):
             _engine.ctx.drawImage(imageEl, tileX, tileY, w, h, cursorX, cursorY, w, h)
             cursorX += w
 
+class Canvas(object):
+    def __init__(self, width, height, el, ctx):
+        self.width = width
+        self.height = height
+        self._el = el
+        self._ctx = ctx
+
 class Image(object):
     def __init__(self, init_arg):
         global _engine
         if isinstance(init_arg, str):
             self._path = init_arg
-            el = _engine.getImageEl(self._path)
-            self.width = el.width
-            self.height = el.height
+            self._el = _engine.getImageEl(self._path)
+            self.width = self._el.width
+            self.height = self._el.height
         else:
             raise NotImplementedError() # TODO: Also handle case where first arg is a canvas?
 
@@ -395,8 +402,7 @@ class _VideoClass(object):
         # already lack an alpha channel.
         if blendmode not in [None, Opaque, Matte]:
             raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        imageEl = _engine.getImageEl(image._path)
-        _engine.ctx.drawImage(imageEl, x, y)
+        _engine.ctx.drawImage(image._el, x, y)
 
     def ClearScreen(self):
         global _engine
@@ -430,12 +436,19 @@ class _VideoClass(object):
         else:
             raise NotImplementedError() # TODO
 
+    def GrabImage(self, x1, y1, x2, y2):
+        global _engine
+        width = x2 - x1
+        height = y2 - y1
+        canvasEl, ctx = _makeCanvasAndContext(width, height)
+        ctx.drawImage(_engine.canvasEl, -x1, -y1)
+        return Canvas(width, height, canvasEl, ctx)
+
     def ScaleBlit(self, image, x, y, width, height, blendmode=None):
         global _engine
         if blendmode not in [None, Opaque, Matte]:
             raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        imageEl = _engine.getImageEl(image._path)
-        _engine.ctx.drawImage(imageEl, 0, 0, image.width, image.height, x, y, width, height)
+        _engine.ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
 
     def ShowPage(self):
         global _engine
@@ -471,6 +484,20 @@ _KeycodeMap = {
     'm': 'M',
 }
 
+def _makeCanvasAndContext(width, height):
+    el = window.document.createElement('canvas')
+    el.width = width
+    el.height = height
+    ctx = el.getContext('2d')
+    ctx.mozImageSmoothingEnabled = False
+    ctx.webkitImageSmoothingEnabled = False
+    ctx.msImageSmoothingEnabled = False
+    ctx.imageSmoothingEnabled = False
+    # We maintain one pristine state on the stack for resetting
+    # clipping.
+    ctx.save()
+    return (el, ctx)
+
 class _Engine(object):
     def __init__(self):
         self.canvasEl = None
@@ -496,22 +523,8 @@ class _Engine(object):
         Video.xres = self.width
         Video.yres = self.height
 
-        def makeCanvasAndContext():
-            el = window.document.createElement('canvas')
-            el.width = self.width
-            el.height = self.height
-            ctx = el.getContext('2d')
-            ctx.mozImageSmoothingEnabled = False
-            ctx.webkitImageSmoothingEnabled = False
-            ctx.msImageSmoothingEnabled = False
-            ctx.imageSmoothingEnabled = False
-            # We maintain one pristine state on the stack for resetting
-            # clipping.
-            ctx.save()
-            return (el, ctx)
-
-        self.canvasEl, self.ctx = makeCanvasAndContext()
-        self.displayCanvasEl, self.displayCtx = makeCanvasAndContext()
+        self.canvasEl, self.ctx = _makeCanvasAndContext(self.width, self.height)
+        self.displayCanvasEl, self.displayCtx = _makeCanvasAndContext(self.width, self.height)
 
         self.displayCanvasEl.style.border = "1px solid"
         window.document.body.appendChild(self.displayCanvasEl)
