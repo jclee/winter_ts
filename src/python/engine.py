@@ -1,7 +1,5 @@
 import ika
 
-from serpens.StatelessProxy import StatelessProxy
-
 import effects
 
 import dir
