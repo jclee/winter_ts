@@ -81,7 +81,7 @@ def crossFade(time, startImage = None, endImage = None):
 
         now = ika.GetTime()
 
-def blurFade(time, startImages, endImages):
+def blurFadeTask(time, startImages, endImages):
     startTime = ika.GetTime()
     endTime = ika.GetTime() + time
     now = startTime
@@ -103,5 +103,5 @@ def blurFade(time, startImages, endImages):
             (0, ika.Video.yres, endfade))
 
         ika.Video.ShowPage()
-        ika.Input.Update()
+        yield from ika.Input.UpdateTask()
         now = ika.GetTime()

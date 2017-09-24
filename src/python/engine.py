@@ -144,8 +144,8 @@ class Engine(object):
         # insanely inefficient:
         bleh = effects.createBlurImages()
         self.draw()
+        yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
         # TODO DO NOT COMMIT - make work
-        #effects.blurFade(50, bleh, effects.createBlurImages())
         #self.run()
 
     def loadGameTask(self):
@@ -160,7 +160,7 @@ class Engine(object):
         #    self.mapSwitch(result.mapName, result.pos,  fade=False)
         #    self.init(result)
         #    self.draw()
-        #    effects.blurFade(50, bleh, effects.createBlurImages())
+        #    yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
         #    self.run()
 
     def mapSwitch(self, mapName, dest = None, fade = True):
@@ -203,10 +203,11 @@ class Engine(object):
         if 'music' in metaData:
             sound.playMusic('music/' + metaData['music'])
 
-        if fade:
-            self.draw()
-            endImages = effects.createBlurImages()
-            effects.blurFade(50, startImages, endImages)
+        # TODO DO NOT COMMIT - turn mapSwitch() and callers into tasks
+        #if fade:
+        #    self.draw()
+        #    endImages = effects.createBlurImages()
+        #    yield from effects.blurFadeTask(50, startImages, endImages)
 
         self.synchTime()
 
