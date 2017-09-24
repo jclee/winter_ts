@@ -22,8 +22,9 @@ class _Obstacle(Entity):
         self.x = self.y = -100
         system.engineObj.destroyEntity(self)
 
-    def update(self):
-        pass
+    def updateTask(self):
+        if False:
+            yield None
 
 class IceWall(_Obstacle):
     '''
@@ -82,7 +83,7 @@ class Boulder(_Obstacle):
         self.isTouching = False
         _Obstacle.__init__(self, *args)
 
-    def update(self):
+    def updateTask(self):
         t = self.touches(system.engineObj.player)
         if t and not self.isTouching:
             self.isTouching = True
@@ -101,3 +102,5 @@ class Boulder(_Obstacle):
 
         else:
             self.isTouching = False
+        if False:
+            yield None

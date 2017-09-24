@@ -71,13 +71,15 @@ class Enemy(Entity):
             self.mood = m
             self.state = self.mood()
 
-    def die(self, recoilSpeed = 0, recoilDir = None):
+    def dieTask(self, recoilSpeed = 0, recoilDir = None):
         self._mood = None
         self.brain = None
         self.interruptable = True
         self.state = self.deathState(recoilSpeed, recoilDir)
         system.engineObj.player.giveXP(self.stats.exp)
         #system.engineObj.player.stats.mp += self.stats.exp # MP Regen for the player.
+        if False:
+            yield None
 
     def deathState(self, recoilSpeed, recoilDir):
         self.invincible = True
@@ -105,7 +107,7 @@ class Enemy(Entity):
         while True:
             yield None
 
-    def update(self):
+    def updateTask(self):
         self.animate()
         if not self._state:
             self.think()
@@ -113,6 +115,8 @@ class Enemy(Entity):
             self._state()
         except StopIteration:
             self.think()
+        if False:
+            yield None
 
     def defaultState(self):
         yield None

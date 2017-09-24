@@ -152,7 +152,7 @@ class Engine(object):
             yield None
         raise NotImplementedError() # TODO - make work
         #import saveloadmenu
-        #result = saveloadmenu.loadMenu(fadeOut=False)
+        #result = yield from saveloadmenu.loadMenuTask(fadeOut=False)
         #if result:
         #    bleh = effects.createBlurImages()
         #    saveload.SaveGame.clearSaveFlags()
@@ -251,7 +251,7 @@ class Engine(object):
                     skipCount = 0
                     self.draw()
                     ika.Video.ShowPage()
-                    ika.Input.Update()
+                    yield from ika.Input.UpdateTask()
 
                 self.nextFrameTime += self.ticksPerFrame
 
@@ -282,7 +282,7 @@ class Engine(object):
 
         # update entities
         for ent in self.entities:
-            ent.update()
+            yield from ent.updateTask()
         self.clearKillQueue()
 
         # check fields

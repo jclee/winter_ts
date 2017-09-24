@@ -3,7 +3,7 @@
 import ika
 import system
 from saveload import SaveGame
-from xi.menu import Menu, Cancel
+from xi.menu import Cancel
 from xi.cursor import ImageCursor
 import xi.effects
 
@@ -78,7 +78,6 @@ class SaveLoadMenu(object):
 
     def update(self):
         assert len(self.layout.children), 'There should be at least one frame in here. (either indicating no saves, or to create a new save.'
-        ika.Input.Update()
 
         if self.curY < self.oldY:
             self.oldY -= 2
@@ -109,7 +108,7 @@ def readSaves():
     except IOError:
         return saves
 
-def loadMenu(fadeOut=True):
+def loadMenuTask(fadeOut=True):
     title = gui.TextFrame(text='Load Game')
     title.Position = (16, 16)
     saves = readSaves()
@@ -120,16 +119,17 @@ def loadMenu(fadeOut=True):
         m.draw()
         title.draw()
 
-    xi.effects.fadeIn(50, draw=draw)
+    yield from xi.effects.fadeInTask(50, draw=draw)
 
     i = None
     while i is None:
         i = m.update()
         draw()
         ika.Video.ShowPage()
+        yield from ika.Input.UpdateTask()
 
     if fadeOut:
-        xi.effects.fadeOut(50, draw=draw)
+        yield from xi.effects.fadeOutTask(50, draw=draw)
 
     draw()
     if i is Cancel or i >= len(saves):
@@ -137,8 +137,7 @@ def loadMenu(fadeOut=True):
     else:
         return saves[i]
 
-
-def saveMenu():
+def saveMenuTask():
     title = gui.TextFrame(text='Save Game')
     title.Position = (16, 16)
     saves = readSaves()
@@ -149,16 +148,17 @@ def saveMenu():
         m.draw()
         title.draw()
 
-    xi.effects.fadeIn(50, draw=draw)
+    yield from xi.effects.fadeInTask(50, draw=draw)
 
     i = None
     while i is None:
         i = m.update()
         draw()
         ika.Video.ShowPage()
+        yield from ika.Input.UpdateTask()
 
     if i is not Cancel:
         s = SaveGame.currentGame()
         s.save('save%i' % i)
 
-    xi.effects.fadeOut(50, draw=draw)
+    yield from xi.effects.fadeOutTask(50, draw=draw)

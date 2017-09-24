@@ -31,34 +31,6 @@ def createBlurImages():
 
     return images
 
-def blurOut():
-    wasteOfMemory = []
-
-    i = 1.0
-    while i < 2:
-        img = blurScreen(1.0 / i)
-        wasteOfMemory.append(img)
-        ika.Video.ScaleBlit(img, 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
-        ika.Video.ShowPage()
-        ika.Input.Update()
-        ika.Delay(3)
-
-        BLEH = 1
-        ika.Video.ScaleBlit(img, -BLEH, -BLEH, ika.Video.xres + BLEH * 2, ika.Video.yres + BLEH * 2)
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 2), True)
-
-        i += 0.1
-
-    return wasteOfMemory
-
-def blurIn(wasteOfMemory):
-
-    for img in wasteOfMemory[::-1]:
-        ika.Video.ScaleBlit(img, 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
-        ika.Video.ShowPage()
-        ika.Input.Update()
-        ika.Delay(3)
-
 def crossFadeTask(time, startImage = None, endImage = None):
     '''Crossfades!  Set either startImage or endImage, or both.'''
 

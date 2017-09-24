@@ -109,7 +109,7 @@ class RazorMane(Enemy):
             self.mood = self.fleeMood
         return super(RazorMane, self).hurtState(recoilSpeed, recoilDir)
 
-    def die(self, *args):
+    def dieTask(self, *args):
         # When one dies, the others scatter
 
         ents = [system.engineObj.entFromEnt[x] for x in
@@ -121,7 +121,7 @@ class RazorMane(Enemy):
             a.mood = a.fleeMood
             a.state = a.idleState()
 
-        super(RazorMane, self).die(*args)
+        yield from super(RazorMane, self).dieTask(*args)
 
     def playerDir(self):
         p = system.engineObj.player

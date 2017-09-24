@@ -728,11 +728,13 @@ class Player(Entity):
     def ternionState(self):
         pass
 
-    def die(self):
+    def dieTask(self):
         self.state = self.deathState()
         self._state()
         self.anim = 'die'
         raise GameOverException()
+        if False:
+            yield None
 
     def deathState(self):
         self.invincible = True

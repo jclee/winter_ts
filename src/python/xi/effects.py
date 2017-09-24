@@ -64,14 +64,8 @@ def fadeTask(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 
         ika.Video.ShowPage()
         yield from ika.Input.UpdateTask()
 
-def fadeIn(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    raise NotImplementedError("use fadeInTask instead")
-
 def fadeInTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
     yield from fadeTask(time, colour, ika.RGB(0, 0, 0, 0), draw)
-
-def fadeOut(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    raise NotImplementedError("use fadeInTask instead")
 
 def fadeOutTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
     yield from fadeTask(time, ika.RGB(0, 0, 0, 0), colour, draw)
@@ -111,32 +105,3 @@ def effect3(curTime, startScale, scaleRange, scr):
     RotateBlit(scr, xres // 2, yres // 2 + math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
     RotateBlit(scr, xres // 2, yres // 2 - math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
 
-def blurry(callback = lambda: None):
-    global xres, yres
-
-    startscale = 100
-    endscale = 500
-    scalestep = 1.5
-    scaleRange = endscale - startscale
-
-    xres = ika.Video.xres
-    yres = ika.Video.yres
-
-    ika.Map.Render()
-    scr = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
-
-    t = ika.GetTime()
-    i = 0
-    while i < scaleRange:
-        x = xres * (i + startscale) // startscale
-        y = yres * (i + startscale) // startscale
-
-        Effect1(i, startscale, endscale, scr)
-
-        scr = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
-        ika.Video.ShowPage()
-        ika.Input.Update()
-        callback()
-
-        i += (ika.GetTime() - t) * scalestep
-        t = ika.GetTime()

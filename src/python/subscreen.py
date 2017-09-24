@@ -134,7 +134,7 @@ class PauseScreen(object):
         self.magWnd.Position = (self.statWnd.Left, self.attribWnd.Bottom + self.attribWnd.Border * 2)
         self.menu.dockRight().dockTop()
 
-    def show(self):
+    def showTask(self):
         # assume the backbuffer is already filled
         self.images = effects.createBlurImages()
         TIME = 40
@@ -156,11 +156,11 @@ class PauseScreen(object):
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
             self.draw()
             ika.Video.ShowPage()
-            ika.Input.Update()
+            yield from ika.Input.UpdateTask()
 
         self.background = self.images[-1]
 
-    def hide(self):
+    def hideTask(self):
         TIME = 40
         t = Transition()
         t.addChild(self.statWnd, endRect=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
@@ -177,7 +177,7 @@ class PauseScreen(object):
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
             self.draw(o)
             ika.Video.ShowPage()
-            ika.Input.Update()
+            yield from ika.Input.UpdateTask()
 
     def draw(self, opacity = 255):
         gui.default_window.opacity = opacity
@@ -186,14 +186,14 @@ class PauseScreen(object):
         self.magWnd.draw()
         self.menu.draw()
 
-    def run(self):
-        self.show()
+    def runTask(self):
+        yield from self.showTask()
         while True:
             ika.Video.ScaleBlit(self.images[-1], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
             self.draw()
             ika.Video.ShowPage()
-            ika.Input.Update()
+            yield from ika.Input.UpdateTask()
 
             result = self.menu.update()
             if result is Cancel or result == 0:
@@ -206,7 +206,7 @@ class PauseScreen(object):
                     self.exitGame, # Exit game
                 ][result]()
 
-        self.hide()
+        yield from self.hideTask()
 
     def exitGame(self):
         # TODO: shiny fade out

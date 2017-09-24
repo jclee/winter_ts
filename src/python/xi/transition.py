@@ -36,13 +36,13 @@ class Transition(object):
         for child in self.children:
             child.draw()
 
-    def execute(self):
+    def executeTask(self):
         now = ika.GetTime()
         done = False
         while not done:
             done = True
 
-            ika.Input.Update()
+            yield from ika.Input.UpdateTask()
             ika.Map.Render()
 
             t = ika.GetTime()

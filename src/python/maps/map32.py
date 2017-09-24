@@ -60,7 +60,7 @@ def finalBattle():
             yield from system.engineObj.tickTask()
             system.engineObj.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask() # TODO DO NOT COMMIT - fix everywhere?
+            yield from ika.Input.UpdateTask()
 
         p.state = p.defaultState()
 

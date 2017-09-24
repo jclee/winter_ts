@@ -205,14 +205,15 @@ class _InputClass(object):
         self.enter = self.keyboard['ENTER']
         self.cancel = self.keyboard['ESCAPE']
 
-    @staticmethod
-    def Update():
-        raise RuntimeError("Use UpdateTask instead.")
+    #@staticmethod
+    #def Update():
+    #    raise RuntimeError("Use UpdateTask instead.")
 
     @staticmethod
     def UpdateTask():
         # Input update is automatic, but Input.Update() is used to signify
         # waiting for the next frame.
+        # TODO: We can probably consolidate any DelayTask calls...
         yield None
 
     # TODO other members...

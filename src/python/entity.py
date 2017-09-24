@@ -36,7 +36,7 @@ class Entity(object):
         for k in self.__dict__.keys():
             self.__dict__[k] = None
 
-    def update(self):
+    def updateTask(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()
         try:
@@ -44,9 +44,13 @@ class Entity(object):
         except StopIteration:
             self.state = self.defaultState()
             return self._state()
+        if False:
+            yield None
 
-    def die(self, *args):
+    def dieTask(self, *args):
         system.engineObj.destroyEntity(self)
+        if False:
+            yield None
 
     # if recoil is nonzero, the enemy is blown backwards in a direction,
     # at some speed.  The default direction is backwards
@@ -59,7 +63,8 @@ class Entity(object):
 
         if self.stats.hp <= amount:
             self.stats.hp = 0
-            self.die()
+            # TODO DO NOT COMMIT - make task work with state system...
+            #yield from self.dieTask()
         else:
             self.stats.hp -= amount
             self.state = self.hurtState(recoilSpeed, recoilDir)

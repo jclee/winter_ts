@@ -17,12 +17,14 @@ class _Rune(Entity):
     def apply(self):
         system.engineObj.player.calcSpells()
 
-    def update(self):
+    def updateTask(self):
         if self.touches(system.engineObj.player):
             system.engineObj.destroyEntity(self)
             system.engineObj.addThing(Caption('~1You got the %s Rune!' % self.element))
             setattr(savedata, self.name, 'True')
             self.apply()
+        if False:
+            yield None
 
 
 class WaterRune(_Rune):

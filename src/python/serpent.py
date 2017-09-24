@@ -55,9 +55,9 @@ class Serpent(Enemy):
         ent.mapobs = ent.entobs = False
         self.bleh = self.watchMood()
 
-    def die(self):
-        xi.effects.fadeOut(200, draw=system.engineObj.draw)
-        ending.credits()
+    def dieTask(self):
+        yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
+        yield from ending.creditsTask()
 
     def think(self):
         self.state = self.bleh.next()

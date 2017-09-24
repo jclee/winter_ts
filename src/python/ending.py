@@ -161,7 +161,7 @@ obscenely difficult to obtain!
 
 '''.split('\n')
 
-def credits():
+def creditsTask():
     m = sound.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
     m.loop = True
     sound.fader.kill()
@@ -212,4 +212,4 @@ def credits():
 
         draw()
         ika.Video.ShowPage()
-        ika.Input.Update()
+        yield from ika.Input.UpdateTask()
