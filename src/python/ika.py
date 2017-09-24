@@ -456,6 +456,13 @@ class _VideoClass(object):
         # Pretty sure any clipping gets reset here...
         #self.ClipScreen()
 
+    def TintDistortBlit(self, image, upLeft, upRight, downRight, downLeft, blendmode=None):
+        (upLeftX, upLeftY, upLeftTint) = upLeft
+        (upRightX, upRightY, upRightTint) = upRight
+        (downRightX, downRightY, downRightTint) = downRight
+        (downLeftX, downLeftY, downLeftTint) = downLeft
+        # TODO: Actually implement.
+
     # TODO other members...
 
 Video = _VideoClass()
