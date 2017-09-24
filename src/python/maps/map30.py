@@ -7,11 +7,11 @@ def AutoExec():
     system.engineObj.things.append(CabinListener())
     
 def to25():
-    system.engineObj.mapSwitch('map25.ika-map', (39 * 16, 5 * 16))
+    yield from system.engineObj.mapSwitchTask('map25.ika-map', (39 * 16, 5 * 16))
 
 def to31():
     x = system.engineObj.player.x + 16
-    system.engineObj.mapSwitch('map31.ika-map', (x, 28 * 16))
+    yield from system.engineObj.mapSwitchTask('map31.ika-map', (x, 28 * 16))
     
 class CabinListener(object):
     def update(self):

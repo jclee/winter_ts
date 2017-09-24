@@ -93,7 +93,7 @@ class Engine(object):
         self.font = ika.Font('system.fnt')
         self.mapName = ''
 
-    def init(self, saveData = None):
+    def initTask(self, saveData = None):
         'barf'
 
         # clean everything
@@ -108,9 +108,9 @@ class Engine(object):
 
         if saveData:
             # evil
-            self.mapSwitch(saveData.mapName, None, fade=False)
+            yield from self.mapSwitchTask(saveData.mapName, None, fade=False)
         else:
-            self.mapSwitch(START_MAP, None, fade=False)
+            yield from self.mapSwitchTask(START_MAP, None, fade=False)
 
         if not self.player:
             self.player = Player()
@@ -136,17 +136,16 @@ class Engine(object):
         saveload.SaveGame.clearSaveFlags()
         yield from cabin.sceneTask('intro')
 
-        self.mapSwitch(START_MAP, START_POS, fade = False)
+        yield from self.mapSwitchTask(START_MAP, START_POS, fade = False)
         lay = ika.Map.GetMetaData()['entityLayer']
 
-        self.init()
+        yield from self.initTask()
 
         # insanely inefficient:
         bleh = effects.createBlurImages()
         self.draw()
         yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
-        # TODO DO NOT COMMIT - make work
-        #self.run()
+        yield from self.runTask()
 
     def loadGameTask(self):
         while False:
@@ -157,13 +156,13 @@ class Engine(object):
         #if result:
         #    bleh = effects.createBlurImages()
         #    saveload.SaveGame.clearSaveFlags()
-        #    self.mapSwitch(result.mapName, result.pos,  fade=False)
-        #    self.init(result)
+        #    yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
+        #    yield from self.initTask(result)
         #    self.draw()
         #    yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
-        #    self.run()
+        #    yield from self.runTask()
 
-    def mapSwitch(self, mapName, dest = None, fade = True):
+    def mapSwitchTask(self, mapName, dest = None, fade = True):
         if fade:
             self.draw()
             startImages = effects.createBlurImages()
@@ -203,15 +202,14 @@ class Engine(object):
         if 'music' in metaData:
             sound.playMusic('music/' + metaData['music'])
 
-        # TODO DO NOT COMMIT - turn mapSwitch() and callers into tasks
-        #if fade:
-        #    self.draw()
-        #    endImages = effects.createBlurImages()
-        #    yield from effects.blurFadeTask(50, startImages, endImages)
+        if fade:
+            self.draw()
+            endImages = effects.createBlurImages()
+            yield from effects.blurFadeTask(50, startImages, endImages)
 
         self.synchTime()
 
-    def warp(self, dest, fade = True):
+    def warpTask(self, dest, fade = True):
         if fade:
             self.draw()
             img = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
@@ -226,10 +224,10 @@ class Engine(object):
 
         self.draw()
         if fade:
-            effects.crossFade(50, startImage = img)
+            yield from effects.crossFadeTask(50, startImage = img)
         self.synchTime()
 
-    def run(self):
+    def runTask(self):
         try:
             skipCount = 0
             self.nextFrameTime = ika.GetTime() + self.ticksPerFrame
@@ -241,10 +239,10 @@ class Engine(object):
                     ika.Delay(int(self.nextFrameTime - t))
 
                 if controls.cancel():
-                    self.pause()
+                    yield from self.pauseTask()
 
                 # Do some thinking
-                self.tick()
+                yield from self.tickTask()
 
                 # if we're behind, and can, skip the frame.  else draw
                 if t > self.nextFrameTime and skipCount < MAX_SKIP_COUNT:
@@ -277,7 +275,7 @@ class Engine(object):
         for t in self.mapThings:
             t.draw()
 
-    def tick(self):
+    def tickTask(self):
         # We let ika do most of the work concerning entity movement.
         # (in particular, collision detection)
         ika.ProcessEntities()
@@ -290,8 +288,9 @@ class Engine(object):
         # check fields
         for f in self.fields:
             if f.test(self.player):
-                f.fire()
+                yield from f.fireTask()
                 break
+            brython_generator_bug_workaround = 'blah'
 
         # update Things.
         # for each thing in each thing list, we update.
@@ -338,8 +337,8 @@ class Engine(object):
 
         for i in range(ika.Map.layercount):
             zones = ika.Map.GetZones(i)
-            for (x, y, w, h, script) in zones:
-                self.addField(Field((x,y,w,h), i, mapModule.__dict__[script]))
+            for (x, y, w, h, scriptTaskName) in zones:
+                self.addField(Field((x,y,w,h), i, mapModule.__dict__[scriptTaskName]))
 
     def readEnts(self, mapModule):
         '''Grabs all entities from the map, and adds them to the engine.'''
@@ -392,7 +391,7 @@ class Engine(object):
         while True:
             i = min(i + 1, t)
             c.update()
-            self.tick()
+            yield from self.tickTask()
             self.draw()
 
             # darken the screen, draw the game over message:
@@ -406,9 +405,9 @@ class Engine(object):
             if i == t and controls.attack():
                 break
 
-    def pause(self):
+    def pauseTask(self):
         self.draw()
         s = subscreen.PauseScreen()
-        s.run()
+        yield from s.runTask()
 
         self.synchTime()

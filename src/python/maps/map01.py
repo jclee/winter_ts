@@ -16,10 +16,10 @@ def to2():
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 38 * 16  # first vertical pos possible
     y = system.engineObj.player.y - offset_from + offset_to
-    system.engineObj.mapSwitch('map02.ika-map', (48 * 16, y))
+    yield from system.engineObj.mapSwitchTask('map02.ika-map', (48 * 16, y))
 
 def to49():
-    system.engineObj.mapSwitch('map49.ika-map', (14 * 16, 23 * 16))
+    yield from system.engineObj.mapSwitchTask('map49.ika-map', (14 * 16, 23 * 16))
 
 class RuneListener(object):
     def update(self):

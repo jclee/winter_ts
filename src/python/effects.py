@@ -59,7 +59,7 @@ def blurIn(wasteOfMemory):
         ika.Input.Update()
         ika.Delay(3)
 
-def crossFade(time, startImage = None, endImage = None):
+def crossFadeTask(time, startImage = None, endImage = None):
     '''Crossfades!  Set either startImage or endImage, or both.'''
 
     assert startImage or endImage, "Don't be a retard."
@@ -77,7 +77,7 @@ def crossFade(time, startImage = None, endImage = None):
         ika.Video.Blit(endImage, 0, 0)
         ika.Video.TintBlit(startImage, 0, 0, ika.RGB(255, 255, 255, opacity))
         ika.Video.ShowPage()
-        ika.Input.Update()
+        yield from ika.Input.UpdateTask()
 
         now = ika.GetTime()
 

@@ -19,10 +19,10 @@ def to3():
     offset_from = 11 * 16  # first horizontal pos possible
     offset_to = 8 * 16  # first horizontal pos possible
     x = system.engineObj.player.x - offset_from + offset_to
-    system.engineObj.mapSwitch('map03.ika-map', (x, 1 * 16))
+    yield from system.engineObj.mapSwitchTask('map03.ika-map', (x, 1 * 16))
 
 def to5():
-    system.engineObj.mapSwitch('map05.ika-map', (10 * 16, 19 * 16))
+    yield from system.engineObj.mapSwitchTask('map05.ika-map', (10 * 16, 19 * 16))
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the fire rune.'

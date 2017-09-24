@@ -5,15 +5,15 @@ class Field(object):
        thingies.
     """
 
-    def __init__(self, rect, layer, script):
+    def __init__(self, rect, layer, scriptTask):
         self.pos = rect[:2]
         self.size = rect[2:]
         self.layer = layer
-        self.script = script
+        self.scriptTask = scriptTask
         self.rect = rect
 
-    def fire(self):
-        self.script()
+    def fireTask(self):
+        yield from self.scriptTask()
 
     def test(self, p):
         if p.layer != self.layer:

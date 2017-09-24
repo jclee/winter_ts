@@ -11,10 +11,10 @@ def AutoExec():
         system.engineObj.mapThings.append(AddRune())
         
 def to23():
-    system.engineObj.mapSwitch('map23.ika-map', (5 * 16, 5 * 16))
+    yield from system.engineObj.mapSwitchTask('map23.ika-map', (5 * 16, 5 * 16))
     
 def to50():
-    system.engineObj.mapSwitch('map50.ika-map', (9 * 16, 13 * 16))
+    yield from system.engineObj.mapSwitchTask('map50.ika-map', (9 * 16, 13 * 16))
     
 class AddRune(object):
     

@@ -10,4 +10,4 @@ def to39():
     offset_from = 8 * 16  # first vertical pos possible
     offset_to = 5 * 16  # first vertical pos possible
     x = system.engineObj.player.x - offset_from + offset_to
-    system.engineObj.mapSwitch('map39.ika-map', (x, 38 * 16))
+    yield from system.engineObj.mapSwitchTask('map39.ika-map', (x, 38 * 16))

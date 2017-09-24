@@ -14,7 +14,7 @@ def AutoExec():
     system.engineObj.background = ika.Image('gfx/mountains.png')
     
 def to36():
-    system.engineObj.mapSwitch('map36.ika-map', (system.engineObj.player.x, 1 * 16))
+    yield from system.engineObj.mapSwitchTask('map36.ika-map', (system.engineObj.player.x, 1 * 16))
     
 def releaseAnklebiters():
 
@@ -29,3 +29,5 @@ def releaseAnklebiters():
             system.engineObj.addEntity(Carnivore(ika.Entity(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
             
         spawned = 1
+    if False:
+        yield None

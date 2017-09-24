@@ -10,16 +10,16 @@ def to38():
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 6 * 16  # first vertical pos possible
     x = system.engineObj.player.x - offset_from + offset_to
-    system.engineObj.mapSwitch('map38.ika-map', (x, 28 * 16))
+    yield from system.engineObj.mapSwitchTask('map38.ika-map', (x, 28 * 16))
     
 def to40():
     offset_from = 5 * 16  # first vertical pos possible
     offset_to = 8 * 16  # first vertical pos possible
     x = system.engineObj.player.x - offset_from + offset_to
-    system.engineObj.mapSwitch('map40.ika-map', (x, 1 * 16))
+    yield from system.engineObj.mapSwitchTask('map40.ika-map', (x, 1 * 16))
     
 def to41():
     offset_from = 34 * 16  # first vertical pos possible
     offset_to = 8 * 16  # first vertical pos possible
     y = system.engineObj.player.y - offset_from + offset_to
-    system.engineObj.mapSwitch('map41.ika-map', (1 * 16, y))
+    yield from system.engineObj.mapSwitchTask('map41.ika-map', (1 * 16, y))

@@ -53,7 +53,7 @@ def bridge_break():
 
         engine.draw()
         ika.Video.ShowPage()
-        ika.Delay(8)
+        yield from ika.DelayTask(8)
 
         for y in range(32):
             p.y += 1
@@ -61,7 +61,7 @@ def bridge_break():
             engine.camera.update()
             engine.draw()
             ika.Video.ShowPage()
-            ika.Delay(1)
+            yield from ika.DelayTask(1)
 
         p.layer = 1
 
@@ -71,14 +71,14 @@ def bridge_break():
             engine.camera.update()
             engine.draw()
             ika.Video.ShowPage()
-            ika.Delay(1)
+            yield from ika.DelayTask(1)
 
         p.ent.specframe = 92
         t = ika.GetTime() + 80
         while t > ika.GetTime():
             engine.draw()
             ika.Video.ShowPage()
-            ika.Input.Update()
+            yield from ika.Input.UpdateTask()
 
         p.state = p.standState()
 
@@ -95,24 +95,30 @@ def bridge_break():
 def manaPool():
     if 'windrune' in savedata.__dict__ and ('nearend' not in savedata.__dict__ or 'windguard' in savedata.__dict__):
         system.engineObj.player.stats.mp += 1
+    if False:
+        yield None
 
 def to13():
-    system.engineObj.mapSwitch('map13.ika-map', (78 * 16, system.engineObj.player.y))
+    yield from system.engineObj.mapSwitchTask('map13.ika-map', (78 * 16, system.engineObj.player.y))
 
 def to17():
-    system.engineObj.mapSwitch('map17.ika-map', (1 * 16, system.engineObj.player.y))
+    yield from system.engineObj.mapSwitchTask('map17.ika-map', (1 * 16, system.engineObj.player.y))
 
 def to19():
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 44 * 16  # first vertical pos possible
     y = system.engineObj.player.y - offset_from + offset_to
-    system.engineObj.mapSwitch('map19.ika-map', (48 * 16, y))
+    yield from system.engineObj.mapSwitchTask('map19.ika-map', (48 * 16, y))
 
 def toLowerLayer():
     system.engineObj.player.layer = 1
+    if False:
+        yield None
 
 def toUpperLayer():
     system.engineObj.player.layer = 3
+    if False:
+        yield None
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the wind rune.'
