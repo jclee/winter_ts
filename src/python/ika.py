@@ -240,9 +240,42 @@ class _MapClass(object):
     def __init__(self):
         self.entities = {}
         self._currentMapName = None
-        self.xwin = 0
-        self.ywin = 0
+        self._xwin = 0
+        self._ywin = 0
         self.layercount = None
+
+    @property
+    def xwin(self):
+        return self._xwin
+
+    @xwin.setter
+    def xwin(self, value):
+        self._setCamera(value, self.ywin)
+
+    @property
+    def ywin(self):
+        return self._ywin
+
+    @ywin.setter
+    def ywin(self, value):
+        self._setCamera(self.xwin, value)
+
+    def _setCamera(self, x, y):
+        global _engine
+        global Video
+        mapData = _engine.maps[self._currentMapName]
+        dimensions = mapData.header.dimensions
+        width = dimensions.width
+        height = dimensions.height
+        if width > 0:
+            self._xwin = max(0, min(x, width - Video.xres - 1))
+        else:
+            self._xwin = x
+
+        if height > 0:
+            self._ywin = max(0, min(y, height - Video.yres - 1))
+        else:
+            self._ywin = y
 
     def Render(self):
         global _engine
@@ -269,8 +302,8 @@ class _MapClass(object):
         # SetRenderList is not used by the game.
         for (i, layer) in enumerate(mapData.layers):
             # This game doesn't use layer position
-            xw = (self.xwin * layer.parallax.mulx // layer.parallax.divx)
-            yw = (self.ywin * layer.parallax.muly // layer.parallax.divy)
+            xw = (self._xwin * layer.parallax.mulx // layer.parallax.divx)
+            yw = (self._ywin * layer.parallax.muly // layer.parallax.divy)
             firstX = xw // tileW
             firstY = yw // tileH
             adjustX = xw % tileW
@@ -280,7 +313,7 @@ class _MapClass(object):
             w = layer.dimensions.width
             h = layer.dimensions.height
             lenX = (Video.xres + tileW - 1) // tileW
-            lenY = (Video.yres + tileH - 1) // tileH
+            lenY = (Video.yres + tileH - 1) // tileH + 1
 
             if firstX < 0:
                 lenX -= -firstX
@@ -295,9 +328,9 @@ class _MapClass(object):
             if firstY + lenY > h:
                 lenY = h - firstY
 
-            for y in range(firstY, firstY + lenY):
-                for x in range(firstX, firstX + lenX):
-                    index = y * w + x
+            for y in range(lenY):
+                for x in range(lenX):
+                    index = (firstY + y) * w + (firstX + x)
                     # This game doesn't use tile animations
                     tileIndex = layer.data[index]
                     tileX = (tileIndex % tilesPerRow) * tileW
