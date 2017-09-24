@@ -139,9 +139,9 @@ class Engine(object):
         self.mapSwitch(START_MAP, START_POS, fade = False)
         lay = ika.Map.GetMetaData()['entityLayer']
 
-        # TODO DO NOT COMMIT - make work
-        #self.init()
+        self.init()
 
+        # TODO DO NOT COMMIT - make work
         ## insanely inefficient:
         #bleh = effects.createBlurImages()
         #self.draw()
@@ -364,7 +364,12 @@ class Engine(object):
             del self.entFromEnt[ent.ent]
             ika.Map.entities.pop(ent, None)
             ent.destroy()
-            self.entities.remove(ent)
+            # brython workaround?
+            #self.entities.remove(ent)
+            for i, e in enumerate(self.entities):
+                if e is ent:
+                    del self.entities[i]
+                    break
 
         self.killList = []
 

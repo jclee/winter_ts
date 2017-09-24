@@ -86,10 +86,18 @@ class _JoystickClass(object):
 
     # TODO other members...
 
+class _Point(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
 class Entity(object):
     def __init__(self, x, y, layer, spritename):
         self.x = x
         self.y = y
+
+        self.destLocation = _Point(x, y)
+        self.destVector = _Point(0, 0)
 
         # Theoretically, we should turn these members into properties and do
         # stuff when the client changes them, but the game in question does not
@@ -114,6 +122,18 @@ class Entity(object):
         self.hoty = spriteData.hotspotY
         self.hotwidth = spriteData.hotspotWidth
         self.hotheight = spriteData.hotspotHeight
+
+    def __hash__(self):
+        # Hashability workaround
+        return id(self)
+
+    def Stop(self):
+        self.destLocation.x = self.x
+        self.destLocation.y = self.y
+        self.destVector.x = 0
+        self.destVector.y = 0
+        self.isMoving = False
+        # This game doesn't seem to use idlescript
 
 class Font(object):
     def __init__(self, file_name):
@@ -340,6 +360,14 @@ class _MapClass(object):
                 scriptName
             ))
         return zoneTuples
+
+    def FindLayerByName(self, name):
+        global _engine
+        mapData = _engine.maps[self._currentMapName]
+        for (i, layer) in enumerate(mapData.layers):
+            if layer.label == name:
+                return i
+        return None
 
 Map = _MapClass()
 
