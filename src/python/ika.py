@@ -473,6 +473,10 @@ class _VideoClass(object):
         # Pretty sure any clipping gets reset here...
         #self.ClipScreen()
 
+    def TintBlit(self, image, x, y, tintColor, blendMode=None):
+        # TODO: Honor tint color
+        self.Blit(image, x, y, blendMode)
+
     def TintDistortBlit(self, image, upLeft, upRight, downRight, downLeft, blendmode=None):
         (upLeftX, upLeftY, upLeftTint) = upLeft
         (upRightX, upRightY, upRightTint) = upRight
