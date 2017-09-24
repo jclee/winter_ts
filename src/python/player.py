@@ -746,4 +746,4 @@ class Player(Entity):
             yield None
 
     def giveMPforHit(self):
-        self.stats.mp += ika.Random(0,2 + self.stats.level/10)
+        self.stats.mp += ika.Random(0,2 + self.stats.level//10)

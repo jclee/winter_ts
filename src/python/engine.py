@@ -143,8 +143,8 @@ class Engine(object):
 
         # insanely inefficient:
         bleh = effects.createBlurImages()
+        self.draw()
         # TODO DO NOT COMMIT - make work
-        #self.draw()
         #effects.blurFade(50, bleh, effects.createBlurImages())
         #self.run()
 
@@ -384,7 +384,7 @@ class Engine(object):
         self.nextFrameTime = ika.GetTime()
 
     def gameOver(self):
-        c = Caption('G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) / 2)
+        c = Caption('G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)
         t = 80
         i = 0
         self.fields = []
@@ -395,7 +395,7 @@ class Engine(object):
             self.draw()
 
             # darken the screen, draw the game over message:
-            o = i * 255 / t
+            o = i * 255 // t
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
             c.draw()
 

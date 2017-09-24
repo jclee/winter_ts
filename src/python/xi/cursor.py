@@ -24,7 +24,7 @@ class TextCursor(Cursor):
 
         self.width = font.StringWidth(t)
         self.height = font.height
-        self.hotspot = self.width, self.height / 2
+        self.hotspot = self.width, self.height // 2
 
         c = ika.Canvas(self.width, self.height)
         c.DrawText(font, 0, 0, t)
@@ -42,7 +42,7 @@ class ImageCursor(Cursor):
         if isinstance(img, str):
             img = ika.Image(img)
         self.img = img
-        self.hotspot = hotspot or (img.width, img.height / 2)
+        self.hotspot = hotspot or (img.width, img.height // 2)
 
     Width = property(lambda self: self.img.width)
     Height = property(lambda self: self.img.height)
@@ -57,7 +57,7 @@ class AnimatedCursor(Cursor):
         Cursor.__init__(self)
         self.width = images[0].width
         self.height = images[0].height
-        self.hotspot = hotspot or (self.width, self.height / 2)
+        self.hotspot = hotspot or (self.width, self.height // 2)
         self.delay = delay
 
         self.frames = images
@@ -66,7 +66,7 @@ class AnimatedCursor(Cursor):
     Height = property(lambda self: self.height)
 
     def draw(self, x, y):
-        frame = ika.GetTime() / self.delay
+        frame = ika.GetTime() // self.delay
 
         ika.Video.Blit(self.frames[frame % len(self.frames)],
             x - self.hotspot[0], y - self.hotspot[1])

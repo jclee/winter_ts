@@ -176,9 +176,9 @@ def credits():
         ika.Video.Blit(bg, 0, 0, ika.Opaque)
         ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
 
-        firstLine = int(y) / font.height
+        firstLine = int(y) // font.height
         adjust = int(y) % font.height
-        length = (ika.Video.yres / font.height) + 1
+        length = (ika.Video.yres // font.height) + 1
 
         print(firstLine)
 

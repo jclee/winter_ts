@@ -90,7 +90,7 @@ class Serpent(Enemy):
             #self._state = None
 
             for n in range(ika.Random(1, 8)):
-                x = self.x + self.ent.hotwidth / 2
+                x = self.x + self.ent.hotwidth // 2
                 d = dir.fromDelta(p.x - x, 0)
                 yield self.moveState(d, abs(p.x - x))
 

@@ -27,7 +27,7 @@ class Wander(object):
         elif self.state == self.MOVE:
             self.state = self.WAIT
             dir = ika.Random(0, 4) # pick a direction (just cardinal for now)
-            dist = ika.Random(self.steps / 2, self.steps) # pick a distance
+            dist = ika.Random(self.steps // 2, self.steps) # pick a distance
 
             if dir == 0:    # left
                 ent.MoveTo(ent.x - dist, ent.y)

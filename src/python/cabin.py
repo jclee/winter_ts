@@ -46,12 +46,12 @@ def textBox(where, txt):
 
     if isinstance(where, ika.Entity):
         ent = where
-        x, y = ent.x + ent.hotwidth / 2 - ika.Map.xwin, ent.y - ika.Map.ywin
+        x, y = ent.x + ent.hotwidth // 2 - ika.Map.xwin, ent.y - ika.Map.ywin
     else:
         x, y = where
 
-    if x < ika.Video.xres / 2:
-        x -= width / 2
+    if x < ika.Video.xres // 2:
+        x -= width // 2
 
     width = WIDTH
     if x + width + 16 > ika.Video.xres:
@@ -63,7 +63,7 @@ def textBox(where, txt):
     frame.addText(*text)
     frame.autoSize()
 
-    if y > ika.Video.yres / 2:
+    if y > ika.Video.yres // 2:
         y += 32
     else:
         y -= frame.Height + 16

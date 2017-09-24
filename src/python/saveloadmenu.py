@@ -72,9 +72,9 @@ class SaveLoadMenu(object):
         self.layout.X = 16 # doesn't change
 
     def draw(self):
-        self.layout.Y = (ika.Video.yres - self.wndHeight) / 2 - self.oldY + 16
+        self.layout.Y = (ika.Video.yres - self.wndHeight) // 2 - self.oldY + 16
         self.layout.draw()
-        self.cursor.draw(16, ika.Video.yres / 2) # cursor doesn't move, everything else does
+        self.cursor.draw(16, ika.Video.yres // 2) # cursor doesn't move, everything else does
 
     def update(self):
         assert len(self.layout.children), 'There should be at least one frame in here. (either indicating no saves, or to create a new save.'

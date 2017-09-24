@@ -10,7 +10,7 @@ class Caption(Thing):
         width = font.StringWidth(text)
         height = font.height
 
-        if x is None:   self.x = (ika.Video.xres - width) / 2
+        if x is None:   self.x = (ika.Video.xres - width) // 2
         else:           self.x = x
 
         if y is None:   self.y = ika.Video.yres - height - 40

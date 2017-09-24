@@ -72,7 +72,7 @@ class Gauge(Thing):
         x -= 2
 
         if self.width:
-            v = self.oldVal * self.width / self.oldMax
+            v = self.oldVal * self.width // self.oldMax
         else:
             v = self.oldVal
 
@@ -121,5 +121,5 @@ class EXPBar(Gauge):
     def drawRect(self, x, y, w, h, opacity):
         super(EXPBar, self).drawRect(x, y, w, h - 1, opacity)
 
-    curVal = property(lambda self: system.engineObj.player.stats.exp * self.width / system.engineObj.player.stats.next)
+    curVal = property(lambda self: system.engineObj.player.stats.exp * self.width // system.engineObj.player.stats.next)
     curMax = property(lambda self: self.width)

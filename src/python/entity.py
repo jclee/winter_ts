@@ -102,7 +102,7 @@ class Entity(object):
         while True:
             t -= 1
             if t <= 34: self.invincible = rest.i
-            self.speed -= t / 8
+            self.speed -= t // 8
 
             yield None
 

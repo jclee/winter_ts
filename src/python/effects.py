@@ -72,7 +72,7 @@ def crossFade(time, startImage = None, endImage = None):
     endTime = ika.GetTime() + time
     now = ika.GetTime()
     while now < endTime:
-        opacity = (endTime - now) * 255 / time
+        opacity = (endTime - now) * 255 // time
         ika.Video.ClearScreen()
         ika.Video.Blit(endImage, 0, 0)
         ika.Video.TintBlit(startImage, 0, 0, ika.RGB(255, 255, 255, opacity))
@@ -86,8 +86,8 @@ def blurFade(time, startImages, endImages):
     endTime = ika.GetTime() + time
     now = startTime
     while now < endTime:
-        imageIndex = (now - startTime) * len(startImages) / time
-        opacity = (now - startTime) * 255 / time
+        imageIndex = (now - startTime) * len(startImages) // time
+        opacity = (now - startTime) * 255 // time
         startfade = ika.RGB(255, 255, 255, 255 - opacity)
         endfade = ika.RGB(255, 255, 255, opacity)
 

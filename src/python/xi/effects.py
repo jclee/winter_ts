@@ -23,8 +23,8 @@ def rotatePoint(x, y, angle):
     return x, y
 
 def rotateBlit(img, cx, cy, angle, scale = 1.0, blendmode = ika.AlphaBlend):
-    halfx = img.width / 2
-    halfy = img.height / 2
+    halfx = img.width // 2
+    halfy = img.height // 2
     # TODO: use a matrix to make this more efficient.
     p1 = RotatePoint(-halfx, -halfy, angle)
     p2 = RotatePoint(halfx, -halfy, angle)
@@ -78,38 +78,38 @@ def fadeOutTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
 
 def effect1(curTime, startScale, scaleRange, scr):
     b = 9
-    g = 9 - min(int(curTime) / startScale, 6)
-    r = 8 - min(int(curTime) / startScale, 8)
+    g = 9 - min(int(curTime) // startScale, 6)
+    r = 8 - min(int(curTime) // startScale, 8)
     ika.Video.DrawRect(0, 0, xres, yres, ika.RGB(r, g, b, 250), True)
     RotateBlit(
         scr,
-        xres / 2,
-        int(yres / 2 + math.sqrt(curTime)),
-        math.pi / 95,
+        xres // 2,
+        int(yres // 2 + math.sqrt(curTime)),
+        math.pi // 95,
         1.1 - curTime / scaleRange,
         ika.AddBlend)
-    RotateBlit(scr, xres / 2, int(yres / 2 - math.sqrt(curTime)), math.pi / 95, .5 + curTime / scaleRange, ika.AddBlend)
+    RotateBlit(scr, xres // 2, int(yres // 2 - math.sqrt(curTime)), math.pi / 95, .5 + curTime / scaleRange, ika.AddBlend)
 
 def effect1a(curTime, startScale, scaleRange, scr):
     r = 9
-    g = 9 - min(curTime / startScale, 6)
-    b = 8 - min(curTime / startScale, 8)
+    g = 9 - min(curTime // startScale, 6)
+    b = 8 - min(curTime // startScale, 8)
     #ika.Video.DrawRect(0, 0, xres, yres, ika.RGB(r, g, b, 250), True)
-    RotateBlit(scr, xres / 2, yres / 2 + math.sqrt(curTime), math.pi / 95, 1.1 - curTime / scaleRange, ika.Opaque)
-    RotateBlit(scr, xres / 2, yres / 2 - math.sqrt(curTime), math.pi / 95, .5 + curTime / scaleRange, ika.Opaque)
+    RotateBlit(scr, xres // 2, yres // 2 + math.sqrt(curTime), math.pi / 95, 1.1 - curTime / scaleRange, ika.Opaque)
+    RotateBlit(scr, xres // 2, yres // 2 - math.sqrt(curTime), math.pi / 95, .5 + curTime / scaleRange, ika.Opaque)
 
 def effect2(curTime, startScale, scaleRange, scr):
     r = 9
-    g = 9 - min(curTime / startScale, 6)
-    b = 8 - min(curTime / startScale, 8)
+    g = 9 - min(curTime // startScale, 6)
+    b = 8 - min(curTime // startScale, 8)
     ika.Video.DrawRect(0, 0, xres, yres, ika.RGB(r, g, b, 20), True)
-    RotateBlit(scr, xres / 2, yres / 2 + math.sqrt(curTime), math.pi / 15, .6 + curTime / scaleRange, ika.AddBlend)
-    RotateBlit(scr, xres / 2, yres / 2 - math.sqrt(curTime), math.pi / 15, .6 + curTime / scaleRange, ika.AddBlend)
+    RotateBlit(scr, xres // 2, yres // 2 + math.sqrt(curTime), math.pi / 15, .6 + curTime / scaleRange, ika.AddBlend)
+    RotateBlit(scr, xres // 2, yres // 2 - math.sqrt(curTime), math.pi / 15, .6 + curTime / scaleRange, ika.AddBlend)
 
 def effect3(curTime, startScale, scaleRange, scr):
     ika.Video.DrawRect(0, 0, xres, yres, ika.RGB(0, 0, 0, 100), True)
-    RotateBlit(scr, xres / 2, yres / 2 + math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
-    RotateBlit(scr, xres / 2, yres / 2 - math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
+    RotateBlit(scr, xres // 2, yres // 2 + math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
+    RotateBlit(scr, xres // 2, yres // 2 - math.sqrt(curTime), math.pi / 55, .6, ika.AddBlend)
 
 def blurry(callback = lambda: None):
     global xres, yres
@@ -128,8 +128,8 @@ def blurry(callback = lambda: None):
     t = ika.GetTime()
     i = 0
     while i < scaleRange:
-        x = xres * (i + startscale) / startscale
-        y = yres * (i + startscale) / startscale
+        x = xres * (i + startscale) // startscale
+        y = yres * (i + startscale) // startscale
 
         Effect1(i, startscale, endscale, scr)
 

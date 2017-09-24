@@ -68,8 +68,8 @@ class IceChunks(_Obstacle):
 
     def freeze(self):
         lay = self.layer
-        X = self.x / 16
-        Y = self.y / 16
+        X = self.x // 16
+        Y = self.y // 16
         for y in range(3):
             for x in range(3):
                 ika.Map.SetTile(x + X, y + Y, lay, self._frozenTiles[y][x])

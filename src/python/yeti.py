@@ -109,7 +109,7 @@ class Yeti(Enemy):
             sound.yetiHurt[self.stats.ind][i].Play()
 
         self.mood = self.attackMood
-        return super(Yeti, self).hurtState(dist * 2 / 3, dir)
+        return super(Yeti, self).hurtState(dist * 2 // 3, dir)
 
     def attackMood(self):
         # if we want to be uber, we can remove this hack.

@@ -32,7 +32,7 @@ def introTask():
 
     def showGba():
         v.ClearScreen()
-        v.Blit(gba, (v.xres - gba.width) / 2, (v.yres - gba.height) / 2)
+        v.Blit(gba, (v.xres - gba.width) // 2, (v.yres - gba.height) // 2)
 
     try:
         yield from delayTask(showGba, 300, snowObj)
@@ -43,7 +43,7 @@ def introTask():
             yield from delayTask(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snowObj)
             yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
 
-        yield from delayTask(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d / 2, snowObj)
+        yield from delayTask(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d // 2, snowObj)
         yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
     except _DoneException:
         return
@@ -63,7 +63,7 @@ def menuTask(resultRef):
 
     for i in range(FADE_TIME - 1, -1, -1):
         draw()
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
+        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME), True)
         snowObj.update()
         snowObj.draw()
         ika.Video.ShowPage()
@@ -99,7 +99,7 @@ def menuTask(resultRef):
 
     #for i in range(FADE_TIME):
     #    draw()
-    #    ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 / FADE_TIME), True)
+    #    ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME), True)
     #    snowObj.update()
     #    snowObj.draw()
     #    ika.Video.ShowPage()

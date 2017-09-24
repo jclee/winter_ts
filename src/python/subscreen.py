@@ -149,8 +149,8 @@ class PauseScreen(object):
 
         for i in range(TIME):
             t.update(1)
-            o = i * 128 / TIME # tint intensity for this frame
-            f = i * len(self.images) / TIME # blur image to draw
+            o = i * 128 // TIME # tint intensity for this frame
+            f = i * len(self.images) // TIME # blur image to draw
 
             ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
@@ -170,11 +170,11 @@ class PauseScreen(object):
 
         for i in range(TIME - 1, -1, -1):
             t.update(1)
-            o = i * 255 / TIME # menu opacity for this frame
-            f = i * len(self.images) / TIME # blur image to draw
+            o = i * 255 // TIME # menu opacity for this frame
+            f = i * len(self.images) // TIME # blur image to draw
 
             ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o / 2), True)
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
             self.draw(o)
             ika.Video.ShowPage()
             ika.Input.Update()

@@ -43,7 +43,7 @@ class ImageWindow(object):
     #----------------------------------------------------------------
 
     def draw(self, x, y, w, h):
-        b = self.Left / 2
+        b = self.Left // 2
         x2 = x + w + b
         y2 = y + h + b
         x -= b

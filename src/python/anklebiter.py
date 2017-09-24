@@ -106,7 +106,7 @@ class AnkleBiter(Enemy):
     def hurtState(self, recoilSpeed, recoilDir):
         if self.stats.hp > 0:
             sound.anklebiterHurt.Play()
-        if self.stats.hp < self.stats.maxhp / 2:
+        if self.stats.hp < self.stats.maxhp // 2:
             self.mood = self.fleeMood
         return super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 

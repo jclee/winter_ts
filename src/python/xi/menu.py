@@ -118,5 +118,5 @@ class Menu(gui.Widget):
         self.textCtrl.draw(self.x + xoffset, self.y + yoffset)
         self.cursor.draw(
             self.x + self.textCtrl.x + xoffset,
-            self.y + self.textCtrl.y + yoffset + self.cursorY + (self.Font.height / 2)
+            self.y + self.textCtrl.y + yoffset + self.cursorY + (self.Font.height // 2)
             )

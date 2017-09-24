@@ -105,7 +105,7 @@ class RazorMane(Enemy):
     def hurtState(self, recoilSpeed, recoilDir):
         if self.stats.hp > 0:
             sound.razorManeHurt.Play()
-        if self.stats.hp < self.stats.maxhp / 2:
+        if self.stats.hp < self.stats.maxhp // 2:
             self.mood = self.fleeMood
         return super(RazorMane, self).hurtState(recoilSpeed, recoilDir)
 
@@ -152,7 +152,7 @@ class RazorMane(Enemy):
             if dist - DIST > 60:
                 # get closer
                 n = dist - DIST - 1
-                yield self.walkState(d, ika.Random(n / 2, n))
+                yield self.walkState(d, ika.Random(n // 2, n))
 
                 yield self.idleState(60)
             elif dist < DIST:
