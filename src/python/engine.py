@@ -236,7 +236,7 @@ class Engine(object):
 
                 # if we're ahead, delay
                 if t < self.nextFrameTime:
-                    ika.Delay(int(self.nextFrameTime - t))
+                    yield from ika.DelayTask(int(self.nextFrameTime - t))
 
                 if controls.cancel():
                     yield from self.pauseTask()
@@ -256,7 +256,7 @@ class Engine(object):
                 self.nextFrameTime += self.ticksPerFrame
 
         except GameOverException:
-            self.gameOver()
+            yield from self.gameOverTask()
             self.killList = self.entities[:]
             self.clearKillQueue()
         except EndGameException:
@@ -383,7 +383,7 @@ class Engine(object):
 
         self.nextFrameTime = ika.GetTime()
 
-    def gameOver(self):
+    def gameOverTask(self):
         c = Caption('G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)
         t = 80
         i = 0
@@ -400,7 +400,7 @@ class Engine(object):
             c.draw()
 
             ika.Video.ShowPage()
-            ika.Delay(4)
+            yield from ika.DelayTask(4)
 
             if i == t and controls.attack():
                 break
