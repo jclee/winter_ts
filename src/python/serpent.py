@@ -60,7 +60,7 @@ class Serpent(Enemy):
         yield from ending.creditsTask()
 
     def think(self):
-        self.state = self.bleh.next()
+        self.state = next(self.bleh)
 
     def hurt(self, amount, speed = 0, dir = None):
         Enemy.hurt(self, amount, 0, dir)

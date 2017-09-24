@@ -42,14 +42,12 @@ class Entity(object):
         self.animate()
         if self._state is None:
             self.state = self.defaultState()
-            self._state()
-            return
         try:
-            self._state()
+            next(self._state)
             return
         except StopIteration:
             self.state = self.defaultState()
-            self._state()
+            next(self._state)
             return
         if False:
             yield None
@@ -81,7 +79,7 @@ class Entity(object):
         to be a function that returns a generator.'''
         if self.interruptable or self._state is None:
             if isinstance(newState, GeneratorType):
-                self._state = newState.next
+                self._state = newState
             elif newState is None:
                 self._state = None
             else:

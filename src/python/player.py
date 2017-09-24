@@ -289,7 +289,7 @@ class Player(Entity):
                 yield None
             elif controls.left() or controls.right() or controls.up() or controls.down():
                 self.state = self.walkState()
-                self._state() # get the walk state started right now.
+                next(self._state) # get the walk state started right now.
             yield None
 
     def walkState(self):
@@ -739,7 +739,7 @@ class Player(Entity):
     def deathState(self):
         self.invincible = True
         s = self.hurtState(300, dir.invert[self.direction])
-        yield s.next()
+        yield next(s)
         self.anim = 'die'
         for x in s:
             yield None

@@ -13,7 +13,7 @@ class GenWrapper(object):
         self.iter = gen(*args, **kw)
 
     def __call__(self):
-        return self.iter.next()
+        return next(self.iter)
 
     def __repr__(self):
         return repr((self.fun, self.iter))
@@ -92,7 +92,7 @@ class Enemy(Entity):
         dummy = self.hurtState(recoilSpeed, recoilDir)
 
         # let it go for a moment
-        yield dummy.next()
+        yield next(dummy)
 
         self.stats.hp = 0
 
