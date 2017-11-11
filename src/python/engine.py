@@ -172,7 +172,7 @@ class Engine(object):
         self.background = None
         self.mapThings = []
         self.fields = []
-        ika.Map.entities.clear()
+        ika.Map.ClearEntities()
 
         # drop the extension, convert slashes to dots, and prepend the maps package
         # ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
@@ -347,7 +347,8 @@ class Engine(object):
             self.killList.remove(self.player)
             self.clearKillQueue()
 
-        for ent in ika.Map.entities.values():
+        for entKey in ika.Map.entities:
+            ent = ika.Map.entities[entKey]
             try:
                 self.addEntity(spawnMap[ent.spritename](ent))
             except KeyError:
@@ -360,7 +361,7 @@ class Engine(object):
             ent.ent.x, ent.ent.y = -100,0
             ent.ent.Stop()
             del self.entFromEnt[ent.ent]
-            ika.Map.entities.pop(ent, None)
+            ika.Map.RemoveEntity(ent)
             ent.destroy()
             # brython workaround?
             #self.entities.remove(ent)

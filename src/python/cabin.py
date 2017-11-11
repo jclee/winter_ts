@@ -36,19 +36,14 @@ def draw():
 
 #------------------------------------------------------------------------------
 
-def textBox(where, txt):
-    # where is either a point or an entity
+def textBox(ent, txt):
     WIDTH = 200
     width = WIDTH
     text = WrapText(txt, width, gui.default_font)
     width = max([gui.default_font.StringWidth(s) for s in text])
     height = len(text) * gui.default_font.height
 
-    if isinstance(where, ika.Entity):
-        ent = where
-        x, y = ent.x + ent.hotwidth // 2 - ika.Map.xwin, ent.y - ika.Map.ywin
-    else:
-        x, y = where
+    x, y = ent.x + ent.hotwidth // 2 - ika.Map.xwin, ent.y - ika.Map.ywin
 
     if x < ika.Video.xres // 2:
         x -= width // 2

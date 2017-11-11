@@ -41,7 +41,8 @@ def GetTime():
 def ProcessEntities():
     global _engine
     global Map
-    for ent in Map.entities.values():
+    for entKey in Map.entities:
+        ent = Map.entities[entKey]
         ent._speedCount += ent.speed
         while ent._speedCount >= _TIME_RATE:
             ent.Update()
@@ -102,58 +103,8 @@ class _Point(object):
         self.x = x
         self.y = y
 
-class Entity(object):
-    def __init__(self, x, y, layer, spritename, name=None):
-        global Map
-        self.x = x
-        self.y = y
-
-        self.destLocation = _Point(x, y)
-        self.destVector = _Point(0, 0)
-
-        # Theoretically, we should turn these members into properties and do
-        # stuff when the client changes them, but the game in question does not
-        # modify them.
-        self.layer = layer
-
-        self.spritename = spritename
-
-        self.specframe = -1
-        self.name = name
-        self.movescript = None
-
-        self.speed = 100
-        self.isobs = True
-        self.mapobs = True
-        self.entobs = True
-
-        spriteData = _engine.sprites[spritename]
-
-        self.spritewidth = spriteData.width
-        self.spriteheight = spriteData.height
-        self.hotx = spriteData.hotspotX
-        self.hoty = spriteData.hotspotY
-        self.hotwidth = spriteData.hotspotWidth
-        self.hotheight = spriteData.hotspotHeight
-
-        self._speedCount = 0
-
-        Map._entityList.append(self)
-
-    def __hash__(self):
-        # Hashability workaround
-        return id(self)
-
-    def Update(self):
-        pass
-
-    def Stop(self):
-        self.destLocation.x = self.x
-        self.destLocation.y = self.y
-        self.destVector.x = 0
-        self.destVector.y = 0
-        self.isMoving = False
-        # This game doesn't seem to use idlescript
+def Entity(x, y, layer, spritename):
+    return Map.AddEntity(x, y, layer, spritename)
 
 class Font(object):
     def __init__(self, file_name):
@@ -225,6 +176,9 @@ class _InputClass(object):
         self.enter = self.keyboard['ENTER']
         self.cancel = self.keyboard['ESCAPE']
 
+    def getKey(self, key):
+        return self.keyboard[key]
+
     #@staticmethod
     #def Update():
     #    raise RuntimeError("Use UpdateTask instead.")
@@ -240,203 +194,6 @@ class _InputClass(object):
 
 Input = _InputClass()
 
-class _MapClass(object):
-    def __init__(self):
-        self.entities = {}
-        self._entityList = []
-        self._currentMapName = None
-        self._xwin = 0
-        self._ywin = 0
-        self.layercount = None
-
-    @property
-    def xwin(self):
-        return self._xwin
-
-    @xwin.setter
-    def xwin(self, value):
-        self._setCamera(value, self.ywin)
-
-    @property
-    def ywin(self):
-        return self._ywin
-
-    @ywin.setter
-    def ywin(self, value):
-        self._setCamera(self.xwin, value)
-
-    def _setCamera(self, x, y):
-        global _engine
-        global Video
-        mapData = _engine.maps[self._currentMapName]
-        dimensions = mapData.header.dimensions
-        width = dimensions.width
-        height = dimensions.height
-        if width > 0:
-            self._xwin = max(0, min(x, width - Video.xres - 1))
-        else:
-            self._xwin = x
-
-        if height > 0:
-            self._ywin = max(0, min(y, height - Video.yres - 1))
-        else:
-            self._ywin = y
-
-    def Render(self):
-        global _engine
-        global Video
-        mapData = _engine.maps[self._currentMapName]
-
-        # This game only uses the single tile map with this fixed size:
-        tileW = 16
-        tileH = 16
-        tilesPerRow = 16
-
-        layerEnts = [[] for x in mapData.layers]
-        for ent in self._entityList:
-            layerEnts[ent.layer].append((ent.y, ent))
-        for ents in layerEnts:
-            ents.sort()
-
-        # This game only uses a single tile map:
-        imageEl = _engine.getImageEl('snowy.png')
-
-        # SetCameraTarget (and SetPlayer, which calls it) are not used by the
-        # game.
-        #
-        # SetRenderList is not used by the game.
-        for (i, layer) in enumerate(mapData.layers):
-            # This game doesn't use layer position
-            xw = (self._xwin * layer.parallax.mulx // layer.parallax.divx)
-            yw = (self._ywin * layer.parallax.muly // layer.parallax.divy)
-            firstX = xw // tileW
-            firstY = yw // tileH
-            adjustX = xw % tileW
-            adjustY = yw % tileH
-            # This game doesn't use wrapped layers.
-
-            w = layer.dimensions.width
-            h = layer.dimensions.height
-            lenX = (Video.xres + tileW - 1) // tileW
-            lenY = (Video.yres + tileH - 1) // tileH + 1
-
-            if firstX < 0:
-                lenX -= -firstX
-                adjustX += firstX * tileW
-                firstX = 0
-            if firstY < 0:
-                lenY -= -firstY
-                adjustY += firstY * tileH
-                firstY = 0
-            if firstX + lenX > w:
-                lenX = w - firstX
-            if firstY + lenY > h:
-                lenY = h - firstY
-
-            for y in range(lenY):
-                for x in range(lenX):
-                    index = (firstY + y) * w + (firstX + x)
-                    # This game doesn't use tile animations
-                    tileIndex = layer.data[index]
-                    tileX = (tileIndex % tilesPerRow) * tileW
-                    tileY = (tileIndex // tilesPerRow) * tileH
-                    _engine.ctx.drawImage(
-                        imageEl,
-                        tileX,
-                        tileY,
-                        tileW,
-                        tileH,
-                        x * tileW - adjustX,
-                        y * tileH - adjustY,
-                        tileW,
-                        tileH
-                    )
-
-            for (_, ent) in layerEnts[i]:
-                # This game doesn't seem to use custom renderscripts
-
-                spritePath = 'sprite/' + ent.spritename[:-len('.ika-sprite')] + '.png'
-                spriteImageEl = _engine.getImageEl(spritePath)
-
-                frameIndex = max(0, ent.specframe)
-                frameX = (frameIndex % 8) * ent.spritewidth
-                frameY = (frameIndex // 8) * ent.spriteheight
-
-                # This game doesn't use sprite visibility toggling.
-                _engine.ctx.drawImage(
-                    spriteImageEl,
-                    frameX,
-                    frameY,
-                    ent.spritewidth,
-                    ent.spriteheight,
-                    ent.x - ent.hotx - xw,
-                    ent.y - ent.hoty - yw,
-                    ent.spritewidth,
-                    ent.spriteheight
-                )
-
-    def Switch(self, path):
-        global _engine
-        self.entities = {}
-        self._entityList = []
-
-        assert path.startswith('maps/')
-        assert path.endswith('.ika-map')
-        self._currentMapName = path[len('maps/'):-len('.ika-map')]
-        self.xwin = 0
-        self.ywin = 0
-
-        mapData = _engine.maps[self._currentMapName]
-        self.layercount = len(mapData.layers)
-
-        for (i, layer) in enumerate(mapData.layers):
-            for entity in layer.entities:
-                ent = Entity(
-                    x=entity.x,
-                    y=entity.y,
-                    layer=i,
-                    spritename=entity.sprite,
-                    name=entity.label,
-                )
-                self._entityList.append(ent)
-                self.entities[entity.label] = ent
-
-    def GetMetaData(self):
-        global _engine
-        return dict(_engine.maps[self._currentMapName]['information']['meta'])
-
-    def GetZones(self, layerIndex):
-        global _engine
-        mapData = _engine.maps[self._currentMapName]
-        zoneMetadatas = mapData['zones']
-
-        zoneTuples = []
-        for zone in mapData['layers'][layerIndex].zones:
-            scriptName = None
-            for zoneMetadata in zoneMetadatas:
-                if zoneMetadata.label == zone.label:
-                    scriptName = zoneMetadata.script
-                    break
-
-            zoneTuples.append((
-                zone['x'],
-                zone['y'],
-                zone['width'],
-                zone['height'],
-                scriptName
-            ))
-        return zoneTuples
-
-    def FindLayerByName(self, name):
-        global _engine
-        mapData = _engine.maps[self._currentMapName]
-        for (i, layer) in enumerate(mapData.layers):
-            if layer.label == name:
-                return i
-        return None
-
-Map = _MapClass()
-
 class Sound(object):
     def __init__(self, file_name):
         self._file_name = file_name
@@ -450,8 +207,9 @@ class Sound(object):
 
 class _VideoClass(object):
     def __init__(self):
-        self.xres = None
-        self.yres = None
+        # Resolution used in this game...
+        self.xres = 320
+        self.yres = 240
         #colours = None # TODO
 
     def Blit(self, image, x, y, blendmode=None):
@@ -530,30 +288,6 @@ class _VideoClass(object):
 
 Video = _VideoClass()
 
-_KeycodeMap = {
-    'ArrowUp': 'UP',
-    'ArrowDown': 'DOWN',
-    'ArrowRight': 'RIGHT',
-    'ArrowLeft': 'LEFT',
-    'Enter': 'ENTER',
-    'Escape': 'ESCAPE',
-    ' ': 'SPACE',
-    'Z': 'Z',
-    'z': 'Z',
-    'X': 'X',
-    'x': 'X',
-    'C': 'C',
-    'c': 'C',
-    'V': 'V',
-    'v': 'V',
-    'B': 'B',
-    'b': 'B',
-    'N': 'N',
-    'n': 'N',
-    'M': 'M',
-    'm': 'M',
-}
-
 def _makeCanvasAndContext(width, height):
     el = window.document.createElement('canvas')
     el.width = width
@@ -568,132 +302,18 @@ def _makeCanvasAndContext(width, height):
     ctx.save()
     return (el, ctx)
 
-class _Engine(object):
-    def __init__(self):
-        self.canvasEl = None
-        self.ctx = None
-        self.displayCanvasEl = None
-        self.displayCtx = None
-        self.height = None
-        self.imageEls = {}
-        self.startMsec = None
-        self.width = None
-        self.maps = None
-        self.sprites = None
-
-    def getImageEl(self, imagePath):
-        return self.imageEls['winter/' + imagePath]
-
-    def run(self, task, mapsPath, spritesPath, imagePaths, systemFontData):
-        self.startMsec = window.Date.now()
-        self.width = 320
-        self.height = 240
-        self.systemFontData = systemFontData
-
-        Video.xres = self.width
-        Video.yres = self.height
-
-        self.canvasEl, self.ctx = _makeCanvasAndContext(self.width, self.height)
-        self.displayCanvasEl, self.displayCtx = _makeCanvasAndContext(self.width, self.height)
-
-        self.displayCanvasEl.style.border = "1px solid"
-        window.document.body.appendChild(self.displayCanvasEl)
-
-        promises = []
-        for path in imagePaths:
-            def loadImage(resolve, reject):
-                imageEl = window.Image.new()
-                # TODO: Handle image load failure?
-                imageEl.addEventListener('load', resolve)
-                imageEl.src = path
-                self.imageEls[path] = imageEl
-
-                # TODO: Not sure what's going on, but for some reason it seems
-                # adding the image element to the page with a non-none display
-                # is a prerequisite to having its width and height properties
-                # populated, even after waiting for the load event, contrary to
-                # all documentation seen online.  Observed in Chrome 59,
-                # Firefox 54.
-                imageEl.style.position = "absolute"
-                imageEl.style.top = "0"
-                imageEl.style.left = "0"
-                imageEl.style.opacity = "0"
-                window.document.body.appendChild(imageEl)
-            promises.append(window.Promise.new(loadImage))
-
-        def loadJson(path):
-            def fn(resolve, reject):
-                xhr = window.XMLHttpRequest.new()
-                def onLoad(*args):
-                    # TODO: Error handling?
-                    json = window.JSON.parse(xhr.responseText)
-                    resolve(json)
-                xhr.addEventListener('load', onLoad)
-                # TODO: Error handling?
-                xhr.open('GET', path)
-                xhr.send()
-            return window.Promise.new(fn)
-
-        def setMapJson(json):
-            self.maps = json
-
-        def setSpriteJson(json):
-            self.sprites = json
-
-        promises.append(loadJson(mapsPath).then(setMapJson))
-        promises.append(loadJson(spritesPath).then(setSpriteJson))
-
-        def onKeyDown(event):
-            global _KeycodeMap
-            if event.defaultPrevented:
-                return
-            if event.key not in _KeycodeMap:
-                return
-            control = Input.keyboard[_KeycodeMap[event.key]]
-            control._pressed = 1
-            control._position = 1
-            event.preventDefault()
-
-        def onKeyUp(event):
-            global _KeycodeMap
-            if event.defaultPrevented:
-                return
-            if event.key not in _KeycodeMap:
-                return
-            control = Input.keyboard[_KeycodeMap[event.key]]
-            control._position = 0
-            event.preventDefault()
-
-        window.addEventListener('keydown', onKeyDown, True)
-        window.addEventListener('keyup', onKeyUp, True)
-
-        def runFrame(timestamp):
-            nonlocal task
-            try:
-                value = next(task)
-            except StopIteration:
-                print("Engine done.")
-                task = None
-            else:
-                window.requestAnimationFrame(runFrame)
-
-        def startEngine(obj):
-            print("Starting engine...")
-            window.requestAnimationFrame(runFrame)
-
-        window.Promise.all(promises).then(startEngine)
-
-_engine = None
+_engine = window.Engine.new(Input.getKey)
+Map = window.MapClass.new(_engine, Video)
 
 def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine
-    if _engine is not None:
-        raise RuntimeError("Already started")
-    _engine = _Engine()
-    _engine.run(
-        task=task,
-        mapsPath=mapsPath,
-        spritesPath=spritesPath,
-        imagePaths=imagePaths,
-        systemFontData=systemFontData
-    )
+
+    def taskFn():
+        nonlocal task
+        try:
+            value = next(task)
+        except StopIteration:
+            return False
+        else:
+            return True
+    _engine.run(taskFn, mapsPath, spritesPath, imagePaths, systemFontData)
