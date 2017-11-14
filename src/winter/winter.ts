@@ -199,6 +199,60 @@ class Entity {
     }
 }
 
+class FontClass {
+    private height: number;
+
+    constructor(
+        private _engine: Engine,
+    ) {
+        this.height = 10;
+    }
+
+    // TODO: Other members?
+
+    StringWidth(s: string): number {
+        const subset = this._engine.systemFontData.subsets[0];
+        const widths = this._engine.systemFontData.widths;
+        let w = 0;
+        for (let ch of s) {
+            if (ch === '\n' || ch === '\t' || ch === '~') {
+                throw new Error("String codes not implemented");
+            }
+            const index = subset[ch.charCodeAt(0)];
+            // TODO: Not sure why original sources have +1 but not having it
+            // looks better.
+            //w += widths[index] + 1;
+            w += widths[index];
+        }
+        return w;
+    }
+
+    Print(x: number, y: number, text: string) {
+        const imageEl = this._engine.getImageEl('system_font.png');
+        const subset = this._engine.systemFontData.subsets[0];
+        const widths = this._engine.systemFontData.widths;
+        const heights = this._engine.systemFontData.heights;
+        let cursorX = x;
+        let cursorY = y;
+        for (let ch of text) {
+            if (ch === '\n' || ch === '\t' || ch === '~') {
+                throw new Error("String codes not implemented");
+            }
+            const index = subset[ch.charCodeAt(0)];
+            // TODO: Not sure why original sources have +1 but not having it
+            // looks better.
+            //const w = widths[index] + 1;
+            const w = widths[index];
+            const h = heights[index];
+            const tileX = (index % 16) * 9;
+            const tileY = Math.floor(index / 16) * 10;
+            this._engine.ctx.drawImage(imageEl, tileX, tileY, w, h, cursorX, cursorY, w, h);
+            cursorX += w;
+        }
+    }
+}
+(window as any).FontClass = FontClass;
+
 class MapClass {
     private _xwin: number;
     private _ywin: number;
@@ -440,6 +494,9 @@ class MapClass {
 (window as any).MapClass = MapClass;
 
 interface SystemFontData {
+    subsets: number[][];
+    widths: number[];
+    heights: number[];
 }
 
 interface SpriteData {

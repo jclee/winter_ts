@@ -106,42 +106,9 @@ class _Point(object):
 def Entity(x, y, layer, spritename):
     return Map.AddEntity(x, y, layer, spritename)
 
-class Font(object):
-    def __init__(self, file_name):
-        self._file_name = file_name
-        self.height = 10
-
-    # TODO other members...
-    def StringWidth(self, s):
-        global _engine
-        w = 0
-        subset = _engine.systemFontData['subsets'][0]
-        widths = _engine.systemFontData['widths']
-        for ch in s:
-            if ch in ['\n', '\t', '~']:
-                raise NotImplementedError() # TODO
-            index = subset[ord(ch)]
-            w += widths[index] + 1
-        return w
-
-    def Print(self, x, y, text):
-        global _engine
-        imageEl = _engine.getImageEl('system_font.png')
-        cursorX = x
-        cursorY = y
-        subset = _engine.systemFontData['subsets'][0]
-        widths = _engine.systemFontData['widths']
-        heights = _engine.systemFontData['heights']
-        for (i, ch) in enumerate(text):
-            if ch in ['\n', '\t', '~']:
-                raise NotImplementedError() # TODO
-            index = subset[ord(ch)]
-            w = widths[index] + 1
-            h = heights[index]
-            tileX = (index % 16) * 9
-            tileY = (index // 16) * 10
-            _engine.ctx.drawImage(imageEl, tileX, tileY, w, h, cursorX, cursorY, w, h)
-            cursorX += w
+def Font(file_name):
+    global _engine
+    return window.FontClass.new(_engine)
 
 class Canvas(object):
     def __init__(self, width, height, el, ctx):
@@ -197,6 +164,7 @@ Input = _InputClass()
 class Sound(object):
     def __init__(self, file_name):
         self._file_name = file_name
+        self.position = 0
 
     def Play(self):
         pass # TODO
