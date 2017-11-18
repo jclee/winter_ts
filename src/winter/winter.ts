@@ -332,8 +332,8 @@ class MapClass {
         for (let i = 0; i < layerCount; ++i) {
             const layer = mapData.layers[i];
             // This game doesn't use layer position
-            const xw = (this._xwin * Math.floor(layer.parallax.mulx / layer.parallax.divx));
-            const yw = (this._ywin * Math.floor(layer.parallax.muly / layer.parallax.divy));
+            const xw = Math.floor(this._xwin * layer.parallax.mulx / layer.parallax.divx);
+            const yw = Math.floor(this._ywin * layer.parallax.muly / layer.parallax.divy);
             let firstX = Math.floor(xw / tileW);
             let firstY = Math.floor(yw / tileH);
             let adjustX = xw % tileW;
