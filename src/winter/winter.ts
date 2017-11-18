@@ -294,7 +294,7 @@ class MapClass {
             this._xwin = x;
         }
         if (height > 0) {
-            this._ywin = Math.min(0, Math.min(height - this._video.yres - 1, y));
+            this._ywin = Math.max(0, Math.min(height - this._video.yres - 1, y));
         } else {
             this._ywin = y;
         }
