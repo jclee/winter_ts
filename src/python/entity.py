@@ -169,6 +169,9 @@ class Entity(object):
         self._animator.update(1)
         self.ent.specframe = self._animator.curFrame
 
+    def getAnim(self):
+        return None
+
     def setAnim(self, value, loop = False):
         a, loop = self._anim[value]
         self._animator.setAnim(a[self.direction], loop)
@@ -179,4 +182,4 @@ class Entity(object):
     moving = property(isMoving)
     speed = property(getSpeed, setSpeed)
     layer = property(getLayer, setLayer)
-    anim = property(fset=setAnim)
+    anim = property(getAnim, setAnim)

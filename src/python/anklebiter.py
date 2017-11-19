@@ -37,14 +37,14 @@ _ankleBiterAnim = {
     ),
 
     'attack': ((
-        zip(range(30, 33), (30, 20, 15)),
-        zip(range(35, 38), (30, 20, 15)),
-        zip(range(25, 28), (30, 20, 15)),
-        zip(range(20, 23), (30, 20, 15)),
-        zip(range(30, 33), (30, 20, 15)),
-        zip(range(35, 38), (30, 20, 15)),
-        zip(range(30, 33), (30, 20, 15)),
-        zip(range(35, 38), (30, 20, 15)),
+        list(zip(range(30, 33), (30, 20, 15))),
+        list(zip(range(35, 38), (30, 20, 15))),
+        list(zip(range(25, 28), (30, 20, 15))),
+        list(zip(range(20, 23), (30, 20, 15))),
+        list(zip(range(30, 33), (30, 20, 15))),
+        list(zip(range(35, 38), (30, 20, 15))),
+        list(zip(range(30, 33), (30, 20, 15))),
+        list(zip(range(35, 38), (30, 20, 15))),
         ),
         False
     ),

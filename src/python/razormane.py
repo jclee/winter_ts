@@ -37,14 +37,14 @@ _razorManeAnim = {
     ),
 
     'attack': ((
-        zip(range(35, 37), (30, 20, 15)),
-        zip(range(42, 44), (30, 20, 15)),
-        zip(range(28, 30), (30, 20, 15)),
-        zip(range(49, 51), (30, 20, 15)),
-        zip(range(35, 37), (30, 20, 15)),
-        zip(range(42, 44), (30, 20, 15)),
-        zip(range(35, 37), (30, 20, 15)),
-        zip(range(42, 44), (30, 20, 15)),
+        list(zip(range(35, 37), (30, 20, 15))),
+        list(zip(range(42, 44), (30, 20, 15))),
+        list(zip(range(28, 30), (30, 20, 15))),
+        list(zip(range(49, 51), (30, 20, 15))),
+        list(zip(range(35, 37), (30, 20, 15))),
+        list(zip(range(42, 44), (30, 20, 15))),
+        list(zip(range(35, 37), (30, 20, 15))),
+        list(zip(range(42, 44), (30, 20, 15))),
         ),
         False
     ),
