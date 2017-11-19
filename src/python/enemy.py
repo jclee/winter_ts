@@ -112,7 +112,8 @@ class Enemy(Entity):
         if not self._state:
             self.think()
         try:
-            self._state()
+            next(self._state)
+            return
         except StopIteration:
             self.think()
         if False:
