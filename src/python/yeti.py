@@ -120,7 +120,7 @@ class Yeti(Enemy):
             sx = self.x + 16
             sy = self.y + 16
             d = dir.fromDelta(p.x - sx, p.y - sy)
-            dist = math.hypot(p.x - sx, p.y - sy)
+            dist = ika.hypot(p.x - sx, p.y - sy)
             if dist < 50:
                 pass
                 yield self.attackState(d)
@@ -135,7 +135,7 @@ class Yeti(Enemy):
             # compensate for the yeti's gigantic sprite:
             sx = self.x + 16
             sy = self.y + 16
-            dist = math.hypot(p.x - sx, p.y - sy)
+            dist = ika.hypot(p.x - sx, p.y - sy)
 
             yield self.idleState()
 

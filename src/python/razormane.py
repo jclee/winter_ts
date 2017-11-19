@@ -113,7 +113,7 @@ class RazorMane(Enemy):
         # When one dies, the others scatter
 
         ents = [system.engineObj.entFromEnt[x] for x in
-            ika.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
+            ika.Map.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
             if x in system.engineObj.entFromEnt]
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 
@@ -129,7 +129,7 @@ class RazorMane(Enemy):
 
     def playerDist(self):
         p = system.engineObj.player
-        return math.hypot(p.x - self.x - 10, p.y - self.y - 7)
+        return ika.hypot(p.x - self.x - 10, p.y - self.y - 7)
 
     def attackMood(self):
         for q in range(5):

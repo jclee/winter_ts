@@ -361,7 +361,7 @@ class Player(Entity):
             rect = list(r[self._animator.index]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = ika.EntitiesAt(*rect)
+            ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
                 x = system.engineObj.entFromEnt[e]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -409,7 +409,7 @@ class Player(Entity):
             rect = list(r[self._animator.index]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = ika.EntitiesAt(*rect)
+            ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
                 x = system.engineObj.entFromEnt[e]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -459,7 +459,7 @@ class Player(Entity):
 
                 rect[0] = r[0] + self.x
                 rect[1] = r[1] + self.y
-                ents = ika.EntitiesAt(*rect)
+                ents = ika.Map.EntitiesAt(*rect)
                 for e in ents:
                     x = system.engineObj.entFromEnt[e]
                     if isinstance(x, Enemy) and not x.invincible:

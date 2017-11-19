@@ -12,7 +12,7 @@ import math
 import ika
 
 def rotatePoint(x, y, angle):
-    r = math.hypot(x, y)
+    r = ika.hypot(x, y)
     theta = math.atan(float(y) / float(x))
     if x < 0:
         theta += math.pi

@@ -114,7 +114,7 @@ class AnkleBiter(Enemy):
         # When one dies, the others scatter
 
         ents = [system.engineObj.entFromEnt[x] for x in
-            ika.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
+            ika.Map.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
             if x in system.engineObj.entFromEnt]
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
@@ -130,7 +130,7 @@ class AnkleBiter(Enemy):
         p = system.engineObj.player
         for q in range(5):
             d = dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = math.hypot(p.x - self.x, p.y - self.y)
+            dist = ika.hypot(p.x - self.x, p.y - self.y)
             if dist < 40:
                 yield self.attackState(d)
                 yield self.idleState(20)
@@ -142,7 +142,7 @@ class AnkleBiter(Enemy):
         p = system.engineObj.player
         for q in range(5):
             d = dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = math.hypot(p.x - self.x, p.y - self.y)
+            dist = ika.hypot(p.x - self.x, p.y - self.y)
 
             if dist > MIN_DIST:
                 break
@@ -156,7 +156,7 @@ class AnkleBiter(Enemy):
         p = system.engineObj.player
         self._animator.kill = True
         while True:
-            dist = math.hypot(p.x - self.x, p.y - self.y)
+            dist = ika.hypot(p.x - self.x, p.y - self.y)
 
             yield self.idleState()
 

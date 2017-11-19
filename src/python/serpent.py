@@ -144,7 +144,7 @@ class Serpent(Enemy):
 
         for q in range(ika.Random(1, 4)):
             x, y = 320 + (q * 60), 588
-            n = ika.EntitiesAt(x, y, x + 16, y + 16, self.layer)
+            n = ika.Map.EntitiesAt(x, y, x + 16, y + 16, self.layer)
 
             if not n:
                 if ika.Random(0, 2):

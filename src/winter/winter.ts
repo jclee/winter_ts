@@ -418,6 +418,23 @@ class Entity {
         this.x = newX
         this.y = newY
     }
+
+    Touches(otherEnt: Entity): boolean {
+        const x1 = this.x
+        const y1 = this.y
+        const w = this.hotwidth
+        const h = this.hotheight
+
+        if (x1     > otherEnt.x + otherEnt.hotwidth ||
+            y1     > otherEnt.y + otherEnt.hotheight ||
+            x1 + w < otherEnt.x ||
+            y1 + h < otherEnt.y)
+        {
+            return false
+        } else {
+            return true
+        }
+    }
 }
 
 class FontClass {
@@ -712,6 +729,32 @@ class MapClass {
     }
     ClearEntities() {
         this.entities = {}
+    }
+    EntitiesAt(x: number, y: number, width: number, height: number, layer: number) {
+        const x2 = x + width
+        const y2 = y + height
+
+        const found = []
+        for (let key in this.entities) {
+            const ent = this.entities[key]
+            if (ent.layer != layer) {
+                continue
+            }
+            if (x > ent.x + ent.hotwidth) {
+                continue
+            }
+            if (y > ent.y + ent.hotheight) {
+                continue
+            }
+            if (x2 < ent.x) {
+                continue
+            }
+            if (y2 < ent.y) {
+                continue
+            }
+            found.push(ent)
+        }
+        return found
     }
     ProcessEntities() {
         const _TIME_RATE = 100

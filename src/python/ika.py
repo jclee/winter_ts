@@ -162,6 +162,9 @@ _engine = window.Engine.new(Input.getKey)
 Map = _engine.map
 Video = _engine._video
 
+def hypot(x, y):
+    return window.Math.sqrt(x * x + y * y)
+
 def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine
 
