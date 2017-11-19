@@ -42,13 +42,6 @@ def Random(low, high):
 def RGB(r, g, b, a = 255):
     return window.RGB(r, g, b, a)
 
-def _RGBAToCSS(colorValue):
-    r = colorValue & 0xff
-    g = (colorValue >> 8) & 0xff
-    b = (colorValue >> 16) & 0xff
-    a = ((colorValue >> 24) & 0xff) / 255.0
-    return "rgba(" + str(r) + ", " + str(g) + ", " + str(b) + ", " + str(a) + ")"
-
 class _ControlClass(object):
     def __init__(self):
         self._pressed = 0
@@ -100,17 +93,12 @@ class Canvas(object):
         self._el = el
         self._ctx = ctx
 
-class Image(object):
-    def __init__(self, init_arg):
-        global _engine
-        if isinstance(init_arg, str):
-            self._path = init_arg
-            self._el = _engine.getImageEl(self._path)
-            self.width = self._el.width
-            self.height = self._el.height
-        else:
-            raise NotImplementedError() # TODO: Also handle case where first arg is a canvas?
-
+def Image(init_arg):
+    global _engine
+    if isinstance(init_arg, str):
+        return _engine.getImage(init_arg)
+    else:
+        raise NotImplementedError() # TODO: Also handle case where first arg is a canvas?
     # TODO other members...
 
 class _InputClass(object):
@@ -156,89 +144,6 @@ class Sound(object):
         pass # TODO
     # TODO other members...
 
-class _VideoClass(object):
-    def __init__(self):
-        # Resolution used in this game...
-        self.xres = 320
-        self.yres = 240
-        #colours = None # TODO
-
-    def Blit(self, image, x, y, blendmode=None):
-        global _engine
-        # Theoretically, we should be discarding the alpha channel of anything
-        # that we blit as "opaque", but it's likely that any such graphics
-        # already lack an alpha channel.
-        if blendmode not in [None, Opaque, Matte]:
-            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        _engine.ctx.drawImage(image._el, x, y)
-
-    def ClearScreen(self):
-        global _engine
-        _engine.ctx.fillStyle = 'rgb(0, 0, 0)'
-        _engine.ctx.fillRect(0, 0, _engine.width, _engine.height)
-
-    def ClipScreen(self, left=None, top=None, right=None, bottom=None):
-        global _engine
-        # Pop and immediately save pristine state
-        _engine.ctx.restore()
-        _engine.ctx.save()
-        if not all(x is None for x in [left, top, right, bottom]):
-            _engine.ctx.rect(left, top, right - left, bottom - top)
-            _engine.ctx.clip()
-
-    def DrawPixel(self, x, y, colour, blendmode=None):
-        global _engine
-        if blendmode not in [None, Opaque, Matte]:
-            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        _engine.ctx.fillStyle = _RGBAToCSS(colour)
-        _engine.ctx.fillRect(x, y, 1, 1)
-
-    def DrawRect(self, x1, y1, x2, y2, colour, fill=None, blendmode=None):
-        global _engine
-        if blendmode not in [None, Opaque, Matte]:
-            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        if fill is True:
-            _engine.ctx.fillStyle = _RGBAToCSS(colour)
-            # TODO: Maybe check on negative dimension behavior?
-            _engine.ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
-        else:
-            raise NotImplementedError() # TODO
-
-    def GrabImage(self, x1, y1, x2, y2):
-        global _engine
-        width = x2 - x1
-        height = y2 - y1
-        canvasEl, ctx = _makeCanvasAndContext(width, height)
-        ctx.drawImage(_engine.canvasEl, -x1, -y1)
-        return Canvas(width, height, canvasEl, ctx)
-
-    def ScaleBlit(self, image, x, y, width, height, blendmode=None):
-        global _engine
-        if blendmode not in [None, Opaque, Matte]:
-            raise NotImplementedError() # TODO: Handle more complicated blendmodes.
-        _engine.ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
-
-    def ShowPage(self):
-        global _engine
-        _engine.displayCtx.drawImage(_engine.canvasEl, 0, 0)
-        # Pretty sure any clipping gets reset here...
-        #self.ClipScreen()
-
-    def TintBlit(self, image, x, y, tintColor, blendMode=None):
-        # TODO: Honor tint color
-        self.Blit(image, x, y, blendMode)
-
-    def TintDistortBlit(self, image, upLeft, upRight, downRight, downLeft, blendmode=None):
-        (upLeftX, upLeftY, upLeftTint) = upLeft
-        (upRightX, upRightY, upRightTint) = upRight
-        (downRightX, downRightY, downRightTint) = downRight
-        (downLeftX, downLeftY, downLeftTint) = downLeft
-        # TODO: Actually implement.
-
-    # TODO other members...
-
-Video = _VideoClass()
-
 def _makeCanvasAndContext(width, height):
     el = window.document.createElement('canvas')
     el.width = width
@@ -255,6 +160,7 @@ def _makeCanvasAndContext(width, height):
 
 _engine = window.Engine.new(Input.getKey)
 Map = _engine.map
+Video = _engine._video
 
 def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine

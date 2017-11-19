@@ -137,6 +137,22 @@ interface MapZoneScript {
     script: string
 }
 
+interface Image {
+    _el: HTMLImageElement | HTMLCanvasElement
+    width: number
+    height: number
+}
+
+class Canvas {
+    constructor(
+        public width: number,
+        public height: number,
+        public _el: HTMLCanvasElement,
+        public _ctx: CanvasRenderingContext2D,
+    ) {
+    }
+}
+
 const RGB = (r: number, g: number, b: number, a: number): number => {
     return (
         (Math.floor(r) & 0xff)
@@ -146,6 +162,33 @@ const RGB = (r: number, g: number, b: number, a: number): number => {
     )
 }
 (window as any).RGB = RGB
+
+const _RGBAToCSS = (colorValue: number): string => {
+    const r = colorValue & 0xff
+    const g = (colorValue >> 8) & 0xff
+    const b = (colorValue >> 16) & 0xff
+    const a = ((colorValue >> 24) & 0xff) / 255.0
+    return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")"
+}
+
+const _makeCanvasAndContext = (width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] => {
+    const el = window.document.createElement('canvas')
+    el.width = width
+    el.height = height
+    const ctx = el.getContext('2d')
+    if (ctx === null) {
+        throw new Error("Couldn't get 2D context")
+    }
+    ctx.mozImageSmoothingEnabled = false
+    ctx.webkitImageSmoothingEnabled = false
+    // TypeScript doesn't know about msImageSmoothingEnabled...
+    //ctx.msImageSmoothingEnabled = false
+    ctx.imageSmoothingEnabled = false
+    // We maintain one pristine state on the stack for resetting
+    // clipping.
+    ctx.save()
+    return [el, ctx]
+}
 
 class Entity {
     // TODO: Probably a bunch of these members can be private, as the game does
@@ -700,6 +743,120 @@ interface SpriteData {
     hotspotHeight: number
 }
 
+class VideoClass {
+    // Resolution used in this game...
+    readonly xres = 320
+    readonly yres = 240
+    //colours = None // TODO
+    // TODO: Only necessary to hide cyclical reference from Brython:
+    private _getEngine: ()=>Engine
+
+    constructor(
+        engine: Engine,
+    ) {
+        this._getEngine = ()=>engine
+    }
+
+    private _assertBlendmodeSupported(blendmode?: number) {
+        const Opaque = 0
+        const Matte = 1
+        //AlphaBlend = 2
+        //AddBlend = 3
+        //SubtractBlend = 4
+        //MultiplyBlend = 5
+        //PreserveBlend = 6
+
+        if (blendmode !== undefined && blendmode != Opaque && blendmode != Matte) {
+            throw new Error("Unsupported blendmode") // TODO: Handle more complicated blendmodes.
+        }
+    }
+
+    Blit(image: Image, x: number, y: number, blendmode?: number) {
+        // Theoretically, we should be discarding the alpha channel of anything
+        // that we blit as "opaque", but it's likely that any such graphics
+        // already lack an alpha channel.
+        this._assertBlendmodeSupported(blendmode)
+        this._getEngine().ctx.drawImage(image._el, x, y)
+    }
+
+    ClearScreen() {
+        this._getEngine().ctx.fillStyle = 'rgb(0, 0, 0)'
+        this._getEngine().ctx.fillRect(0, 0, this._getEngine().width, this._getEngine().height)
+    }
+
+    ResetClipScreen() {
+        // Pop and immediately save pristine state
+        this._getEngine().ctx.restore()
+        this._getEngine().ctx.save()
+    }
+
+    ClipScreen(left?: number, top?: number, right?: number, bottom?: number) {
+        // TODO: Migrate empty param calls to ResetClipScreen() instead.
+        this.ResetClipScreen()
+        if (left !== undefined && top !== undefined && right !== undefined && bottom !== undefined) {
+            this._getEngine().ctx.rect(left, top, right - left, bottom - top)
+            this._getEngine().ctx.clip()
+        }
+    }
+
+    DrawPixel(x: number, y: number, colour: number, blendmode?: number) {
+        this._assertBlendmodeSupported(blendmode)
+        this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
+        this._getEngine().ctx.fillRect(x, y, 1, 1)
+    }
+
+    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number, fill: boolean, blendmode?: number) {
+        this._assertBlendmodeSupported(blendmode)
+        if (fill) {
+            this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
+            // TODO: Maybe check on negative dimension behavior?
+            this._getEngine().ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
+        } else {
+            throw new Error("DrawRect not implemented") // TODO
+        }
+    }
+
+    GrabImage(x1: number, y1: number, x2: number, y2: number) {
+        const width = x2 - x1
+        const height = y2 - y1
+        var canvasEl
+        var ctx
+        ;[canvasEl, ctx] = _makeCanvasAndContext(width, height)
+        ctx.drawImage(this._getEngine().canvasEl, -x1, -y1)
+        return new Canvas(width, height, canvasEl, ctx)
+    }
+
+    ScaleBlit(image: Image, x: number, y: number, width: number, height: number, blendmode?: number) {
+        this._assertBlendmodeSupported(blendmode)
+        this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
+    }
+
+    ShowPage() {
+        this._getEngine().displayCtx.drawImage(this._getEngine().canvasEl, 0, 0)
+        // Pretty sure any clipping gets reset here...
+        //this.ClipScreen()
+    }
+
+    TintBlit(image: Image, x: number, y: number, tintColor: number, blendMode?: number) {
+        // TODO: Honor tint color
+        tintColor = tintColor
+        this.Blit(image, x, y, blendMode)
+    }
+
+    TintDistortBlit(image: Image, upLeft: any, upRight: any, downRight: any, downLeft: any, blendmode?: number) {
+        // TODO: Actually implement.
+        image = image
+        upLeft = upLeft
+        upRight = upRight
+        downLeft = downLeft
+        downRight = downRight
+        blendmode = blendmode
+    }
+
+    // TODO other members...
+}
+(window as any).VideoClass = VideoClass
+
 class Engine {
     maps: {[key: string]: MapData}
     imageEls: {[key: string]: HTMLImageElement}
@@ -721,27 +878,8 @@ class Engine {
         this.imageEls = {}
         this.maps = {}
         this.sprites = {}
-        this._video = new VideoClass()
+        this._video = new VideoClass(this)
         this.map = new MapClass(this, this._video)
-    }
-
-    private _makeCanvasAndContext(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
-        const el = window.document.createElement('canvas')
-        el.width = width
-        el.height = height
-        const ctx = el.getContext('2d')
-        if (ctx === null) {
-            throw new Error("Couldn't get 2D context")
-        }
-        ctx.mozImageSmoothingEnabled = false
-        ctx.webkitImageSmoothingEnabled = false
-        // TypeScript doesn't know about msImageSmoothingEnabled...
-        //ctx.msImageSmoothingEnabled = false
-        ctx.imageSmoothingEnabled = false
-        // We maintain one pristine state on the stack for resetting
-        // clipping.
-        ctx.save()
-        return [el, ctx]
     }
 
     run(
@@ -756,8 +894,8 @@ class Engine {
         this.height = 240
         this.systemFontData = systemFontData
 
-        ;[this.canvasEl, this.ctx] = this._makeCanvasAndContext(this.width, this.height)
-        ;[this.displayCanvasEl, this.displayCtx] = this._makeCanvasAndContext(this.width, this.height)
+        ;[this.canvasEl, this.ctx] = _makeCanvasAndContext(this.width, this.height)
+        ;[this.displayCanvasEl, this.displayCtx] = _makeCanvasAndContext(this.width, this.height)
 
         this.displayCanvasEl.style.border = "1px solid"
         window.document.body.appendChild(this.displayCanvasEl)
@@ -897,6 +1035,15 @@ class Engine {
         return imageEl
     }
 
+    getImage(imagePath: string): Image {
+        const el = this.getImageEl(imagePath)
+        return {
+            _el: el,
+            width: el.width,
+            height: el.height,
+        }
+    }
+
     detectMapCollision(x: number, y: number, w: number, h: number, layerIndex: number): boolean {
         const tileW = 16
         const tileH = 16
@@ -925,12 +1072,6 @@ class Engine {
     }
 }
 (window as any).Engine = Engine
-
-class VideoClass {
-    readonly xres = 320
-    readonly yres = 240
-}
-(window as any).VideoClass = VideoClass
 
 // loading code:
 
