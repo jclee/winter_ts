@@ -271,7 +271,7 @@ def _makeCanvasAndContext(width, height):
     return (el, ctx)
 
 _engine = window.Engine.new(Input.getKey)
-Map = window.MapClass.new(_engine, Video)
+Map = _engine.map
 
 def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine

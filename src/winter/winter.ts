@@ -153,10 +153,13 @@ class Entity {
     isobs: boolean
     mapobs: boolean
     entobs: boolean
+    _delayCount: number
     _speedCount: number
     hotwidth: number
     hotheight: number
     isMoving: boolean
+    // TODO: Only necessary to hide cyclical reference from Brython:
+    _getEngine: ()=>Engine
 
     constructor(
         public x: number,
@@ -165,7 +168,10 @@ class Entity {
         public spritename: string,
         public name: string,
         spriteData: SpriteData,
+        engine: Engine,
     ) {
+        this._getEngine = ()=>engine
+
         this.specframe = -1
         this.name = name
 
@@ -181,6 +187,7 @@ class Entity {
         this.hotwidth = spriteData.hotspotWidth
         this.hotheight = spriteData.hotspotHeight
 
+        this._delayCount = 0
         this._speedCount = 0
         this.destLocation = new Point()
         this.destVector = new Point()
@@ -188,7 +195,13 @@ class Entity {
 
     // TODO - hashability?
 
-    Update() {}
+    MoveTo(x: number, y: number) {
+        this.destLocation.x = x
+        this.destLocation.y = y
+        this.destVector.x = x - this.x
+        this.destVector.y = y - this.y
+        this._delayCount = 0
+    }
 
     Stop() {
         this.destLocation.x = this.x
@@ -196,6 +209,161 @@ class Entity {
         this.destVector.x = 0
         this.destVector.y = 0
         this.isMoving = false
+    }
+
+    Update() {
+        let newDir = ''
+
+        // TODO: Don't know if animation scripts are being used yet.
+        // TODO: Not handling player logic, since game doesn't seem to hook
+        // up a player entity.
+        // TODO: Not dealing with movescripts.
+
+        if (this._delayCount > 0) {
+            this._delayCount -= 1
+        } else if (this.destVector.x != 0 || this.destVector.y != 0) {
+            const startX = this.destLocation.x - this.destVector.x
+            const startY = this.destLocation.y - this.destVector.y
+            const dx = this.x - this.destLocation.x
+            const dy = this.y - this.destLocation.y
+            if (dx == 0) {
+                if (this.y > this.destLocation.y) {
+                    newDir = 'up'
+                } else if (this.y < this.destLocation.y) {
+                    newDir = 'down'
+                } else {
+                    newDir = ''
+                }
+            } else if (dy == 0) {
+                if (this.x > this.destLocation.x) {
+                    newDir = 'left'
+                } else if (this.x < this.destLocation.x) {
+                    newDir = 'right'
+                } else {
+                    newDir = ''
+                }
+            } else {
+                const m = this.destVector.y / this.destVector.x
+                let targetY = Math.floor(Math.floor((this.x - startX) * m) + startY)
+                let deltaY = Math.abs(this.y - targetY)
+                if (deltaY == 0) {
+                    var tempX
+                    if (this.x > this.destLocation.x) {
+                        newDir = 'left'
+                        tempX = this.x - 1
+                    } else {
+                        newDir = 'right'
+                        tempX = this.x + 1
+                    }
+                    targetY = Math.floor((tempX - startX) * m) + startY
+                    deltaY = Math.abs(this.y - targetY)
+                }
+                if (deltaY == 1) {
+                    if (this.y > this.destLocation.y) {
+                        if (this.x > this.destLocation.x) {
+                            newDir = 'upleft'
+                        } else {
+                            newDir = 'upright'
+                        }
+                    } else {
+                        if (this.x > this.destLocation.x) {
+                            newDir = 'downleft'
+                        } else {
+                            newDir = 'downright'
+                        }
+                    }
+                } else if (deltaY > 1) {
+                    if (this.y > this.destLocation.y) {
+                        newDir = 'up'
+                    } else {
+                        newDir = 'down'
+                    }
+                }
+            }
+        }
+        if (newDir == '') {
+            this.Stop()
+        } else {
+            this._Move(newDir)
+        }
+    }
+
+    private _MoveDiagonally(d: string): string {
+        let d1 = ''
+        let d2 = ''
+        if (d == 'upleft') {
+            ;[d1, d2] = ['up', 'left']
+        } else if (d == 'upright') {
+            ;[d1, d2] = ['up', 'right']
+        } else if (d == 'downleft') {
+            ;[d1, d2] = ['down', 'left']
+        } else if (d == 'downright') {
+            ;[d1, d2] = ['down', 'right']
+        } else {
+            return d
+        }
+
+        const newX = this.x + (d2 == 'left' ? -1 : 1)
+        const newY = this.y + (d1 == 'up' ? -1 : 1)
+
+        if (this.mapobs && this._getEngine().detectMapCollision(this.x, newY, this.hotwidth, this.hotheight, this.layer)) {
+            // TODO: Not dealing with entity/entity collisions.
+            d1 = ''
+        }
+
+        if (this.mapobs && this._getEngine().detectMapCollision(newX, this.y, this.hotwidth, this.hotheight, this.layer)) {
+            // TODO: Not dealing with entity/entity collisions.
+            d2 = ''
+        }
+
+        if (d1 == '') {
+            return d2
+        }
+        if (d2 == '') {
+            return d1
+        }
+
+        if (d1 == 'up') {
+            return (d2 == 'left' ? 'upleft' : 'upright')
+        } else {
+            return (d2 == 'left' ? 'downleft' : 'downright')
+        }
+    }
+
+    private _Move(newDir: string) {
+        const moveDir = this._MoveDiagonally(newDir)
+        // TODO Not dealing with animscript
+
+        let newX = this.x
+        let newY = this.y
+        if (moveDir == 'up') {
+            newY -= 1
+        } else if (moveDir == 'down') {
+            newY += 1
+        } else if (moveDir == 'left') {
+            newX -= 1
+        } else if (moveDir == 'right') {
+            newX += 1
+        } else if (moveDir == 'upleft') {
+            newY -= 1
+            newX -= 1
+        } else if (moveDir == 'upright') {
+            newY -= 1
+            newX += 1
+        } else if (moveDir == 'downleft') {
+            newY += 1
+            newX -= 1
+        } else if (moveDir == 'downright') {
+            newY += 1
+            newX += 1
+        }
+        if (this.mapobs && this._getEngine().detectMapCollision(newX, newY, this.hotwidth, this.hotheight, this.layer)) {
+            this.Stop()
+            return
+        }
+        // TODO: Not dealing with entity/entity collisions.
+        this.x = newX
+        this.y = newY
     }
 }
 
@@ -256,7 +424,7 @@ class FontClass {
 class MapClass {
     private _xwin: number
     private _ywin: number
-    private _currentMapName: string
+    _currentMapName: string
     private _spriteID: number
     // TODO: make private and provide different accessor?
     entities: {[key: string]: Entity}
@@ -342,8 +510,8 @@ class MapClass {
 
             const w = layer.dimensions.width
             const h = layer.dimensions.height
-            let lenX = Math.floor((this._video.xres + tileW - 1) / tileW)
-            let lenY = Math.floor((this._video.yres + tileH - 1) / tileH + 1)
+            let lenX = Math.floor(this._video.xres / tileW) + 1
+            let lenY = Math.floor(this._video.yres / tileH) + 2
 
             if (firstX < 0) {
                 lenX -= -firstX
@@ -407,6 +575,7 @@ class MapClass {
                 )
             }
         }
+        // TODO: Hookretrace?
     }
 
     Switch(path: string) {
@@ -430,6 +599,7 @@ class MapClass {
                     entity.sprite,
                     entity.label,
                     spriteData,
+                    this._engine,
                 )
                 this.entities[ent.name] = ent
             }
@@ -480,7 +650,7 @@ class MapClass {
         this._spriteID += 1
         const name = "sprite_" + this._spriteID
         const spriteData = this._engine.sprites[spritename]
-        const ent = new Entity(x, y, layer, spritename, name, spriteData)
+        const ent = new Entity(x, y, layer, spritename, name, spriteData, this._engine)
         this.entities[ent.name] = ent
         return ent
     }
@@ -521,6 +691,8 @@ class Engine {
     ctx: CanvasRenderingContext2D
     displayCanvasEl: HTMLCanvasElement
     displayCtx: CanvasRenderingContext2D
+    map: MapClass
+    _video: VideoClass
 
     constructor(
         private _getKey: (key: string) => Control,
@@ -528,6 +700,8 @@ class Engine {
         this.imageEls = {}
         this.maps = {}
         this.sprites = {}
+        this._video = new VideoClass()
+        this.map = new MapClass(this, this._video)
     }
 
     private _makeCanvasAndContext(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
@@ -700,6 +874,33 @@ class Engine {
             throw new Error("Image element not found")
         }
         return imageEl
+    }
+
+    detectMapCollision(x: number, y: number, w: number, h: number, layerIndex: number): boolean {
+        const tileW = 16
+        const tileH = 16
+        const mapData = this.getMapData(this.map._currentMapName)
+        const layer = mapData.layers[layerIndex]
+        const layerWidth = layer.dimensions.width
+        const layerHeight = layer.dimensions.height
+        const y2 = Math.floor((y + h - 1) / tileH)
+        const x2 = Math.floor((x + w - 1) / tileW)
+        x = Math.floor(x / tileW)
+        y = Math.floor(y / tileH)
+        if (x < 0 || y < 0 || x2 >= layerWidth || y2 >= layerHeight) {
+            return true
+        }
+        for (let cy = y; cy <= y2; ++cy) {
+            for (let cx = x; cx <= x2; ++cx) {
+                const obsIndex = cy * layerWidth + cx
+                if (obsIndex < layer.obstructions.length) {
+                    if (layer.obstructions[obsIndex] != 0) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 }
 (window as any).Engine = Engine
