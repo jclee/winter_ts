@@ -137,6 +137,16 @@ interface MapZoneScript {
     script: string
 }
 
+const RGB = (r: number, g: number, b: number, a: number): number => {
+    return (
+        (Math.floor(r) & 0xff)
+        | ((Math.floor(g) & 0xff) << 8)
+        | ((Math.floor(b) & 0xff) << 16)
+        | ((Math.floor(a) & 0xff) << 24)
+    )
+}
+(window as any).RGB = RGB
+
 class Entity {
     // TODO: Probably a bunch of these members can be private, as the game does
     // not access them.

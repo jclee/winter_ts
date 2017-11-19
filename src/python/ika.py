@@ -38,26 +38,11 @@ def GetTime():
     deltaMsec = window.Date.now() - _engine.startMsec
     return (deltaMsec // 10)
 
-def ProcessEntities():
-    global _engine
-    global Map
-    for entKey in Map.entities:
-        ent = Map.entities[entKey]
-        ent._speedCount += ent.speed
-        while ent._speedCount >= _TIME_RATE:
-            ent.Update()
-            ent._speedCount -= _TIME_RATE
-
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 
 def RGB(r, g, b, a = 255):
-    return (
-        (int(r) & 0xff)
-        | ((int(g) & 0xff) << 8)
-        | ((int(b) & 0xff) << 16)
-        | ((int(a) & 0xff) << 24)
-    )
+    return window.RGB(r, g, b, a)
 
 def _RGBAToCSS(colorValue):
     r = colorValue & 0xff
