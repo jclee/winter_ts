@@ -276,7 +276,7 @@ class Engine(object):
     def tickTask(self):
         # We let ika do most of the work concerning entity movement.
         # (in particular, collision detection)
-        ika.ProcessEntities()
+        ika.Map.ProcessEntities()
 
         # update entities
         for ent in self.entities:

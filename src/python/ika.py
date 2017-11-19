@@ -11,8 +11,6 @@ PreserveBlend = 6
 #def Delay(time):
 #    raise RuntimeError("Use DelayTask instead.")
 
-_TIME_RATE = 100
-
 def DelayTask(time):
     targetEnd = window.Date.now() + (time * 10)
     # Busy waiting, sort of... :(

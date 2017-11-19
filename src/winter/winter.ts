@@ -670,6 +670,17 @@ class MapClass {
     ClearEntities() {
         this.entities = {}
     }
+    ProcessEntities() {
+        const _TIME_RATE = 100
+        for (let key in this.entities) {
+            const ent = this.entities[key]
+            ent._speedCount += ent.speed
+            while (ent._speedCount >= _TIME_RATE) {
+                ent.Update()
+                ent._speedCount -= _TIME_RATE
+            }
+        }
+    }
 }
 (window as any).MapClass = MapClass
 
