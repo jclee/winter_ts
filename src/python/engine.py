@@ -172,7 +172,7 @@ class Engine(object):
         self.background = None
         self.mapThings = []
         self.fields = []
-        ika.Map.ClearEntities()
+        ika.Map.clearMapEntities()
 
         # drop the extension, convert slashes to dots, and prepend the maps package
         # ie 'blah/map42.ika-map' becomes 'maps.blah.map42'

@@ -80,7 +80,7 @@ class _Point(object):
         self.y = y
 
 def Entity(x, y, layer, spritename):
-    return Map.AddEntity(x, y, layer, spritename)
+    return Map.addEntity(x, y, layer, spritename)
 
 def Font(file_name):
     global _engine

@@ -498,6 +498,7 @@ class MapClass {
     private _spriteID: number
     // TODO: make private and provide different accessor?
     entities: {[key: string]: Entity}
+    mapEntityNames_: string[]
     layercount: number
 
     constructor(
@@ -506,6 +507,7 @@ class MapClass {
     ) {
         this._spriteID = 0
         this.entities = {}
+        this.mapEntityNames_ = []
     }
 
     get xwin(): number {
@@ -649,7 +651,7 @@ class MapClass {
     }
 
     Switch(path: string) {
-        this.entities = {}
+        this.clearMapEntities()
 
         this._currentMapName = path.replace('maps/', '').replace('.ika-map', '')
         this._xwin = 0
@@ -672,6 +674,7 @@ class MapClass {
                     this._engine,
                 )
                 this.entities[ent.name] = ent
+                this.mapEntityNames_.push(ent.name)
             }
         }
     }
@@ -716,7 +719,7 @@ class MapClass {
     }
 
     // Adding some methods to replace direct access of python dict...
-    AddEntity(x: number, y: number, layer: number, spritename: string) {
+    addEntity(x: number, y: number, layer: number, spritename: string) {
         this._spriteID += 1
         const name = "sprite_" + this._spriteID
         const spriteData = this._engine.sprites[spritename]
@@ -727,8 +730,11 @@ class MapClass {
     RemoveEntity(entity: Entity) {
         delete this.entities[entity.name]
     }
-    ClearEntities() {
-        this.entities = {}
+    clearMapEntities() {
+        for (let name in this.mapEntityNames_) {
+            delete this.entities[name]
+        }
+        this.mapEntityNames_ = []
     }
     EntitiesAt(x: number, y: number, width: number, height: number, layer: number) {
         const x2 = x + width
