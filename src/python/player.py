@@ -363,7 +363,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
-                x = system.engineObj.entFromEnt[e]
+                x = system.engineObj.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 120, self.direction)
@@ -411,7 +411,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
-                x = system.engineObj.entFromEnt[e]
+                x = system.engineObj.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 130, self.direction)
@@ -461,7 +461,7 @@ class Player(Entity):
                 rect[1] = r[1] + self.y
                 ents = ika.Map.EntitiesAt(*rect)
                 for e in ents:
-                    x = system.engineObj.entFromEnt[e]
+                    x = system.engineObj.entFromEnt[e.name]
                     if isinstance(x, Enemy) and not x.invincible:
                         x.hurt(int(self.stats.att * 1.5), 300, self.direction)
                         self.giveMPforHit()

@@ -34,7 +34,7 @@ class DeathListener(Thing):
             # doing this)
             sound.playMusic("music/Competative.xm")
             self.yeti = system.engineObj.entFromEnt[
-                ika.Map.entities['demiyeti']
+                ika.Map.entities['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in savedata.__dict__:

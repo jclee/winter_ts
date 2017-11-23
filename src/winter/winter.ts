@@ -246,8 +246,6 @@ class Entity {
         this.destVector = new Point()
     }
 
-    // TODO - hashability?
-
     MoveTo(x: number, y: number) {
         this.destLocation.x = x
         this.destLocation.y = y

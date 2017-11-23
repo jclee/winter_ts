@@ -134,8 +134,8 @@ class Entity(object):
             rect[2], rect[3],
             self.layer)
 
-        return [system.engineObj.entFromEnt[e] for e in
-            ika.Map.EntitiesAt(*rect) if e in system.engineObj.entFromEnt]
+        return [system.engineObj.entFromEnt[e.name] for e in
+            ika.Map.EntitiesAt(*rect) if e.name in system.engineObj.entFromEnt]
 
     def touches(self, ent):
         return self.ent.Touches(ent.ent)

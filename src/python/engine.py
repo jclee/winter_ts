@@ -309,7 +309,7 @@ class Engine(object):
         assert ent not in self.entities
 
         self.entities.append(ent)
-        self.entFromEnt[ent.ent] = ent
+        self.entFromEnt[ent.ent.name] = ent
 
     def destroyEntity(self, ent):
         ent.x = ent.y = -1000
@@ -360,7 +360,7 @@ class Engine(object):
         for ent in self.killList:
             ent.ent.x, ent.ent.y = -100,0
             ent.ent.Stop()
-            del self.entFromEnt[ent.ent]
+            del self.entFromEnt[ent.ent.name]
             ika.Map.RemoveEntity(ent)
             ent.destroy()
             # brython workaround?
@@ -374,7 +374,7 @@ class Engine(object):
 
     def testCollision(self, ent):
         e = ent.ent.DetectCollision()
-        return self.entFromEnt.get(e)
+        return self.entFromEnt.get(e.name)
 
     def synchTime(self):
         '''Used to keep the engine from thinking it has to catch up

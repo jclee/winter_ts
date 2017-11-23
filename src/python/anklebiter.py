@@ -113,9 +113,9 @@ class AnkleBiter(Enemy):
     def dieTask(self, *args):
         # When one dies, the others scatter
 
-        ents = [system.engineObj.entFromEnt[x] for x in
+        ents = [system.engineObj.entFromEnt[x.name] for x in
             ika.Map.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
-            if x in system.engineObj.entFromEnt]
+            if x.name in system.engineObj.entFromEnt]
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
         for a in allies:
