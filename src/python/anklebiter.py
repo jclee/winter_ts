@@ -187,10 +187,10 @@ class AnkleBiter(Enemy):
         return super(AnkleBiter, self).deathState(*args, **kwargs)
 
     def attackState(self, dir):
-        class SpeedSaver(object):
-            def __init__(_self): _self.s = self.speed
-            def __del__(_self):  self.speed = _self.s
-        ss = SpeedSaver()
+        oldSpeed = self.speed
+        def restoreVars(self=self, oldSpeed=oldSpeed):
+            self.speed = oldSpeed
+        self._onStateExit = restoreVars
 
         self.direction = dir
         self.anim = 'attack'

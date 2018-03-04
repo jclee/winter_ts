@@ -29,11 +29,10 @@ class SoulReaver(Yeti):
         elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
             self.direction = dir.RIGHT
 
-        class Saver(object):
-            def __init__(_self):        _self.i = self.interruptable
-            def __del__(_self):         self.interruptable = _self.i
-
-        saver = Saver()
+        oldInterruptable = self.interruptable
+        def restoreVars(self=self, oldInterruptable=oldInterruptable):
+            self.interruptable = oldInterruptable
+        self._onStateExit = restoreVars
 
         self.anim = 'attack'
 
@@ -97,8 +96,6 @@ class SoulReaver(Yeti):
         #    yield None
 
         self.stop()
-
-        del saver
 
         self.state = self.idleState(10)
 

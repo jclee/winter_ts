@@ -28,10 +28,8 @@ class Entity(object):
         self.interruptable = True # if false, no state changes will occur
         self.invincible = False
         self._state = None
+        self._onStateExit = None
         self.state = self.defaultState()
-
-    #def __del__(self):
-    #    print('deleting ', self)
 
     def destroy(self):
         for k in self.__dict__.keys():
@@ -77,6 +75,9 @@ class Entity(object):
     def _setState(self, newState):
         '''Tries to be psychic.  Generators are recognized, other crap is assumed
         to be a function that returns a generator.'''
+        if self._onStateExit is not None:
+            self._onStateExit()
+            self._onStateExit = None
         if self.interruptable or self._state is None:
             if isinstance(newState, GeneratorType):
                 self._state = newState
@@ -92,15 +93,12 @@ class Entity(object):
             yield None
 
     def hurtState(self, recoilSpeed, recoilDir):
-        class Restorer(object):
-            def __init__(_self):
-                _self.s = self.speed
-                _self.i = self.invincible
-            def __del__(_self):
-                self.speed = _self.s
-                self.invincible = _self.i
-
-        rest = Restorer()
+        oldSpeed = self.speed
+        oldInvincible = self.invincible
+        def restoreVars(self=self, oldSpeed=oldSpeed, oldInvincible=oldInvincible):
+            self.speed = oldSpeed
+            self.invincible = oldInvincible
+        self._onStateExit = restoreVars
 
         dx, dy = dir.delta[recoilDir]
         self.speed = recoilSpeed
@@ -111,7 +109,7 @@ class Entity(object):
         t = 64
         while True:
             t -= 1
-            if t <= 34: self.invincible = rest.i
+            if t <= 34: self.invincible = oldInvincible
             self.speed -= t // 8
 
             yield None

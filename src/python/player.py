@@ -435,11 +435,10 @@ class Player(Entity):
         elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
             self.direction = dir.RIGHT
 
-        class SpeedSaver(object):
-            def __init__(_self):        _self.s = self.speed
-            def __del__(_self):         self.speed = _self.s
-
-        ss = SpeedSaver()
+        oldSpeed = self.speed
+        def restoreVars(self=self, oldSpeed=oldSpeed):
+            self.speed = oldSpeed
+        self._onStateExit = restoreVars
 
         self.anim = 'thrust'
         self.speed += 800
@@ -486,11 +485,10 @@ class Player(Entity):
         elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
             self.direction = dir.RIGHT
 
-        class SpeedSaver(object):
-            def __init__(_self):        _self.s = self.speed
-            def __del__(_self):         self.speed = _self.s
-
-        ss = SpeedSaver()
+        oldSpeed = self.speed
+        def restoreVars(self=self, oldSpeed=oldSpeed):
+            self.speed = oldSpeed
+        self._onStateExit = restoreVars
 
         self.anim = 'backthrust'
         self.speed += 400
@@ -581,19 +579,16 @@ class Player(Entity):
             yield None
 
     def crushingGaleState(self):
-        class Saver(object):
-            def __init__(_self):
-                _self.speed = self.speed
-                _self.o = self.ent.entobs
-                _self.i = self.invincible
-                _self.l = system.engineObj.camera.locked
-            def __del__(_self):
-                self.speed = _self.speed
-                self.ent.entobs = _self.o
-                self.invincible = _self.i
-                system.engineObj.camera.locked = _self.l
-
-        saver = Saver()
+        oldSpeed = self.speed
+        oldObs = self.ent.entobs
+        oldInvincible = self.invincible
+        oldCameraLocked = system.engineObj.camera.locked
+        def restoreVars(self=self, oldSpeed=oldSpeed, oldObs=oldObs, oldInvincible=oldInvincible, oldCameraLocked=oldCameraLocked):
+            self.speed = oldSpeed
+            self.ent.entobs = oldObs
+            self.invincible = oldInvincible
+            system.engineObj.camera.locked = oldCameraLocked
+        self._onStateExit = restoreVars
 
         if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
             self.direction = dir.LEFT
@@ -638,7 +633,7 @@ class Player(Entity):
                     e.hurt(self.stats.att + self.stats.mag * 2, 300, (self.direction + 2) & 3)
 
             yield None
-            self.speed = max(saver.speed, self.speed - 20)
+            self.speed = max(oldSpeed, self.speed - 20)
 
         while True:
             ents = [x for x in self.detectCollision((0, 0, self.ent.hotwidth, self.ent.hotheight, self.layer)) if isinstance(x, Gap)]

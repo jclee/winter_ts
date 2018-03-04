@@ -160,11 +160,10 @@ class Yeti(Enemy):
         self.stop()
 
     def attackState(self, dir):
-        class Saver(object):
-            def __init__(_self):        _self.i = self.interruptable
-            def __del__(_self):         self.interruptable = _self.i
-
-        saver = Saver()
+        oldInterruptable = self.interruptable
+        def restoreVars(self=self, oldInterruptable=oldInterruptable):
+            self.interruptable = oldInterruptable
+        self._onStateExit = restoreVars
 
         self.direction = dir
         self.anim = 'attack'
@@ -193,8 +192,6 @@ class Yeti(Enemy):
             yield None
 
         self.stop()
-
-        del saver
 
         self.state = self.idleState(10)
         yield None
