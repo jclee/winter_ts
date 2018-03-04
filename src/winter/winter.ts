@@ -729,7 +729,7 @@ class MapClass {
         delete this.entities[entity.name]
     }
     clearMapEntities() {
-        for (let name in this.mapEntityNames_) {
+        for (let name of this.mapEntityNames_) {
             delete this.entities[name]
         }
         this.mapEntityNames_ = []
