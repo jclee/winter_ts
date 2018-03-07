@@ -152,7 +152,7 @@ class Entity(object):
         self.direction = d
         self.ent.MoveTo(int(self.ent.x + dist * dx), int(self.ent.y + dist * dy))
 
-    def isMoving(self):     return self.ent.IsMoving()
+    def isMoving(self):     return self.ent.isMoving
     def stop(self):         self.ent.Stop()
     def getX(self):         return self.ent.x
     def getY(self):         return self.ent.y

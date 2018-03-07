@@ -210,6 +210,7 @@ class Entity {
     _speedCount: number
     hotwidth: number
     hotheight: number
+    _direction: string
     isMoving: boolean
     // TODO: Only necessary to hide cyclical reference from Brython:
     _getEngine: ()=>Engine
@@ -239,6 +240,9 @@ class Entity {
         this.hoty = spriteData.hotspotY
         this.hotwidth = spriteData.hotspotWidth
         this.hotheight = spriteData.hotspotHeight
+
+        this._direction = 'down'
+        this.isMoving = false
 
         this._delayCount = 0
         this._speedCount = 0
@@ -382,8 +386,14 @@ class Entity {
     }
 
     private _Move(newDir: string) {
+        const oldDir = this._direction
         const moveDir = this._MoveDiagonally(newDir)
+        this._direction = newDir
+
         // TODO Not dealing with animscript
+        if (newDir != oldDir) {
+            this.isMoving = true
+        }
 
         let newX = this.x
         let newY = this.y

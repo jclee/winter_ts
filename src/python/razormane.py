@@ -107,7 +107,7 @@ class RazorMane(Enemy):
             sound.razorManeHurt.Play()
         if self.stats.hp < self.stats.maxhp // 2:
             self.mood = self.fleeMood
-        return super(RazorMane, self).hurtState(recoilSpeed, recoilDir)
+        yield from super(RazorMane, self).hurtState(recoilSpeed, recoilDir)
 
     def dieTask(self, *args):
         # When one dies, the others scatter
@@ -195,7 +195,7 @@ class RazorMane(Enemy):
 
     def idleState(self, *args):
         self._animator.kill = True
-        return super(RazorMane, self).idleState(*args)
+        yield from super(RazorMane, self).idleState(*args)
 
     def walkState(self, dir, dist):
         ox, oy = self.x, self.y
@@ -213,7 +213,7 @@ class RazorMane(Enemy):
     def deathState(self, *args, **kwargs):
         sound.razorManeDie.Play()
         self.anim = 'die'
-        return super(RazorMane, self).deathState(*args, **kwargs)
+        yield from super(RazorMane, self).deathState(*args, **kwargs)
 
     def attackState(self, dir):
         oldSpeed = self.speed

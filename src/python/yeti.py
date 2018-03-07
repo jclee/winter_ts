@@ -109,7 +109,7 @@ class Yeti(Enemy):
             sound.yetiHurt[self.stats.ind][i].Play()
 
         self.mood = self.attackMood
-        return super(Yeti, self).hurtState(dist * 2 // 3, dir)
+        yield from super(Yeti, self).hurtState(dist * 2 // 3, dir)
 
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
@@ -148,7 +148,7 @@ class Yeti(Enemy):
     def deathState(self, *args, **kwargs):
         sound.yetiDie[self.stats.ind].Play()
         self.anim = 'die'
-        return super(Yeti, self).deathState(*args, **kwargs)
+        yield from super(Yeti, self).deathState(*args, **kwargs)
 
     def walkState(self, dir, dist):
         self.move(dir, dist)

@@ -42,12 +42,16 @@ class Enemy(Entity):
             Brain.Flee : self.idleState
         }
 
-    def _setMood(self, value):
-        self._mood = GenWrapper(value)
+    @property
+    def mood(self):
+        return self._mood
 
-    mood = property(
-        fget = lambda self: self._mood,
-        fset = _setMood)
+    @mood.setter
+    def mood(self, value):
+        if value is None:
+            self._mood = None
+            return
+        self._mood = GenWrapper(value)
 
     def addMood(self, mood, func):
         self.brain.moods.append(mood)
@@ -113,7 +117,6 @@ class Enemy(Entity):
             self.think()
         try:
             next(self._state)
-            return
         except StopIteration:
             self.think()
         if False:

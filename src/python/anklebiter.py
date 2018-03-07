@@ -108,7 +108,7 @@ class AnkleBiter(Enemy):
             sound.anklebiterHurt.Play()
         if self.stats.hp < self.stats.maxhp // 2:
             self.mood = self.fleeMood
-        return super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
+        yield from super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 
     def dieTask(self, *args):
         # When one dies, the others scatter
@@ -169,7 +169,7 @@ class AnkleBiter(Enemy):
 
     def idleState(self, *args):
         self._animator.kill = True
-        return super(AnkleBiter, self).idleState(*args)
+        yield from super(AnkleBiter, self).idleState(*args)
 
     def walkState(self, dir, dist):
         ox, oy = self.x, self.y
@@ -184,7 +184,7 @@ class AnkleBiter(Enemy):
     def deathState(self, *args, **kwargs):
         sound.anklebiterDie.Play()
         self.anim = 'die'
-        return super(AnkleBiter, self).deathState(*args, **kwargs)
+        yield from super(AnkleBiter, self).deathState(*args, **kwargs)
 
     def attackState(self, dir):
         oldSpeed = self.speed
