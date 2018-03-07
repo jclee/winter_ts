@@ -175,7 +175,7 @@ class AnkleBiter(Enemy):
         ox, oy = self.x, self.y
         self.move(dir, dist)
         self.anim = 'walk'
-        while self.moving:
+        while self.isMoving():
             yield None
             if (ox, oy) == (self.x, self.y):
                 break

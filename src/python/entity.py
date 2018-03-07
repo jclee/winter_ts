@@ -154,30 +154,44 @@ class Entity(object):
 
     def isMoving(self):     return self.ent.isMoving
     def stop(self):         self.ent.Stop()
-    def getX(self):         return self.ent.x
-    def getY(self):         return self.ent.y
-    def setX(self, value):  self.ent.x = value
-    def setY(self, value):  self.ent.y = value
-    def getSpeed(self):     return self.ent.speed
-    def setSpeed(self, v):  self.ent.speed = v
-    def getLayer(self):     return self.ent.layer
-    def setLayer(self, v):  self.ent.layer = v
 
     def animate(self):
         self._animator.update(1)
         self.ent.specframe = self._animator.curFrame
 
-    def getAnim(self):
-        return None
+    # properties.  Because they're high in fibre.
+    @property
+    def x(self):
+        return self.ent.x
+    @x.setter
+    def x(self, value):
+        self.ent.x = value
 
-    def setAnim(self, value, loop = False):
+    @property
+    def y(self):
+        return self.ent.y
+    @y.setter
+    def y(self, value):
+        self.ent.y = value
+
+    @property
+    def speed(self):
+        return self.ent.speed
+    @speed.setter
+    def speed(self, value):
+        self.ent.speed = value
+
+    @property
+    def layer(self):
+        return self.ent.layer
+    @layer.setter
+    def layer(self, value):
+        self.ent.layer = value
+
+    @property
+    def anim(self):
+        return None
+    @anim.setter
+    def anim(self, value, loop = False):
         a, loop = self._anim[value]
         self._animator.setAnim(a[self.direction], loop)
-
-    # properties.  Because they're high in fibre.
-    x = property(getX, setX)
-    y = property(getY, setY)
-    moving = property(isMoving)
-    speed = property(getSpeed, setSpeed)
-    layer = property(getLayer, setLayer)
-    anim = property(getAnim, setAnim)
