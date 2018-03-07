@@ -17,7 +17,7 @@ class SavePoint(Entity):
         t = self.touches(system.engineObj.player)
         if t and not self.isTouching:
             # bump the player backward, so he's not touching us anymore.
-            xi.effects.fadeOut(50, draw=system.engineObj.draw)
+            yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
 
             p = system.engineObj.player
             p.stats.hp = 999
