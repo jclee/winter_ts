@@ -11,9 +11,9 @@ import snow
 def AutoExec():
     system.engineObj.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
     if 'waterrune' not in savedata.__dict__:
-        system.engineObj.things.append(RuneListener())
+        system.engineObj.mapThings.append(RuneListener())
     if 'nearend' in savedata.__dict__:
-        system.engineObj.things.append(RuneListener())
+        system.engineObj.mapThings.append(RuneListener())
 
 def to3():
     offset_from = 11 * 16  # first horizontal pos possible

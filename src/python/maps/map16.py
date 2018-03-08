@@ -19,7 +19,7 @@ def AutoExec():
             ika.Map.entities['break_gap'].x = -100
 
     if 'windguard' not in savedata.__dict__ and 'nearend' in savedata.__dict__:
-        system.engineObj.things.append(RuneListener())
+        system.engineObj.mapThings.append(RuneListener())
 
 
 def bridge_break():

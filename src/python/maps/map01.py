@@ -10,7 +10,7 @@ import snow
 def AutoExec():
     system.engineObj.mapThings.append(snow.Snow(velocity=(0, 0.5)))
     if 'cowardrune' not in savedata.__dict__:
-        system.engineObj.things.append(RuneListener())
+        system.engineObj.mapThings.append(RuneListener())
 
 def to2():
     offset_from = 4 * 16  # first vertical pos possible

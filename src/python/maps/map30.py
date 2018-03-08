@@ -4,7 +4,7 @@ import savedata
 import cabin
 
 def AutoExec():
-    system.engineObj.things.append(CabinListener())
+    system.engineObj.mapThings.append(CabinListener())
     
 def to25():
     yield from system.engineObj.mapSwitchTask('map25.ika-map', (39 * 16, 5 * 16))
