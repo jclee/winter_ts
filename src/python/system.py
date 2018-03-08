@@ -13,9 +13,8 @@ def mainTask():
     controls.init()
     subscreen.init()
 
-    try:
-        c = controls.readConfig('controls.cfg')
-    except IOError:
+    c = controls.readConfig('controls.cfg')
+    if c is None:
         c = controls.defaultControls
         controls.writeConfig('controls.cfg', c)
     controls.setConfig(c)

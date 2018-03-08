@@ -5,7 +5,7 @@ Input abstraction and so on.
 import ika
 
 from keynames import keyNames
-import virtualfile
+# TODO: Don't do circular include?
 import controls
 import xi.controls
 
@@ -56,22 +56,21 @@ def init():
     setConfig(defaultControls)
 
 # returns a dict
-def readConfig(f):
-    if isinstance(f, str):
-        f = virtualfile.open(f, 'rt')
+def readConfig(key):
+    data = ika.GetLocalStorageItem(key)
+    if data is None:
+        return None
 
     config = dict()
-    for line in f.readlines():
+    for line in data.splitlines():
         l = line.split()[:2]
         config[l[0]] = l[1]
 
     return config
 
-def writeConfig(f, config):
-    if isinstance(f, str):
-        f = virtualfile.open(f, 'wt')
-    for k, v in config.items():
-        f.write('%s %s\n' % (k, v))
+def writeConfig(key, config):
+    data = '\n'.join('%s %s' % (k, v) for (k, v) in config.items())
+    ika.SetLocalStorageItem(key, data)
 
 def setConfig(config=None):
     class PosControl(object):

@@ -151,6 +151,12 @@ Video = _engine._video
 def hypot(x, y):
     return window.Math.sqrt(x * x + y * y)
 
+def SetLocalStorageItem(key, value):
+    window.localStorage.setItem('wintergame/' + key, value)
+
+def GetLocalStorageItem(key):
+    return window.localStorage.getItem('wintergame/' + key)
+
 def Run(task, mapsPath, spritesPath, imagePaths, systemFontData):
     global _engine
 
