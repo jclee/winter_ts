@@ -256,6 +256,11 @@ class Entity {
         this.destVector.x = x - this.x
         this.destVector.y = y - this.y
         this._delayCount = 0
+
+        // The code setting this flag seems to be missing in the ika source,
+        // but seems to be necessary for the expected AI behavior seen in the
+        // shipped game?
+        this.isMoving = this.destVector.x != 0 || this.destVector.y != 0
     }
 
     Stop() {
@@ -274,6 +279,7 @@ class Entity {
         // up a player entity.
         // TODO: Not dealing with movescripts.
 
+        // TODO: Can probably remove _delayCount: Wait not used.
         if (this._delayCount > 0) {
             this._delayCount -= 1
         } else if (this.destVector.x != 0 || this.destVector.y != 0) {
@@ -386,14 +392,11 @@ class Entity {
     }
 
     private _Move(newDir: string) {
-        const oldDir = this._direction
         const moveDir = this._MoveDiagonally(newDir)
         this._direction = newDir
 
         // TODO Not dealing with animscript
-        if (newDir != oldDir) {
-            this.isMoving = true
-        }
+        this.isMoving = true
 
         let newX = this.x
         let newY = this.y
