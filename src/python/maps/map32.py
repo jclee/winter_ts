@@ -68,7 +68,9 @@ def finalBattle():
         system.engineObj.synchTime()
 
 def to31():
-    pass
+    if False:
+        yield None
 
 def to33():
-    pass
+    if False:
+        yield None

@@ -15,7 +15,7 @@ def AutoExec():
         engine.mapThings.append(RuneListener())
 
     if 'firerune' in savedata.__dict__.keys():
-        del ika.Map.entities['demiyeti']
+        ika.Map.RemoveEntity(ika.Map.entities['demiyeti'])
     else:
         engine.mapThings.append(DeathListener())
 
