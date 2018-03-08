@@ -141,13 +141,14 @@ def sceneTask(name):
 
     yield from xi.effects.fadeOutTask(100)
 
-    #grandpa = kid1 = kid2 = kid3 = None
+    grandpa = kid1 = kid2 = kid3 = None
 
-    ## FIXME? AutoExec will be called when you do this!
-    #if system.engineObj.mapName:
-    #    ika.Map.Switch('maps/' + system.engineObj.mapName)
-    #    for e, pos in zip(system.engineObj.entities, savedPos):
-    #        e.x, e.y = pos
+    if system.engineObj.mapName:
+        # We now only call AutoExec in engine.mapSwitchTask, not
+        # ika.Map.Switch, so this should be an OK way to restore the map.
+        ika.Map.Switch('maps/' + system.engineObj.mapName)
+        for e, pos in zip(system.engineObj.entities, savedPos):
+            e.x, e.y = pos
 
 # name : function pairs
 def addScene(function):
