@@ -110,7 +110,7 @@ class AnkleBiter(Enemy):
             self.mood = self.fleeMood
         yield from super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 
-    def dieTask(self, *args):
+    def die(self, *args):
         # When one dies, the others scatter
 
         ents = [system.engineObj.entFromEnt[x.name] for x in
@@ -122,7 +122,7 @@ class AnkleBiter(Enemy):
             a.mood = a.fleeMood
             a.state = a.idleState()
 
-        yield from super(AnkleBiter, self).dieTask(*args)
+        super(AnkleBiter, self).die(*args)
 
     def attackMood(self):
         # if we want to be uber, we can remove this hack.

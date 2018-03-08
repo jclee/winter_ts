@@ -12,6 +12,7 @@ import ika
 
 class ImageWindow(object):
     def __init__(self, srcimage, bordersize, stretch = 0):
+        raise NotImplementedError() # pretty sure nothing uses this
         def ss(x, y, w, h):
             c = ika.Canvas(w, h)
             srcimage.Blit(c, -x, -y)

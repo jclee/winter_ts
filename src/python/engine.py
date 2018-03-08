@@ -23,14 +23,17 @@ from field import Field
 from hud import HPBar, MPBar, EXPBar
 from caption import Caption
 from camera import Camera
-from gameover import EndGameException, GameOverException
+from gameover import EndGameException, GameOverException, GameWinException
 
 import subscreen
 import saveload
 
 import controls
 import cabin
+import ending
 import sound
+import xi
+import system
 
 FRAME_RATE = 100
 MAX_SKIP_COUNT = 10
@@ -262,6 +265,13 @@ class Engine(object):
             yield from self.gameOverTask()
             self.killList = self.entities[:]
             self.clearKillQueue()
+
+        except GameWinException:
+            yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
+            self.killList = self.entities[:]
+            self.clearKillQueue()
+            yield from ending.creditsTask()
+
         except EndGameException:
             self.killList = self.entities[:]
             self.clearKillQueue()

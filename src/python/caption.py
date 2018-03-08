@@ -16,13 +16,15 @@ class Caption(Thing):
         if y is None:   self.y = ika.Video.yres - height - 40
         else:           self.y = y
 
-        canv = ika.Canvas(width, height)
-        canv.DrawText(font, 0, 0, text)
+        # TODO - make work
+        #canv = ika.Canvas(width, height)
+        #canv.DrawText(font, 0, 0, text)
 
-        self.img = ika.Image(canv)
+        #self.img = ika.Image(canv)
         self.opacity = 0
         self.duration = duration
-        self.update = self._update().next
+        self._updateGen =  self._update()
+        self.update = lambda: next(self._updateGen)
 
     def _update(self):
         while self.opacity < 256:
@@ -41,4 +43,5 @@ class Caption(Thing):
 
     def draw(self):
         o = min(255, self.opacity)
-        ika.Video.TintBlit(self.img, self.x, self.y, ika.RGB(255, 255, 255, o))
+        # TODO: make work
+        #ika.Video.TintBlit(self.img, self.x, self.y, ika.RGB(255, 255, 255, o))

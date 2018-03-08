@@ -185,20 +185,23 @@ def creditsTask():
         Y = -adjust
         while Y < ika.Video.yres and firstLine < len(_text):
             if firstLine >= 0:
-                font.CenterPrint(160, Y, _text[firstLine])
+                # TODO: make work
+                pass
+                #font.CenterPrint(160, Y, _text[firstLine])
             Y += font.height
             firstLine += 1
 
 
-        ika.Video.DrawTriangle(
-            (0, 0, ika.RGB(0, 0, 0)),
-            (ika.Video.xres, 0, ika.RGB(0, 0, 0, 0)),
-            (0, 60, ika.RGB(0, 0, 0, 0)))
+        # TODO: Make work
+        #ika.Video.DrawTriangle(
+        #    (0, 0, ika.RGB(0, 0, 0)),
+        #    (ika.Video.xres, 0, ika.RGB(0, 0, 0, 0)),
+        #    (0, 60, ika.RGB(0, 0, 0, 0)))
 
-        ika.Video.DrawTriangle(
-            (ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0)),
-            (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
-            (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
+        #ika.Video.DrawTriangle(
+        #    (ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0)),
+        #    (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
+        #    (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
 
         snowObj.draw()
 

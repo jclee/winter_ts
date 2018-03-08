@@ -50,10 +50,8 @@ class Entity(object):
         if False:
             yield None
 
-    def dieTask(self, *args):
+    def die(self, *args):
         system.engineObj.destroyEntity(self)
-        if False:
-            yield None
 
     # if recoil is nonzero, the enemy is blown backwards in a direction,
     # at some speed.  The default direction is backwards
@@ -66,8 +64,7 @@ class Entity(object):
 
         if self.stats.hp <= amount:
             self.stats.hp = 0
-            # TODO DO NOT COMMIT - make task work with state system...
-            #yield from self.dieTask()
+            self.die()
         else:
             self.stats.hp -= amount
             self.state = self.hurtState(recoilSpeed, recoilDir)

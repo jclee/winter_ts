@@ -4,3 +4,6 @@ class EndGameException(Exception):
 
 class GameOverException(EndGameException):
     pass
+
+class GameWinException(EndGameException):
+    pass

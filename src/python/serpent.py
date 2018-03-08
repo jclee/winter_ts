@@ -7,9 +7,10 @@ import dir
 import ending
 import xi.effects
 
-from enemy import Enemy
-from carnivore import Carnivore
 from anklebiter import AnkleBiter
+from carnivore import Carnivore
+from enemy import Enemy
+from gameover import GameWinException
 
 # arbitrary :D
 _idleAnim = animator.makeAnim((0, 4, 0, 0, 0, 4, 0, 0, 1, 2, 3, 2, 1, 0), 50)
@@ -55,9 +56,8 @@ class Serpent(Enemy):
         ent.mapobs = ent.entobs = False
         self.bleh = self.watchMood()
 
-    def dieTask(self):
-        yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
-        yield from ending.creditsTask()
+    def die(self):
+        raise GameWinException()
 
     def think(self):
         self.state = next(self.bleh)
