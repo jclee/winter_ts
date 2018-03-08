@@ -55,16 +55,6 @@ def WrapText(text, maxWidth, font):
 
     return result
 
-def clamp(value, lower, upper):
-    return max(min(value, upper), lower)
-
-def formatTime(time, separator = ':'):
-    hours = time // 360000
-    minutes = time // 6000 % 60
-    seconds = time // 100 % 60
-
-    return separator.join(['%02i' % i for i in (hours, minutes, seconds)])
-
 import ika
 
 up = ika.Input.up

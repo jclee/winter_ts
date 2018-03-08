@@ -6,10 +6,7 @@ __all__ = [
     'layout',
     'menu',
     'misc',
-    'movescript',
     'scrolltext',
     'sound',
-    'statelessproxy',
-    'token',
     'window'
     ]
