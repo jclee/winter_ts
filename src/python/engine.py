@@ -146,19 +146,18 @@ class Engine(object):
         yield from self.runTask()
 
     def loadGameTask(self):
-        while False:
-            yield None
-        raise NotImplementedError() # TODO - make work
-        #import saveloadmenu
-        #result = yield from saveloadmenu.loadMenuTask(fadeOut=False)
-        #if result:
-        #    bleh = effects.createBlurImages()
-        #    saveload.SaveGame.clearSaveFlags()
-        #    yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
-        #    yield from self.initTask(result)
-        #    self.draw()
-        #    yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
-        #    yield from self.runTask()
+        import saveloadmenu
+        resultRef = [None]
+        yield from saveloadmenu.loadMenuTask(resultRef, fadeOut=False)
+        [result] = resultRef
+        if result:
+            bleh = effects.createBlurImages()
+            saveload.SaveGame.clearSaveFlags()
+            yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
+            yield from self.initTask(result)
+            self.draw()
+            yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
+            yield from self.runTask()
 
     def mapSwitchTask(self, mapName, dest = None, fade = True):
         if fade:

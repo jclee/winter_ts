@@ -108,7 +108,7 @@ def readSaves():
     except IOError:
         return saves
 
-def loadMenuTask(fadeOut=True):
+def loadMenuTask(resultRef, fadeOut=True):
     title = gui.TextFrame(text='Load Game')
     title.Position = (16, 16)
     saves = readSaves()
@@ -132,10 +132,12 @@ def loadMenuTask(fadeOut=True):
         yield from xi.effects.fadeOutTask(50, draw=draw)
 
     draw()
+    # Hack to get around brython's lack of support for returning values through
+    # "yield from":
     if i is Cancel or i >= len(saves):
-        return None
+        resultRef[0] = None
     else:
-        return saves[i]
+        resultRef[0] = saves[i]
 
 def saveMenuTask():
     title = gui.TextFrame(text='Save Game')
