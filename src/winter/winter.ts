@@ -511,6 +511,9 @@ class FontClass {
 class MapClass {
     private _xwin: number
     private _ywin: number
+    private _localLayerDatas: number[][]
+    // TODO: Make private?
+    _localLayerObstructions: number[][]
     _currentMapName: string
     private _spriteID: number
     // TODO: make private and provide different accessor?
@@ -619,11 +622,12 @@ class MapClass {
                 lenY = h - firstY
             }
 
+            const localLayerData = this._localLayerDatas[i]
             for (let y = 0; y < lenY; ++y) {
                 for (let x = 0; x < lenX; ++x) {
                     const index = (firstY + y) * w + (firstX + x)
                     // This game doesn't use tile animations
-                    const tileIndex = layer.data[index]
+                    const tileIndex = localLayerData[index]
                     const tileX = (tileIndex % tilesPerRow) * tileW
                     const tileY = Math.floor(tileIndex / tilesPerRow) * tileH
                     this._engine.ctx.drawImage(
@@ -667,6 +671,22 @@ class MapClass {
         // TODO: Hookretrace?
     }
 
+    SetTile(x: number, y: number, layerIndex: number, tileIndex: number) {
+        const mapData = this._engine.getMapData(this._currentMapName)
+        const layer = mapData.layers[layerIndex]
+        const localLayerData = this._localLayerDatas[layerIndex]
+        const index = y * layer.dimensions.width + x
+        localLayerData[index] = tileIndex
+    }
+
+    SetObs(x: number, y: number, layerIndex: number, obs: number) {
+        const mapData = this._engine.getMapData(this._currentMapName)
+        const layer = mapData.layers[layerIndex]
+        const localLayerObstructions = this._localLayerObstructions[layerIndex]
+        const index = y * layer.dimensions.width + x
+        localLayerObstructions[index] = obs
+    }
+
     Switch(path: string) {
         this.clearMapEntities()
 
@@ -676,6 +696,16 @@ class MapClass {
 
         const mapData = this._engine.getMapData(this._currentMapName)
         this.layercount = mapData.layers.length
+
+        // We need to clone layer data, since scripts can mutate the tile
+        // content.
+        this._localLayerDatas = []
+        this._localLayerObstructions = []
+        for (let i = 0; i < mapData.layers.length; ++i) {
+            const layer = mapData.layers[i]
+            this._localLayerDatas.push(layer.data.slice(0))
+            this._localLayerObstructions.push(layer.obstructions.slice(0))
+        }
 
         for (let i = 0; i < mapData.layers.length; ++i) {
             const layer = mapData.layers[i]
@@ -1124,11 +1154,12 @@ class Engine {
         if (x < 0 || y < 0 || x2 >= layerWidth || y2 >= layerHeight) {
             return true
         }
+        const localLayerObstructions = this.map._localLayerObstructions[layerIndex]
         for (let cy = y; cy <= y2; ++cy) {
             for (let cx = x; cx <= x2; ++cx) {
                 const obsIndex = cy * layerWidth + cx
-                if (obsIndex < layer.obstructions.length) {
-                    if (layer.obstructions[obsIndex] != 0) {
+                if (obsIndex < localLayerObstructions.length) {
+                    if (localLayerObstructions[obsIndex] != 0) {
                         return true
                     }
                 }
