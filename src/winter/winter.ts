@@ -21,9 +21,7 @@ class WinterSnow {
     ) {
         this.flakes = []
         for (let i = 0; i < this.count; ++i) {
-            const flake = this.makeFlake()
-            flake.life = Math.floor(Math.random() * WinterSnow.MaxLife)
-            this.flakes.push(flake)
+            this.flakes.push({x: 0, y: 0, vx: 0, life: 0})
         }
         const r = colorValue & 0xff
         const g = (colorValue >> 8) & 0xff
@@ -31,13 +29,11 @@ class WinterSnow {
         this.colorPrefix = 'rgba(' + r + ', ' + g + ', ' + b + ', '
     }
 
-    private makeFlake() {
-        return {
-            x: Math.floor(Math.random() * this.xres),
-            y: Math.floor(Math.random() * this.yres),
-            vx: Math.floor(Math.random() * 3) - 1,
-            life: 0
-        }
+    private reinitFlake(s: FlakeState) {
+        s.x = Math.floor(Math.random() * this.xres)
+        s.y = Math.floor(Math.random() * this.yres)
+        s.vx = Math.floor(Math.random() * 3) - 1
+        s.life = Math.floor(Math.random() * WinterSnow.MaxLife)
     }
 
     update() {
@@ -50,7 +46,7 @@ class WinterSnow {
                     || p.x >= this.xres
                     || p.y >= this.yres
                     || p.life >= WinterSnow.MaxLife) {
-                this.flakes[i] = this.makeFlake()
+                this.reinitFlake(p)
             }
         }
     }
