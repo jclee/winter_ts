@@ -902,9 +902,9 @@ class VideoClass {
         if (fill) {
             this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
             // TODO: Maybe check on negative dimension behavior?
-            this._getEngine().ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
+            this._getEngine().ctx.fillRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
         } else {
-            throw new Error("DrawRect not implemented") // TODO
+            throw new Error("unfilled DrawRect not implemented") // TODO
         }
     }
 
@@ -930,19 +930,27 @@ class VideoClass {
     }
 
     TintBlit(image: Image, x: number, y: number, tintColor: number, blendMode?: number) {
-        // TODO: Honor tint color
-        tintColor = tintColor
+        // TODO: actually only need alpha -- we only otherwise use white
+        this._getEngine().ctx.save()
+        this._getEngine().ctx.globalAlpha = ((tintColor >> 24) & 0xff) / 255.0
         this.Blit(image, x, y, blendMode)
+        this._getEngine().ctx.restore()
     }
 
-    TintDistortBlit(image: Image, upLeft: any, upRight: any, downRight: any, downLeft: any, blendmode?: number) {
-        // TODO: Actually implement.
-        image = image
-        upLeft = upLeft
-        upRight = upRight
-        downLeft = downLeft
-        downRight = downRight
-        blendmode = blendmode
+    TintDistortBlit(image: Image, upLeft: any, _upRight: any, downRight: any, _downLeft: any, blendmode?: number) {
+        // TODO: We actually only use TintDistortBlit as a version of ScaleBlit
+        // with alpha.
+        this._getEngine().ctx.save()
+        const tintColor: number = upLeft[2]
+        this._getEngine().ctx.globalAlpha = ((tintColor >> 24) & 0xff) / 255.0
+        this.ScaleBlit(
+            image,
+            upLeft[0],
+            upLeft[1],
+            downRight[0] - upLeft[0],
+            downRight[1] - upLeft[1],
+            blendmode)
+        this._getEngine().ctx.restore()
     }
 
     // TODO other members...
