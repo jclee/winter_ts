@@ -7,22 +7,28 @@ interface FlakeState {
 }
 
 class WinterSnow {
-    private static readonly Count = 1000
-    private static readonly MaxLife = 100
+    private static readonly MaxLife = 50
 
+    private colorPrefix: string
     private flakes: FlakeState[]
 
     constructor(
         readonly xres: number,
         readonly yres: number,
-        readonly velocity: [number, number]
+        readonly count: number,
+        readonly velocity: [number, number],
+        colorValue: number,
     ) {
         this.flakes = []
-        for (let i = 0; i < WinterSnow.Count; ++i) {
+        for (let i = 0; i < this.count; ++i) {
             const flake = this.makeFlake()
             flake.life = Math.floor(Math.random() * WinterSnow.MaxLife)
             this.flakes.push(flake)
         }
+        const r = colorValue & 0xff
+        const g = (colorValue >> 8) & 0xff
+        const b = (colorValue >> 16) & 0xff
+        this.colorPrefix = 'rgba(' + r + ', ' + g + ', ' + b + ', '
     }
 
     private makeFlake() {
@@ -35,7 +41,7 @@ class WinterSnow {
     }
 
     update() {
-        for (let i = 0; i < WinterSnow.Count; ++i) {
+        for (let i = 0; i < this.count; ++i) {
             const p = this.flakes[i]
             p.x += p.vx + this.velocity[0]
             p.y += 1 + this.velocity[1]
@@ -57,7 +63,7 @@ class WinterSnow {
         ctx.imageSmoothingEnabled = false
         for (let p of this.flakes) {
             const a = Math.sin(p.life / WinterSnow.MaxLife * Math.PI)
-            ctx.fillStyle = 'rgba(255, 255, 255, ' + a + ')'
+            ctx.fillStyle = this.colorPrefix + a + ')'
             ctx.fillRect(Math.floor(p.x), Math.floor(p.y), 1, 1)
         }
     }

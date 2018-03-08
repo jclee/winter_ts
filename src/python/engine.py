@@ -180,6 +180,11 @@ class Engine(object):
         moduleName = mapName[:mapName.rfind('.')].replace('/', '.')
         mapModule = __import__(moduleName, globals(), locals(), [''])
         ika.Map.Switch(mapName)
+
+        autoExecFunc = mapModule.__dict__.get('AutoExec', None)
+        if autoExecFunc is not None:
+            autoExecFunc()
+
         metaData = ika.Map.GetMetaData()
 
         self.readZones(mapModule)

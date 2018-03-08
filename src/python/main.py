@@ -83,7 +83,7 @@ def main():
         imagePaths=[
             'winter/gfx/gba.png',
             'winter/gfx/isabigfatbitch.png',
-            #'winter/gfx/mountains.png',
+            'winter/gfx/mountains.png',
             'winter/gfx/title.png',
             'winter/gfx/ui/barhp0.png',
             'winter/gfx/ui/barhp1.png',
