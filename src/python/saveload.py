@@ -3,6 +3,7 @@
    see if I care.
 """
 
+import ika
 import savedata
 import system
 from statset import StatSet
@@ -59,10 +60,13 @@ class SaveGame(object):
         self.setFlags()
 
     def save(self, fileName):
-        file(fileName, 'wt').write(str(self))
+        ika.SetLocalStorageItem(fileName, str(self))
 
     def load(self, fileName):
-        self.read(file(fileName, 'rt'))
+        data = ika.GetLocalStorageItem(fileName)
+        if data is None:
+            raise IOError("file not found")
+        self.read(data)
 
     def __str__(self):
         s = ''
@@ -84,8 +88,8 @@ class SaveGame(object):
                     s += 'END\n'
         return s
 
-    def read(self, f):
-        lines = [x.strip() for x in f.readlines()]
+    def read(self, data):
+        lines = [x.strip() for x in data.splitlines()]
 
         def parse(v):
             v = v.strip()

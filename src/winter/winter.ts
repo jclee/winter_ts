@@ -1090,7 +1090,7 @@ class Engine {
     getImageEl(imagePath: string): HTMLImageElement {
         const imageEl = this.imageEls['winter/' + imagePath]
         if (!imageEl) {
-            throw new Error("Image element not found")
+            throw new Error("Image element not found:" + imagePath)
         }
         return imageEl
     }
