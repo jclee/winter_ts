@@ -144,20 +144,6 @@ class Sound(object):
         pass # TODO
     # TODO other members...
 
-def _makeCanvasAndContext(width, height):
-    el = window.document.createElement('canvas')
-    el.width = width
-    el.height = height
-    ctx = el.getContext('2d')
-    ctx.mozImageSmoothingEnabled = False
-    ctx.webkitImageSmoothingEnabled = False
-    ctx.msImageSmoothingEnabled = False
-    ctx.imageSmoothingEnabled = False
-    # We maintain one pristine state on the stack for resetting
-    # clipping.
-    ctx.save()
-    return (el, ctx)
-
 _engine = window.Engine.new(Input.getKey)
 Map = _engine.map
 Video = _engine._video
