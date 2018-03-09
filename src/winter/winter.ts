@@ -11,6 +11,7 @@ class WinterSnow {
 
     private colorPrefix: string
     private flakes: FlakeState[]
+    private yRange: number
 
     constructor(
         readonly xres: number,
@@ -27,11 +28,12 @@ class WinterSnow {
         const g = (colorValue >> 8) & 0xff
         const b = (colorValue >> 16) & 0xff
         this.colorPrefix = 'rgba(' + r + ', ' + g + ', ' + b + ', '
+        this.yRange = this.yres + velocity[1] * WinterSnow.MaxLife
     }
 
     private reinitFlake(s: FlakeState) {
         s.x = Math.floor(Math.random() * this.xres)
-        s.y = Math.floor(Math.random() * this.yres)
+        s.y = this.yres - Math.floor(Math.random() * this.yRange)
         s.vx = Math.floor(Math.random() * 3) - 1
         s.life = Math.floor(Math.random() * WinterSnow.MaxLife)
     }
@@ -41,11 +43,11 @@ class WinterSnow {
             const p = this.flakes[i]
             p.x += p.vx + this.velocity[0]
             p.y += 1 + this.velocity[1]
-            p.life += 1
+            p.life -= 1
             if (p.x < 0
                     || p.x >= this.xres
                     || p.y >= this.yres
-                    || p.life >= WinterSnow.MaxLife) {
+                    || p.life <= 0) {
                 this.reinitFlake(p)
             }
         }
