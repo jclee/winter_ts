@@ -959,6 +959,19 @@ class VideoClass {
         this._getEngine().ctx.restore()
     }
 
+    DrawTriangle(v1: any, v2: any, v3: any) {
+        // TODO: We actually only use DrawTriangle in the credits scene, to
+        // draw a gradiated black triangle.
+        // TODO: Add the gradients
+        const ctx = this._getEngine().ctx
+        ctx.fillStyle = 'rgb(0,0,0)'
+        ctx.beginPath()
+        ctx.moveTo(v1[0], v1[1])
+        ctx.lineTo(v2[0], v2[1])
+        ctx.lineTo(v3[0], v3[1])
+        ctx.fill()
+    }
+
     // TODO other members...
 }
 (window as any).VideoClass = VideoClass

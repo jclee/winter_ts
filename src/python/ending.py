@@ -189,17 +189,15 @@ def creditsTask():
             Y += font.height
             firstLine += 1
 
+        ika.Video.DrawTriangle(
+            (0, 0, ika.RGB(0, 0, 0)),
+            (ika.Video.xres, 0, ika.RGB(0, 0, 0, 0)),
+            (0, 60, ika.RGB(0, 0, 0, 0)))
 
-        # TODO: Make work
-        #ika.Video.DrawTriangle(
-        #    (0, 0, ika.RGB(0, 0, 0)),
-        #    (ika.Video.xres, 0, ika.RGB(0, 0, 0, 0)),
-        #    (0, 60, ika.RGB(0, 0, 0, 0)))
-
-        #ika.Video.DrawTriangle(
-        #    (ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0)),
-        #    (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
-        #    (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
+        ika.Video.DrawTriangle(
+            (ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0)),
+            (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
+            (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
 
         snowObj.draw()
 
