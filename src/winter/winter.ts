@@ -997,8 +997,20 @@ class Engine {
         ;[this.canvasEl, this.ctx] = _makeCanvasAndContext(this.width, this.height)
         ;[this.displayCanvasEl, this.displayCtx] = _makeCanvasAndContext(this.width, this.height)
 
-        this.displayCanvasEl.style.border = "1px solid"
+        // Typescript doesn't know about imageRendering yet.
+        const style = this.displayCanvasEl.style as any
+        style.border = "1px solid"
+        style.imageRendering = "pixelated"
+        style.imageRendering = "optimizeSpeed"
+        style.imageRendering = "-moz-crisp-edges"
+        style.imageRendering = "-webkit-optimize-contrast"
+        style.width = "" + this.width * 2
+        style.height = "" + this.height * 2
+        style.display = "block"
+        style.marginLeft = "auto"
+        style.marginRight = "auto"
         window.document.body.appendChild(this.displayCanvasEl)
+        window.document.body.style.backgroundColor = "#dddddd"
 
         let promises: Promise<void>[] = []
         for (let path of imagePaths) {
