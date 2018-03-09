@@ -484,6 +484,12 @@ class FontClass {
         return w
     }
 
+    PrintWithOpacity(x: number, y: number, text: string, opacity: number) {
+        const ctx = this._engine.ctx
+        ctx.globalAlpha = opacity / 255.0
+        this.Print(x, y, text)
+    }
+
     Print(x: number, y: number, text: string) {
         const imageEl = this._engine.getImageEl('system_font.png')
         const subset = this._engine.systemFontData.subsets[0]
