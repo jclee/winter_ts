@@ -461,6 +461,10 @@ class FontClass {
 
     // TODO: Other members?
 
+    CenterPrint(x: number, y: number, text: string) {
+        this.Print(x - this.StringWidth(text) / 2 , y, text)
+    }
+
     StringWidth(s: string): number {
         const subset = this._engine.systemFontData.subsets[0]
         const widths = this._engine.systemFontData.widths
@@ -483,8 +487,8 @@ class FontClass {
         const subset = this._engine.systemFontData.subsets[0]
         const widths = this._engine.systemFontData.widths
         const heights = this._engine.systemFontData.heights
-        let cursorX = x
-        let cursorY = y
+        let cursorX = Math.floor(x)
+        let cursorY = Math.floor(y)
         for (let ch of text) {
             if (ch === '\n' || ch === '\t' || ch === '~') {
                 throw new Error("String codes not implemented")

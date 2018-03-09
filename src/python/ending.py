@@ -180,14 +180,12 @@ def creditsTask():
         adjust = int(y) % font.height
         length = (ika.Video.yres // font.height) + 1
 
-        print(firstLine)
+        #print(firstLine)
 
         Y = -adjust
         while Y < ika.Video.yres and firstLine < len(_text):
             if firstLine >= 0:
-                # TODO: make work
-                pass
-                #font.CenterPrint(160, Y, _text[firstLine])
+                font.CenterPrint(160, Y, _text[firstLine])
             Y += font.height
             firstLine += 1
 
