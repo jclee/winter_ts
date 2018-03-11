@@ -2,7 +2,10 @@
 class EndGameException(Exception):
     pass
 
-class GameOverException(EndGameException):
+class GameLoseException(EndGameException):
+    pass
+
+class GameQuitException(EndGameException):
     pass
 
 class GameWinException(EndGameException):

@@ -9,7 +9,7 @@ import savedata
 
 from statset import StatSet
 from caption import Caption
-from gameover import GameOverException
+from gameover import GameLoseException
 
 from entity import Entity
 from enemy import Enemy
@@ -725,7 +725,7 @@ class Player(Entity):
 
     def die(self):
         self.state = self.deathState()
-        raise GameOverException()
+        raise GameLoseException()
 
     def deathState(self):
         self.invincible = True

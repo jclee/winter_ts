@@ -23,7 +23,7 @@ from field import Field
 from hud import HPBar, MPBar, EXPBar
 from caption import Caption
 from camera import Camera
-from gameover import EndGameException, GameOverException, GameWinException
+from gameover import GameLoseException, GameQuitException, GameWinException
 
 import subscreen
 import saveload
@@ -261,7 +261,7 @@ class Engine(object):
 
                 self.nextFrameTime += self.ticksPerFrame
 
-        except GameOverException:
+        except GameLoseException:
             yield from self.gameOverTask()
             self.killList = self.entities[:]
             self.clearKillQueue()
@@ -272,7 +272,7 @@ class Engine(object):
             self.clearKillQueue()
             yield from ending.creditsTask()
 
-        except EndGameException:
+        except GameQuitException:
             self.killList = self.entities[:]
             self.clearKillQueue()
             return # Brython workaround

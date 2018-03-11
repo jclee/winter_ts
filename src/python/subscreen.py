@@ -13,7 +13,7 @@ import effects
 import system
 import savedata
 
-from gameover import EndGameException
+from gameover import GameQuitException
 
 class Window(ImageWindow):
     '''
@@ -208,7 +208,7 @@ class PauseScreen(object):
 
     def exitGameTask(self):
         # TODO: shiny fade out
-        raise EndGameException()
+        raise GameQuitException()
 
 _initted = False
 
