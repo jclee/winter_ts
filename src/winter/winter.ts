@@ -481,8 +481,10 @@ class FontClass {
 
     PrintWithOpacity(x: number, y: number, text: string, opacity: number) {
         const ctx = this._engine.ctx
+        ctx.save()
         ctx.globalAlpha = opacity / 255.0
         this.Print(x, y, text)
+        ctx.restore()
     }
 
     Print(x: number, y: number, text: string) {
