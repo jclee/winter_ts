@@ -646,6 +646,10 @@ class Player(Entity):
             yield None
 
     def healingRainState(self):
+        oldInvincible = self.invincible
+        def restoreVars(self=self, oldInvincible=oldInvincible):
+            self.invincible = oldInvincible
+        self._onStateExit = restoreVars
 
         self.stop()
 
@@ -683,8 +687,6 @@ class Player(Entity):
 
         for i in range(45):
             yield None
-
-        self.invincible = False
 
     def shiverState(self):
         self.stop()
