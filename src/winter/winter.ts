@@ -371,13 +371,10 @@ class Entity {
         const newX = this.x + (d2 == 'left' ? -1 : 1)
         const newY = this.y + (d1 == 'up' ? -1 : 1)
 
-        if (this.mapobs && this._getEngine().detectMapCollision(this.x, newY, this.hotwidth, this.hotheight, this.layer)) {
-            // TODO: Not dealing with entity/entity collisions.
+        if (this._isObstructedAt(this.x, newY)) {
             d1 = ''
         }
-
-        if (this.mapobs && this._getEngine().detectMapCollision(newX, this.y, this.hotwidth, this.hotheight, this.layer)) {
-            // TODO: Not dealing with entity/entity collisions.
+        if (this._isObstructedAt(newX, this.y)) {
             d2 = ''
         }
 
@@ -425,13 +422,20 @@ class Entity {
             newY += 1
             newX += 1
         }
-        if (this.mapobs && this._getEngine().detectMapCollision(newX, newY, this.hotwidth, this.hotheight, this.layer)) {
+        if (this._isObstructedAt(newX, newY)) {
             this.Stop()
             return
         }
-        // TODO: Not dealing with entity/entity collisions.
         this.x = newX
         this.y = newY
+    }
+
+    private _isObstructedAt(x: number, y: number): boolean {
+        const engine = this._getEngine()
+        return (
+            (this.mapobs && engine.detectMapCollision(x, y, this.hotwidth, this.hotheight, this.layer))
+            || (this.entobs && engine.detectEntityCollision(this.name, x, y, this.hotwidth, this.hotheight, this.layer))
+        )
     }
 
     Touches(otherEnt: Entity): boolean {
@@ -1218,7 +1222,30 @@ class Engine {
         }
     }
 
-    detectMapCollision(x: number, y: number, w: number, h: number, layerIndex: number): boolean {
+    detectEntityCollision(
+        entName: string,
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        layerIndex: number
+    ): boolean {
+        const ents = this.map.EntitiesAt(x, y, w, h, layerIndex)
+        for (let ent of ents) {
+            if (ent.isobs && ent.name != entName) {
+                return true
+            }
+        }
+        return false
+    }
+
+    detectMapCollision(
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        layerIndex: number
+    ): boolean {
         const tileW = 16
         const tileH = 16
         const mapData = this.getMapData(this.map._currentMapName)
