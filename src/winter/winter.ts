@@ -501,23 +501,32 @@ class FontClass {
     }
 
     *_genGlyphs(text:string) {
-        const subset = this._engine.systemFontData.subsets[0]
+        const subsets = this._engine.systemFontData.subsets
         const widths = this._engine.systemFontData.widths
         const heights = this._engine.systemFontData.heights
         let index = 0
+        let subsetIndex = 0
         while (index < text.length) {
             const ch = text.charAt(index)
-            if (ch === '\n' || ch === '\t' || ch === '~') {
+            index += 1
+            if (ch === '\n' || ch === '\t') {
                 throw new Error("String codes not implemented")
             }
-            const glyphIndex = subset[ch.charCodeAt(0)]
+            if (ch == '~' && index < text.length) {
+                const subsetCh = text.charAt(index)
+                if (subsetCh >= '0' && subsetCh <= '9') {
+                    index += 1
+                    subsetIndex = subsetCh.charCodeAt(0) - '0'.charCodeAt(0)
+                    continue
+                }
+            }
+            const glyphIndex = subsets[subsetIndex][ch.charCodeAt(0)]
             yield {
                 width: widths[glyphIndex],
                 height: heights[glyphIndex],
                 tileX: (glyphIndex % 16) * 9,
                 tileY: Math.floor(glyphIndex / 16) * 10,
             }
-            index += 1
         }
     }
 }
