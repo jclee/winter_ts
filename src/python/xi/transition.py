@@ -8,7 +8,7 @@ class Transition(object):
 
     def findChild(self, child):
         for i,iter in enumerate(self.children):
-            if iter.window == child:
+            if iter.theWindow == child:
                 return i
         return None
 
@@ -57,22 +57,24 @@ class Transition(object):
             ika.Video.ShowPage()
 
 class WindowMover(object):
-    def __init__(self, window, startRect, endRect, time):
+    def __init__(self, theWindow, startRect, endRect, time):
         self.endTime = float(time)
         self.time = 0.0
 
         # specifying just a position is fine: we'll use the current size of the window to fill in the gap
-        if len(startRect) == 2: startRect += window.Size
-        if len(endRect) == 2:   endRect += window.Size
+        if len(startRect) == 2: startRect += theWindow.Size
+        if len(endRect) == 2:   endRect += theWindow.Size
 
-        self.window = window
+        self.theWindow = theWindow
         self.startRect = startRect
         self.endRect = endRect
 
         # change in position that occurs every tick.
         self.delta = [(e - s) / self.endTime for s, e in zip(startRect, endRect)]
 
-        self.window.Rect = startRect
+        # Looks like "window" is special for Brython...
+        #self.window.Rect = startRect
+        self.theWindow.Rect = startRect
 
     def isDone(self):
         return self.time >= self.endTime
@@ -80,14 +82,14 @@ class WindowMover(object):
     def update(self, timeDelta):
         if self.time + timeDelta >= self.endTime:
             self.time = self.endTime
-            self.window.Rect = self.endRect
+            self.theWindow.Rect = self.endRect
         else:
             self.time += timeDelta
 
             # typical interpolation stuff
             # maybe parameterize the algorithm, so that we can have nonlinear movement.
             # Maybe just use a matrix to express the transform.
-            self.window.Rect = [int(d * self.time + s) for s, d in zip(self.startRect, self.delta)]
+            self.theWindow.Rect = [int(d * self.time + s) for s, d in zip(self.startRect, self.delta)]
 
     def draw(self):
-        self.window.draw()
+        self.theWindow.draw()

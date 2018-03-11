@@ -199,18 +199,16 @@ class PauseScreen(object):
             if result is Cancel or result == 0:
                 break
             elif result is not None:
-                [
-                    'dummy', # should never happen
-                    #lambda: None, # Control setup
-                    #lambda: None, # Load game
-                    self.exitGame, # Exit game
-                ][result]()
+                if result == 0:
+                    raise RuntimeError() # should never happen
+                elif result == 1:
+                    yield from self.exitGameTask()
 
         yield from self.hideTask()
 
-    def exitGame(self):
+    def exitGameTask(self):
         # TODO: shiny fade out
-        raise EndGameException
+        raise EndGameException()
 
 _initted = False
 

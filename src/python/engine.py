@@ -275,6 +275,9 @@ class Engine(object):
         except EndGameException:
             self.killList = self.entities[:]
             self.clearKillQueue()
+            return # Brython workaround
+
+        brython_generator_bug_workaround = 'blah'
 
     def draw(self):
         if self.background:

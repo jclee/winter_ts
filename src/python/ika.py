@@ -18,7 +18,7 @@ def DelayTask(time):
         yield None
 
 def Exit():
-    pass # TODO
+    print("Exiting.") # TODO
 
 def GetCanvasEl():
     global _engine
