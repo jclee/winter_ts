@@ -1231,7 +1231,7 @@ class Engine {
         h: number,
         layerIndex: number
     ): boolean {
-        const ents = this.map.EntitiesAt(x, y, w, h, layerIndex)
+        const ents = this.map.EntitiesAt(x + 1, y + 1, w - 2, h - 2, layerIndex)
         for (let ent of ents) {
             if (ent.isobs && ent.name != entName) {
                 return true
