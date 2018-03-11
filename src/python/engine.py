@@ -320,9 +320,6 @@ class Engine(object):
                 if result:  t.pop(i)
                 else:       i += 1
 
-    def setPlayer(self, player):
-        assert self.player is None
-
     def addEntity(self, ent):
         assert ent not in self.entities
 
@@ -338,14 +335,8 @@ class Engine(object):
         assert field not in self.fields
         self.fields.append(field)
 
-    def destroyField(self, field):
-        self.fields.remove(field)
-
     def addThing(self, thing):
         self.things.append(thing)
-
-    def destroyThing(self, thing):
-        self.things.remove(thing)
 
     def readZones(self, mapModule):
         '''Read all the zones on the map, and create fields.'''
@@ -391,10 +382,6 @@ class Engine(object):
                     break
 
         self.killList = []
-
-    def testCollision(self, ent):
-        e = ent.ent.DetectCollision()
-        return self.entFromEnt.get(e.name)
 
     def synchTime(self):
         '''Used to keep the engine from thinking it has to catch up

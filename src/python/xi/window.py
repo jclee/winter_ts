@@ -73,7 +73,7 @@ class ImageWindow(object):
 
 #--------------------------------------------------------------------
 
-class SimpleWindow(object):
+class Window(object):
     def __init__(self, bordercolour = ika.RGB(0, 0, 0), backgroundcolour = ika.RGB(0, 0, 255)):
         self._border = bordercolour
         self._bg = backgroundcolour
@@ -86,25 +86,3 @@ class SimpleWindow(object):
 
     Top = Bottom = Left = Right = property(lambda a: 1)
 
-
-#--------------------------------------------------------------------
-
-class GradientWindow(object):
-    __slots__ = ['c1', 'c2', 'c3', 'c4'] # Colour of each corner of the window
-
-    def __init__(self, c1, c2, c3, c4):
-        self.c1 = c1
-        self.c2 = c2
-        self.c3 = c3
-        self.c4 = c4
-
-    def draw(self, x, y, w, h):
-        x2 = x + w
-        y2 = y + h
-        ika.Video.DrawTriangle((x, y, self.c1), (x2, y, self.c2), (x2, y2, self.c3))
-        ika.Video.DrawTriangle((x2, y2, self.c3), (x, y2, self.c4), (x, y, self.c1))
-        ika.Video.DrawRect(x, y, x2, y2, ika.RGB(0, 0, 0), False)
-
-    Top = Bottom = Left = Right = property(lambda a: 1)
-
-Window = SimpleWindow

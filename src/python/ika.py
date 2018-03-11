@@ -8,9 +8,6 @@ SubtractBlend = 4
 MultiplyBlend = 5
 PreserveBlend = 6
 
-#def Delay(time):
-#    raise RuntimeError("Use DelayTask instead.")
-
 def DelayTask(time):
     targetEnd = window.Date.now() + (time * 10)
     # Busy waiting, sort of... :(
