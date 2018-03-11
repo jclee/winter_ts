@@ -468,18 +468,9 @@ class FontClass {
     }
 
     StringWidth(s: string): number {
-        const subset = this._engine.systemFontData.subsets[0]
-        const widths = this._engine.systemFontData.widths
         let w = 0
-        for (let ch of s) {
-            if (ch === '\n' || ch === '\t' || ch === '~') {
-                throw new Error("String codes not implemented")
-            }
-            const index = subset[ch.charCodeAt(0)]
-            // TODO: Not sure why original sources have +1 but not having it
-            // looks better.
-            //w += widths[index] + 1
-            w += widths[index]
+        for (let glyph of this._genGlyphs(s)) {
+            w += glyph.width
         }
         return w
     }
@@ -492,25 +483,41 @@ class FontClass {
 
     Print(x: number, y: number, text: string) {
         const imageEl = this._engine.getImageEl('system_font.png')
+        let cursorX = Math.floor(x)
+        let cursorY = Math.floor(y)
+        for (let glyph of this._genGlyphs(text)) {
+            this._engine.ctx.drawImage(
+                imageEl,
+                glyph.tileX,
+                glyph.tileY,
+                glyph.width,
+                glyph.height,
+                cursorX,
+                cursorY,
+                glyph.width,
+                glyph.height)
+            cursorX += glyph.width
+        }
+    }
+
+    *_genGlyphs(text:string) {
         const subset = this._engine.systemFontData.subsets[0]
         const widths = this._engine.systemFontData.widths
         const heights = this._engine.systemFontData.heights
-        let cursorX = Math.floor(x)
-        let cursorY = Math.floor(y)
-        for (let ch of text) {
+        let index = 0
+        while (index < text.length) {
+            const ch = text.charAt(index)
             if (ch === '\n' || ch === '\t' || ch === '~') {
                 throw new Error("String codes not implemented")
             }
-            const index = subset[ch.charCodeAt(0)]
-            // TODO: Not sure why original sources have +1 but not having it
-            // looks better.
-            //const w = widths[index] + 1
-            const w = widths[index]
-            const h = heights[index]
-            const tileX = (index % 16) * 9
-            const tileY = Math.floor(index / 16) * 10
-            this._engine.ctx.drawImage(imageEl, tileX, tileY, w, h, cursorX, cursorY, w, h)
-            cursorX += w
+            const glyphIndex = subset[ch.charCodeAt(0)]
+            yield {
+                width: widths[glyphIndex],
+                height: heights[glyphIndex],
+                tileX: (glyphIndex % 16) * 9,
+                tileY: Math.floor(glyphIndex / 16) * 10,
+            }
+            index += 1
         }
     }
 }
