@@ -376,6 +376,8 @@ class Engine(object):
         # it's a bad idea to tweak the entity list in the middle of an iteration,
         # so we queue them up, and nuke them here.
         for ent in self.killList:
+            if ent is self.player:
+                self.player = None
             ent.ent.x, ent.ent.y = -100,0
             ent.ent.Stop()
             del self.entFromEnt[ent.ent.name]
