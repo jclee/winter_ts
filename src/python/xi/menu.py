@@ -6,7 +6,7 @@ import xi.scrolltext as scrolltext
 #import xi.cursor
 
 import xi.sound as sound
-import xi.controls as controls
+import controls
 
 # unique object returned when the user cancels a menu.
 # this object's identity is its only attribute, like None.

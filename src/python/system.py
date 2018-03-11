@@ -10,14 +10,7 @@ engineObj = None
 
 def mainTask():
     global engineObj
-    controls.init()
     subscreen.init()
-
-    c = controls.readConfig('controls.cfg')
-    if c is None:
-        c = controls.defaultControls
-        controls.writeConfig('controls.cfg', c)
-    controls.setConfig(c)
 
     introMusic = ika.Sound('music/Existing.s3m')
 

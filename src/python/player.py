@@ -262,9 +262,6 @@ class Player(Entity):
         self.stats.heal = 'waterrune' in savedata.__dict__
         self.stats.gale = 'windrune' in savedata.__dict__
         self.stats.shiver = 'cowardrune' in savedata.__dict__
-        self.stats.smoke = self.stats.rend and self.stats.gale and (bind > 0)
-        self.stats.vivify = self.stats.rend and self.stats.heal and (bind > 0)
-        self.stats.ternion = self.stats.heal and self.stats.gale and self.stats.rend and (bind == 2)
 
     def defaultState(self):
         return self.standState()
@@ -689,9 +686,6 @@ class Player(Entity):
 
         self.invincible = False
 
-    def smokeScreenState(self):
-        pass
-
     def shiverState(self):
         self.stop()
         self.anim = 'thrust'
@@ -716,12 +710,6 @@ class Player(Entity):
         # stall
         for i in range(100):
             yield None
-
-    def vivifyState(self):
-        pass
-
-    def ternionState(self):
-        pass
 
     def die(self):
         self.state = self.deathState()

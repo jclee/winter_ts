@@ -10,8 +10,6 @@ import xi.effects
 
 #------------------------------------------------------------------------------
 
-controls.init()
-
 class Tinter(object):
     def __init__(self):
         self.curTint = 0

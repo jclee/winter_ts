@@ -54,12 +54,3 @@ def WrapText(text, maxWidth, font):
         pos += 1
 
     return result
-
-import ika
-
-up = ika.Input.up
-down = ika.Input.down
-left = ika.Input.left
-right = ika.Input.right
-enter = ika.Input.enter
-cancel = ika.Input.cancel

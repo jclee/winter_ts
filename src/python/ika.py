@@ -94,20 +94,8 @@ class _InputClass(object):
     def __init__(self):
         self.keyboard = _KeyboardClass()
 
-        # Not sure this is a good idea...
-        self.up = self.keyboard['UP']
-        self.down = self.keyboard['DOWN']
-        self.left = self.keyboard['LEFT']
-        self.right = self.keyboard['RIGHT']
-        self.enter = self.keyboard['ENTER']
-        self.cancel = self.keyboard['ESCAPE']
-
     def getKey(self, key):
         return self.keyboard[key]
-
-    #@staticmethod
-    #def Update():
-    #    raise RuntimeError("Use UpdateTask instead.")
 
     @staticmethod
     def UpdateTask():
@@ -115,8 +103,6 @@ class _InputClass(object):
         # waiting for the next frame.
         # TODO: We can probably consolidate any DelayTask calls...
         yield None
-
-    # TODO other members...
 
 Input = _InputClass()
 
