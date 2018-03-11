@@ -63,14 +63,6 @@ class _KeyboardClass(object):
 
     # TODO other members...
 
-class _JoystickClass(object):
-    def __init__(self):
-        self.axes = []
-        self.reverseAxes = []
-        self.buttons = []
-
-    # TODO other members...
-
 class _Point(object):
     def __init__(self, x, y):
         self.x = x
@@ -101,7 +93,6 @@ def Image(init_arg):
 class _InputClass(object):
     def __init__(self):
         self.keyboard = _KeyboardClass()
-        self.joysticks = [_JoystickClass()]
 
         # Not sure this is a good idea...
         self.up = self.keyboard['UP']

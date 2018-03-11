@@ -39,20 +39,6 @@ def init():
     for k in keyNames:
         _allControls[k] = ika.Input.keyboard[k]
 
-    # joystick:
-    for joyIndex, joy in enumerate(ika.Input.joysticks):
-        # axes:
-        for axisIndex, axis in enumerate(joy.axes):
-            _allControls['joy%iaxis%i+' % (joyIndex, axisIndex)] = axis
-
-        for axisIndex, axis in enumerate(joy.reverseAxes):
-            _allControls['joy%iaxis%i-' % (joyIndex, axisIndex)] = axis
-
-        # buttons:
-        for buttonIndex, button in enumerate(joy.buttons):
-            _allControls['joy%ibutton%i' % (joyIndex, buttonIndex)] = button
-
-
     setConfig(defaultControls)
 
 # returns a dict
