@@ -1068,10 +1068,9 @@ class Engine {
         // Typescript doesn't know about imageRendering yet.
         const style = this.displayCanvasEl.style as any
         style.border = "1px solid"
-        style.imageRendering = "pixelated"
         style.imageRendering = "optimizeSpeed"
         style.imageRendering = "-moz-crisp-edges"
-        style.imageRendering = "-webkit-optimize-contrast"
+        style.imageRendering = "pixelated"
         style.width = "" + this.width * 2
         style.height = "" + this.height * 2
         style.display = "block"
