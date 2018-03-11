@@ -257,11 +257,12 @@ class Player(Entity):
         Figures out what spells the player has access to, based on the
         flags set in the savedata module.
         '''
-        bind = len([x for x in savedata.__dict__.keys() if x.startswith('bind')])
-        self.stats.rend = 'firerune' in savedata.__dict__
-        self.stats.heal = 'waterrune' in savedata.__dict__
-        self.stats.gale = 'windrune' in savedata.__dict__
-        self.stats.shiver = 'cowardrune' in savedata.__dict__
+        def hasKeyInt(k):
+            return 1 if k in savedata.__dict__ else 0
+        self.stats.rend = hasKeyInt('firerune')
+        self.stats.heal = hasKeyInt('waterrune')
+        self.stats.gale = hasKeyInt('windrune')
+        self.stats.shiver = hasKeyInt('cowardrune')
 
     def defaultState(self):
         return self.standState()
