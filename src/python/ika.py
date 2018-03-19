@@ -71,6 +71,9 @@ class _Point(object):
 def Entity(x, y, layer, spritename):
     return Map.addEntity(x, y, layer, spritename)
 
+def removeEntity(ent):
+    Map.RemoveEntity(ent)
+
 def Font(file_name):
     global _engine
     return window.FontClass.new(_engine)

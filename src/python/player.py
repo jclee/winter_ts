@@ -570,7 +570,7 @@ class Player(Entity):
 
             yield None
 
-        del fire
+        ika.removeEntity(fire)
 
         # stall period:
         for i in range(30):
