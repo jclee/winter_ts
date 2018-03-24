@@ -15,4 +15,10 @@ cp -r src/python/* "$WINTER_TS_BUILD_TARGET"
 cp node_modules/brython/brython.js "$WINTER_TS_BUILD_TARGET"
 cp src/index.html "$WINTER_TS_BUILD_TARGET"
 
+
+# Necessary to turn off Jekyll for Github pages, so that files starting with an
+# underscore are visible.
+# https://help.github.com/articles/files-that-start-with-an-underscore-are-missing/
+touch "$WINTER_TS_BUILD_TARGET"/.nojekyll
+
 echo "Done."
