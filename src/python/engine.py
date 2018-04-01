@@ -395,7 +395,7 @@ class Engine(object):
         self.nextFrameTime = ika.GetTime()
 
     def gameOverTask(self):
-        c = Caption('G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)
+        c = Caption(self.font, 'G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)
         t = 80
         i = 0
         self.fields = []

@@ -1,14 +1,13 @@
 import ika
-import system
 from thing import Thing
 
 class Caption(Thing):
 
-    def __init__(self, text, x = None, y = None, duration=200):
-        font = system.engineObj.font
+    def __init__(self, font, text, x = None, y = None, duration=200):
+        self.font = font
 
-        width = font.StringWidth(text)
-        height = font.height
+        width = self.font.StringWidth(text)
+        height = self.font.height
 
         if x is None:   self.x = (ika.Video.xres - width) // 2
         else:           self.x = x
@@ -39,5 +38,4 @@ class Caption(Thing):
 
     def draw(self):
         o = min(255, self.opacity)
-        font = system.engineObj.font
-        font.PrintWithOpacity(self.x, self.y, self.text, o)
+        self.font.PrintWithOpacity(self.x, self.y, self.text, o)

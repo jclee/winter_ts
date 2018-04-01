@@ -97,7 +97,7 @@ class Boulder(_Obstacle):
                 setattr(savedata, tnt[0], 'False')
                 setattr(savedata, self.flagName, 'Broken')
                 self.engineRef.destroyEntity(self)
-                self.engineRef.things.append(Caption('Blew the rock apart!'))
+                self.engineRef.things.append(Caption(self.engineRef.font, 'Blew the rock apart!'))
 
         else:
             self.isTouching = False

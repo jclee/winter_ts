@@ -249,7 +249,7 @@ class Player(Entity):
             self.stats.exp -= self.stats.next
             self.stats.next = self.stats.level * (self.stats.level + 1) * 5
 
-        self.engineRef.things.append(Caption('Level %i!' % self.stats.level))
+        self.engineRef.things.append(Caption(self.engineRef.font, 'Level %i!' % self.stats.level))
 
     def calcSpells(self):
         '''
@@ -565,7 +565,7 @@ class Player(Entity):
                     setattr(savedata, e.flagName, 'Broken')
 
                     self.engineRef.destroyEntity(e)
-                    self.engineRef.things.append(Caption('~1The ice melted!'))
+                    self.engineRef.things.append(Caption(self.engineRef.font, '~1The ice melted!'))
 
             yield None
 
@@ -681,7 +681,7 @@ class Player(Entity):
         for e in ents:
             if isinstance(e, IceChunks):
                 e.freeze()
-                self.engineRef.things.append(Caption('~1The ice froze over!'))
+                self.engineRef.things.append(Caption(self.engineRef.font, '~1The ice froze over!'))
                 self.engineRef.destroyEntity(e)
                 break
 
