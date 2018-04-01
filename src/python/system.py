@@ -20,7 +20,7 @@ def mainTask():
     #yield from intro.introTask()
     
     while True:
-        sound.fader.kill()
+        engineObj.fader.kill()
         introMusic.position = 0
         introMusic.Play()
         # Workaround for Brython "yield from" expression bugs:

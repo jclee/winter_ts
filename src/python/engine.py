@@ -93,6 +93,12 @@ class Engine(object):
         self.font = ika.Font('system.fnt')
         self.mapName = ''
 
+        self.fader = sound.Crossfader()
+        # all music.  Never ever let go. (because I'm lazy)
+        self.music = {
+            'music/silence': sound.NullSound(),
+        }
+
     def initTask(self, saveData = None):
         'barf'
 
@@ -205,7 +211,7 @@ class Engine(object):
             self.camera.center()
 
         if 'music' in metaData:
-            sound.playMusic('music/' + metaData['music'])
+            self.playMusic('music/' + metaData['music'])
 
         if fade:
             self.draw()
@@ -416,3 +422,15 @@ class Engine(object):
         yield from s.runTask()
 
         self.synchTime()
+
+    def playMusic(self, fname):
+        if fname in self.music:
+            m = self.music[fname]
+        else:
+            m = ika.Sound(fname)
+            m.loop = True
+            self.music[fname] = m
+
+        self.fader.reset(m)
+        if self.fader not in self.things:
+            self.things.append(self.fader)

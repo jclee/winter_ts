@@ -1,7 +1,5 @@
-
 import ika
 from thing import Thing
-import system
 
 class NullSound(object):
     def __init__(self):
@@ -64,12 +62,6 @@ razorManeDie = RepeatableSound('sfx/RazormaneDie.wav')
 
 # other effects?
 
-# music:
-# all music.  Never ever let go. (because I'm lazy)
-music = {}
-
-music['music/silence'] = NullSound()
-
 class Crossfader(Thing):
     def __init__(self):
         self.oldMusic = []
@@ -128,21 +120,3 @@ class Crossfader(Thing):
 
     def draw(self):
         pass
-
-fader = Crossfader()
-
-def playMusic(fname):
-    if fname in music:
-        m = music[fname]
-    else:
-        m = ika.Sound(fname)
-        m.loop = True
-        music[fname] = m
-
-    fader.reset(m)
-    if fader not in system.engineObj.things:
-        system.engineObj.things.append(fader)
-
-def killMusic():
-    global musicName
-    fader.kill()

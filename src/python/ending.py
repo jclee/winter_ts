@@ -1,6 +1,6 @@
 
 import ika
-import sound
+import system
 import snow
 
 _text = '''\
@@ -162,10 +162,10 @@ obscenely difficult to obtain!
 '''.split('\n')
 
 def creditsTask():
-    m = sound.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
+    m = system.engineObj.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
     m.loop = True
-    sound.fader.kill()
-    sound.fader.reset(m)
+    system.engineObj.fader.kill()
+    system.engineObj.fader.reset(m)
 
     bg = ika.Image('gfx/mountains.png')
     snowObj = snow.Snow(velocity=(0, 1))
