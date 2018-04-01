@@ -33,7 +33,6 @@ import cabin
 import ending
 import sound
 import xi
-import system
 
 FRAME_RATE = 100
 MAX_SKIP_COUNT = 10
@@ -267,7 +266,7 @@ class Engine(object):
             self.clearKillQueue()
 
         except GameWinException:
-            yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
+            yield from xi.effects.fadeOutTask(200, draw=self.draw)
             self.killList = self.entities[:]
             self.clearKillQueue()
             yield from ending.creditsTask()
