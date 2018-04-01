@@ -4,7 +4,6 @@ from player import Player
 import ika
 import Brain
 import animator
-import system
 import sound
 import math
 import dir
@@ -88,8 +87,8 @@ _attackRange = (
 )
 
 class Yeti(Enemy):
-    def __init__(self, ent):
-        Enemy.__init__(self, ent, _anim, Brain.Brain())
+    def __init__(self, engineRef, ent):
+        Enemy.__init__(self, engineRef, ent, _anim, Brain.Brain())
         self.speed = 80
 
         self.addMoods(
@@ -114,7 +113,7 @@ class Yeti(Enemy):
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
         # for now fuckit.  Attack the player!!
-        p = system.engineObj.player
+        p = self.engineRef.player
         for q in range(5):
             # compensate for the yeti's gigantic sprite:
             sx = self.x + 16
@@ -129,7 +128,7 @@ class Yeti(Enemy):
                 yield self.walkState(d, min(90, dist))
 
     def passiveMood(self):
-        p = system.engineObj.player
+        p = self.engineRef.player
         self._animator.kill = True
         while True:
             # compensate for the yeti's gigantic sprite:

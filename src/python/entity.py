@@ -2,7 +2,6 @@ import ika
 
 from animator import Animator
 import dir
-import system
 from statset import StatSet
 
 def _temp():
@@ -16,8 +15,9 @@ class Entity(object):
     # arbitrary, and meaningless for the most part.
     DIST = 48
 
-    def __init__(self, ent, anim):
+    def __init__(self, engineRef, ent, anim):
         'ent can be None if all of the entity manipulating methods (below) are overridden.'
+        self.engineRef = engineRef
         self.ent = ent
         self.stats = StatSet()
         self.stats.hp = 1
@@ -54,7 +54,7 @@ class Entity(object):
             yield None
 
     def die(self, *args):
-        system.engineObj.destroyEntity(self)
+        self.engineRef.destroyEntity(self)
 
     # if recoil is nonzero, the enemy is blown backwards in a direction,
     # at some speed.  The default direction is backwards
@@ -132,8 +132,8 @@ class Entity(object):
             rect[2], rect[3],
             self.layer)
 
-        return [system.engineObj.entFromEnt[e.name] for e in
-            ika.Map.EntitiesAt(*rect) if e.name in system.engineObj.entFromEnt]
+        return [self.engineRef.entFromEnt[e.name] for e in
+            ika.Map.EntitiesAt(*rect) if e.name in self.engineRef.entFromEnt]
 
     def touches(self, ent):
         return self.ent.Touches(ent.ent)

@@ -48,7 +48,7 @@ class RuneListener(object):
             return True
         elif 'waterrune' in savedata.__dict__ and 'nearend' not in savedata.__dict__:
             system.engineObj.addEntity(
-                Yeti(ika.Entity(15* 16, 32 * 16, system.engineObj.player.layer, 'yeti.ika-sprite'))
+                Yeti(system.engineObj, ika.Entity(15* 16, 32 * 16, system.engineObj.player.layer, 'yeti.ika-sprite'))
                 )
             return True
 

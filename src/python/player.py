@@ -1,6 +1,5 @@
 import ika
 
-import system
 import animator
 import controls
 import sound
@@ -217,8 +216,8 @@ initialStats = StatSet(
     next=10)
 
 class Player(Entity):
-    def __init__(self, x=0, y=0, layer=0):
-        Entity.__init__(self, ika.Entity(x, y, layer, PLAYER_SPRITE), _playerAnim)
+    def __init__(self, engineRef, x=0, y=0, layer=0):
+        Entity.__init__(self, engineRef, ika.Entity(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.state = self.standState()
         self.stats = initialStats.clone()
 
@@ -250,7 +249,7 @@ class Player(Entity):
             self.stats.exp -= self.stats.next
             self.stats.next = self.stats.level * (self.stats.level + 1) * 5
 
-        system.engineObj.things.append(Caption('Level %i!' % self.stats.level))
+        self.engineRef.things.append(Caption('Level %i!' % self.stats.level))
 
     def calcSpells(self):
         '''
@@ -361,7 +360,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
-                x = system.engineObj.entFromEnt[e.name]
+                x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 120, self.direction)
@@ -409,7 +408,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
             for e in ents:
-                x = system.engineObj.entFromEnt[e.name]
+                x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 130, self.direction)
@@ -458,7 +457,7 @@ class Player(Entity):
                 rect[1] = r[1] + self.y
                 ents = ika.Map.EntitiesAt(*rect)
                 for e in ents:
-                    x = system.engineObj.entFromEnt[e.name]
+                    x = self.engineRef.entFromEnt[e.name]
                     if isinstance(x, Enemy) and not x.invincible:
                         x.hurt(int(self.stats.att * 1.5), 300, self.direction)
                         self.giveMPforHit()
@@ -565,8 +564,8 @@ class Player(Entity):
                     # TODO: some sort of nice animation.
                     setattr(savedata, e.flagName, 'Broken')
 
-                    system.engineObj.destroyEntity(e)
-                    system.engineObj.things.append(Caption('~1The ice melted!'))
+                    self.engineRef.destroyEntity(e)
+                    self.engineRef.things.append(Caption('~1The ice melted!'))
 
             yield None
 
@@ -580,12 +579,12 @@ class Player(Entity):
         oldSpeed = self.speed
         oldObs = self.ent.entobs
         oldInvincible = self.invincible
-        oldCameraLocked = system.engineObj.camera.locked
+        oldCameraLocked = self.engineRef.camera.locked
         def restoreVars(self=self, oldSpeed=oldSpeed, oldObs=oldObs, oldInvincible=oldInvincible, oldCameraLocked=oldCameraLocked):
             self.speed = oldSpeed
             self.ent.entobs = oldObs
             self.invincible = oldInvincible
-            system.engineObj.camera.locked = oldCameraLocked
+            self.engineRef.camera.locked = oldCameraLocked
         self._onStateExit = restoreVars
 
         if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
@@ -602,7 +601,7 @@ class Player(Entity):
 
         self.stats.mp -= 15
 
-        camera = system.engineObj.camera
+        camera = self.engineRef.camera
 
         camera.locked = True
         dx, dy = dir.delta[self.direction]
@@ -682,8 +681,8 @@ class Player(Entity):
         for e in ents:
             if isinstance(e, IceChunks):
                 e.freeze()
-                system.engineObj.things.append(Caption('~1The ice froze over!'))
-                system.engineObj.destroyEntity(e)
+                self.engineRef.things.append(Caption('~1The ice froze over!'))
+                self.engineRef.destroyEntity(e)
                 break
 
         for i in range(45):

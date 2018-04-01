@@ -82,7 +82,7 @@ def bridge_break():
 
         p.state = p.standState()
 
-        y = Yeti(ika.Entity(304, 64, 1, 'yeti.ika-sprite'))
+        y = Yeti(engine, ika.Entity(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp

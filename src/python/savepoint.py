@@ -2,24 +2,23 @@
 from entity import Entity
 import xi.effects
 
-import system
 import saveloadmenu
 import dir
 
 class SavePoint(Entity):
-    def __init__(self, ent):
-        Entity.__init__(self, ent, None)
+    def __init__(self, engineRef, ent):
+        Entity.__init__(self, engineRef, ent, None)
         self.isTouching = False
         self.interruptable = False
         self.invincible = True
 
     def updateTask(self):
-        t = self.touches(system.engineObj.player)
+        t = self.touches(self.engineRef.player)
         if t and not self.isTouching:
             # bump the player backward, so he's not touching us anymore.
-            yield from xi.effects.fadeOutTask(200, draw=system.engineObj.draw)
+            yield from xi.effects.fadeOutTask(200, draw=self.engineRef.draw)
 
-            p = system.engineObj.player
+            p = self.engineRef.player
             p.stats.hp = 999
             p.stats.mp = 999
 
@@ -30,10 +29,10 @@ class SavePoint(Entity):
             # "Do you wish to save?" "Yes/No"
 
             self.isTouching = True
-            system.engineObj.draw()
+            self.engineRef.draw()
             yield from saveloadmenu.saveMenuTask()
-            yield from xi.effects.fadeInTask(50, draw=system.engineObj.draw)
-            system.engineObj.synchTime()
+            yield from xi.effects.fadeInTask(50, draw=self.engineRef.draw)
+            self.engineRef.synchTime()
 
         elif not t:
             self.isTouching = False

@@ -113,7 +113,7 @@ class Engine(object):
             yield from self.mapSwitchTask(START_MAP, None, fade=False)
 
         if not self.player:
-            self.player = Player()
+            self.player = Player(self)
         self.addEntity(self.player)
 
         if saveData:
@@ -358,7 +358,7 @@ class Engine(object):
         for entKey in ika.Map.entities:
             ent = ika.Map.entities[entKey]
             try:
-                self.addEntity(spawnMap[ent.spritename](ent))
+                self.addEntity(spawnMap[ent.spritename](self, ent))
             except KeyError:
                 print('Unknown entity sprite %s.  Ignoring.' % ent.spritename)
 

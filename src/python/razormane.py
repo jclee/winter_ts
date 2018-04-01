@@ -6,7 +6,6 @@ import Brain
 import animator
 import sound
 import math
-import system
 import dir
 
 _razorManeAnim = {
@@ -88,8 +87,8 @@ _attackRange = [
 ]
 
 class RazorMane(Enemy):
-    def __init__(self, ent):
-        Enemy.__init__(self, ent, _razorManeAnim, Brain.Brain())
+    def __init__(self, engineRef, ent):
+        Enemy.__init__(self, engineRef, ent, _razorManeAnim, Brain.Brain())
 
         self.addMoods(
             (Brain.Attack(1), self.stalkMood),
@@ -112,9 +111,9 @@ class RazorMane(Enemy):
     def die(self, *args):
         # When one dies, the others scatter
 
-        ents = [system.engineObj.entFromEnt[x.name] for x in
+        ents = [self.engineRef.entFromEnt[x.name] for x in
             ika.Map.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
-            if x.name in system.engineObj.entFromEnt]
+            if x.name in self.engineRef.entFromEnt]
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 
         for a in allies:
@@ -124,11 +123,11 @@ class RazorMane(Enemy):
         super(RazorMane, self).die(*args)
 
     def playerDir(self):
-        p = system.engineObj.player
+        p = self.engineRef.player
         return dir.fromDelta(p.x - self.x - 10, p.y - self.y - 7)
 
     def playerDist(self):
-        p = system.engineObj.player
+        p = self.engineRef.player
         return ika.hypot(p.x - self.x - 10, p.y - self.y - 7)
 
     def attackMood(self):
@@ -143,7 +142,7 @@ class RazorMane(Enemy):
 
     def stalkMood(self):
         DIST = 0
-        p = system.engineObj.player
+        p = self.engineRef.player
         # be DIST away, if at all possible
         while True:
             d = self.playerDir()
@@ -180,7 +179,7 @@ class RazorMane(Enemy):
         yield self.idleState()
 
     def passiveMood(self):
-        p = system.engineObj.player
+        p = self.engineRef.player
         self._animator.kill = True
         while True:
             dist = self.playerDist()

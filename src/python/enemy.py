@@ -1,7 +1,5 @@
 import ika
 
-import system
-#import dir  # get rid of this
 import Brain
 import sound
 from entity import Entity
@@ -29,8 +27,8 @@ class Enemy(Entity):
     Maybe it would be a good idea to send the brain information about why
     it is reconsidering its options.
     '''
-    def __init__(self, ent, anim, brain):
-        Entity.__init__(self, ent, anim)
+    def __init__(self, engineRef, ent, anim, brain):
+        Entity.__init__(self, engineRef, ent, anim)
         self.brain = brain
         self.state = self.idleState()
         self.stats.hp = 15
@@ -80,8 +78,8 @@ class Enemy(Entity):
         self.brain = None
         self.interruptable = True
         self.state = self.deathState(recoilSpeed, recoilDir)
-        system.engineObj.player.giveXP(self.stats.exp)
-        #system.engineObj.player.stats.mp += self.stats.exp # MP Regen for the player.
+        self.engineRef.player.giveXP(self.stats.exp)
+        #self.engineRef.player.stats.mp += self.stats.exp # MP Regen for the player.
 
     def deathState(self, recoilSpeed, recoilDir):
         self.invincible = True

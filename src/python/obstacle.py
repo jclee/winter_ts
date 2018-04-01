@@ -4,15 +4,14 @@ Given the proper skill or item, the player can cross these.
 
 import ika
 import savedata
-import system
 
 from entity import Entity
 from caption import Caption
 
 class _Obstacle(Entity):
-    def __init__(self, ent, anim = None):
+    def __init__(self, engineRef, ent, anim = None):
         self.flagName = ent.name
-        Entity.__init__(self, ent, anim)
+        Entity.__init__(self, engineRef, ent, anim)
         self.invincible = True
 
         if self.flagName in savedata.__dict__:
@@ -20,7 +19,7 @@ class _Obstacle(Entity):
 
     def remove(self):
         self.x = self.y = -100
-        system.engineObj.destroyEntity(self)
+        self.engineRef.destroyEntity(self)
 
     def updateTask(self):
         if False:
@@ -84,7 +83,7 @@ class Boulder(_Obstacle):
         _Obstacle.__init__(self, *args)
 
     def updateTask(self):
-        t = self.touches(system.engineObj.player)
+        t = self.touches(self.engineRef.player)
         if t and not self.isTouching:
             self.isTouching = True
 
@@ -97,8 +96,8 @@ class Boulder(_Obstacle):
                 # TODO: explode animation here
                 setattr(savedata, tnt[0], 'False')
                 setattr(savedata, self.flagName, 'Broken')
-                system.engineObj.destroyEntity(self)
-                system.engineObj.things.append(Caption('Blew the rock apart!'))
+                self.engineRef.destroyEntity(self)
+                self.engineRef.things.append(Caption('Blew the rock apart!'))
 
         else:
             self.isTouching = False

@@ -1,6 +1,5 @@
 
 import ika
-import system
 import animator
 import Brain
 import dir
@@ -41,8 +40,8 @@ _biteRange = (
 )
 
 class Serpent(Enemy):
-    def __init__(self, ent):
-        Enemy.__init__(self, ent, _anim, Brain.Brain())
+    def __init__(self, engineRef, ent):
+        Enemy.__init__(self, engineRef, ent, _anim, Brain.Brain())
 
         self.addMoods(
             (Brain.Attack(1), self.watchMood)
@@ -82,7 +81,7 @@ class Serpent(Enemy):
         then try to bite.
         Roar every now and again.
         '''
-        p = system.engineObj.player
+        p = self.engineRef.player
 
         while True:
             # why is this necessary? O_o
@@ -116,7 +115,7 @@ class Serpent(Enemy):
             r = _biteRange[self._animator.index] + (self.layer,)
             ents = self.detectCollision(r)
             for e in ents:
-                d = max(1, self.stats.att - system.engineObj.player.stats.pres)
+                d = max(1, self.stats.att - self.engineRef.player.stats.pres)
                 e.hurt(d, 350, dir.DOWN)
             yield None
 
@@ -148,16 +147,16 @@ class Serpent(Enemy):
 
             if not n:
                 if ika.Random(0, 2):
-                    e = Carnivore(ika.Entity(x, y, self.layer, 'carnivore.ika-sprite'))
+                    e = Carnivore(self.engineRef, ika.Entity(x, y, self.layer, 'carnivore.ika-sprite'))
                 else:
-                    e = AnkleBiter(ika.Entity(x, y, self.layer, 'anklebiter.ika-sprite'))
-                system.engineObj.addEntity(e)
+                    e = AnkleBiter(self.engineRef, ika.Entity(x, y, self.layer, 'anklebiter.ika-sprite'))
+                self.engineRef.addEntity(e)
                 e.mood = e.attackMood
 
         # need to destroy old corpses (a first!)
-        for e in system.engineObj.entities:
+        for e in self.engineRef.entities:
             if e.stats.hp == 0 and isinstance(e, Enemy):
-                system.engineObj.destroyEntity(e)
+                self.engineRef.destroyEntity(e)
 
         while not self._animator.kill:
             n = self._animator.curFrame - 12

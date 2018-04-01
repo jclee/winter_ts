@@ -1,15 +1,12 @@
 
 from yeti import Yeti, _attackRange
 
-from enemy import Enemy
 from player import Player
 import ika
 import animator
-import system
 import sound
 import math
 import dir
-
 
 class SoulReaver(Yeti):
 
