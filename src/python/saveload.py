@@ -5,7 +5,6 @@
 
 import ika
 import savedata
-import system
 from statset import StatSet
 
 class SaveGame(object):
@@ -17,8 +16,8 @@ class SaveGame(object):
         if fileName:
             self.load(fileName)
 
-    def getStats(self):
-        self.stats = system.engineObj.player.stats.clone()
+    def getStats(self, engineRef):
+        self.stats = engineRef.player.stats.clone()
 
     def getFlags(self):
         self.flags = {}
@@ -26,8 +25,8 @@ class SaveGame(object):
             if isinstance(v, (int, str, list, tuple)):
                 self.flags[k] = v
 
-    def setStats(self):
-        system.engineObj.player.stats = self.stats.clone()
+    def setStats(self, engineRef):
+        engineRef.player.stats = self.stats.clone()
 
     def setFlags(self):
         self.clearSaveFlags()
@@ -44,20 +43,20 @@ class SaveGame(object):
 
     clearSaveFlags = staticmethod(clearSaveFlags)
 
-    def currentGame():
+    def currentGame(engineRef):
         s = SaveGame()
-        s.getStats()
+        s.getStats(engineRef)
         s.getFlags()
-        s.mapName = system.engineObj.mapName
-        p = system.engineObj.player
+        s.mapName = engineRef.mapName
+        p = engineRef.player
         s.pos = (p.x, p.y, p.layer)
         return s
 
     currentGame = staticmethod(currentGame)
 
-    def setCurrent(self):
-        self.setStats()
-        self.setFlags()
+    def setCurrent(self, engineRef):
+        self.setStats(engineRef)
+        self.setFlags(engineRef)
 
     def save(self, fileName):
         ika.SetLocalStorageItem(fileName, str(self))
@@ -124,28 +123,5 @@ class SaveGame(object):
             if k == 'MAPNAME':  self.mapName = v
             elif k == 'POS':
                 self.pos = tuple([int(x) for x in v.split(',')])
-            else:               self.flags[k] = v
-
-def test():
-    savedata.test1 = 'COCKS'
-    savedata.test8 = 1337
-    savedata.test1337 = range(10,40)
-    sg = SaveGame.currentGame()
-    #sg.save('bleh.txt')
-    #f = file('bleh.txt', 'w')
-    #writeSaveFlags(f)
-    #f.close()
-
-    #f = file('bleh.txt', 'r')
-    #readSaveFlags(f)
-    #f.close()
-    bleh = SaveGame()
-    bleh.load('bleh.txt')
-    bleh.setCurrent()
-    s = StatSet.STAT_NAMES
-
-    print(repr(savedata.test1))
-    print(repr(savedata.test8))
-    print(repr(savedata.test1337))
-
-#test()
+            else:
+                self.flags[k] = v

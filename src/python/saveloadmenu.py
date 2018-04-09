@@ -1,7 +1,6 @@
 # Stand-in load/save menu code
 
 import ika
-import system
 from saveload import SaveGame
 from xi.menu import Cancel
 from xi.cursor import ImageCursor
@@ -139,7 +138,7 @@ def loadMenuTask(resultRef, fadeOut=True):
     else:
         resultRef[0] = saves[i]
 
-def saveMenuTask():
+def saveMenuTask(engineRef):
     title = gui.TextFrame(text='Save Game')
     title.Position = (16, 16)
     saves = readSaves()
@@ -160,7 +159,7 @@ def saveMenuTask():
         yield from ika.Input.UpdateTask()
 
     if i is not Cancel:
-        s = SaveGame.currentGame()
+        s = SaveGame.currentGame(engineRef)
         s.save('save%i' % i)
 
     yield from xi.effects.fadeOutTask(50, draw=draw)

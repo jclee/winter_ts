@@ -124,7 +124,7 @@ class Engine(object):
 
         if saveData:
             self.player.x, self.player.y, self.player.layer = saveData.pos
-            saveData.setCurrent() # set stats, flags
+            saveData.setCurrent(self) # set stats, flags
         else:
             self.player.x, self.player.y = START_POS
             lay = ika.Map.GetMetaData()['entityLayer']

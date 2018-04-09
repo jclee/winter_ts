@@ -30,7 +30,7 @@ class SavePoint(Entity):
 
             self.isTouching = True
             self.engineRef.draw()
-            yield from saveloadmenu.saveMenuTask()
+            yield from saveloadmenu.saveMenuTask(self.engineRef)
             yield from xi.effects.fadeInTask(50, draw=self.engineRef.draw)
             self.engineRef.synchTime()
 
