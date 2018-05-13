@@ -660,6 +660,10 @@ class MapClass {
                     const index = (firstY + y) * w + (firstX + x)
                     // This game doesn't use tile animations
                     const tileIndex = localLayerData[index]
+                    // canvas drawing optimization: tile 0 is fully transparent.
+                    if (tileIndex === 0) {
+                        continue;
+                    }
                     const tileX = (tileIndex % tilesPerRow) * tileW
                     const tileY = Math.floor(tileIndex / tilesPerRow) * tileH
                     this._engine.ctx.drawImage(
