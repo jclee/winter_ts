@@ -52,8 +52,17 @@ class SaveGame(object):
 
     def _toStringData(self, engineRef):
         s = ''
-        for k in StatSet.STAT_NAMES:
-            s += '%s=%i\n' % (k, self.stats[k])
+        s += '_hp=%i\n' % self.stats._hp
+        s += '_mp=%i\n' % self.stats._mp
+        s += 'att=%i\n' % self.stats.att
+        s += 'exp=%i\n' % self.stats.exp
+        s += 'level=%i\n' % self.stats.level
+        s += 'mag=%i\n' % self.stats.mag
+        s += 'maxhp=%i\n' % self.stats.maxhp
+        s += 'maxmp=%i\n' % self.stats.maxmp
+        s += 'mres=%i\n' % self.stats.mres
+        s += 'next=%i\n' % self.stats.next
+        s += 'pres=%i\n' % self.stats.pres
 
         s += 'FLAGS\n'
         s += 'MAPNAME=\'%s\'\n' % self.mapName

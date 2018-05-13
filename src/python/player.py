@@ -200,24 +200,24 @@ galeRange = (
 
 backSlashRange = [x[::-1] for x in slashRange]
 
-initialStats = StatSet(
-    maxhp=80,
-    hp=80,
-    maxmp=40,
-    mp=40,
-    att=5,
-    mag=1,
-    pres=1,
-    mres=1,
-    level=1,
-    exp=0,
-    next=10)
-
 class Player(Entity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
         Entity.__init__(self, engineRef, ika.Entity(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.state = self.standState()
-        self.stats = initialStats.clone()
+
+        self.stats = StatSet()
+        self.stats.maxhp = 80
+        self.stats.maxmp = 40
+        self.stats.att = 5
+        self.stats.mag = 1
+        self.stats.pres = 1
+        self.stats.mres = 1
+        self.stats.level = 1
+        self.stats.exp = 0
+        self.stats.next = 10
+
+        self.stats.hp = 80
+        self.stats.mp = 40
 
     def giveXP(self, amount):
         self.stats.exp += amount
