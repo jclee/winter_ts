@@ -25,7 +25,6 @@ from camera import Camera
 from gameover import GameLoseException, GameQuitException, GameWinException
 
 import subscreen
-import saveload
 
 import controls
 import cabin

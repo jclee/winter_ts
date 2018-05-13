@@ -5,7 +5,6 @@ import player
 import Brain
 import animator
 import sound
-import math
 
 _razorManeAnim = {
     'walk': ((

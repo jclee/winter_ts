@@ -1,9 +1,5 @@
-
-import ika
-
 import xi.gui as gui
 import xi.scrolltext as scrolltext
-#import xi.cursor
 
 import xi.sound as sound
 import controls
@@ -23,7 +19,6 @@ class Menu(gui.Widget):
     '''
     def __init__(self, *args, **kwargs):
         gui.Widget.__init__(self, *args)
-        #self.textCtrl = kwargs.get('textctrl') or scrolltext.ScrollableTextFrame()
         self.textCtrl = kwargs.get('textctrl') or scrolltext.ScrollableTextLabel()
         self.cursor = kwargs.get('cursor') or gui.default_cursor
         self.cursorY = 0

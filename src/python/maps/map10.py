@@ -1,5 +1,4 @@
 import ika
-from yeti import Yeti
 from soulreaver import SoulReaver
 from thing import Thing
 from rune import FireRune

@@ -5,7 +5,6 @@ import ika
 import Brain
 import animator
 import sound
-import math
 
 _anim = {
     'idle': ((

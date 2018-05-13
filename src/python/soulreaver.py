@@ -3,9 +3,7 @@ from yeti import Yeti, _attackRange
 
 from player import Player
 import ika
-import animator
 import sound
-import math
 
 class SoulReaver(Yeti):
 

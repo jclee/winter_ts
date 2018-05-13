@@ -1,5 +1,3 @@
-import ika
-
 import Brain
 import sound
 from entity import Entity
