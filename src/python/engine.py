@@ -134,7 +134,7 @@ class Engine(object):
         self.things.append(MPBar(self))
         self.things.append(EXPBar(self))
 
-        self.camera = Camera()
+        self.camera = Camera(self)
         self.camera.center()
         self.things.append(self.camera)
 

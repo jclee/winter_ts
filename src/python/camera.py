@@ -1,16 +1,16 @@
 import ika
-import system
 from thing import Thing
 
 class Camera(Thing):
-    def __init__(self):
+    def __init__(self, engineRef):
         super(Camera, self).__init__()
+        self.engineRef = engineRef
         self.locked = False
 
     def update(self):
         if not self.locked:
-            x = system.engineObj.player.x - ika.Video.xres // 2
-            y = system.engineObj.player.y - ika.Video.yres // 2
+            x = self.engineRef.player.x - ika.Video.xres // 2
+            y = self.engineRef.player.y - ika.Video.yres // 2
 
             ywin = ika.Map.ywin
             xwin = ika.Map.xwin
@@ -24,5 +24,5 @@ class Camera(Thing):
             ika.Map.xwin = xwin
 
     def center(self):
-        ika.Map.xwin = system.engineObj.player.x - ika.Video.xres // 2
-        ika.Map.ywin = system.engineObj.player.y - ika.Video.yres // 2
+        ika.Map.xwin = self.engineRef.player.x - ika.Video.xres // 2
+        ika.Map.ywin = self.engineRef.player.y - ika.Video.yres // 2
