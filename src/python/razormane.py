@@ -33,15 +33,28 @@ _razorManeAnim = {
         False
     ),
 
+    'windup': ((
+        ((35, 30),),
+        ((42, 30),),
+        ((28, 30),),
+        ((49, 30),),
+        ((35, 30),),
+        ((42, 30),),
+        ((35, 30),),
+        ((42, 30),),
+        ),
+        False
+    ),
+
     'attack': ((
-        list(zip(range(35, 37), (30, 20, 15))),
-        list(zip(range(42, 44), (30, 20, 15))),
-        list(zip(range(28, 30), (30, 20, 15))),
-        list(zip(range(49, 51), (30, 20, 15))),
-        list(zip(range(35, 37), (30, 20, 15))),
-        list(zip(range(42, 44), (30, 20, 15))),
-        list(zip(range(35, 37), (30, 20, 15))),
-        list(zip(range(42, 44), (30, 20, 15))),
+        ((36, 20),),
+        ((43, 20),),
+        ((29, 20),),
+        ((50, 20),),
+        ((36, 20),),
+        ((43, 20),),
+        ((36, 20),),
+        ((43, 20),),
         ),
         False
     ),
@@ -219,18 +232,18 @@ class RazorMane(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.startAnimation('attack')
+        self.startAnimation('windup')
         self.stop()
 
         sound.razorManeStrike.Play()
 
         self.speed *= 2
 
-        # Winding up for the pounce.  Stop until the animation advances to the
-        # next frame.
-        while self._animator.index == 0:
+        # Winding up for the pounce.
+        for i in range(30):
             yield None
 
+        self.startAnimation('attack')
         self.move(dir, 32)
         while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])

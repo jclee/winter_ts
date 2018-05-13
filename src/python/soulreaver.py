@@ -28,24 +28,21 @@ class SoulReaver(Yeti):
             self.interruptable = oldInterruptable
         self._onStateExit = restoreVars
 
-        self.startAnimation('attack')
-
-        attacks = [75]
-        speeds = [120]
-        extradelay = attacks[ika.Random(0,len(attacks))]
-        newspeed = speeds[ika.Random(0,len(speeds))]
+        self.startAnimation('windup')
         self.stop()
-
         sound.yetiStrike[self.stats.ind].Play()
-
         self.interruptable = False
 
-        self._animator.count = extradelay
-
         # Wind up.  Hold up a sec.
-        while self._animator.index < 2:
+        # Show first frame for a bit longer than usual.
+        self.stopAnimation()
+        for i in range(75):
+            yield None
+        self.startAnimation('windup')
+        for i in range(35):
             yield None
 
+        self.startAnimation('attack')
         self.speed += 800
         self.move(self.direction, 2000)
 
@@ -78,7 +75,6 @@ class SoulReaver(Yeti):
         self.stop()
 
         self.state = self.idleState(10)
-
-        self.speed = newspeed
+        self.speed = 120
 
         yield None

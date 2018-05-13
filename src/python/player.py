@@ -526,7 +526,7 @@ class Player(Entity):
 
         # charge
         # TODO: sound/particle effect here
-        while self._animator.index == 0:
+        for i in range(12):
             yield None
 
         fire = ika.Entity(self.x, self.y, self.layer, 'rend.ika-sprite')

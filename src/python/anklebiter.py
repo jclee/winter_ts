@@ -33,15 +33,28 @@ _ankleBiterAnim = {
         True
     ),
 
+    'windup': ((
+        ((30, 1000),),
+        ((35, 1000),),
+        ((25, 1000),),
+        ((20, 1000),),
+        ((30, 1000),),
+        ((35, 1000),),
+        ((30, 1000),),
+        ((35, 1000),),
+        ),
+        True
+    ),
+
     'attack': ((
-        list(zip(range(30, 33), (30, 20, 15))),
-        list(zip(range(35, 38), (30, 20, 15))),
-        list(zip(range(25, 28), (30, 20, 15))),
-        list(zip(range(20, 23), (30, 20, 15))),
-        list(zip(range(30, 33), (30, 20, 15))),
-        list(zip(range(35, 38), (30, 20, 15))),
-        list(zip(range(30, 33), (30, 20, 15))),
-        list(zip(range(35, 38), (30, 20, 15))),
+        ((31, 20), (32, 15)),
+        ((36, 20), (37, 15)),
+        ((26, 20), (27, 15)),
+        ((21, 20), (22, 15)),
+        ((31, 20), (32, 15)),
+        ((36, 20), (37, 15)),
+        ((31, 20), (32, 15)),
+        ((36, 20), (37, 15)),
         ),
         False
     ),
@@ -190,18 +203,18 @@ class AnkleBiter(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.startAnimation('attack')
+        self.startAnimation('windup')
         self.stop()
 
         sound.anklebiterStrike.Play()
 
         self.speed *= 2
 
-        # Winding up for the pounce.  Stop until the animation advances to the
-        # next frame.
-        while self._animator.index == 0:
+        # Winding up for the pounce.
+        for i in range(30):
             yield None
 
+        self.startAnimation('attack')
         self.move(dir, 32)
         while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])

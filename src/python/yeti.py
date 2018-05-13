@@ -59,15 +59,28 @@ _anim = {
         False
     ),
 
+    'windup': ((
+        ((35, 25),(36, 10)),
+        ((42, 25),(43, 10)),
+        ((49, 25),(50, 10)),
+        ((28, 25),(29, 10)),
+        ((35, 25),(36, 10)),
+        ((42, 25),(43, 10)),
+        ((35, 25),(36, 10)),
+        ((42, 25),(43, 10)),
+        ),
+        False
+    ),
+
     'attack': ((
-        ((35, 25), (36, 10), (37, 20)),
-        ((42, 25), (43, 10), (44, 20)),
-        ((49, 25), (50, 10), (51, 20)),
-        ((28, 25), (29, 10), (30, 20)),
-        ((35, 25), (36, 10), (37, 20)),
-        ((42, 25), (43, 10), (44, 20)),
-        ((35, 25), (36, 10), (37, 20)),
-        ((42, 25), (43, 10), (44, 20)),
+        ((37, 20),),
+        ((44, 20),),
+        ((51, 20),),
+        ((30, 20),),
+        ((37, 20),),
+        ((44, 20),),
+        ((37, 20),),
+        ((44, 20),),
         ),
         False
     ),
@@ -163,17 +176,16 @@ class Yeti(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.startAnimation('attack')
+        self.startAnimation('windup')
         self.stop()
-
         sound.yetiStrike[self.stats.ind].Play()
-
         self.interruptable = False
 
         # Wind up.  Hold up a sec.
-        while self._animator.index < 2:
+        for i in range(35):
             yield None
 
+        self.startAnimation('attack')
         self.move(dir, 6)
         while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])

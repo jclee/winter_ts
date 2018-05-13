@@ -18,18 +18,15 @@ class Devourer(AnkleBiter):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.startAnimation('attack')
+        self.startAnimation('windup')
         self.stop()
         self.speed *= 2
 
-        # Winding up for the pounce.  Stop until the animation advances to the
-        # next frame.
+        # Winding up for the pounce.
         for i in range(25):
             yield None
 
-        # force the animator to move on
-        self._animator.count = 0
-
+        self.startAnimation('attack')
         self.move(dir, 32)
         while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])
