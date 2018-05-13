@@ -125,7 +125,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         i = m.update()
         draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
+        yield None
 
     if fadeOut:
         yield from xi.effects.fadeOutTask(50, draw=draw)
@@ -156,7 +156,7 @@ def saveMenuTask(engineRef):
         i = m.update()
         draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
+        yield None
 
     if i is not Cancel:
         s = SaveGame.currentGame(engineRef)

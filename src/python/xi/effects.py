@@ -31,7 +31,7 @@ def fadeTask(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 
             True)
 
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
+        yield None
 
 def fadeInTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
     yield from fadeTask(time, colour, ika.RGB(0, 0, 0, 0), draw)

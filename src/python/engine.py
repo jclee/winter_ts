@@ -269,7 +269,7 @@ class Engine(object):
                     skipCount = 0
                     self.draw()
                     ika.Video.ShowPage()
-                    yield from ika.Input.UpdateTask()
+                    yield None
 
                 self.nextFrameTime += self.ticksPerFrame
 

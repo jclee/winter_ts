@@ -15,7 +15,7 @@ def delayTask(draw, count, snowObj):
         count -= 1
         ika.Video.ShowPage()
 
-        yield from ika.Input.UpdateTask()
+        yield None
         if controls.attack():
             raise _DoneException()
 
@@ -67,7 +67,6 @@ def menuTask(resultRef):
         snowObj.update()
         snowObj.draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
         yield from ika.DelayTask(1)
 
     u = 0 # gay unpress hack
@@ -77,7 +76,6 @@ def menuTask(resultRef):
         snowObj.update()
         snowObj.draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
         yield from ika.DelayTask(1)
 
         if controls.up() and cursorPos > 0:
@@ -103,5 +101,4 @@ def menuTask(resultRef):
     #    snowObj.update()
     #    snowObj.draw()
     #    ika.Video.ShowPage()
-    #    yield from ika.Input.UpdateTask()
     #    yield from ika.DelayTask(1)

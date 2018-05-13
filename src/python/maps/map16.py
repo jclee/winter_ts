@@ -74,7 +74,7 @@ def bridge_break(engineRef):
         while t > ika.GetTime():
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
         p.state = p.standState()
 

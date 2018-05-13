@@ -209,4 +209,4 @@ def creditsTask(engineRef):
 
         draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
+        yield None

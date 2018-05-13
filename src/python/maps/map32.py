@@ -23,7 +23,7 @@ def finalBattle(engineRef):
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
         def noOp():
             while True:
@@ -39,7 +39,7 @@ def finalBattle(engineRef):
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
         s = Serpent(
             engineRef,
@@ -56,7 +56,7 @@ def finalBattle(engineRef):
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
         p.state = p.defaultState()
 

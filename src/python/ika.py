@@ -100,13 +100,6 @@ class _InputClass(object):
     def getKey(self, key):
         return self.keyboard[key]
 
-    @staticmethod
-    def UpdateTask():
-        # Input update is automatic, but Input.Update() is used to signify
-        # waiting for the next frame.
-        # TODO: We can probably consolidate any DelayTask calls...
-        yield None
-
 Input = _InputClass()
 
 class Sound(object):

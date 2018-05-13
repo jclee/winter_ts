@@ -75,7 +75,7 @@ def textTask(where, txt):
         draw()
         frame.draw()
         ika.Video.ShowPage()
-        yield from ika.Input.UpdateTask()
+        yield None
 
 #------------------------------------------------------------------------------
 

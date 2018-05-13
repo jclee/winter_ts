@@ -42,7 +42,7 @@ class Transition(object):
         while not done:
             done = True
 
-            yield from ika.Input.UpdateTask()
+            yield None
             ika.Map.Render()
 
             t = ika.GetTime()

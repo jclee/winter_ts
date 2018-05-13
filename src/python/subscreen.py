@@ -155,7 +155,7 @@ class PauseScreen(object):
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
             self.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
         self.background = self.images[-1]
 
@@ -176,7 +176,7 @@ class PauseScreen(object):
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
             self.draw(o)
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
     def draw(self, opacity = 255):
         gui.default_window.opacity = opacity
@@ -192,7 +192,7 @@ class PauseScreen(object):
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
             self.draw()
             ika.Video.ShowPage()
-            yield from ika.Input.UpdateTask()
+            yield None
 
             result = self.menu.update()
             if result is Cancel or result == 0:
