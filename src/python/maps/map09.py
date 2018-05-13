@@ -1,8 +1,5 @@
+def to8(engineRef):
+    yield from engineRef.mapSwitchTask('map08.ika-map', (1 * 16, engineRef.player.y))
 
-import system
-
-def to8():
-    yield from system.engineObj.mapSwitchTask('map08.ika-map', (1 * 16, system.engineObj.player.y))
-    
-def to10():
-    yield from system.engineObj.mapSwitchTask('map10.ika-map', (system.engineObj.player.x, 28 * 16))
+def to10(engineRef):
+    yield from engineRef.mapSwitchTask('map10.ika-map', (engineRef.player.x, 28 * 16))

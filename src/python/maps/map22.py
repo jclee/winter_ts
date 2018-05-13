@@ -1,12 +1,10 @@
-
-import system
 import ika
 
-def AutoExec():
-    system.engineObj.background = ika.Image('gfx/mountains.png')
+def AutoExec(engineRef):
+    engineRef.background = ika.Image('gfx/mountains.png')
 
-def to21():
-    yield from system.engineObj.mapSwitchTask('map21.ika-map', (38 * 16, system.engineObj.player.y))
-    
-def to50():
-    yield from system.engineObj.mapSwitchTask('map50.ika-map', (9 * 16, 13 * 16))
+def to21(engineRef):
+    yield from engineRef.mapSwitchTask('map21.ika-map', (38 * 16, engineRef.player.y))
+
+def to50(engineRef):
+    yield from engineRef.mapSwitchTask('map50.ika-map', (9 * 16, 13 * 16))

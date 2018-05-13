@@ -1,11 +1,8 @@
-import ika
-import system
-
-def to25():
+def to25(engineRef):
     offset_from = 20 * 16  # first vertical pos possible
     offset_to = 50 * 16  # first vertical pos possible
-    y = system.engineObj.player.y - offset_from + offset_to
-    yield from system.engineObj.mapSwitchTask('map25.ika-map', (1 * 16, y))
-    
-def to27():
-    yield from system.engineObj.mapSwitchTask('map27.ika-map', (system.engineObj.player.x, 78 * 16))    
+    y = engineRef.player.y - offset_from + offset_to
+    yield from engineRef.mapSwitchTask('map25.ika-map', (1 * 16, y))
+
+def to27(engineRef):
+    yield from engineRef.mapSwitchTask('map27.ika-map', (engineRef.player.x, 78 * 16))

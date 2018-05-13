@@ -1,21 +1,18 @@
-import ika
-import system
+def to26(engineRef):
+    yield from engineRef.mapSwitchTask('map26.ika-map', (engineRef.player.x, 1 * 16))
 
-def to26():
-    yield from system.engineObj.mapSwitchTask('map26.ika-map', (system.engineObj.player.x, 1 * 16))    
-    
-def to28():
+def to28(engineRef):
     offset_from = 33 * 16  # first vertical pos possible
     offset_to = 13 * 16  # first vertical pos possible
-    x = system.engineObj.player.x - offset_from + offset_to
-    yield from system.engineObj.mapSwitchTask('map28.ika-map', (x, 28 * 16))
+    x = engineRef.player.x - offset_from + offset_to
+    yield from engineRef.mapSwitchTask('map28.ika-map', (x, 28 * 16))
 
-def to29():
+def to29(engineRef):
     offset_from = 22 * 16  # first vertical pos possible
     offset_to = 8 * 16  # first vertical pos possible
-    y = system.engineObj.player.y - offset_from + offset_to
-    yield from system.engineObj.mapSwitchTask('map29.ika-map', (1 * 16, y))
+    y = engineRef.player.y - offset_from + offset_to
+    yield from engineRef.mapSwitchTask('map29.ika-map', (1 * 16, y))
 
-def to34():
-    yield from system.engineObj.mapSwitchTask('map34.ika-map', (74 * 16, 6.5 * 16))
-    
+def to34(engineRef):
+    yield from engineRef.mapSwitchTask('map34.ika-map', (74 * 16, 6.5 * 16))
+

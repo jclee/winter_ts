@@ -1,13 +1,12 @@
 import cabin
 import savedata
-import system
 
-def to30():
-    x = system.engineObj.player.x - 160
-    yield from system.engineObj.mapSwitchTask('map30.ika-map', (6 * 16 + x, 16))
+def to30(engineRef):
+    x = engineRef.player.x - 160
+    yield from engineRef.mapSwitchTask('map30.ika-map', (6 * 16 + x, 16))
     if 'nearend' not in savedata.__dict__:
-        yield from cabin.sceneTask('nearend')
+        yield from cabin.sceneTask(engineRef, 'nearend')
 
-def to32():
+def to32(engineRef):
     # no adjustment here on purpose
-    yield from system.engineObj.mapSwitchTask('map32.ika-map', (25 * 16, 38 * 16))
+    yield from engineRef.mapSwitchTask('map32.ika-map', (25 * 16, 38 * 16))

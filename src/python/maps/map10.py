@@ -1,5 +1,3 @@
-
-import system
 import ika
 from yeti import Yeti
 from soulreaver import SoulReaver
@@ -8,23 +6,22 @@ from rune import FireRune
 import savedata
 import sound
 
-def AutoExec():
-    engine = system.engineObj
-
+def AutoExec(engineRef):
     if 'fireguard' not in savedata.__dict__:
-        engine.mapThings.append(RuneListener())
+        engineRef.mapThings.append(RuneListener(engineRef))
 
     if 'firerune' in savedata.__dict__.keys():
         ika.Map.RemoveEntity(ika.Map.entities['demiyeti'])
     else:
-        engine.mapThings.append(DeathListener())
+        engineRef.mapThings.append(DeathListener(engineRef))
 
-def to9():
-    yield from system.engineObj.mapSwitchTask('map09.ika-map', (system.engineObj.player.x, 1 * 16))
+def to9(engineRef):
+    yield from engineRef.mapSwitchTask('map09.ika-map', (engineRef.player.x, 1 * 16))
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the fire rune.'
-    def __init__(self, yeti=None):
+    def __init__(self, engineRef, yeti=None):
+        self.engineRef = engineRef
         self.yeti = yeti
 
     def update(self):
@@ -33,14 +30,14 @@ class DeathListener(Thing):
             # in AutoExec. (if we had more time, I'd fix that problem instead of
             # doing this)
             sound.playMusic("music/Competative.xm")
-            self.yeti = system.engineObj.entFromEnt[
+            self.yeti = self.engineRef.entFromEnt[
                 ika.Map.entities['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in savedata.__dict__:
                 e = ika.Entity(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
-                system.engineObj.addEntity(
+                self.engineRef.addEntity(
                     FireRune(e)
                     )
             else:
@@ -53,12 +50,15 @@ class DeathListener(Thing):
         pass
 
 class RuneListener(object):
+    def __init__(self, engineRef):
+        self.engineRef = engineRef
+
     def update(self):
         if 'nearend' in savedata.__dict__:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
-            system.engineObj.addEntity(y)
-            system.engineObj.mapThings.append(DeathListener(y))
+            self.engineRef.addEntity(y)
+            self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
 
     def draw(self):

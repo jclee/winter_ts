@@ -12,8 +12,8 @@ class Field(object):
         self.scriptTask = scriptTask
         self.rect = rect
 
-    def fireTask(self):
-        yield from self.scriptTask()
+    def fireTask(self, engineRef):
+        yield from self.scriptTask(engineRef)
 
     def test(self, p):
         if p.layer != self.layer:

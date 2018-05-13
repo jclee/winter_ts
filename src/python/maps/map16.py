@@ -1,5 +1,3 @@
-
-import system
 import ika
 import savedata
 import sound
@@ -8,8 +6,8 @@ from soulreaver import SoulReaver
 from thing import Thing
 from rune import WindRune
 
-def AutoExec():
-    system.engineObj.background = ika.Image('gfx/mountains.png')
+def AutoExec(engineRef):
+    engineRef.background = ika.Image('gfx/mountains.png')
 
     if 'bridge_broken' not in savedata.__dict__:
         for x in range(19, 22):
@@ -19,10 +17,10 @@ def AutoExec():
             ika.Map.entities['break_gap'].x = -100
 
     if 'windguard' not in savedata.__dict__ and 'nearend' in savedata.__dict__:
-        system.engineObj.mapThings.append(RuneListener())
+        engineRef.mapThings.append(RuneListener(engineRef))
 
 
-def bridge_break():
+def bridge_break(engineRef):
     if 'bridge_broken' not in savedata.__dict__:
 
         sound.playMusic('music/Competative.xm')
@@ -44,22 +42,21 @@ def bridge_break():
         # This is really cheap.  Probably fragile too.  I'm stepping beyond
         # the game engine and directly twiddling with ika.
 
-        engine = system.engineObj
-        p = engine.player
+        p = engineRef.player
         p.stop()
         p.layer = 2
         p.ent.specframe = 91
         p._state = lambda: None # keep the player from moving
 
-        engine.draw()
+        engineRef.draw()
         ika.Video.ShowPage()
         yield from ika.DelayTask(8)
 
         for y in range(32):
             p.y += 1
             ika.Map.ProcessEntities()
-            engine.camera.update()
-            engine.draw()
+            engineRef.camera.update()
+            engineRef.draw()
             ika.Video.ShowPage()
             yield from ika.DelayTask(1)
 
@@ -68,61 +65,62 @@ def bridge_break():
         for y in range(32):
             p.y += 1
             ika.Map.ProcessEntities()
-            engine.camera.update()
-            engine.draw()
+            engineRef.camera.update()
+            engineRef.draw()
             ika.Video.ShowPage()
             yield from ika.DelayTask(1)
 
         p.ent.specframe = 92
         t = ika.GetTime() + 80
         while t > ika.GetTime():
-            engine.draw()
+            engineRef.draw()
             ika.Video.ShowPage()
             yield from ika.Input.UpdateTask()
 
         p.state = p.standState()
 
-        y = Yeti(engine, ika.Entity(304, 64, 1, 'yeti.ika-sprite'))
+        y = Yeti(engineRef, ika.Entity(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp
         y.stats.att += 10
-        engine.addEntity(y)
-        engine.mapThings.append(DeathListener(y))
+        engineRef.addEntity(y)
+        engineRef.mapThings.append(DeathListener(engineRef, y))
 
-        engine.synchTime()
+        engineRef.synchTime()
 
-def manaPool():
+def manaPool(engineRef):
     if 'windrune' in savedata.__dict__ and ('nearend' not in savedata.__dict__ or 'windguard' in savedata.__dict__):
-        system.engineObj.player.stats.mp += 1
+        engineRef.player.stats.mp += 1
     if False:
         yield None
 
-def to13():
-    yield from system.engineObj.mapSwitchTask('map13.ika-map', (78 * 16, system.engineObj.player.y))
+def to13(engineRef):
+    yield from engineRef.mapSwitchTask('map13.ika-map', (78 * 16, engineRef.player.y))
 
-def to17():
-    yield from system.engineObj.mapSwitchTask('map17.ika-map', (1 * 16, system.engineObj.player.y))
+def to17(engineRef):
+    yield from engineRef.mapSwitchTask('map17.ika-map', (1 * 16, engineRef.player.y))
 
-def to19():
+def to19(engineRef):
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 44 * 16  # first vertical pos possible
-    y = system.engineObj.player.y - offset_from + offset_to
-    yield from system.engineObj.mapSwitchTask('map19.ika-map', (48 * 16, y))
+    y = engineRef.player.y - offset_from + offset_to
+    yield from engineRef.mapSwitchTask('map19.ika-map', (48 * 16, y))
 
-def toLowerLayer():
-    system.engineObj.player.layer = 1
+def toLowerLayer(engineRef):
+    engineRef.player.layer = 1
     if False:
         yield None
 
-def toUpperLayer():
-    system.engineObj.player.layer = 3
+def toUpperLayer(engineRef):
+    engineRef.player.layer = 3
     if False:
         yield None
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the wind rune.'
-    def __init__(self, yeti):
+    def __init__(self, engineRef, yeti):
+        self.engineRef = engineRef
         self.yeti = yeti
 
     def update(self):
@@ -130,12 +128,12 @@ class DeathListener(Thing):
             if 'windrune' not in savedata.__dict__:
                 e = ika.Entity(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
-                system.engineObj.addEntity(
+                engineRef.addEntity(
                     WindRune(e)
                     )
             else:
                 setattr(savedata, 'windguard', 'True')
-                
+
             sound.playMusic('music/winter.ogg')
             return True
 
@@ -143,12 +141,15 @@ class DeathListener(Thing):
         pass
 
 class RuneListener(object):
+    def __init__(self, engineRef):
+        self.engineRef = engineRef
+
     def update(self):
         if 'nearend' in savedata.__dict__:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
-            system.engineObj.addEntity(y)
-            system.engineObj.mapThings.append(DeathListener(y))
+            engineRef.addEntity(y)
+            engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
 
     def draw(self):

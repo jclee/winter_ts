@@ -1,31 +1,32 @@
 import ika
-import system
 import savedata
-import cabin
 
 from yeti import Yeti
 import snow
 
 
-def AutoExec():
-    system.engineObj.mapThings.append(snow.Snow(velocity=(0, 0.5)))
+def AutoExec(engineRef):
+    engineRef.mapThings.append(snow.Snow(velocity=(0, 0.5)))
     if 'cowardrune' not in savedata.__dict__:
-        system.engineObj.mapThings.append(RuneListener())
+        engineRef.mapThings.append(RuneListener(engineRef))
 
-def to2():
+def to2(engineRef):
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 38 * 16  # first vertical pos possible
-    y = system.engineObj.player.y - offset_from + offset_to
-    yield from system.engineObj.mapSwitchTask('map02.ika-map', (48 * 16, y))
+    y = engineRef.player.y - offset_from + offset_to
+    yield from engineRef.mapSwitchTask('map02.ika-map', (48 * 16, y))
 
-def to49():
-    yield from system.engineObj.mapSwitchTask('map49.ika-map', (14 * 16, 23 * 16))
+def to49(engineRef):
+    yield from engineRef.mapSwitchTask('map49.ika-map', (14 * 16, 23 * 16))
 
 class RuneListener(object):
+    def __init__(self, engineRef):
+        self.engineRef = engineRef
+
     def update(self):
         if 'waterguard' in savedata.__dict__ and 'fireguard' in savedata.__dict__ and 'windguard' in savedata.__dict__:
-            system.engineObj.addEntity(
-                Yeti(system.engineObj, ika.Entity(35 * 16, 19 * 16, system.engineObj.player.layer, 'yeti.ika-sprite')))
+            engineRef.addEntity(
+                Yeti(engineRef, ika.Entity(35 * 16, 19 * 16, engineRef.player.layer, 'yeti.ika-sprite')))
             return True
 
     def draw(self):

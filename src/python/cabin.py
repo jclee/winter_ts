@@ -1,7 +1,6 @@
 import ika
 import controls
 import savedata
-import system
 
 from xi import gui
 from xi.misc import WrapText
@@ -119,11 +118,11 @@ def animate(ent, frames, delay, thing=None, loop=True, text=None):
 _scenes = {}
 
 # TODO: transitions
-def sceneTask(name):
+def sceneTask(engineRef, name):
     global grandpa, kid1, kid2, kid3
-    savedPos = [(e.x, e.y) for e in system.engineObj.entities]
+    savedPos = [(e.x, e.y) for e in engineRef.entities]
     # hide 'em all
-    for e in system.engineObj.entities:
+    for e in engineRef.entities:
         e.x, e.y = -100, -100
 
     ika.Map.Switch('maps/cabinmap.ika-map')
@@ -141,11 +140,11 @@ def sceneTask(name):
 
     grandpa = kid1 = kid2 = kid3 = None
 
-    if system.engineObj.mapName:
+    if engineRef.mapName:
         # We now only call AutoExec in engine.mapSwitchTask, not
         # ika.Map.Switch, so this should be an OK way to restore the map.
-        ika.Map.Switch('maps/' + system.engineObj.mapName)
-        for e, pos in zip(system.engineObj.entities, savedPos):
+        ika.Map.Switch('maps/' + engineRef.mapName)
+        for e, pos in zip(engineRef.entities, savedPos):
             e.x, e.y = pos
 
 # name : function pairs

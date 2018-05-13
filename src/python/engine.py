@@ -140,7 +140,7 @@ class Engine(object):
 
     def beginNewGameTask(self):
         saveload.SaveGame.clearSaveFlags()
-        yield from cabin.sceneTask('intro')
+        yield from cabin.sceneTask(self, 'intro')
 
         yield from self.mapSwitchTask(START_MAP, START_POS, fade = False)
         lay = ika.Map.GetMetaData()['entityLayer']
@@ -190,7 +190,7 @@ class Engine(object):
 
         autoExecFunc = mapModule.__dict__.get('AutoExec', None)
         if autoExecFunc is not None:
-            autoExecFunc()
+            autoExecFunc(self)
 
         metaData = ika.Map.GetMetaData()
 
@@ -309,7 +309,7 @@ class Engine(object):
         # check fields
         for f in self.fields:
             if f.test(self.player):
-                yield from f.fireTask()
+                yield from f.fireTask(self)
                 break
             brython_generator_bug_workaround = 'blah'
 
