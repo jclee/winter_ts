@@ -6,7 +6,6 @@ import ika
 import animator
 import sound
 import math
-import dir
 
 class SoulReaver(Yeti):
 
@@ -21,10 +20,10 @@ class SoulReaver(Yeti):
         
     def attackState(self, direc):
         self.direction = direc
-        if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
-            self.direction = dir.LEFT
-        elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
-            self.direction = dir.RIGHT
+        if self.direction == self.engineRef.dir.UpLeft or self.direction == self.engineRef.dir.DownLeft:
+            self.direction = self.engineRef.dir.Left
+        elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
+            self.direction = self.engineRef.dir.Right
 
         oldInterruptable = self.interruptable
         def restoreVars(self=self, oldInterruptable=oldInterruptable):

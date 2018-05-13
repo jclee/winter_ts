@@ -6,7 +6,6 @@ import Brain
 import animator
 import sound
 import math
-import dir
 
 _razorManeAnim = {
     'walk': ((
@@ -124,7 +123,7 @@ class RazorMane(Enemy):
 
     def playerDir(self):
         p = self.engineRef.player
-        return dir.fromDelta(p.x - self.x - 10, p.y - self.y - 7)
+        return self.engineRef.dir.fromDelta(p.x - self.x - 10, p.y - self.y - 7)
 
     def playerDist(self):
         p = self.engineRef.player
@@ -157,7 +156,7 @@ class RazorMane(Enemy):
             elif dist < DIST:
                 # fall back
 
-                yield self.walkState(dir.invert[d], min(80, DIST - dist))
+                yield self.walkState(self.engineRef.dir.invert(d), min(80, DIST - dist))
                 self.direction = d
                 yield self.idleState(60)
             else:
@@ -173,7 +172,7 @@ class RazorMane(Enemy):
             if dist > MIN_DIST:
                 break
 
-            yield self.walkState(dir.invert[d], MIN_DIST - dist)
+            yield self.walkState(self.engineRef.dir.invert(d), MIN_DIST - dist)
 
         self.mood = self.passiveMood
         yield self.idleState()

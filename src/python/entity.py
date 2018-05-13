@@ -1,7 +1,6 @@
 import ika
 
 from animator import Animator
-import dir
 from statset import StatSet
 
 def _temp():
@@ -24,7 +23,7 @@ class Entity(object):
 
         self._animator = Animator()
         self._anim = anim
-        self.direction = dir.DOWN # as good as any
+        self.direction = self.engineRef.dir.Down # as good as any
         self.interruptable = True # if false, no state changes will occur
         self.invincible = False
         self._state = None
@@ -63,7 +62,7 @@ class Entity(object):
             return
 
         if recoilDir is None:
-            recoilDir = dir.invert[self.direction]
+            recoilDir = self.engineRef.dir.invert(self.direction)
 
         if self.stats.hp <= amount:
             self.stats.hp = 0
@@ -100,7 +99,6 @@ class Entity(object):
             self.invincible = oldInvincible
         self._onStateExit = restoreVars
 
-        dx, dy = dir.delta[recoilDir]
         self.speed = recoilSpeed
         self.move(recoilDir, 1000000) # just go until I say stop
         self.anim = 'hurt'
@@ -116,7 +114,7 @@ class Entity(object):
 
             if t <= 0 or self.speed <= 0: break
 
-        self.direction = dir.invert[self.direction]
+        self.direction = self.engineRef.dir.invert(self.direction)
         self.ent.Stop()
         yield None
 
@@ -139,18 +137,18 @@ class Entity(object):
         return self.ent.Touches(ent.ent)
 
     # Entity methods.  Most everything that involves an ika entity should be done here.
-    def up(self):           self.ent.MoveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = dir.UP
-    def down(self):         self.ent.MoveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = dir.DOWN
-    def left(self):         self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = dir.LEFT
-    def right(self):        self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y);    self.direction = dir.RIGHT
-    def upLeft(self):       self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y - self.DIST);    self.direction = dir.UPLEFT
-    def upRight(self):      self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y - self.DIST);    self.direction = dir.UPRIGHT
-    def downLeft(self):     self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y + self.DIST);    self.direction = dir.DOWNLEFT
-    def downRight(self):    self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y + self.DIST);    self.direction = dir.DOWNRIGHT
+    def up(self):           self.ent.MoveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.Up
+    def down(self):         self.ent.MoveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.Down
+    def left(self):         self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Left
+    def right(self):        self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Right
+    def upLeft(self):       self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpLeft
+    def upRight(self):      self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpRight
+    def downLeft(self):     self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownLeft
+    def downRight(self):    self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownRight
     def move(self, d, dist = DIST):
-        dx, dy = dir.delta[d]
+        delta = self.engineRef.dir.toDelta(d)
         self.direction = d
-        self.ent.MoveTo(int(self.ent.x + dist * dx), int(self.ent.y + dist * dy))
+        self.ent.MoveTo(int(self.ent.x + dist * delta.x), int(self.ent.y + dist * delta.y))
 
     def isMoving(self):     return self.ent.isMoving
     def stop(self):         self.ent.Stop()

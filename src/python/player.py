@@ -3,7 +3,6 @@ import ika
 import animator
 import controls
 import sound
-import dir
 
 from statset import StatSet
 from caption import Caption
@@ -311,22 +310,22 @@ class Player(Entity):
                 yield None
             elif controls.left():
                 if controls.up():
-                    d = dir.UPLEFT
+                    d = self.engineRef.dir.UpLeft
                 elif controls.down():
-                    d = dir.DOWNLEFT
+                    d = self.engineRef.dir.DownLeft
                 else:
-                    d = dir.LEFT
+                    d = self.engineRef.dir.Left
             elif controls.right():
                 if controls.up():
-                    d = dir.UPRIGHT
+                    d = self.engineRef.dir.UpRight
                 elif controls.down():
-                    d = dir.DOWNRIGHT
+                    d = self.engineRef.dir.DownRight
                 else:
-                    d = dir.RIGHT
+                    d = self.engineRef.dir.Right
             elif controls.up():
-                d = dir.UP
+                d = self.engineRef.dir.Up
             elif controls.down():
-                d = dir.DOWN
+                d = self.engineRef.dir.Down
             else:
                 self.state = self.standState()
                 yield None
@@ -365,10 +364,10 @@ class Player(Entity):
                     x.hurt(self.stats.att, 120, self.direction)
                     self.giveMPforHit()
 
-            if controls.up() and self.direction == dir.DOWN:  backthrust = True
-            elif controls.down() and self.direction == dir.UP:  backthrust = True
-            elif controls.left() and self.direction in [dir.RIGHT, dir.UPRIGHT, dir.DOWNRIGHT]:  backthrust = True
-            elif controls.right() and self.direction in [dir.LEFT, dir.UPLEFT, dir.DOWNLEFT]:  backthrust = True
+            if controls.up() and self.direction == self.engineRef.dir.Down:  backthrust = True
+            elif controls.down() and self.direction == self.engineRef.dir.Up:  backthrust = True
+            elif controls.left() and self.direction in [self.engineRef.dir.Right, self.engineRef.dir.UpRight, self.engineRef.dir.DownRight]:  backthrust = True
+            elif controls.right() and self.direction in [self.engineRef.dir.Left, self.engineRef.dir.UpLeft, self.engineRef.dir.DownLeft]:  backthrust = True
 
             elif controls.attack():
                 backslash = True
@@ -426,10 +425,10 @@ class Player(Entity):
             yield None
 
     def thrustState(self):
-        if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
-            self.direction = dir.LEFT
-        elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
-            self.direction = dir.RIGHT
+        if self.direction == self.engineRef.dir.UpLeft or self.direction == self.engineRef.dir.DownLeft:
+            self.direction = self.engineRef.dir.Left
+        elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
+            self.direction = self.engineRef.dir.Right
 
         oldSpeed = self.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
@@ -476,10 +475,10 @@ class Player(Entity):
         self.stop()
 
     def backThrustState(self):
-        if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
-            self.direction = dir.LEFT
-        elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
-            self.direction = dir.RIGHT
+        if self.direction == self.engineRef.dir.UpLeft or self.direction == self.engineRef.dir.DownLeft:
+            self.direction = self.engineRef.dir.Left
+        elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
+            self.direction = self.engineRef.dir.Right
 
         oldSpeed = self.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
@@ -488,7 +487,7 @@ class Player(Entity):
 
         self.anim = 'backthrust'
         self.speed += 400
-        self.move(dir.invert[self.direction], 1000)
+        self.move(self.engineRef.dir.invert(self.direction), 1000)
 
         i = 8
         while i > 0:
@@ -509,7 +508,7 @@ class Player(Entity):
                 gale = True
             yield None
 
-        self.direction = dir.invert[self.direction]
+        self.direction = self.engineRef.dir.invert(self.direction)
 
         if thrust:
             self.state = self.thrustState()
@@ -522,10 +521,10 @@ class Player(Entity):
         self.stop()
 
     def hearthRendState(self):
-        if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
-            self.direction = dir.LEFT
-        elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
-            self.direction = dir.RIGHT
+        if self.direction == self.engineRef.dir.UpLeft or self.direction == self.engineRef.dir.DownLeft:
+            self.direction = self.engineRef.dir.Left
+        elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
+            self.direction = self.engineRef.dir.Right
 
         self.stop()
         self.anim = 'rend'
@@ -586,10 +585,10 @@ class Player(Entity):
             self.engineRef.camera.locked = oldCameraLocked
         self._onStateExit = restoreVars
 
-        if self.direction == dir.UPLEFT or self.direction == dir.DOWNLEFT:
-            self.direction = dir.LEFT
-        elif self.direction == dir.UPRIGHT or self.direction == dir.DOWNRIGHT:
-            self.direction = dir.RIGHT
+        if self.direction == self.engineRef.dir.UpLeft or self.direction == self.engineRef.dir.DownLeft:
+            self.direction = self.engineRef.dir.Left
+        elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
+            self.direction = self.engineRef.dir.Right
 
         self.stop()
         self.anim = 'stand'
@@ -603,15 +602,15 @@ class Player(Entity):
         camera = self.engineRef.camera
 
         camera.locked = True
-        dx, dy = dir.delta[self.direction]
+        delta = self.engineRef.dir.toDelta(self.direction)
 
         # charge
 
         sound.crushingGale.Play()
 
         for i in range(30):
-            ika.Map.xwin += dx * 2
-            ika.Map.ywin += dy * 2
+            ika.Map.xwin += delta.x * 2
+            ika.Map.ywin += delta.y * 2
             yield None
 
         self.invincible = True
@@ -703,7 +702,7 @@ class Player(Entity):
 
         for e in ents:
             if isinstance(e, Enemy) and not e.invincible:
-                d = dir.fromDelta(self.x - e.x, self.y - e.y)
+                d = self.engineRef.dir.fromDelta(self.x - e.x, self.y - e.y)
                 e.hurt((self.stats.att + self.stats.mag) * 3, 400, d)
 
         self.stop()
@@ -718,7 +717,7 @@ class Player(Entity):
 
     def deathState(self):
         self.invincible = True
-        s = self.hurtState(300, dir.invert[self.direction])
+        s = self.hurtState(300, self.engineRef.dir.invert(self.direction))
         yield next(s)
         self.anim = 'die'
         for x in s:

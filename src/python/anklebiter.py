@@ -6,7 +6,6 @@ import Brain
 import animator
 import sound
 import math
-import dir
 
 _ankleBiterAnim = {
     'walk': ((
@@ -128,7 +127,7 @@ class AnkleBiter(Enemy):
         # for now fuckit.  Attack the player!!
         p = self.engineRef.player
         for q in range(5):
-            d = dir.fromDelta(p.x - self.x, p.y - self.y)
+            d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
             dist = ika.hypot(p.x - self.x, p.y - self.y)
             if dist < 40:
                 yield self.attackState(d)
@@ -140,13 +139,13 @@ class AnkleBiter(Enemy):
         MIN_DIST = 150
         p = self.engineRef.player
         for q in range(5):
-            d = dir.fromDelta(p.x - self.x, p.y - self.y)
+            d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
             dist = ika.hypot(p.x - self.x, p.y - self.y)
 
             if dist > MIN_DIST:
                 break
 
-            yield self.walkState(dir.invert[d], MIN_DIST - dist)
+            yield self.walkState(self.engineRef.dir.invert(d), MIN_DIST - dist)
 
         self.mood = self.passiveMood
         yield self.idleState()

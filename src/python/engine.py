@@ -1,8 +1,7 @@
 import ika
+from browser import window
 
 import effects
-
-import dir
 
 from player import Player
 from anklebiter import AnkleBiter
@@ -72,6 +71,8 @@ spawnMap = {
 
 class Engine(object):
     '''Core engine thingie.  bleh.'''
+
+    dir = window.Dir
 
     def __init__(self):
         self.entities = []
@@ -232,7 +233,7 @@ class Engine(object):
             self.draw()
             img = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
 
-        self.player.direction = dir.DOWN
+        self.player.direction = self.engineRef.dir.Down
         self.player.state = self.player.defaultState()
         self.player.anim = 'stand'
         self.player.animate()

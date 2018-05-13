@@ -2,6 +2,22 @@
 import { WinterSnow } from "./Snow.js";
 (window as any).WinterSnow = WinterSnow
 
+import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
+(window as any).Dir = {
+    Left: Direction.Left,
+    Right: Direction.Right,
+    Up: Direction.Up,
+    Down: Direction.Down,
+    UpLeft: Direction.UpLeft,
+    UpRight: Direction.UpRight,
+    DownLeft: Direction.DownLeft,
+    DownRight: Direction.DownRight,
+
+    fromDelta: fromDelta,
+    invert: invert,
+    toDelta: toDelta,
+}
+
 interface Size {
     width: number
     height: number

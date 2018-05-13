@@ -2,7 +2,6 @@
 import ika
 import animator
 import Brain
-import dir
 import ending
 import xi.effects
 
@@ -90,7 +89,7 @@ class Serpent(Enemy):
 
             for n in range(ika.Random(1, 8)):
                 x = self.x + self.ent.hotwidth // 2
-                d = dir.fromDelta(p.x - x, 0)
+                d = self.engineRef.dir.fromDelta(p.x - x, 0)
                 yield self.moveState(d, abs(p.x - x))
 
                 if ika.Random(0, 100) < 70:
@@ -116,7 +115,7 @@ class Serpent(Enemy):
             ents = self.detectCollision(r)
             for e in ents:
                 d = max(1, self.stats.att - self.engineRef.player.stats.pres)
-                e.hurt(d, 350, dir.DOWN)
+                e.hurt(d, 350, self.engineRef.dir.Down)
             yield None
 
         for i in range(60):

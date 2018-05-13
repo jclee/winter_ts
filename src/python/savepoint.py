@@ -3,7 +3,6 @@ from entity import Entity
 import xi.effects
 
 import saveloadmenu
-import dir
 
 class SavePoint(Entity):
     def __init__(self, engineRef, ent):
@@ -22,8 +21,8 @@ class SavePoint(Entity):
             p.stats.hp = 999
             p.stats.mp = 999
 
-            dx, dy = dir.delta[dir.invert[p.direction]]
-            p.x, p.y = p.x + dx*3, p.y + dy*3
+            delta = self.engineRef.dir.toDelta(self.engineRef.dir.invert(p.direction))
+            p.x, p.y = p.x + delta.x * 3, p.y + delta.y * 3
 
             # TODO: neato fadeout, etc.
             # "Do you wish to save?" "Yes/No"

@@ -1,5 +1,4 @@
 import ika
-import dir
 from serpent import Serpent
 
 # essentially autoExec
@@ -13,7 +12,7 @@ def finalBattle(engineRef):
         p = engineRef.player
 
         def walkUp():
-            p.move(dir.UP, 128)
+            p.move(engineRef.dir.Up, 128)
             p.anim = 'walk'
             for n in range(128):
                 yield None
