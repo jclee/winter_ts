@@ -418,7 +418,7 @@ class Engine(object):
 
     def pauseTask(self):
         self.draw()
-        s = subscreen.PauseScreen()
+        s = subscreen.PauseScreen(self)
         yield from s.runTask()
 
         self.synchTime()

@@ -1,4 +1,3 @@
-
 import ika
 
 from xi.menu import Menu, Cancel
@@ -10,7 +9,6 @@ from xi.window import ImageWindow
 from xi.cursor import ImageCursor
 import effects
 
-import system
 import savedata
 
 from gameover import GameQuitException
@@ -36,7 +34,7 @@ class Window(ImageWindow):
 
 class SubScreenWindow(gui.Frame):
     def __init__(self, *args, **kw):
-        gui.Frame.__init__(self, *args, **kw)
+        super(SubScreenWindow, self).__init__(*args, **kw)
         self.layout = self.createLayout()
         self.addChild(self.layout)
         self.Border = self.wnd.iLeft.width
@@ -45,15 +43,17 @@ class SubScreenWindow(gui.Frame):
         return layout.VerticalBoxLayout()
 
     def update(self):
-        stats = system.engineObj.player.stats
-
         self.layout.setChildren(self.createContents())
         self.layout.layout()
         self.autoSize()
 
 class StatWindow(SubScreenWindow):
+    def __init__(self, engineRef, *args, **kw):
+        super(StatWindow, self).__init__(*args, **kw)
+        self.engineRef = engineRef
+
     def createContents(self):
-        stats = system.engineObj.player.stats
+        stats = self.engineRef.player.stats
         return (
             gui.StaticText(text='Level %02i' % stats.level),
             gui.StaticText(text='Exp'), gui.StaticText(text=' %06i/' % stats.exp),
@@ -66,8 +66,9 @@ class StatWindow(SubScreenWindow):
             )
 
 class AttribWindow(SubScreenWindow):
-    def __init__(self):
-        SubScreenWindow.__init__(self)
+    def __init__(self, engineRef):
+        super(AttribWindow, self).__init__()
+        self.engineRef = engineRef
         self.icons = dict(
             [(s, gui.Picture(img='gfx/ui/icon_%s.png' % s))
                 for s in ('att', 'mag', 'pres', 'mres')]
@@ -77,7 +78,7 @@ class AttribWindow(SubScreenWindow):
         return layout.FlexGridLayout(cols=2, pad=0)
 
     def createContents(self):
-        stats = system.engineObj.player.stats
+        stats = self.engineRef.player.stats
         return (
             self.icons['att'], gui.StaticText(text='...%03i' % stats.att),
             self.icons['mag'], gui.StaticText(text='...%03i' % stats.mag),
@@ -86,15 +87,16 @@ class AttribWindow(SubScreenWindow):
             )
 
 class MagicWindow(SubScreenWindow):
-    def __init__(self):
+    def __init__(self, engineRef):
         SubScreenWindow.__init__(self)
+        self.engineRef = engineRef
 
     def createLayout(self):
         return layout.VerticalBoxLayout()
 
     def createContents(self):
         txt = ['Magic:']
-        p = system.engineObj.player.stats
+        p = self.engineRef.player.stats
         if p.rend:
             txt.append('Z...Hearth Rend')
         if p.gale:
@@ -118,11 +120,11 @@ class MenuWindow(Menu):
         self.Border = self.textCtrl.wnd.iLeft.width
 
 class PauseScreen(object):
-    def __init__(self):
+    def __init__(self, engineRef):
         assert _initted
-        self.statWnd = StatWindow()
-        self.attribWnd = AttribWindow()
-        self.magWnd = MagicWindow()
+        self.statWnd = StatWindow(engineRef)
+        self.attribWnd = AttribWindow(engineRef)
+        self.magWnd = MagicWindow(engineRef)
         self.menu = MenuWindow()
 
     def update(self):
