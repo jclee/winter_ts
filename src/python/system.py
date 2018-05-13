@@ -1,15 +1,10 @@
 import ika
 import engine
 import intro
-import sound
 
-import controls
 import subscreen
 
-engineObj = None
-
-def mainTask():
-    global engineObj
+def _mainTask():
     subscreen.init()
 
     introMusic = ika.Sound('music/Existing.s3m')
@@ -40,3 +35,8 @@ def mainTask():
 
     ika.Exit()
 
+def main():
+    ika.Run(_mainTask())
+
+if __name__ == '__main__':
+    main()
