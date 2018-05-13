@@ -1,6 +1,5 @@
 from entity import Entity
 from caption import Caption
-import savedata
 
 class _Rune(Entity):
 
@@ -9,7 +8,7 @@ class _Rune(Entity):
         self.invincible = True
         self.name = self.ent.name
 
-        if self.name in savedata.__dict__:
+        if self.name in engineRef.saveFlags:
             self.x = -100
             self.engineRef.destroyEntity(self)
 
@@ -20,7 +19,7 @@ class _Rune(Entity):
         if self.touches(self.engineRef.player):
             self.engineRef.destroyEntity(self)
             self.engineRef.addThing(Caption(self.engineRef.font, '~1You got the %s Rune!' % self.element))
-            setattr(savedata, self.name, 'True')
+            self.engineRef.saveFlags[self.name] = 'True'
             self.apply()
         if False:
             yield None

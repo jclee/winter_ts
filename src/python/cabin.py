@@ -1,6 +1,5 @@
 import ika
 import controls
-import savedata
 
 from xi import gui
 from xi.misc import WrapText
@@ -134,7 +133,7 @@ def sceneTask(engineRef, name):
     yield from xi.effects.fadeInTask(100)
 
     yield from _scenes[name]()
-    setattr(savedata, name, 'True')
+    engineRef.saveFlags[name] = 'True'
 
     yield from xi.effects.fadeOutTask(100)
 

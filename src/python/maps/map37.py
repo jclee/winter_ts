@@ -1,5 +1,4 @@
 import ika
-import savedata
 import snow
 
 from carnivore import Carnivore
@@ -18,7 +17,7 @@ def to36(engineRef):
 def releaseAnklebiters(engineRef):
     global spawned
 
-    if not 'dynamite3' in savedata.__dict__.keys() and not spawned:
+    if not 'dynamite3' in engineRef.saveFlags and not spawned:
 
         indeces = ((6,6), (9,6), (12,6), (4, 8), (14, 8), (2, 10), (6, 10), (12, 10), (16, 10),
                    (4,11), (14, 11))

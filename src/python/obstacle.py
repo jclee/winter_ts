@@ -3,7 +3,6 @@ Given the proper skill or item, the player can cross these.
 '''
 
 import ika
-import savedata
 
 from entity import Entity
 from caption import Caption
@@ -14,7 +13,7 @@ class _Obstacle(Entity):
         Entity.__init__(self, engineRef, ent, anim)
         self.invincible = True
 
-        if self.flagName in savedata.__dict__:
+        if self.flagName in engineRef.saveFlags:
             self.remove()
 
     def remove(self):
@@ -75,7 +74,7 @@ class IceChunks(_Obstacle):
                 ika.Map.SetTile(x + X, y + Y, lay, self._frozenTiles[y][x])
                 ika.Map.SetObs(x + X, y + Y, lay, False)
 
-        setattr(savedata, self.flagName, 'True')
+        self.engineRef.saveFlags[self.flagName] = 'True'
 
 class Boulder(_Obstacle):
     def __init__(self, *args):
@@ -88,14 +87,14 @@ class Boulder(_Obstacle):
             self.isTouching = True
 
             # find a stick of TNT
-            tnt = [k for k in savedata.__dict__.keys()
+            tnt = [k for k in self.engineRef.saveFlags
                 if k.startswith('dynamite')
-                and savedata.__dict__[k] == 'True']
+                and self.engineRef.saveFlags[k] == 'True']
 
             if tnt:
                 # TODO: explode animation here
-                setattr(savedata, tnt[0], 'False')
-                setattr(savedata, self.flagName, 'Broken')
+                self.engineRef.saveFlags[tnt[0]] = 'False'
+                self.engineRef.saveFlags[self.flagName] = 'Broken'
                 self.engineRef.destroyEntity(self)
                 self.engineRef.things.append(Caption(self.engineRef.font, 'Blew the rock apart!'))
 

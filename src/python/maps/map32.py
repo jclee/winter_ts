@@ -1,15 +1,14 @@
 import ika
-import savedata
 import dir
 from serpent import Serpent
 
 # essentially autoExec
 def finalBattle(engineRef):
-    if 'finalbattle' in savedata.__dict__:
+    if 'finalbattle' in engineRef.saveFlags:
         pass
         # make the river passable
     else:
-        savedata.__dict__['finalbattle'] = 'True'
+        engineRef.saveFlags['finalbattle'] = 'True'
 
         p = engineRef.player
 

@@ -3,7 +3,6 @@ import ika
 import Brain
 import sound
 from entity import Entity
-from statset import StatSet
 
 class GenWrapper(object):
     def __init__(self, gen, *args, **kw):

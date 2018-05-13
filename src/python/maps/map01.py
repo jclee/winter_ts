@@ -1,5 +1,4 @@
 import ika
-import savedata
 
 from yeti import Yeti
 import snow
@@ -7,7 +6,7 @@ import snow
 
 def AutoExec(engineRef):
     engineRef.mapThings.append(snow.Snow(velocity=(0, 0.5)))
-    if 'cowardrune' not in savedata.__dict__:
+    if 'cowardrune' not in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
 
 def to2(engineRef):
@@ -24,7 +23,7 @@ class RuneListener(object):
         self.engineRef = engineRef
 
     def update(self):
-        if 'waterguard' in savedata.__dict__ and 'fireguard' in savedata.__dict__ and 'windguard' in savedata.__dict__:
+        if 'waterguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags:
             engineRef.addEntity(
                 Yeti(engineRef, ika.Entity(35 * 16, 19 * 16, engineRef.player.layer, 'yeti.ika-sprite')))
             return True

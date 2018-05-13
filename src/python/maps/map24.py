@@ -1,10 +1,9 @@
 import ika
-import savedata
 
 from rune import CowardRune
 
 def AutoExec(engineRef):
-    if 'waterguard' in savedata.__dict__ and 'windguard' in savedata.__dict__ and 'fireguard' in savedata.__dict__:
+    if 'waterguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags:
         engineRef.mapThings.append(AddRune())
 
 def to23(engineRef):

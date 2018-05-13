@@ -1,5 +1,4 @@
 import cabin
-import savedata
 
 def to23(engineRef):
     yield from engineRef.mapSwitchTask('map23.ika-map', (6 * 16, 42 * 16))
@@ -12,5 +11,5 @@ def to26(engineRef):
 
 def to30(engineRef):
     yield from engineRef.mapSwitchTask('map30.ika-map', (9*16, 21*16))
-    if 'nearend' not in savedata.__dict__:
+    if 'nearend' not in engineRef.saveFlags:
         yield from cabin.sceneTask(engineRef, 'nearend')

@@ -1,5 +1,4 @@
 import ika
-import savedata
 import sound
 from thing import Thing
 from yeti import Yeti
@@ -9,9 +8,9 @@ import snow
 
 def AutoExec(engineRef):
     engineRef.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
-    if 'waterrune' not in savedata.__dict__:
+    if 'waterrune' not in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
-    if 'nearend' in savedata.__dict__:
+    if 'nearend' in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
 
 def to3(engineRef):
@@ -32,7 +31,7 @@ class DeathListener(Thing):
     def update(self):
         if self.yeti.stats.hp == 0:
             sound.playMusic("music/winter.ogg")
-            savedata.waterguard = 'True'
+            self.engineRef.saveFlags['waterguard'] = 'True'
             return True
 
     def draw(self):
@@ -43,13 +42,13 @@ class RuneListener(object):
         self.engineRef = engineRef
 
     def update(self):
-        if 'nearend' in savedata.__dict__ and 'waterguard' not in savedata.__dict__:
+        if 'nearend' in self.engineRef.saveFlags and 'waterguard' not in self.engineRef.saveFlags:
             sound.playMusic("music/resurrection.it")
             y = SoulReaver(ika.Entity(15* 16, 17 * 16, self.engineRef.player.layer, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
-        elif 'waterrune' in savedata.__dict__ and 'nearend' not in savedata.__dict__:
+        elif 'waterrune' in self.engineRef.saveFlags and 'nearend' not in self.engineRef.saveFlags:
             self.engineRef.addEntity(
                 Yeti(self.engineRef, ika.Entity(15* 16, 32 * 16, self.engineRef.player.layer, 'yeti.ika-sprite'))
             )

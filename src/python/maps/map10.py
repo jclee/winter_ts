@@ -3,14 +3,13 @@ from yeti import Yeti
 from soulreaver import SoulReaver
 from thing import Thing
 from rune import FireRune
-import savedata
 import sound
 
 def AutoExec(engineRef):
-    if 'fireguard' not in savedata.__dict__:
+    if 'fireguard' not in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
 
-    if 'firerune' in savedata.__dict__.keys():
+    if 'firerune' in engineRef.saveFlags:
         ika.Map.RemoveEntity(ika.Map.entities['demiyeti'])
     else:
         engineRef.mapThings.append(DeathListener(engineRef))
@@ -34,7 +33,7 @@ class DeathListener(Thing):
                 ika.Map.entities['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:
-            if 'nearend' not in savedata.__dict__:
+            if 'nearend' not in self.engineRef.saveFlags:
                 e = ika.Entity(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
                 self.engineRef.addEntity(
@@ -42,7 +41,7 @@ class DeathListener(Thing):
                     )
             else:
                 sound.playMusic("music/winter.ogg")
-                savedata.fireguard = 'True'
+                self.engineRef.saveFlags['fireguard'] = 'True'
 
             return True
 
@@ -54,7 +53,7 @@ class RuneListener(object):
         self.engineRef = engineRef
 
     def update(self):
-        if 'nearend' in savedata.__dict__:
+        if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)

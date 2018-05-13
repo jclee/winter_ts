@@ -4,7 +4,6 @@ import animator
 import controls
 import sound
 import dir
-import savedata
 
 from statset import StatSet
 from caption import Caption
@@ -254,10 +253,10 @@ class Player(Entity):
     def calcSpells(self):
         '''
         Figures out what spells the player has access to, based on the
-        flags set in the savedata module.
+        flags set in the save flags.
         '''
         def hasKeyInt(k):
-            return 1 if k in savedata.__dict__ else 0
+            return 1 if k in self.engineRef.saveFlags else 0
         self.stats.rend = hasKeyInt('firerune')
         self.stats.heal = hasKeyInt('waterrune')
         self.stats.gale = hasKeyInt('windrune')
@@ -562,7 +561,7 @@ class Player(Entity):
                     e.hurt(int(self.stats.att + self.stats.mag) * 2, 300, self.direction)
                 elif isinstance(e, IceWall):
                     # TODO: some sort of nice animation.
-                    setattr(savedata, e.flagName, 'Broken')
+                    self.engineRef.saveFlags[e.flagName] = 'Broken'
 
                     self.engineRef.destroyEntity(e)
                     self.engineRef.things.append(Caption(self.engineRef.font, '~1The ice melted!'))

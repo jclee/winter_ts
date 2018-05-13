@@ -3,7 +3,6 @@
    see if I care.
 """
 
-import savedata
 from statset import StatSet
 
 class SaveGame(object):
@@ -21,9 +20,9 @@ class SaveGame(object):
     def getStats(self, engineRef):
         self.stats = engineRef.player.stats.clone()
 
-    def getFlags(self):
+    def getFlags(self, engineRef):
         self.flags = {}
-        for k, v in savedata.__dict__.items():
+        for k, v in engineRef.saveFlags.items():
             if isinstance(v, (int, str, list, tuple)):
                 self.flags[k] = v
 
@@ -31,24 +30,12 @@ class SaveGame(object):
         engineRef.player.stats = self.stats.clone()
 
     def setFlags(self, engineRef):
-        self.clearSaveFlags()
-        for k, v in self.flags.items():
-            savedata.__dict__[k] = v
-
-    def clearSaveFlags():
-        destroy = []
-        for var, val in savedata.__dict__.items():
-            if not var.startswith('_') and isinstance(val, (str, int, list, tuple)):
-                destroy.append(var)
-        for d in destroy:
-            del savedata.__dict__[d]
-
-    clearSaveFlags = staticmethod(clearSaveFlags)
+        engineRef.saveFlags = dict(self.flags)
 
     def currentGame(engineRef):
         s = SaveGame(engineRef)
         s.getStats(engineRef)
-        s.getFlags()
+        s.getFlags(engineRef)
         s.mapName = engineRef.mapName
         p = engineRef.player
         s.pos = (p.x, p.y, p.layer)
@@ -61,9 +48,9 @@ class SaveGame(object):
         self.setFlags(engineRef)
 
     def save(self, engineRef, fileName):
-        engineRef.setLocalStorageItem(fileName, str(self))
+        engineRef.setLocalStorageItem(fileName, self._toStringData(engineRef))
 
-    def __str__(self):
+    def _toStringData(self, engineRef):
         s = ''
         for k in StatSet.STAT_NAMES:
             s += '%s=%i\n' % (k, self.stats[k])
@@ -71,7 +58,7 @@ class SaveGame(object):
         s += 'FLAGS\n'
         s += 'MAPNAME=\'%s\'\n' % self.mapName
         s += 'POS=\'%s\'\n' % ','.join([str(x) for x in self.pos])
-        for var, val in savedata.__dict__.items():
+        for var, val in engineRef.saveFlags.items():
             if not var.startswith('_'):
                 if isinstance(val, (int, str)):
                     s += '%s=%r\n' % (var, val)

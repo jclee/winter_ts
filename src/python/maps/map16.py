@@ -1,5 +1,4 @@
 import ika
-import savedata
 import sound
 from yeti import Yeti
 from soulreaver import SoulReaver
@@ -9,23 +8,23 @@ from rune import WindRune
 def AutoExec(engineRef):
     engineRef.background = ika.Image('gfx/mountains.png')
 
-    if 'bridge_broken' not in savedata.__dict__:
+    if 'bridge_broken' not in engineRef.saveFlags:
         for x in range(19, 22):
             ika.Map.SetTile(x, 28, 3, 152)
             ika.Map.SetTile(x, 29, 3, 158)
             ika.Map.SetTile(x, 30, 3, 164)
             ika.Map.entities['break_gap'].x = -100
 
-    if 'windguard' not in savedata.__dict__ and 'nearend' in savedata.__dict__:
+    if 'windguard' not in engineRef.saveFlags and 'nearend' in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
 
 
 def bridge_break(engineRef):
-    if 'bridge_broken' not in savedata.__dict__:
+    if 'bridge_broken' not in engineRef.saveFlags:
 
         sound.playMusic('music/Competative.xm')
 
-        savedata.bridge_broken = 'True'
+        engineRef.saveFlags['bridge_broken'] = 'True'
 
         bridge = (
             (366, 0, 367),
@@ -90,7 +89,7 @@ def bridge_break(engineRef):
         engineRef.synchTime()
 
 def manaPool(engineRef):
-    if 'windrune' in savedata.__dict__ and ('nearend' not in savedata.__dict__ or 'windguard' in savedata.__dict__):
+    if 'windrune' in engineRef.saveFlags and ('nearend' not in engineRef.saveFlags or 'windguard' in engineRef.saveFlags):
         engineRef.player.stats.mp += 1
     if False:
         yield None
@@ -125,14 +124,14 @@ class DeathListener(Thing):
 
     def update(self):
         if self.yeti.stats.hp == 0:
-            if 'windrune' not in savedata.__dict__:
+            if 'windrune' not in self.engineRef.saveFlags:
                 e = ika.Entity(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
                 engineRef.addEntity(
                     WindRune(e)
                     )
             else:
-                setattr(savedata, 'windguard', 'True')
+                self.engineRef.saveFlags['windguard'] = 'True'
 
             sound.playMusic('music/winter.ogg')
             return True
@@ -145,7 +144,7 @@ class RuneListener(object):
         self.engineRef = engineRef
 
     def update(self):
-        if 'nearend' in savedata.__dict__:
+        if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
             y = SoulReaver(ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
             engineRef.addEntity(y)

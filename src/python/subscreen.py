@@ -9,8 +9,6 @@ from xi.window import ImageWindow
 from xi.cursor import ImageCursor
 import effects
 
-import savedata
-
 from gameover import GameQuitException
 
 class Window(ImageWindow):

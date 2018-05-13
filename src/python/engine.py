@@ -98,6 +98,7 @@ class Engine(object):
         self.music = {
             'music/silence': sound.NullSound(),
         }
+        self.saveFlags = {}
 
     def initTask(self, saveData = None):
         'barf'
@@ -139,7 +140,7 @@ class Engine(object):
         self.things.append(self.camera)
 
     def beginNewGameTask(self):
-        saveload.SaveGame.clearSaveFlags()
+        self.saveFlags = {}
         yield from cabin.sceneTask(self, 'intro')
 
         yield from self.mapSwitchTask(START_MAP, START_POS, fade = False)
@@ -160,7 +161,7 @@ class Engine(object):
         [result] = resultRef
         if result:
             bleh = effects.createBlurImages()
-            saveload.SaveGame.clearSaveFlags()
+            self.saveFlags = {}
             yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
             yield from self.initTask(result)
             self.draw()
