@@ -134,7 +134,7 @@ def SetLocalStorageItem(key, value):
 def GetLocalStorageItem(key):
     return window.localStorage.getItem('wintergame/' + key)
 
-def Run(task, mapsPath, spritesPath, imagePaths):
+def Run(task):
     global _engine
 
     def taskFn():
@@ -145,4 +145,4 @@ def Run(task, mapsPath, spritesPath, imagePaths):
             return False
         else:
             return True
-    _engine.run(taskFn, mapsPath, spritesPath, imagePaths)
+    _engine.run(taskFn)

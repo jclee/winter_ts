@@ -1049,12 +1049,7 @@ class Engine {
         this.map = new MapClass(this, this._video)
     }
 
-    run(
-        taskFn: ()=>boolean,
-        mapsPath: string,
-        spritesPath: string,
-        imagePaths: string[]
-    ) {
+    run(taskFn: ()=>boolean) {
         this.startMsec = Date.now()
         this.width = 320
         this.height = 240
@@ -1075,6 +1070,100 @@ class Engine {
         style.marginRight = "auto"
         window.document.body.appendChild(this.displayCanvasEl)
         window.document.body.style.backgroundColor = "#dddddd"
+
+        const imagePaths = [
+            'winter/gfx/gba.png',
+            'winter/gfx/isabigfatbitch.png',
+            'winter/gfx/mountains.png',
+            'winter/gfx/title.png',
+            'winter/gfx/ui/barhp0.png',
+            'winter/gfx/ui/barhp1.png',
+            'winter/gfx/ui/barhp2.png',
+            'winter/gfx/ui/barhp3.png',
+            'winter/gfx/ui/barmp0.png',
+            'winter/gfx/ui/barmp1.png',
+            'winter/gfx/ui/barmp2.png',
+            'winter/gfx/ui/barmp3.png',
+            //'winter/gfx/ui/divider.png',
+            //'winter/gfx/ui/font.png',
+            //'winter/gfx/ui/font2.png',
+            'winter/gfx/ui/icon_att.png',
+            'winter/gfx/ui/icon_mag.png',
+            'winter/gfx/ui/icon_mres.png',
+            'winter/gfx/ui/icon_pres.png',
+            //'winter/gfx/ui/icon_speed.png',
+            //'winter/gfx/ui/item_dynamite.png',
+            //'winter/gfx/ui/item_sword.png',
+            //'winter/gfx/ui/meter.png',
+            'winter/gfx/ui/pointer.png',
+            //'winter/gfx/ui/rune_apoplexy.png',
+            //'winter/gfx/ui/rune_quicken.png',
+            //'winter/gfx/ui/rune_shield.png',
+            //'winter/gfx/ui/rune_squall.png',
+            //'winter/gfx/ui/rune_strike.png',
+            //'winter/gfx/ui/rune_surge.png',
+            //'winter/gfx/ui/rune_trinity.png',
+            //'winter/gfx/ui/text_attributes.png',
+            //'winter/gfx/ui/text_equip.png',
+            //'winter/gfx/ui/text_exp.png',
+            //'winter/gfx/ui/text_hp.png',
+            //'winter/gfx/ui/text_items.png',
+            //'winter/gfx/ui/text_lvl.png',
+            //'winter/gfx/ui/text_menu.png',
+            //'winter/gfx/ui/text_mp.png',
+            //'winter/gfx/ui/text_spells.png',
+            //'winter/gfx/ui/text_stats.png',
+            //'winter/gfx/ui/win2_background.png',
+            //'winter/gfx/ui/win2_bottom.png',
+            //'winter/gfx/ui/win2_bottom_left.png',
+            //'winter/gfx/ui/win2_bottom_right.png',
+            //'winter/gfx/ui/win2_right.png',
+            //'winter/gfx/ui/win2_top.png',
+            //'winter/gfx/ui/win2_top_left.png',
+            //'winter/gfx/ui/win2_top_right.png',
+            'winter/gfx/ui/win_background.png',
+            'winter/gfx/ui/win_bottom.png',
+            'winter/gfx/ui/win_bottom_left.png',
+            'winter/gfx/ui/win_bottom_right.png',
+            'winter/gfx/ui/win_left.png',
+            'winter/gfx/ui/win_right.png',
+            'winter/gfx/ui/win_top.png',
+            'winter/gfx/ui/win_top_left.png',
+            'winter/gfx/ui/win_top_right.png',
+            'winter/gfx/yourmother.png',
+            'winter/snowy.png',
+            'winter/sprite/anklebiter.png',
+            'winter/sprite/boulder.png',
+            'winter/sprite/carnivore.png',
+            'winter/sprite/devourer.png',
+            'winter/sprite/dragonpup.png',
+            'winter/sprite/dynamite.png',
+            'winter/sprite/firerune.png',
+            'winter/sprite/gorilla.png',
+            'winter/sprite/grandpa.png',
+            'winter/sprite/guardrune.png',
+            'winter/sprite/hellhound.png',
+            'winter/sprite/hgap.png',
+            'winter/sprite/ice.png',
+            'winter/sprite/icecave.png',
+            'winter/sprite/icechunks.png',
+            'winter/sprite/kid1.png',
+            'winter/sprite/kid2.png',
+            'winter/sprite/kid3.png',
+            'winter/sprite/powerrune.png',
+            'winter/sprite/protagonist.png',
+            'winter/sprite/razormane.png',
+            'winter/sprite/rend.png',
+            'winter/sprite/savepoint.png',
+            'winter/sprite/serpent.png',
+            'winter/sprite/soulreaver.png',
+            'winter/sprite/strengthrune.png',
+            'winter/sprite/vgap.png',
+            'winter/sprite/waterrune.png',
+            'winter/sprite/windrune.png',
+            'winter/sprite/yeti.png',
+            'winter/system_font.png',
+        ]
 
         let promises: Promise<void>[] = []
         for (let path of imagePaths) {
@@ -1124,8 +1213,8 @@ class Engine {
             this.sprites = json
         }
 
-        promises.push(loadJson(mapsPath).then(setMapJson))
-        promises.push(loadJson(spritesPath).then(setSpriteJson))
+        promises.push(loadJson('winter/maps.json').then(setMapJson))
+        promises.push(loadJson('winter/sprites.json').then(setSpriteJson))
 
         const _KeycodeMap: {[key: string]: string} = {
             'ArrowUp': 'UP',
