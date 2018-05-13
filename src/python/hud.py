@@ -1,7 +1,5 @@
-
 import ika
 from thing import Thing
-import system
 
 def sgn(i):
     if i > 0: return 1
@@ -90,28 +88,31 @@ class Gauge(Thing):
     curMax = property(lambda self: None) # override.  Needs to be readable.
 
 class HPBar(Gauge):
-    def __init__(self):
+    def __init__(self, engineRef):
         Gauge.__init__(self, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
+        self.engineRef = engineRef
         self.y = ika.Video.yres - self.left.height - 1
         self.colour = (255, 0, 0)
 
-    curVal = property(lambda self: system.engineObj.player.stats.hp)
-    curMax = property(lambda self: system.engineObj.player.stats.maxhp)
+    curVal = property(lambda self: self.engineRef.player.stats.hp)
+    curMax = property(lambda self: self.engineRef.player.stats.maxhp)
 
 class MPBar(Gauge):
-    def __init__(self):
+    def __init__(self, engineRef):
         Gauge.__init__(self, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
+        self.engineRef = engineRef
         self.y = ika.Video.yres - self.left.height * 2 - 1
         self.colour = (0, 0, 255)
         self.oldMax = self.curMax
         self.oldVal = self.curVal
 
-    curVal = property(lambda self: system.engineObj.player.stats.mp)
-    curMax = property(lambda self: system.engineObj.player.stats.maxmp)
+    curVal = property(lambda self: self.engineRef.player.stats.mp)
+    curMax = property(lambda self: self.engineRef.player.stats.maxmp)
 
 class EXPBar(Gauge):
-    def __init__(self):
+    def __init__(self, engineRef):
         Gauge.__init__(self, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
+        self.engineRef = engineRef
         #self.y = ika.Video.yres - self.left.height * 2 - 1
         self.width = 100
         self.colour = (0, 128, 128)
@@ -121,5 +122,5 @@ class EXPBar(Gauge):
     def drawRect(self, x, y, w, h, opacity):
         super(EXPBar, self).drawRect(x, y, w, h - 1, opacity)
 
-    curVal = property(lambda self: system.engineObj.player.stats.exp * self.width // system.engineObj.player.stats.next)
+    curVal = property(lambda self: self.engineRef.player.stats.exp * self.width // self.engineRef.player.stats.next)
     curMax = property(lambda self: self.width)

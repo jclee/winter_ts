@@ -130,9 +130,9 @@ class Engine(object):
             lay = ika.Map.GetMetaData()['entityLayer']
             self.player.layer = ika.Map.FindLayerByName(lay)
 
-        self.things.append(HPBar())
-        self.things.append(MPBar())
-        self.things.append(EXPBar())
+        self.things.append(HPBar(self))
+        self.things.append(MPBar(self))
+        self.things.append(EXPBar(self))
 
         self.camera = Camera()
         self.camera.center()
