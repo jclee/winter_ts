@@ -110,7 +110,7 @@ class Serpent(Enemy):
         self.invincible = False
 
         while self.isAnimating():
-            r = _biteRange[self._animator.index] + (self.layer,)
+            r = _biteRange[self.getAnimationIndex()] + (self.layer,)
             ents = self.detectCollision(r)
             for e in ents:
                 d = max(1, self.stats.att - self.engineRef.player.stats.pres)

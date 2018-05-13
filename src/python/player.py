@@ -341,7 +341,7 @@ class Player(Entity):
         sound.slash1.Play()
 
         while self.isAnimating():
-            rect = list(r[self._animator.index]) + [self.layer]
+            rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
@@ -389,7 +389,7 @@ class Player(Entity):
         sound.slash2.Play()
 
         while self.isAnimating():
-            rect = list(r[self._animator.index]) + [self.layer]
+            rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
             ents = ika.Map.EntitiesAt(*rect)
@@ -539,8 +539,8 @@ class Player(Entity):
         sound.hearthRend.Play()
 
         while self.isAnimating():
-            ents = self.detectCollision(r[self._animator.index] + (self.layer,))
-            fire.specframe = f + self._animator.index
+            ents = self.detectCollision(r[self.getAnimationIndex()] + (self.layer,))
+            fire.specframe = f + self.getAnimationIndex()
 
             for e in ents:
                 if isinstance(e, Enemy) and not e.invincible and e not in hitList:

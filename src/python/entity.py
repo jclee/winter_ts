@@ -195,3 +195,6 @@ class Entity(object):
 
     def isAnimating(self):
         return not self._animator.kill
+
+    def getAnimationIndex(self):
+        return self._animator.index
