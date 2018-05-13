@@ -275,7 +275,7 @@ class Engine(object):
             yield from xi.effects.fadeOutTask(200, draw=self.draw)
             self.killList = self.entities[:]
             self.clearKillQueue()
-            yield from ending.creditsTask()
+            yield from ending.creditsTask(self)
 
         except GameQuitException:
             self.killList = self.entities[:]

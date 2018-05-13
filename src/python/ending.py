@@ -1,6 +1,4 @@
-
 import ika
-import system
 import snow
 
 _text = '''\
@@ -161,11 +159,11 @@ obscenely difficult to obtain!
 
 '''.split('\n')
 
-def creditsTask():
-    m = system.engineObj.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
+def creditsTask(engineRef):
+    m = engineRef.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
     m.loop = True
-    system.engineObj.fader.kill()
-    system.engineObj.fader.reset(m)
+    engineRef.fader.kill()
+    engineRef.fader.reset(m)
 
     bg = ika.Image('gfx/mountains.png')
     snowObj = snow.Snow(velocity=(0, 1))
