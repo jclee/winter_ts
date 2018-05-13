@@ -46,29 +46,15 @@ class SoulReaver(Yeti):
         self.speed += 800
         self.move(self.direction, 2000)
 
-        def thing():
-            i = 8
-            while i > 0:
-                i -= 1
-                self.speed -= (10 - i) * 10
-                ents = self.detectCollision(_attackRange[self.direction])
+        for i in range(8):
+            self.speed -= (i + 2) * 10
+            for e in self.detectCollision(_attackRange[self.direction]):
+                if isinstance(e, Player):
+                    d = max(1, self.stats.att - e.stats.pres)
+                    e.hurt(d, 350, self.direction)
+            yield None
 
-                for e in ents:
-                    if isinstance(e, Player):
-                        d = max(1, self.stats.att - e.stats.pres)
-                        e.hurt(d, 350, self.direction)
-                        yield None
-                        break
-                    brython_generator_bug_workaround = 'blah'
-
-                yield None
-
-        for x in thing():
-            yield x
-
-        i = 30
-        while i > 0:
-            i -= 1
+        for i in range(30):
             self.speed = max(10, self.speed - 10)
             yield None
 

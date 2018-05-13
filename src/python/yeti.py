@@ -187,17 +187,11 @@ class Yeti(Enemy):
 
         self.startAnimation('attack')
         self.move(dir, 6)
-        while self.isAnimating():
-            ents = self.detectCollision(_attackRange[dir])
-
-            for e in ents:
+        for i in range(20):
+            for e in self.detectCollision(_attackRange[dir]):
                 if isinstance(e, Player):
                     d = max(1, self.stats.att - e.stats.pres)
                     e.hurt(d, 350, self.direction)
-                    yield None
-                    break
-                brython_generator_bug_workaround = 'blah'
-
             yield None
 
         self.stop()
