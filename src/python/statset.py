@@ -5,10 +5,7 @@ class StatSet(object):
         '_hp', '_mp', 'maxhp', 'maxmp',
         'att', 'mag', 'pres', 'mres',
         'level', 'exp', 'next',
-
-        # spells go here because its as good a place as any.
-        # horrible hack, yes.  But whatever.
-        'rend', 'heal', 'gale', 'shiver')
+        )
 
     def __init__(self, **kw):
         for name in self.STAT_NAMES:

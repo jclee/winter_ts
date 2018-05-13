@@ -249,18 +249,6 @@ class Player(Entity):
 
         self.engineRef.things.append(Caption(self.engineRef.font, 'Level %i!' % self.stats.level))
 
-    def calcSpells(self):
-        '''
-        Figures out what spells the player has access to, based on the
-        flags set in the save flags.
-        '''
-        def hasKeyInt(k):
-            return 1 if k in self.engineRef.saveFlags else 0
-        self.stats.rend = hasKeyInt('firerune')
-        self.stats.heal = hasKeyInt('waterrune')
-        self.stats.gale = hasKeyInt('windrune')
-        self.stats.shiver = hasKeyInt('cowardrune')
-
     def defaultState(self):
         return self.standState()
 
@@ -530,7 +518,7 @@ class Player(Entity):
         self.anim = 'rend'
         r = rendRange[self.direction]
 
-        if self.stats.mp < 10 or not self.stats.rend:
+        if self.stats.mp < 10 or 'firerune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
             return
 
@@ -593,7 +581,7 @@ class Player(Entity):
         self.stop()
         self.anim = 'stand'
 
-        if self.stats.mp < 15 or not self.stats.gale:
+        if self.stats.mp < 15 or 'windrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
             return
 
@@ -653,7 +641,7 @@ class Player(Entity):
 
         self.anim = 'magic'
 
-        if self.stats.mp < 20 or not self.stats.heal:
+        if self.stats.mp < 20 or 'waterrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
             return
 
@@ -690,7 +678,7 @@ class Player(Entity):
         self.stop()
         self.anim = 'thrust'
 
-        if self.stats.mp < 45 or not self.stats.shiver:
+        if self.stats.mp < 45 or 'cowardrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
             return
 

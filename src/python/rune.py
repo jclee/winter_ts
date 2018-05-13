@@ -13,7 +13,7 @@ class _Rune(Entity):
             self.engineRef.destroyEntity(self)
 
     def apply(self):
-        self.engineRef.player.calcSpells()
+        pass
 
     def updateTask(self):
         if self.touches(self.engineRef.player):

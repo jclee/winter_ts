@@ -94,14 +94,13 @@ class MagicWindow(SubScreenWindow):
 
     def createContents(self):
         txt = ['Magic:']
-        p = self.engineRef.player.stats
-        if p.rend:
+        if 'firerune' in self.engineRef.saveFlags:
             txt.append('Z...Hearth Rend')
-        if p.gale:
+        if 'windrune' in self.engineRef.saveFlags:
             txt.append('X...Crushing Gale')
-        if p.heal:
+        if 'waterrune' in self.engineRef.saveFlags:
             txt.append('C...Healing Rain')
-        if p.shiver:
+        if 'cowardrune' in self.engineRef.saveFlags:
             txt.append('B...Shiver')
 
         return (gui.StaticText(text=txt),)
