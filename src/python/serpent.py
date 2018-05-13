@@ -131,12 +131,12 @@ class Serpent(Enemy):
     def roarState(self):
         # spawn one to five Carnivores to irritate the shit out of the player
         self.anim = 'roar'
-        s = False
 
+        offsets = [0, 1, 1, 2, 3, 4, 4, 4, 2, 0]
         for wait in range(200):
-            n = self._animator.curFrame - 12 # Yet another gay hack.
-            ika.Map.xwin += ika.Random(-n, n + 1)
-            ika.Map.ywin += ika.Random(-n, n + 1)
+            offset = offsets[wait // 20]
+            ika.Map.xwin += ika.Random(-offset, offset + 1)
+            ika.Map.ywin += ika.Random(-offset, offset + 1)
             yield None
 
         for q in range(ika.Random(1, 4)):
@@ -155,9 +155,3 @@ class Serpent(Enemy):
         for e in self.engineRef.entities:
             if e.stats.hp == 0 and isinstance(e, Enemy):
                 self.engineRef.destroyEntity(e)
-
-        while not self._animator.kill:
-            n = self._animator.curFrame - 12
-            ika.Map.xwin += ika.Random(-n, n + 1)
-            ika.Map.ywin += ika.Random(-n, n + 1)
-            yield None
