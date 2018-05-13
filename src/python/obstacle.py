@@ -78,14 +78,10 @@ class IceChunks(_Obstacle):
 
 class Boulder(_Obstacle):
     def __init__(self, *args):
-        self.isTouching = False
         _Obstacle.__init__(self, *args)
 
     def updateTask(self):
-        t = self.touches(self.engineRef.player)
-        if t and not self.isTouching:
-            self.isTouching = True
-
+        if self.touches(self.engineRef.player):
             # find a stick of TNT
             tnt = [k for k in self.engineRef.saveFlags
                 if k.startswith('dynamite')
@@ -98,7 +94,5 @@ class Boulder(_Obstacle):
                 self.engineRef.destroyEntity(self)
                 self.engineRef.things.append(Caption(self.engineRef.font, 'Blew the rock apart!'))
 
-        else:
-            self.isTouching = False
         if False:
             yield None
