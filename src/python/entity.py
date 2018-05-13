@@ -30,13 +30,6 @@ class Entity(object):
         self._onStateExit = None
         self.state = self.defaultState()
 
-    def destroy(self):
-        # TODO: Not totally sure why we explicitly cleared all properties...
-        # But it also nukes __class__, which makes Brython unhappy.
-        pass
-        #for k in self.__dict__.keys():
-        #    self.__dict__[k] = None
-
     def updateTask(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()

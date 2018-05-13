@@ -385,7 +385,6 @@ class Engine(object):
             ent.ent.Stop()
             del self.entFromEnt[ent.ent.name]
             ika.Map.RemoveEntity(ent)
-            ent.destroy()
             # brython workaround?
             #self.entities.remove(ent)
             for i, e in enumerate(self.entities):
