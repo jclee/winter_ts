@@ -3,18 +3,20 @@
    see if I care.
 """
 
-import ika
 import savedata
 from statset import StatSet
 
 class SaveGame(object):
-    def __init__(self, fileName = None):
+    def __init__(self, engineRef, fileName = None):
         self.stats = StatSet()
         self.flags = {}
         self.mapName = ''
         self.pos = (0, 0, 0)
         if fileName:
-            self.load(fileName)
+            data = engineRef.getLocalStorageItem(fileName)
+            if data is None:
+                raise IOError("file not found")
+            self.read(data)
 
     def getStats(self, engineRef):
         self.stats = engineRef.player.stats.clone()
@@ -28,7 +30,7 @@ class SaveGame(object):
     def setStats(self, engineRef):
         engineRef.player.stats = self.stats.clone()
 
-    def setFlags(self):
+    def setFlags(self, engineRef):
         self.clearSaveFlags()
         for k, v in self.flags.items():
             savedata.__dict__[k] = v
@@ -44,7 +46,7 @@ class SaveGame(object):
     clearSaveFlags = staticmethod(clearSaveFlags)
 
     def currentGame(engineRef):
-        s = SaveGame()
+        s = SaveGame(engineRef)
         s.getStats(engineRef)
         s.getFlags()
         s.mapName = engineRef.mapName
@@ -58,14 +60,8 @@ class SaveGame(object):
         self.setStats(engineRef)
         self.setFlags(engineRef)
 
-    def save(self, fileName):
-        ika.SetLocalStorageItem(fileName, str(self))
-
-    def load(self, fileName):
-        data = ika.GetLocalStorageItem(fileName)
-        if data is None:
-            raise IOError("file not found")
-        self.read(data)
+    def save(self, engineRef, fileName):
+        engineRef.setLocalStorageItem(fileName, str(self))
 
     def __str__(self):
         s = ''

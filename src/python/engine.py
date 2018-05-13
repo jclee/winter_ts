@@ -156,7 +156,7 @@ class Engine(object):
     def loadGameTask(self):
         import saveloadmenu
         resultRef = [None]
-        yield from saveloadmenu.loadMenuTask(resultRef, fadeOut=False)
+        yield from saveloadmenu.loadMenuTask(self, resultRef, fadeOut=False)
         [result] = resultRef
         if result:
             bleh = effects.createBlurImages()
@@ -166,6 +166,12 @@ class Engine(object):
             self.draw()
             yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
             yield from self.runTask()
+
+    def setLocalStorageItem(self, key, data):
+        ika.SetLocalStorageItem(key, data)
+
+    def getLocalStorageItem(self, key):
+        return ika.GetLocalStorageItem(key)
 
     def mapSwitchTask(self, mapName, dest = None, fade = True):
         if fade:

@@ -96,21 +96,21 @@ class SaveLoadMenu(object):
 
             return None
 
-def readSaves():
+def readSaves(engineRef):
     saves = []
 
     try:
         i = 0
         while True:
-            saves.append(SaveGame('save%i' % i))
+            saves.append(SaveGame(engineRef, 'save%i' % i))
             i += 1
     except IOError:
         return saves
 
-def loadMenuTask(resultRef, fadeOut=True):
+def loadMenuTask(engineRef, resultRef, fadeOut=True):
     title = gui.TextFrame(text='Load Game')
     title.Position = (16, 16)
-    saves = readSaves()
+    saves = readSaves(engineRef)
     m = SaveLoadMenu(saves, saving=False)
 
     def draw():
@@ -141,7 +141,7 @@ def loadMenuTask(resultRef, fadeOut=True):
 def saveMenuTask(engineRef):
     title = gui.TextFrame(text='Save Game')
     title.Position = (16, 16)
-    saves = readSaves()
+    saves = readSaves(engineRef)
     m = SaveLoadMenu(saves, saving=True)
 
     def draw():
@@ -160,6 +160,6 @@ def saveMenuTask(engineRef):
 
     if i is not Cancel:
         s = SaveGame.currentGame(engineRef)
-        s.save('save%i' % i)
+        s.save(engineRef, 'save%i' % i)
 
     yield from xi.effects.fadeOutTask(50, draw=draw)
