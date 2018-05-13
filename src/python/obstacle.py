@@ -59,7 +59,7 @@ class IceChunks(_Obstacle):
 
     def __init__(self, ent):
         _Obstacle.__init__(self, ent, self._anim)
-        self.anim = 'default'
+        self.startAnimation('default')
 
     def remove(self):
         self.freeze()

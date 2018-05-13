@@ -234,7 +234,7 @@ class Engine(object):
 
         self.player.direction = self.engineRef.dir.Down
         self.player.state = self.player.defaultState()
-        self.player.anim = 'stand'
+        self.player.startAnimation('stand')
         self.player.animate()
 
         self.player.x, self.player.y = dest

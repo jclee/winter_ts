@@ -63,7 +63,7 @@ class Serpent(Enemy):
         Enemy.hurt(self, amount, 0, dir)
 
     def hurtState(self, *args):
-        self.anim = 'hurt'
+        self.startAnimation('hurt')
         self.invincible = True
         self.interruptable = False
         i = 30
@@ -97,7 +97,7 @@ class Serpent(Enemy):
             yield self.roarState()
 
     def moveState(self, dir, dist):
-        self.anim = 'idle'
+        self.startAnimation('idle')
         self.move(dir, dist)
 
         dist *= 100
@@ -106,7 +106,7 @@ class Serpent(Enemy):
             yield None
 
     def biteState(self):
-        self.anim = 'bite'
+        self.startAnimation('bite')
         self.invincible = False
 
         while not self._animator.kill:
@@ -123,14 +123,14 @@ class Serpent(Enemy):
         self.invincible = True
 
     def stareState(self):
-        self.anim = 'stare'
+        self.startAnimation('stare')
         # TODO: finish this if someone can think of a good idea for
         # what it should do!
         yield None
 
     def roarState(self):
         # spawn one to five Carnivores to irritate the shit out of the player
-        self.anim = 'roar'
+        self.startAnimation('roar')
 
         offsets = [0, 1, 1, 2, 3, 4, 4, 4, 2, 0]
         for wait in range(200):

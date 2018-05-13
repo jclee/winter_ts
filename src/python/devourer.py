@@ -18,7 +18,7 @@ class Devourer(AnkleBiter):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.anim = 'attack'
+        self.startAnimation('attack')
         self.stop()
         self.speed *= 2
 

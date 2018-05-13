@@ -28,7 +28,7 @@ class SoulReaver(Yeti):
             self.interruptable = oldInterruptable
         self._onStateExit = restoreVars
 
-        self.anim = 'attack'
+        self.startAnimation('attack')
 
         attacks = [75]
         speeds = [120]

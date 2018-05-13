@@ -101,7 +101,7 @@ class Entity(object):
 
         self.speed = recoilSpeed
         self.move(recoilDir, 1000000) # just go until I say stop
-        self.anim = 'hurt'
+        self.startAnimation('hurt')
 
         self.invincible = True
         t = 64
@@ -186,10 +186,6 @@ class Entity(object):
     def layer(self, value):
         self.ent.layer = value
 
-    @property
-    def anim(self):
-        return None
-    @anim.setter
-    def anim(self, value, loop = False):
-        a, loop = self._anim[value]
+    def startAnimation(self, name):
+        a, loop = self._anim[name]
         self._animator.setAnim(a[self.direction], loop)

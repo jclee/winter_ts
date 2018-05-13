@@ -144,12 +144,12 @@ class Yeti(Enemy):
 
     def deathState(self, *args, **kwargs):
         sound.yetiDie[self.stats.ind].Play()
-        self.anim = 'die'
+        self.startAnimation('die')
         yield from super(Yeti, self).deathState(*args, **kwargs)
 
     def walkState(self, dir, dist):
         self.move(dir, dist)
-        self.anim = 'walk'
+        self.startAnimation('walk')
         dist *= 100
         while dist > 0:
             dist -= self.speed
@@ -163,7 +163,7 @@ class Yeti(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.anim = 'attack'
+        self.startAnimation('attack')
         self.stop()
 
         sound.yetiStrike[self.stats.ind].Play()

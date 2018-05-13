@@ -94,7 +94,7 @@ class Enemy(Entity):
         self.stats.hp = 0
 
         # take over the animation, then finish the hurt state
-        self.anim = 'die'
+        self.startAnimation('die')
         for crap in dummy:
             yield None
 
@@ -119,7 +119,7 @@ class Enemy(Entity):
         yield None
 
     def idleState(self, time = 50):
-        self.anim = 'idle'
+        self.startAnimation('idle')
         while time > 0:
             time -= 1
             yield None

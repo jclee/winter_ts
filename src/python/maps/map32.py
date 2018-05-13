@@ -13,7 +13,7 @@ def finalBattle(engineRef):
 
         def walkUp():
             p.move(engineRef.dir.Up, 128)
-            p.anim = 'walk'
+            p.startAnimation('walk')
             for n in range(128):
                 yield None
 
@@ -29,7 +29,7 @@ def finalBattle(engineRef):
             while True:
                 yield None
 
-        p.anim = 'stand'
+        p.startAnimation('stand')
         p.state = noOp()
 
         for n in range(256):
@@ -45,7 +45,7 @@ def finalBattle(engineRef):
             engineRef,
             ika.Entity(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
             )
-        s.anim = 'appear'
+        s.startAnimation('appear')
         engineRef.addEntity(s)
 
         for n in range(19, 32):

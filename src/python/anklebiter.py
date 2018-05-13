@@ -171,7 +171,7 @@ class AnkleBiter(Enemy):
     def walkState(self, dir, dist):
         ox, oy = self.x, self.y
         self.move(dir, dist)
-        self.anim = 'walk'
+        self.startAnimation('walk')
         while self.isMoving():
             yield None
             if (ox, oy) == (self.x, self.y):
@@ -180,7 +180,7 @@ class AnkleBiter(Enemy):
 
     def deathState(self, *args, **kwargs):
         sound.anklebiterDie.Play()
-        self.anim = 'die'
+        self.startAnimation('die')
         yield from super(AnkleBiter, self).deathState(*args, **kwargs)
 
     def attackState(self, dir):
@@ -190,7 +190,7 @@ class AnkleBiter(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.anim = 'attack'
+        self.startAnimation('attack')
         self.stop()
 
         sound.anklebiterStrike.Play()

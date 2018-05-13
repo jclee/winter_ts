@@ -254,7 +254,7 @@ class Player(Entity):
 
     def standState(self):
         self.stop()
-        self.anim = 'stand'
+        self.startAnimation('stand')
         while True:
             if controls.attack():
                 self.state = self.slashState()
@@ -277,7 +277,7 @@ class Player(Entity):
 
     def walkState(self):
         oldDir = self.direction
-        self.anim = 'walk'
+        self.startAnimation('walk')
 
         while True:
 
@@ -322,14 +322,14 @@ class Player(Entity):
 
             # handle animation and junk
             if d != oldDir:
-                self.anim = 'walk'
+                self.startAnimation('walk')
                 self.direction = d
                 oldDir = d
             yield None
 
     def slashState(self):
         self.stop()
-        self.anim = 'slash'
+        self.startAnimation('slash')
         r = slashRange[self.direction]
         backslash = False
         backthrust = False
@@ -379,7 +379,7 @@ class Player(Entity):
 
     def backSlashState(self):
         self.stop()
-        self.anim = 'backslash'
+        self.startAnimation('backslash')
         r = backSlashRange[self.direction]
 
         # when we hit an entity, we append it here so that
@@ -423,7 +423,7 @@ class Player(Entity):
             self.speed = oldSpeed
         self._onStateExit = restoreVars
 
-        self.anim = 'thrust'
+        self.startAnimation('thrust')
         self.speed += 800
         self.move(self.direction, 1000)
 
@@ -473,7 +473,7 @@ class Player(Entity):
             self.speed = oldSpeed
         self._onStateExit = restoreVars
 
-        self.anim = 'backthrust'
+        self.startAnimation('backthrust')
         self.speed += 400
         self.move(self.engineRef.dir.invert(self.direction), 1000)
 
@@ -515,7 +515,7 @@ class Player(Entity):
             self.direction = self.engineRef.dir.Right
 
         self.stop()
-        self.anim = 'rend'
+        self.startAnimation('rend')
         r = rendRange[self.direction]
 
         if self.stats.mp < 10 or 'firerune' not in self.engineRef.saveFlags:
@@ -579,7 +579,7 @@ class Player(Entity):
             self.direction = self.engineRef.dir.Right
 
         self.stop()
-        self.anim = 'stand'
+        self.startAnimation('stand')
 
         if self.stats.mp < 15 or 'windrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
@@ -604,7 +604,7 @@ class Player(Entity):
         self.invincible = True
         self.ent.entobs = False
 
-        self.anim = 'thrust'
+        self.startAnimation('thrust')
         r = galeRange[self.direction] + (self.layer,)
         self.move(self.direction, 100000)
         self.speed *= 10
@@ -639,7 +639,7 @@ class Player(Entity):
 
         self.stop()
 
-        self.anim = 'magic'
+        self.startAnimation('magic')
 
         if self.stats.mp < 20 or 'waterrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
@@ -676,7 +676,7 @@ class Player(Entity):
 
     def shiverState(self):
         self.stop()
-        self.anim = 'thrust'
+        self.startAnimation('thrust')
 
         if self.stats.mp < 45 or 'cowardrune' not in self.engineRef.saveFlags:
             sound.menuBuzz.Play()
@@ -707,7 +707,7 @@ class Player(Entity):
         self.invincible = True
         s = self.hurtState(300, self.engineRef.dir.invert(self.direction))
         yield next(s)
-        self.anim = 'die'
+        self.startAnimation('die')
         for x in s:
             yield None
 

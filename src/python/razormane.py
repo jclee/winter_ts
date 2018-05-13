@@ -197,7 +197,7 @@ class RazorMane(Enemy):
     def walkState(self, dir, dist):
         ox, oy = self.x, self.y
         self.move(dir, dist)
-        self.anim = 'walk'
+        self.startAnimation('walk')
         dist *= 100
         while dist > 0:
             dist -= self.speed
@@ -209,7 +209,7 @@ class RazorMane(Enemy):
 
     def deathState(self, *args, **kwargs):
         sound.razorManeDie.Play()
-        self.anim = 'die'
+        self.startAnimation('die')
         yield from super(RazorMane, self).deathState(*args, **kwargs)
 
     def attackState(self, dir):
@@ -219,7 +219,7 @@ class RazorMane(Enemy):
         self._onStateExit = restoreVars
 
         self.direction = dir
-        self.anim = 'attack'
+        self.startAnimation('attack')
         self.stop()
 
         sound.razorManeStrike.Play()
