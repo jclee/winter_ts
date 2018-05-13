@@ -227,10 +227,9 @@ class Engine(object):
 
         self.synchTime()
 
-    def warpTask(self, dest, fade = True):
-        if fade:
-            self.draw()
-            img = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
+    def warpTask(self, dest):
+        self.draw()
+        startImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
 
         self.player.direction = self.engineRef.dir.Down
         self.player.state = self.player.defaultState()
@@ -241,8 +240,19 @@ class Engine(object):
         self.camera.center()
 
         self.draw()
-        if fade:
-            yield from effects.crossFadeTask(50, startImage = img)
+        endImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
+
+        time = 50
+        endTime = ika.GetTime() + time
+        now = ika.GetTime()
+        while now < endTime:
+            opacity = (endTime - now) * 255 // time
+            ika.Video.Blit(endImage, 0, 0)
+            ika.Video.TintBlit(startImage, 0, 0, ika.RGB(255, 255, 255, opacity))
+            ika.Video.ShowPage()
+            yield None
+            now = ika.GetTime()
+
         self.synchTime()
 
     def runTask(self):
