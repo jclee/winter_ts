@@ -151,7 +151,7 @@ class AnkleBiter(Enemy):
 
     def passiveMood(self):
         p = self.engineRef.player
-        self._animator.kill = True
+        self.stopAnimation()
         while True:
             dist = ika.hypot(p.x - self.x, p.y - self.y)
 
@@ -165,7 +165,7 @@ class AnkleBiter(Enemy):
             brython_generator_bug_workaround = 'blah'
 
     def idleState(self, *args):
-        self._animator.kill = True
+        self.stopAnimation()
         yield from super(AnkleBiter, self).idleState(*args)
 
     def walkState(self, dir, dist):
@@ -203,7 +203,7 @@ class AnkleBiter(Enemy):
             yield None
 
         self.move(dir, 32)
-        while not self._animator.kill:
+        while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:

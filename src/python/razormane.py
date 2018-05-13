@@ -178,7 +178,7 @@ class RazorMane(Enemy):
 
     def passiveMood(self):
         p = self.engineRef.player
-        self._animator.kill = True
+        self.stopAnimation()
         while True:
             dist = self.playerDist()
 
@@ -191,7 +191,7 @@ class RazorMane(Enemy):
             brython_generator_bug_workaround = 'blah'
 
     def idleState(self, *args):
-        self._animator.kill = True
+        self.stopAnimation()
         yield from super(RazorMane, self).idleState(*args)
 
     def walkState(self, dir, dist):
@@ -232,7 +232,7 @@ class RazorMane(Enemy):
             yield None
 
         self.move(dir, 32)
-        while not self._animator.kill:
+        while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:

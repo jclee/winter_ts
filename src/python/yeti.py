@@ -127,7 +127,7 @@ class Yeti(Enemy):
 
     def passiveMood(self):
         p = self.engineRef.player
-        self._animator.kill = True
+        self.stopAnimation()
         while True:
             # compensate for the yeti's gigantic sprite:
             sx = self.x + 16
@@ -175,7 +175,7 @@ class Yeti(Enemy):
             yield None
 
         self.move(dir, 6)
-        while not self._animator.kill:
+        while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:

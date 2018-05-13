@@ -340,7 +340,7 @@ class Player(Entity):
 
         sound.slash1.Play()
 
-        while not self._animator.kill:
+        while self.isAnimating():
             rect = list(r[self._animator.index]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
@@ -388,7 +388,7 @@ class Player(Entity):
 
         sound.slash2.Play()
 
-        while not self._animator.kill:
+        while self.isAnimating():
             rect = list(r[self._animator.index]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
@@ -538,7 +538,7 @@ class Player(Entity):
 
         sound.hearthRend.Play()
 
-        while not self._animator.kill:
+        while self.isAnimating():
             ents = self.detectCollision(r[self._animator.index] + (self.layer,))
             fire.specframe = f + self._animator.index
 

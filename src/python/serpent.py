@@ -109,7 +109,7 @@ class Serpent(Enemy):
         self.startAnimation('bite')
         self.invincible = False
 
-        while not self._animator.kill:
+        while self.isAnimating():
             r = _biteRange[self._animator.index] + (self.layer,)
             ents = self.detectCollision(r)
             for e in ents:

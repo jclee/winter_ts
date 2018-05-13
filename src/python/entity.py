@@ -189,3 +189,9 @@ class Entity(object):
     def startAnimation(self, name):
         a, loop = self._anim[name]
         self._animator.setAnim(a[self.direction], loop)
+
+    def stopAnimation(self):
+        self._animator.kill = True
+
+    def isAnimating(self):
+        return not self._animator.kill

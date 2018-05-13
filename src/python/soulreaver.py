@@ -75,20 +75,6 @@ class SoulReaver(Yeti):
             self.speed = max(10, self.speed - 10)
             yield None
 
-        #while not self._animator.kill:
-        #    self.speed -= 40
-        #    ents = self.detectCollision(_attackRange[dir])
-
-        #    for e in ents:
-        #        if isinstance(e, Player):
-        #            d = max(1, self.stats.att - e.stats.pres)
-        #            e.hurt(d, 350, self.direction)
-        #            yield None
-        #            break
-        #        brython_generator_bug_workaround = 'blah'
-
-        #    yield None
-
         self.stop()
 
         self.state = self.idleState(10)

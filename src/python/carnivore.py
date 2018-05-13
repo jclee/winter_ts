@@ -31,7 +31,7 @@ class Carnivore(AnkleBiter):
         self._animator.count = 0
 
         self.move(dir, 32)
-        while not self._animator.kill:
+        while self.isAnimating():
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:
