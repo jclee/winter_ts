@@ -1,4 +1,7 @@
 
+import { Animator } from "./Animator.js";
+(window as any).Animator = Animator
+
 import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
 (window as any).Dir = {
     Left: Direction.Left,
