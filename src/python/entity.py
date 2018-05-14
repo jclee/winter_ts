@@ -147,7 +147,7 @@ class Entity(object):
     def stop(self):         self.ent.Stop()
 
     def animate(self):
-        self._animator.update(1)
+        self._animator.update()
         self.ent.specframe = self._animator.curFrame
 
     # properties.  Because they're high in fibre.
@@ -181,13 +181,13 @@ class Entity(object):
 
     def startAnimation(self, name):
         a, loop = self._anim[name]
-        self._animator.setAnim(a[self.direction], loop)
+        self._animator.start(a[self.direction], loop)
 
     def stopAnimation(self):
-        self._animator.kill = True
+        self._animator.stop()
 
     def isAnimating(self):
-        return not self._animator.kill
+        return self._animator.isAnimating
 
     def getAnimationIndex(self):
         return self._animator.index

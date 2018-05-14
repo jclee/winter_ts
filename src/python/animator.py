@@ -1,64 +1,41 @@
-
 class Animator(object):
     """Handles animating sprites."""
 
-    def __init__(self, anim=None, loop=True):
-        self._anim = anim
-        self.count = 0
+    def __init__(self):
+        self._frameIndexTimePairs = None
+        self._count = 0
         self.curFrame = 0
         self.index = 0
-        self.loop = loop
-        self.kill = anim is None
+        self._loop = True
+        self.isAnimating = False
 
-    def __repr__(self):
-        return repr((
-            self._anim,
-            self.count,
-            self.curFrame,
-            self.index,
-            self.loop,
-            self.kill))
-
-    anim = property(lambda self: self._anim)
-
-    def setAnim(self, value, loop=True):
-        self._anim = value
-        self.curFrame = self._anim[0][0]
-        self.count = self._anim[0][1]
+    def start(self, frameIndexTimePairs, loop):
+        self._frameIndexTimePairs = frameIndexTimePairs
+        self.curFrame = self._frameIndexTimePairs[0][0]
+        self._count = self._frameIndexTimePairs[0][1]
         self.index = 0
-        self.kill = False
-        self.loop = loop
+        self.isAnimating = True
+        self._loop = loop
 
-    def update(self, time_delta):
-        if self.kill:
+    def update(self):
+        if not self.isAnimating:
             return
 
-        self.count -= time_delta
-        while self.count <= 0:
+        self._count -= 1
+        while self._count <= 0:
             self.index += 1
-            if self.index >= len(self.anim):
-                if self.loop:
+            if self.index >= len(self._frameIndexTimePairs):
+                if self._loop:
                     self.index = 0
                 else:
-                    self.kill = True
+                    self.isAnimating = False
                     return
 
-            self.curFrame = self.anim[self.index][0]
-            self.count += self.anim[self.index][1]
+            self.curFrame = self._frameIndexTimePairs[self.index][0]
+            self._count += self._frameIndexTimePairs[self.index][1]
 
     def stop(self):
-        self.kill = True
-
-    def resume(self):
-        self.kill = False
-        if self.index >= len(self.anim):
-            self.restart()
-
-    def restart(self):
-        self.index = 0
-        self.count = 0
-        self.kill = False
-
+        self.isAnimating = False
 
 def makeAnim(strand, delay):
     """Quicky function to make a proper strand, given a
