@@ -13,8 +13,6 @@ import ika
 import xi.window as window
 import xi.cursor as cursor
 
-from xi.proxy import Proxy
-
 default_font = None
 default_cursor = None
 default_window = window.Window()
@@ -162,16 +160,6 @@ class Frame(Widget):
     def draw(self, xofs = 0, yofs = 0):
         self.wnd.draw(self.x + xofs, self.y + yofs, self.width, self.height)
         Widget.draw(self, xofs, yofs)
-
-class FrameDecorator(Proxy):
-    def __init__(self, subject, wnd = None):
-        Proxy.__init__(self, subject)
-        self.__wnd = wnd or default_window
-
-    def draw(self, xofs = 0, yofs = 0):
-        s = self.getSubject()
-        self.__wnd.draw(s.x, s.y, s.width, s.height)
-        s.draw(xofs, yofs)
 
 class StaticText(Widget):
     '''
