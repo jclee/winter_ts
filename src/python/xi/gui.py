@@ -10,14 +10,11 @@
 
 import ika
 
-import xi.window as window
-import xi.cursor as cursor
-
 default_font = None
 default_cursor = None
-default_window = window.Window()
+default_window = None
 
-def init(font, wnd = None, csr = None):
+def init(font, wnd, csr):
     '''
     Initializes defaults for the GUI system.  This MUST be called before
     creating any instances.
@@ -25,8 +22,8 @@ def init(font, wnd = None, csr = None):
     global default_font, default_window, default_cursor
 
     default_font = font
-    default_window = wnd or default_window
-    default_cursor = csr or cursor.TextCursor(default_font, '>')
+    default_window = wnd
+    default_cursor = csr
 
 class Widget(object):
     '''

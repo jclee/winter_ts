@@ -5,13 +5,13 @@ from xi.scrolltext import ScrollableTextFrame
 import xi.gui as gui
 import xi.layout as layout
 from xi.transition import Transition
-from xi.window import ImageWindow
+#from xi.window import ImageWindow
 from xi.cursor import ImageCursor
 import effects
 
 from gameover import GameQuitException
 
-class Window(ImageWindow):
+class Window(object):
     '''
     Specialized xi window.  The only real differences are that it pulls
     its images from separate image files instead of cutting up a single
@@ -29,6 +29,31 @@ class Window(ImageWindow):
 
         self.Blit = ika.Video.ScaleBlit
         self.border = 0
+
+    def draw(self, x, y, w, h):
+        b = self.Left // 2
+        x2 = x + w + b
+        y2 = y + h + b
+        x -= b
+        y -= b
+
+        ika.Video.Blit(self.iTopleft,  x - self.iTopleft.width, y - self.iTopleft.height)
+        ika.Video.Blit(self.iTopright, x2, y - self.iTopright.height)
+        ika.Video.Blit(self.iBottomleft, x - self.iBottomleft.width, y2)
+        ika.Video.Blit(self.iBottomright, x2, y2)
+
+        self.Blit(self.iLeft, x - self.iLeft.width, y, self.iLeft.width, y2 - y)
+        self.Blit(self.iRight, x2, y, self.iRight.width, y2 - y)
+
+        self.Blit(self.iTop, x, y - self.iTop.height, x2 - x, self.iTop.height)
+        self.Blit(self.iBottom, x, y2, x2 - x, self.iBottom.height)
+
+        self.Blit(self.iCentre, x, y, x2 - x, y2 - y)
+
+    Left   = property(lambda self: 0)
+    Right  = property(lambda self: 0)
+    Top    = property(lambda self: 0)
+    Bottom = property(lambda self: 0)
 
 class SubScreenWindow(gui.Frame):
     def __init__(self, *args, **kw):
