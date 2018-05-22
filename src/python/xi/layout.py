@@ -113,48 +113,16 @@ class HorizontalBoxLayout(Layout):
         self.width = x - self.x
         self.height = max([child.Height + self.pad for child in self.children]) - self.pad - self.y
 
-class GridLayout(Layout):
+class FlexGridLayout(Layout):
     '''
-    Arranges its children in a grid.  Each grid 'cell' is as wide as the
-    widest child, and as high as the highest child.
+    More robust GridLayout.  Each row/column is as big as it needs to be.  No
+    bigger.
     '''
     def __init__(self, cols, *args, **kwargs):
         Layout.__init__(self, *args)
         self.cols = cols
         self.pad = kwargs.get('pad', 0)
 
-    def layout(self):
-        rowWidth = max([ child.Width for child in self.children ]) + self.pad
-        colHeight = max([ child.Height for child in self.children ]) + self.pad
-
-        row, col = 0, 0
-        x, y = 0, 0
-        for child in self.children:
-            if (isinstance(child, Layout)):
-                child.layout()
-
-            child.Position = x, y
-            x += rowWidth
-            col += 1
-            if col >= self.cols:
-                row, col = row + 1, 0
-                x, y = 0, y + colHeight
-
-        if len(self.children) > self.cols:
-            self.width = self.cols * rowWidth
-            self.height = row * colHeight
-        else:
-            self.width = col * rowWidth
-            self.height = colHeight
-
-        self.width -= self.pad
-        self.height -= self.pad
-
-class FlexGridLayout(GridLayout):
-    '''
-    More robust GridLayout.  Each row/column is as big as it needs to be.  No
-    bigger.
-    '''
     def layout(self):
         for child in self.children:
             if isinstance(child, Layout):
