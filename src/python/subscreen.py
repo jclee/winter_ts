@@ -1,15 +1,103 @@
 import ika
 
-from xi.menu import Menu, Cancel
-from xi.scrolltext import ScrollableTextFrame
 import xi.gui as gui
-import xi.layout as layout
-from xi.transition import Transition
-#from xi.window import ImageWindow
-from xi.cursor import ImageCursor
 import effects
 
 from gameover import GameQuitException
+
+DEFAULT_TIME = 30
+
+class Transition(object):
+    def __init__(self):
+        self.children = []
+
+    def findChild(self, child):
+        for i,iter in enumerate(self.children):
+            if iter.theWindow == child:
+                return i
+        return None
+
+    def hasChild(self, child):
+        return self.findChild(child) is not None
+
+    def addChild(self, child, startRect = None, endRect = None, time = None):
+        self.removeChild(child)
+        r = child.Rect
+        self.children.append(WindowMover(child, startRect or r, endRect or r, time or DEFAULT_TIME))
+
+    def removeChild(self, child):
+        i = self.findChild(child)
+        if i is not None:
+            self.children.pop(i)
+
+    def update(self, timeDelta):
+        for i, iter in enumerate(self.children):
+            iter.update(timeDelta)
+
+            if iter.isDone():
+                self.children.pop(i)
+
+    def draw(self):
+        for child in self.children:
+            child.draw()
+
+    def executeTask(self):
+        now = ika.GetTime()
+        done = False
+        while not done:
+            done = True
+
+            yield None
+            ika.Map.Render()
+
+            t = ika.GetTime()
+            delta = t - now
+            now = t
+            for child in self.children:
+                if not child.isDone():
+                    done = False
+                    child.update(delta)
+                child.draw()
+
+            ika.Video.ShowPage()
+
+class WindowMover(object):
+    def __init__(self, theWindow, startRect, endRect, time):
+        self.endTime = float(time)
+        self.time = 0.0
+
+        # specifying just a position is fine: we'll use the current size of the window to fill in the gap
+        if len(startRect) == 2: startRect += theWindow.Size
+        if len(endRect) == 2:   endRect += theWindow.Size
+
+        self.theWindow = theWindow
+        self.startRect = startRect
+        self.endRect = endRect
+
+        # change in position that occurs every tick.
+        self.delta = [(e - s) / self.endTime for s, e in zip(startRect, endRect)]
+
+        # Looks like "window" is special for Brython...
+        #self.window.Rect = startRect
+        self.theWindow.Rect = startRect
+
+    def isDone(self):
+        return self.time >= self.endTime
+
+    def update(self, timeDelta):
+        if self.time + timeDelta >= self.endTime:
+            self.time = self.endTime
+            self.theWindow.Rect = self.endRect
+        else:
+            self.time += timeDelta
+
+            # typical interpolation stuff
+            # maybe parameterize the algorithm, so that we can have nonlinear movement.
+            # Maybe just use a matrix to express the transform.
+            self.theWindow.Rect = [int(d * self.time + s) for s, d in zip(self.startRect, self.delta)]
+
+    def draw(self):
+        self.theWindow.draw()
 
 class Window(object):
     '''
@@ -63,7 +151,7 @@ class SubScreenWindow(gui.Frame):
         self.Border = self.wnd.iLeft.width
 
     def createLayout(self):
-        return layout.VerticalBoxLayout()
+        return gui.VerticalBoxLayout()
 
     def update(self):
         self.layout.setChildren(self.createContents())
@@ -98,7 +186,7 @@ class AttribWindow(SubScreenWindow):
         )
 
     def createLayout(self):
-        return layout.FlexGridLayout(cols=2, pad=0)
+        return gui.FlexGridLayout(cols=2, pad=0)
 
     def createContents(self):
         stats = self.engineRef.player.stats
@@ -115,7 +203,7 @@ class MagicWindow(SubScreenWindow):
         self.engineRef = engineRef
 
     def createLayout(self):
-        return layout.VerticalBoxLayout()
+        return gui.VerticalBoxLayout()
 
     def createContents(self):
         txt = ['Magic:']
@@ -130,9 +218,9 @@ class MagicWindow(SubScreenWindow):
 
         return (gui.StaticText(text=txt),)
 
-class MenuWindow(Menu):
+class MenuWindow(gui.Menu):
     def __init__(self):
-        Menu.__init__(self, textctrl=ScrollableTextFrame())
+        gui.Menu.__init__(self, textctrl=gui.ScrollableTextFrame())
         self.addText(
             'Resume',
             #'Controls',
@@ -220,7 +308,7 @@ class PauseScreen(object):
             yield None
 
             result = self.menu.update()
-            if result is Cancel or result == 0:
+            if result is gui.Cancel or result == 0:
                 break
             elif result is not None:
                 if result == 0:
@@ -242,5 +330,5 @@ def init():
     gui.init(
         font=ika.Font('system.fnt'),
         wnd=Window('gfx/ui/win_%s.png'),
-        csr=ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
+        csr=gui.ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
         )

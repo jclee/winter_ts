@@ -2,11 +2,8 @@
 
 import ika
 from saveload import SaveGame
-from xi.menu import Cancel
-from xi.cursor import ImageCursor
 import xi.effects
-
-from xi import gui, layout
+import xi.gui as gui
 
 import controls
 
@@ -14,7 +11,7 @@ class SaveGameFrame(gui.Frame):
     def __init__(self, *args, **kw):
         gui.Frame.__init__(self, *args, **kw)
         self.save = kw.get('save', None)
-        self.layout = layout.VerticalBoxLayout()
+        self.layout = gui.VerticalBoxLayout()
         self.addChild(self.layout)
         self.update(kw['icons'])
 
@@ -22,12 +19,12 @@ class SaveGameFrame(gui.Frame):
         if self.save:
             stats = self.save.stats
             self.layout.setChildren([
-                layout.HorizontalBoxLayout(
+                gui.HorizontalBoxLayout(
                     gui.StaticText(text='HP%03i/%03i' % (stats.hp, stats.maxhp)),
-                    layout.Spacer(width=16),
+                    gui.Spacer(width=16),
                     gui.StaticText(text='Lv. %02i' % stats.level)
                 ),
-                layout.FlexGridLayout(4,
+                gui.FlexGridLayout(4,
                     icons['att'], gui.StaticText(text='%02i  ' % stats.att),
                     icons['mag'], gui.StaticText(text='%02i  ' % stats.mag),
                     icons['pres'], gui.StaticText(text='%02i  ' % stats.pres),
@@ -47,7 +44,7 @@ class SaveLoadMenu(object):
                 for s in ('att', 'mag', 'pres', 'mres')]
         )
 
-        self.cursor = ImageCursor('gfx/ui/pointer.png')
+        self.cursor = gui.ImageCursor('gfx/ui/pointer.png')
 
         self.saves = saves
 
@@ -57,7 +54,7 @@ class SaveLoadMenu(object):
         elif not boxes:
             boxes.append(gui.TextFrame(text='No Saves'))
 
-        self.layout = layout.VerticalBoxLayout(pad=16, *boxes)
+        self.layout = gui.VerticalBoxLayout(pad=16, *boxes)
         self.layout.layout()
 
         self.cursorPos = 0
@@ -92,7 +89,7 @@ class SaveLoadMenu(object):
             elif controls.attack():
                 return self.cursorPos
             elif controls.cancel():
-                return Cancel
+                return gui.Cancel
 
             return None
 
@@ -133,7 +130,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
     draw()
     # Hack to get around brython's lack of support for returning values through
     # "yield from":
-    if i is Cancel or i >= len(saves):
+    if i is gui.Cancel or i >= len(saves):
         resultRef[0] = None
     else:
         resultRef[0] = saves[i]
@@ -158,7 +155,7 @@ def saveMenuTask(engineRef):
         ika.Video.ShowPage()
         yield None
 
-    if i is not Cancel:
+    if i is not gui.Cancel:
         s = SaveGame.currentGame(engineRef)
         s.save(engineRef, 'save%i' % i)
 

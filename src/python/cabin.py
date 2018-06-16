@@ -1,9 +1,8 @@
 import ika
 import controls
 
-from xi import gui
+import xi.gui as gui
 from xi.misc import WrapText
-from xi.scrolltext import ScrollableTextFrame
 import xi.effects
 
 #------------------------------------------------------------------------------
@@ -50,7 +49,7 @@ def textBox(ent, txt):
         width = max([gui.default_font.StringWidth(s) for s in text])
         height = len(text) * gui.default_font.height
 
-    frame = ScrollableTextFrame()
+    frame = gui.ScrollableTextFrame()
     frame.addText(*text)
     frame.autoSize()
 
