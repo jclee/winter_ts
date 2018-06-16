@@ -99,50 +99,6 @@ class WindowMover(object):
     def draw(self):
         self.theWindow.draw()
 
-class Window(object):
-    '''
-    Specialized xi window.  The only real differences are that it pulls
-    its images from separate image files instead of cutting up a single
-    image.
-    '''
-    def __init__(self, nameTemplate):
-        self.iTopleft, self.iTopright, self.iBottomleft, self.iBottomright = [
-            ika.Image(nameTemplate % i) for i in
-                ('top_left', 'top_right', 'bottom_left', 'bottom_right')]
-        self.iLeft, self.iRight, self.iTop, self.iBottom = [
-            ika.Image(nameTemplate % i) for i in
-                ('left', 'right', 'top', 'bottom')]
-
-        self.iCentre = ika.Image(nameTemplate % 'background')
-
-        self.Blit = ika.Video.ScaleBlit
-        self.border = 0
-
-    def draw(self, x, y, w, h):
-        b = self.Left // 2
-        x2 = x + w + b
-        y2 = y + h + b
-        x -= b
-        y -= b
-
-        ika.Video.Blit(self.iTopleft,  x - self.iTopleft.width, y - self.iTopleft.height)
-        ika.Video.Blit(self.iTopright, x2, y - self.iTopright.height)
-        ika.Video.Blit(self.iBottomleft, x - self.iBottomleft.width, y2)
-        ika.Video.Blit(self.iBottomright, x2, y2)
-
-        self.Blit(self.iLeft, x - self.iLeft.width, y, self.iLeft.width, y2 - y)
-        self.Blit(self.iRight, x2, y, self.iRight.width, y2 - y)
-
-        self.Blit(self.iTop, x, y - self.iTop.height, x2 - x, self.iTop.height)
-        self.Blit(self.iBottom, x, y2, x2 - x, self.iBottom.height)
-
-        self.Blit(self.iCentre, x, y, x2 - x, y2 - y)
-
-    Left   = property(lambda self: 0)
-    Right  = property(lambda self: 0)
-    Top    = property(lambda self: 0)
-    Bottom = property(lambda self: 0)
-
 class SubScreenWindow(gui.Frame):
     def __init__(self, *args, **kw):
         super(SubScreenWindow, self).__init__(*args, **kw)
@@ -231,7 +187,6 @@ class MenuWindow(gui.Menu):
 
 class PauseScreen(object):
     def __init__(self, engineRef):
-        assert _initted
         self.statWnd = StatWindow(engineRef)
         self.attribWnd = AttribWindow(engineRef)
         self.magWnd = MagicWindow(engineRef)
@@ -321,14 +276,3 @@ class PauseScreen(object):
     def exitGameTask(self):
         # TODO: shiny fade out
         raise GameQuitException()
-
-_initted = False
-
-def init():
-    global _initted
-    _initted = True
-    gui.init(
-        font=ika.Font('system.fnt'),
-        wnd=Window('gfx/ui/win_%s.png'),
-        csr=gui.ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
-        )

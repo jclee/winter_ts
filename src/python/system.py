@@ -1,11 +1,14 @@
 import ika
 import engine
 import intro
-
-import subscreen
+import xi.gui as gui
 
 def _mainTask():
-    subscreen.init()
+    gui.init(
+        font=ika.Font('system.fnt'),
+        wnd=gui.Window('gfx/ui/win_%s.png'),
+        csr=gui.ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
+        )
 
     introMusic = ika.Sound('music/Existing.s3m')
 
