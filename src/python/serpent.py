@@ -2,7 +2,6 @@
 import ika
 import animator
 import Brain
-import xi.effects
 
 from anklebiter import AnkleBiter
 from carnivore import Carnivore

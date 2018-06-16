@@ -2,7 +2,7 @@
 
 import ika
 from saveload import SaveGame
-import xi.effects
+import effects
 import xi.gui as gui
 
 import controls
@@ -115,7 +115,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         m.draw()
         title.draw()
 
-    yield from xi.effects.fadeInTask(50, draw=draw)
+    yield from effects.fadeInTask(50, draw=draw)
 
     i = None
     while i is None:
@@ -125,7 +125,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         yield None
 
     if fadeOut:
-        yield from xi.effects.fadeOutTask(50, draw=draw)
+        yield from effects.fadeOutTask(50, draw=draw)
 
     draw()
     # Hack to get around brython's lack of support for returning values through
@@ -146,7 +146,7 @@ def saveMenuTask(engineRef):
         m.draw()
         title.draw()
 
-    yield from xi.effects.fadeInTask(50, draw=draw)
+    yield from effects.fadeInTask(50, draw=draw)
 
     i = None
     while i is None:
@@ -159,4 +159,4 @@ def saveMenuTask(engineRef):
         s = SaveGame.currentGame(engineRef)
         s.save(engineRef, 'save%i' % i)
 
-    yield from xi.effects.fadeOutTask(50, draw=draw)
+    yield from effects.fadeOutTask(50, draw=draw)

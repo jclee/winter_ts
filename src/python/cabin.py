@@ -3,7 +3,7 @@ import controls
 
 import xi.gui as gui
 from xi.misc import WrapText
-import xi.effects
+import effects
 
 #------------------------------------------------------------------------------
 
@@ -129,12 +129,12 @@ def sceneTask(engineRef, name):
     kid2 = ika.Map.entities['kid2']
     kid3 = ika.Map.entities['kid3']
 
-    yield from xi.effects.fadeInTask(100)
+    yield from effects.fadeInTask(100)
 
     yield from _scenes[name]()
     engineRef.saveFlags[name] = 'True'
 
-    yield from xi.effects.fadeOutTask(100)
+    yield from effects.fadeOutTask(100)
 
     grandpa = kid1 = kid2 = kid3 = None
 

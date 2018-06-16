@@ -1,6 +1,6 @@
 
 from entity import Entity
-import xi.effects
+import effects
 
 import saveloadmenu
 
@@ -13,7 +13,7 @@ class SavePoint(Entity):
     def updateTask(self):
         if self.touches(self.engineRef.player):
             # bump the player backward, so he's not touching us anymore.
-            yield from xi.effects.fadeOutTask(200, draw=self.engineRef.draw)
+            yield from effects.fadeOutTask(200, draw=self.engineRef.draw)
 
             p = self.engineRef.player
             p.stats.hp = 999
@@ -27,5 +27,5 @@ class SavePoint(Entity):
 
             self.engineRef.draw()
             yield from saveloadmenu.saveMenuTask(self.engineRef)
-            yield from xi.effects.fadeInTask(50, draw=self.engineRef.draw)
+            yield from effects.fadeInTask(50, draw=self.engineRef.draw)
             self.engineRef.synchTime()
