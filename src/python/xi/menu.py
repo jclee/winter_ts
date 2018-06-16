@@ -1,7 +1,6 @@
 import xi.gui as gui
 import xi.scrolltext as scrolltext
 
-import xi.sound as sound
 import controls
 
 # unique object returned when the user cancels a menu.
@@ -93,12 +92,10 @@ class Menu(gui.Widget):
             if controls.up() and self.cursorPos > 0:
                 if not unpress:
                     self.cursorPos -= 1
-                    sound.cursormove.Play()
                     unpress = True
             elif controls.down() and self.cursorPos < len(self.Text) - 1:
                 if not unpress:
                     self.cursorPos += 1
-                    sound.cursormove.Play()
                     unpress = True
             elif controls.enter():
                 return self.cursorPos

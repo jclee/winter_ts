@@ -6,7 +6,5 @@ __all__ = [
     'layout',
     'menu',
     'misc',
-    'scrolltext',
-    'sound',
-    'window'
+    'scrolltext'
     ]
