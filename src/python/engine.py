@@ -30,7 +30,6 @@ import controls
 import cabin
 import ending
 import sound
-import xi
 
 FRAME_RATE = 100
 MAX_SKIP_COUNT = 10

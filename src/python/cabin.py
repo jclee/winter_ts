@@ -1,9 +1,8 @@
-import ika
 import controls
-
-import xi.gui as gui
-from xi.misc import WrapText
 import effects
+import gui
+import ika
+from misc import WrapText
 
 #------------------------------------------------------------------------------
 

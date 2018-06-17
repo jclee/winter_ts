@@ -1,11 +1,10 @@
 # Stand-in load/save menu code
 
+import controls
+import effects
+import gui
 import ika
 from saveload import SaveGame
-import effects
-import xi.gui as gui
-
-import controls
 
 class SaveGameFrame(gui.Frame):
     def __init__(self, *args, **kw):

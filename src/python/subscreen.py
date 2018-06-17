@@ -1,7 +1,6 @@
-import ika
-
-import xi.gui as gui
 import effects
+import gui
+import ika
 
 from gameover import GameQuitException
 

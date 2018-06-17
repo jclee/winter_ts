@@ -1,7 +1,7 @@
-import ika
 import engine
+import gui
+import ika
 import intro
-import xi.gui as gui
 
 def _mainTask():
     gui.init(
