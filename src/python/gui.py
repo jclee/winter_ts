@@ -144,15 +144,6 @@ class Widget(object):
         assert child not in self.children, 'Object %o is already a child!'
         self.children.append(child)
 
-    def removeChild(self, child):
-        'Removes a child from the widget.'
-        assert child in self.children, 'Attempt to remove nonexistent child!'
-        self.children.remove(child)
-
-    def hasChild(self, child):
-        'Returns True if the widget is a child'
-        return child in self.children
-
     def autoSize(self):
         '''
         Sets the size of the frame such that every child will be visibly contained within it.
@@ -531,18 +522,8 @@ class Layout(object):
         assert child not in self.children, '%o is already a child!' % child
         self.children.append(child)
 
-    def removeChild(self, child):
-        assert child in self.children, '%o is not a cihld!' % child
-        self.children.remove(child)
-
     def setChildren(self, children):
         self.children = children[:]
-
-    def addChildren(self, children):
-        self.children.extend(children)
-
-    def removeAllChildren(self):
-        self.children = []
 
     def draw(self, xoffset = 0, yoffset = 0):
         for child in self.children:

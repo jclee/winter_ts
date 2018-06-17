@@ -10,24 +10,9 @@ class Transition(object):
     def __init__(self):
         self.children = []
 
-    def findChild(self, child):
-        for i,iter in enumerate(self.children):
-            if iter.theWindow == child:
-                return i
-        return None
-
-    def hasChild(self, child):
-        return self.findChild(child) is not None
-
     def addChild(self, child, startRect = None, endRect = None, time = None):
-        self.removeChild(child)
         r = child.Rect
         self.children.append(WindowMover(child, startRect or r, endRect or r, time or DEFAULT_TIME))
-
-    def removeChild(self, child):
-        i = self.findChild(child)
-        if i is not None:
-            self.children.pop(i)
 
     def update(self, timeDelta):
         for i, iter in enumerate(self.children):
