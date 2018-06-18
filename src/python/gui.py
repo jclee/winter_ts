@@ -86,7 +86,8 @@ class Widget(object):
     def _setRect(self, rect):
         (x, y, width, height) = rect
         self.Position = (x, y)
-        self.Size = (width, height)
+        self.Width = width
+        self.Height = height
 
     def _setBorder(self, value):
         self.border = value
@@ -148,7 +149,8 @@ class Widget(object):
         '''
         Sets the size of the frame such that every child will be visibly contained within it.
         '''
-        self.Size = (1, 1)
+        self.width = 1
+        self.height = 1
         for child in self.children:
             self.width = max(self.width, child.Width + child.X)
             self.height = max(self.height, child.Height + child.Y)
@@ -214,7 +216,8 @@ class StaticText(Widget):
                 [ self.font.StringWidth(t) for t in self.text ]
                 )
         else:
-            self.Size = 1, 1
+            self.width = 1
+            self.height = 1
 
     def draw(self, xoffset = 0, yoffset = 0):
         y = self.y + yoffset
@@ -259,7 +262,8 @@ class TextFrame(Frame):
     def autoSize(self):
         'Autosizes the frame such that it is just large enough to contain its text.'
         self.text.autoSize()
-        self.Size = self.text.Size
+        self.Width = self.text.Width
+        self.Height = self.text.Height
 
 class Picture(Widget):
     '''
@@ -348,7 +352,8 @@ class ScrollableTextFrame(Frame):
 
     def autoSize(self):
         self.text.autoSize()
-        self.Size = self.text.Size
+        self.Width = self.text.Width
+        self.Height = self.text.Height
 
 # unique object returned when the user cancels a menu.
 # this object's identity is its only attribute, like None.
