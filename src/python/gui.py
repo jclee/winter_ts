@@ -183,10 +183,9 @@ class StaticText(Widget):
 
     Text = property(lambda self: self.text, _setText, doc='Gets or sets the text that is to be displayed.')
 
-    def addText(self, *args):
+    def addText(self, text):
         'Appends text to what is already stored'
-        a = [str(i) for i in args]
-        self.text.extend(a)
+        self.text.extend(text)
 
     def clear(self):
         'Clears all the text.'
@@ -232,10 +231,10 @@ class TextFrame(Frame):
 
     Text = property(lambda self: self.text.Text, _setText, doc='Gets or sets the text contained by the control.')
 
-    def addText(self, *args):
+    def addText(self, text):
         'Appends text to what is already contained.'
 
-        self.text.addText(*args)
+        self.text.addText(text)
 
     def autoSize(self):
         'Autosizes the frame such that it is just large enough to contain its text.'
@@ -284,8 +283,8 @@ class ScrollableTextLabel(StaticText):
     YMax = property(lambda self: self.ymax - self.height)
     Text = property(lambda self: self.text, _setText)
 
-    def addText(self, *args):
-        StaticText.addText(self, *args)
+    def addText(self, text):
+        StaticText.addText(self, text)
         self.ymax = len(self.text) * self.font.height
 
     def draw(self, xoffset = 0, yoffset = 0):
@@ -324,8 +323,8 @@ class ScrollableTextFrame(Frame):
     YMax = property(lambda self: self.text.YMax)
     Text = property(lambda self: self.text.Text, _setText)
 
-    def addText(self, *args):
-        self.text.addText(*args)
+    def addText(self, text):
+        self.text.addText(text)
 
     def autoSize(self):
         self.text.autoSize()
@@ -373,8 +372,8 @@ class Menu(Widget):
     Text = property(lambda self: self.textCtrl.Text, _setText)
     Border = property(lambda self: self.textCtrl.Border, _setBorder)
 
-    def addText(self, *args):
-        self.textCtrl.addText(*args)
+    def addText(self, text):
+        self.textCtrl.addText(text)
 
     def autoSize(self):
         w = self.cursor.Width

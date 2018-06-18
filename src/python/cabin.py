@@ -49,7 +49,7 @@ def textBox(ent, txt):
         height = len(text) * gui.default_font.height
 
     frame = gui.ScrollableTextFrame()
-    frame.addText(*text)
+    frame.addText(text)
     frame.autoSize()
 
     if y > ika.Video.yres // 2:

@@ -157,11 +157,12 @@ class MagicWindow(SubScreenWindow):
 class MenuWindow(gui.Menu):
     def __init__(self):
         gui.Menu.__init__(self, textctrl=gui.ScrollableTextFrame())
-        self.addText(
+        self.addText([
             'Resume',
             #'Controls',
             #'Load Game',
-            'Exit')
+            'Exit'
+        ])
         self.autoSize()
         self.Border = self.textCtrl.wnd.iLeft.width
 
