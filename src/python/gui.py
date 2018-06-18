@@ -32,14 +32,14 @@ class ImageCursor(object):
         self.img = img
         self.hotspot = hotspot or (img.width, img.height // 2)
 
-    def setHotSpot(self, p):
+    def _setHotSpot(self, p):
         (x, y) = p
         self.hotspot = int(x), int(y)
 
     Width = property(lambda self: self.img.width)
     Height = property(lambda self: self.img.height)
     Size = property(lambda self: (self.Width, self.Height))
-    HotSpot = property(lambda self: self.hotspot, setHotSpot)
+    HotSpot = property(lambda self: self.hotspot, _setHotSpot)
 
     def draw(self, x, y):
         ika.Video.Blit(self.img, x - self.hotspot[0], y - self.hotspot[1])
@@ -59,36 +59,36 @@ class Widget(object):
         self.children = []
         self.border = 0
 
-    def setX(self, value):      self.x = value
-    def setY(self, value):
+    def _setX(self, value):      self.x = value
+    def _setY(self, value):
         self.y = value
 
-    def setWidth(self, value):
+    def _setWidth(self, value):
         assert value > 0, 'Width must be positive!! (%i)' % value
         self.width = value
 
-    def setHeight(self, value):
+    def _setHeight(self, value):
         assert value > 0, 'Height must be positive!!! (%i)' % value
         self.height = value
 
-    def setRight(self, value):
+    def _setRight(self, value):
         self.x = value - self.width
 
-    def setBottom(self, value):
+    def _setBottom(self, value):
         self.y = value - self.height
 
-    def setSize(self, value):
+    def _setSize(self, value):
         self.Width, self.Height = value
 
-    def setPosition(self, value):
+    def _setPosition(self, value):
         self.X, self.Y = value
 
-    def setRect(self, rect):
+    def _setRect(self, rect):
         (x, y, width, height) = rect
         self.Position = (x, y)
         self.Size = (width, height)
 
-    def setBorder(self, value):
+    def _setBorder(self, value):
         self.border = value
 
     def stretchHorizontally(self, x1, x2):
@@ -117,18 +117,18 @@ class Widget(object):
         self.Right = ika.Video.xres - self.Border
         return self
 
-    X = property(lambda self: self.x, setX, doc='Gets or sets the x coordinate of the left edge of the widget')
-    Y = property(lambda self: self.y, setY, doc='Gets or sets the y coordinate of the top edge of the widget')
+    X = property(lambda self: self.x, _setX, doc='Gets or sets the x coordinate of the left edge of the widget')
+    Y = property(lambda self: self.y, _setY, doc='Gets or sets the y coordinate of the top edge of the widget')
     Left = X
     Top = Y
-    Bottom = property(lambda self: self.y + self.height, setBottom, doc='Gets or sets the y coordinate of the bottom edge of the widget.  Setting this does not resize the widget in any case.')
-    Right = property(lambda self: self.y + self.height, setRight, doc='Gets or sets the x coordinate of the right edge of th widget.  Setting this does not resize the widget in any case.')
-    Width = property(lambda self: self.width, setWidth, doc='Gets or sets the width of the widget')
-    Height = property(lambda self: self.height, setHeight, doc='Gets or sets the height of the widget')
-    Position = property(lambda self: (self.x, self.y), setPosition, doc='Gets or sets the position of the upper left corner of the widget.  Position is a tuple, ie (x,y)')
-    Size = property(lambda self: (self.width, self.height), setSize, doc='Gets or sets the size of the widget.  Size is a tuple.  ie (width, height)')
-    Rect = property(lambda self: self.Position + self.Size, setRect, doc='Gets or sets the window rect of the widget.  ie (x, y, width, height)')
-    Border = property(lambda self: self.border, setBorder, doc='Gets or sets the size of the border around the widget.')
+    Bottom = property(lambda self: self.y + self.height, _setBottom, doc='Gets or sets the y coordinate of the bottom edge of the widget.  Setting this does not resize the widget in any case.')
+    Right = property(lambda self: self.y + self.height, _setRight, doc='Gets or sets the x coordinate of the right edge of th widget.  Setting this does not resize the widget in any case.')
+    Width = property(lambda self: self.width, _setWidth, doc='Gets or sets the width of the widget')
+    Height = property(lambda self: self.height, _setHeight, doc='Gets or sets the height of the widget')
+    Position = property(lambda self: (self.x, self.y), _setPosition, doc='Gets or sets the position of the upper left corner of the widget.  Position is a tuple, ie (x,y)')
+    Size = property(lambda self: (self.width, self.height), _setSize, doc='Gets or sets the size of the widget.  Size is a tuple.  ie (width, height)')
+    Rect = property(lambda self: self.Position + self.Size, _setRect, doc='Gets or sets the window rect of the widget.  ie (x, y, width, height)')
+    Border = property(lambda self: self.border, _setBorder, doc='Gets or sets the size of the border around the widget.')
 
     def draw(self, xofs = 0, yofs = 0):
         '''
@@ -188,14 +188,14 @@ class StaticText(Widget):
 
         self.autoSize()
 
-    def setText(self, value):
+    def _setText(self, value):
         self.text = value[:]
 
-    def setFont(self, value):
+    def _setFont(self, value):
         self.font = value
 
-    Text = property(lambda self: self.text, setText, doc='Gets or sets the text that is to be displayed.')
-    Font = property(lambda self: self.font, setFont, doc='Gets or sets the font used to display the text.')
+    Text = property(lambda self: self.text, _setText, doc='Gets or sets the text that is to be displayed.')
+    Font = property(lambda self: self.font, _setFont, doc='Gets or sets the font used to display the text.')
 
     def addText(self, *args):
         'Appends text to what is already stored'
@@ -240,13 +240,15 @@ class TextFrame(Frame):
         self.addChild(self.text)
         self.autoSize()
 
-    def setFont(self, font):
+    def _setFont(self, font):
         self.text.Font = font
 
-    Text = property(lambda self: self.text.Text, lambda self, value: self.text.setText(value),
-        doc='Gets or sets the text contained by the control.')
+    def _setText(self, text):
+        self.text.Text = text
 
-    Font = property(lambda self: self.text.Font, setFont,
+    Text = property(lambda self: self.text.Text, _setText, doc='Gets or sets the text contained by the control.')
+
+    Font = property(lambda self: self.text.Font, _setFont,
         doc='Gets or sets the font used for the text contained by the control.')
 
     def addText(self, *args):
@@ -302,18 +304,18 @@ class ScrollableTextLabel(StaticText):
         self.ywin = 0
         self.ymax = 0
 
-    def setYWin(self, value):
+    def _setYWin(self, value):
         self.ywin = min(self.ymax - self.height, value)
         if self.ywin < 0:
             self.ywin = 0
 
-    def setText(self, value):
+    def _setText(self, value):
         self.text = value[:]
         self.ymax = len(self.text) * self.font.height
 
-    YWin = property(lambda self: self.ywin, setYWin)
+    YWin = property(lambda self: self.ywin, _setYWin)
     YMax = property(lambda self: self.ymax - self.height)
-    Text = property(lambda self: self.text, setText)
+    Text = property(lambda self: self.text, _setText)
 
     def addText(self, *args):
         StaticText.addText(self, *args)
@@ -347,14 +349,14 @@ class ScrollableTextFrame(Frame):
         self.text = ScrollableTextLabel()
         self.addChild(self.text)
 
-    def setYWin(self, value):   self.text.YWin = value
-    def setText(self, value):   self.text.Text = value
-    def setFont(self, value):   self.text.Font = value
+    def _setYWin(self, value):   self.text.YWin = value
+    def _setText(self, value):   self.text.Text = value
+    def _setFont(self, value):   self.text.Font = value
 
-    YWin = property(lambda self: self.text.YWin, setYWin)
+    YWin = property(lambda self: self.text.YWin, _setYWin)
     YMax = property(lambda self: self.text.YMax)
-    Text = property(lambda self: self.text.Text, setText)
-    Font = property(lambda self: self.text.Font, setFont)
+    Text = property(lambda self: self.text.Text, _setText)
+    Font = property(lambda self: self.text.Font, _setFont)
 
     def addText(self, *args):
         self.text.addText(*args)
@@ -385,27 +387,27 @@ class Menu(Widget):
         self.cursorSpeed = 2 # speed at which the cursor moves (in pixels per update)
         self.addChild(self.textCtrl)
 
-    def setCursorPos(self, value):
+    def _setCursorPos(self, value):
         value = max(0, value)
         self.cursorPos = min(len(self.Text), value)
 
-    def setWidth(self, value):
+    def _setWidth(self, value):
         self.width = value
         self.textCtrl.Width = value - self.cursor.Width
 
-    def setHeight(self, value): self.height = self.textCtrl.Height = value
-    def setSize(self, value):   self.Width, self.Height = value
-    def setText(self, value):   self.textCtrl.Text = value
-    def setBorder(self, value): self.textCtrl.Border = value
+    def _setHeight(self, value): self.height = self.textCtrl.Height = value
+    def _setSize(self, value):   self.Width, self.Height = value
+    def _setText(self, value):   self.textCtrl.Text = value
+    def _setBorder(self, value): self.textCtrl.Border = value
 
-    Width = property(lambda self: self.width, setWidth)
-    Height = property(lambda self: self.height, setHeight)
-    Size = property(lambda self: (self.width, self.height), setSize)
+    Width = property(lambda self: self.width, _setWidth)
+    Height = property(lambda self: self.height, _setHeight)
+    Size = property(lambda self: (self.width, self.height), _setSize)
     CursorY = property(lambda self: self.cursorY)
-    CursorPos = property(lambda self: self.cursorPos, setCursorPos)
+    CursorPos = property(lambda self: self.cursorPos, _setCursorPos)
     Font = property(lambda self: self.textCtrl.Font)
-    Text = property(lambda self: self.textCtrl.Text, setText)
-    Border = property(lambda self: self.textCtrl.Border, setBorder)
+    Text = property(lambda self: self.textCtrl.Text, _setText)
+    Border = property(lambda self: self.textCtrl.Border, _setBorder)
 
     def addText(self, *args):
         self.textCtrl.addText(*args)
@@ -490,30 +492,30 @@ class Layout(object):
         self.x = self.y = 0
         self.width = self.height = 0
 
-    def setX(self, value):
+    def _setX(self, value):
         for child in self.children:
             child.X += value - self.x
         self.x = value
 
-    def setY(self, value):
+    def _setY(self, value):
         for child in self.children:
             child.Y += value - self.y
         self.y = value
 
-    def setPosition(self, p):
+    def _setPosition(self, p):
         (x, y) = p
         for child in self.children:
             child.X += x - self.x
             child.Y += y - self.y
         self.x, self.y = x, y
 
-    X = property(lambda self: self.x, setX)
-    Y = property(lambda self: self.y, setY)
+    X = property(lambda self: self.x, _setX)
+    Y = property(lambda self: self.y, _setY)
     Left = X
     Top = Y
     Right = property(lambda self: self.x + self.width)
     Bottom = property(lambda self: self.y + self.height)
-    Position = property(lambda self: (self.x, self.y), setPosition)
+    Position = property(lambda self: (self.x, self.y), _setPosition)
     Width = property(lambda self: self.width)
     Height = property(lambda self: self.height)
     Size = property(lambda self: (self.width, self.height))
