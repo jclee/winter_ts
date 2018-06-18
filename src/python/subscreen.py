@@ -10,9 +10,9 @@ class Transition(object):
     def __init__(self):
         self.children = []
 
-    def addChild(self, child, startRect = None, endRect = None, time = None):
-        r = child.Rect
-        self.children.append(WindowMover(child, startRect or r, endRect or r, time or DEFAULT_TIME))
+    def addChild(self, child, startPos = None, endPos = None, time = None):
+        p = child.Position
+        self.children.append(WindowMover(child, startPos or p, endPos or p, time or DEFAULT_TIME))
 
     def update(self, timeDelta):
         for i, iter in enumerate(self.children):
@@ -46,24 +46,20 @@ class Transition(object):
             ika.Video.ShowPage()
 
 class WindowMover(object):
-    def __init__(self, theWindow, startRect, endRect, time):
+    def __init__(self, theWindow, startPos, endPos, time):
         self.endTime = float(time)
         self.time = 0.0
 
-        # specifying just a position is fine: we'll use the current size of the window to fill in the gap
-        if len(startRect) == 2: startRect += theWindow.Size
-        if len(endRect) == 2:   endRect += theWindow.Size
-
         self.theWindow = theWindow
-        self.startRect = startRect
-        self.endRect = endRect
+        self.startPos = startPos
+        self.endPos = endPos
 
         # change in position that occurs every tick.
-        self.delta = [(e - s) / self.endTime for s, e in zip(startRect, endRect)]
+        self.delta = [(e - s) / self.endTime for s, e in zip(startPos, endPos)]
 
         # Looks like "window" is special for Brython...
-        #self.window.Rect = startRect
-        self.theWindow.Rect = startRect
+        #self.window.Position = startPos
+        self.theWindow.Position = startPos
 
     def isDone(self):
         return self.time >= self.endTime
@@ -71,14 +67,14 @@ class WindowMover(object):
     def update(self, timeDelta):
         if self.time + timeDelta >= self.endTime:
             self.time = self.endTime
-            self.theWindow.Rect = self.endRect
+            self.theWindow.Position = self.endPos
         else:
             self.time += timeDelta
 
             # typical interpolation stuff
             # maybe parameterize the algorithm, so that we can have nonlinear movement.
             # Maybe just use a matrix to express the transform.
-            self.theWindow.Rect = [int(d * self.time + s) for s, d in zip(self.startRect, self.delta)]
+            self.theWindow.Position = [int(d * self.time + s) for s, d in zip(self.startPos, self.delta)]
 
     def draw(self):
         self.theWindow.draw()
@@ -193,10 +189,10 @@ class PauseScreen(object):
         self.update()
 
         t = Transition()
-        t.addChild(self.statWnd, startRect=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
-        t.addChild(self.attribWnd, startRect=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
-        t.addChild(self.magWnd, startRect=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
-        t.addChild(self.menu, startRect=(ika.Video.xres, self.menu.Top), time=TIME - 5)
+        t.addChild(self.statWnd, startPos=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
+        t.addChild(self.attribWnd, startPos=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
+        t.addChild(self.magWnd, startPos=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
+        t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.Top), time=TIME - 5)
 
         for i in range(TIME):
             t.update(1)
@@ -214,10 +210,10 @@ class PauseScreen(object):
     def hideTask(self):
         TIME = 40
         t = Transition()
-        t.addChild(self.statWnd, endRect=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
-        t.addChild(self.attribWnd, endRect=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
-        t.addChild(self.magWnd, endRect=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
-        t.addChild(self.menu, endRect=(ika.Video.xres, self.menu.Top), time=TIME - 5)
+        t.addChild(self.statWnd, endPos=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
+        t.addChild(self.attribWnd, endPos=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
+        t.addChild(self.magWnd, endPos=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
+        t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.Top), time=TIME - 5)
 
         for i in range(TIME - 1, -1, -1):
             t.update(1)
