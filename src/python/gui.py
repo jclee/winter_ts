@@ -29,20 +29,20 @@ def init(font, wnd, csr):
 class ImageCursor(object):
     def __init__(self, filename, hotspot = None):
         img = ika.Image(filename)
-        self.img = img
+        self._img = img
         self.hotspot = hotspot or (img.width, img.height // 2)
 
     def _setHotSpot(self, p):
         (x, y) = p
         self.hotspot = int(x), int(y)
 
-    Width = property(lambda self: self.img.width)
-    Height = property(lambda self: self.img.height)
+    Width = property(lambda self: self._img.width)
+    Height = property(lambda self: self._img.height)
     Size = property(lambda self: (self.Width, self.Height))
     HotSpot = property(lambda self: self.hotspot, _setHotSpot)
 
     def draw(self, x, y):
-        ika.Video.Blit(self.img, x - self.hotspot[0], y - self.hotspot[1])
+        ika.Video.Blit(self._img, x - self.hotspot[0], y - self.hotspot[1])
 
 class Widget(object):
     '''
@@ -269,11 +269,11 @@ class Picture(Widget):
     def __init__(self, x = 0, y = 0, width = 0, height = 0, **kwargs):
         Widget.__init__(self, x, y, width, height)
         assert 'img' in kwargs, 'Must specify an img argument to Picture constructor.'
-        self.img = kwargs['img']
-        if isinstance(self.img, str):
-            self.img = ika.Image(self.img)
+        self._img = kwargs['img']
+        if isinstance(self._img, str):
+            self._img = ika.Image(self._img)
 
-        self.Size = (width or self.img.width), (height or self.img.height)
+        self.Size = (width or self._img.width), (height or self._img.height)
 
         self.drawImage = Picture.drawImage
 
@@ -288,7 +288,7 @@ class Picture(Widget):
     drawImage = staticmethod(drawImage)
 
     def draw(self, xoffset = 0, yoffset = 0):
-        self.drawImage(self.img, self.x + xoffset, self.y + yoffset, self.width, self.height)
+        self.drawImage(self._img, self.x + xoffset, self.y + yoffset, self.width, self.height)
 
 class ScrollableTextLabel(StaticText):
     '''
