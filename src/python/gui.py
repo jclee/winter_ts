@@ -174,18 +174,14 @@ class StaticText(Widget):
         else:
             self.text = list(args)
 
-        self.font = kwargs.get('font', default_font)
+        self.font = default_font
 
         self.autoSize()
 
     def _setText(self, value):
         self.text = value[:]
 
-    def _setFont(self, value):
-        self.font = value
-
     Text = property(lambda self: self.text, _setText, doc='Gets or sets the text that is to be displayed.')
-    Font = property(lambda self: self.font, _setFont, doc='Gets or sets the font used to display the text.')
 
     def addText(self, *args):
         'Appends text to what is already stored'
@@ -231,16 +227,10 @@ class TextFrame(Frame):
         self.addChild(self.text)
         self.autoSize()
 
-    def _setFont(self, font):
-        self.text.Font = font
-
     def _setText(self, text):
         self.text.Text = text
 
     Text = property(lambda self: self.text.Text, _setText, doc='Gets or sets the text contained by the control.')
-
-    Font = property(lambda self: self.text.Font, _setFont,
-        doc='Gets or sets the font used for the text contained by the control.')
 
     def addText(self, *args):
         'Appends text to what is already contained.'
@@ -324,16 +314,15 @@ class ScrollableTextFrame(Frame):
         Frame.__init__(self, *args, **kwargs)
 
         self.text = ScrollableTextLabel()
+        self.font = self.text.font
         self.addChild(self.text)
 
     def _setYWin(self, value):   self.text.YWin = value
     def _setText(self, value):   self.text.Text = value
-    def _setFont(self, value):   self.text.Font = value
 
     YWin = property(lambda self: self.text.YWin, _setYWin)
     YMax = property(lambda self: self.text.YMax)
     Text = property(lambda self: self.text.Text, _setText)
-    Font = property(lambda self: self.text.Font, _setFont)
 
     def addText(self, *args):
         self.text.addText(*args)
@@ -381,7 +370,6 @@ class Menu(Widget):
     Height = property(lambda self: self.height, _setHeight)
     CursorY = property(lambda self: self.cursorY)
     CursorPos = property(lambda self: self.cursorPos, _setCursorPos)
-    Font = property(lambda self: self.textCtrl.Font)
     Text = property(lambda self: self.textCtrl.Text, _setText)
     Border = property(lambda self: self.textCtrl.Border, _setBorder)
 
@@ -409,12 +397,13 @@ class Menu(Widget):
         # TODO: handle it the manly way, by making the cursor repeat after a moment
 
         # update the cursor
-        ymax = max(0, len(self.Text) * self.Font.height - self.textCtrl.Height)
+        fontHeight = self.textCtrl.font.height
+        ymax = max(0, len(self.Text) * fontHeight - self.textCtrl.Height)
         assert 0 <= self.cursorPos <= len(self.Text), 'cursorPos out of range 0 <= %i <= %i' % (self.cursorPos, len(self.Text))
 
-        delta = self.cursorPos * self.Font.height - self.textCtrl.YWin - cy
+        delta = self.cursorPos * fontHeight - self.textCtrl.YWin - cy
         if delta > 0:
-            if cy < self.textCtrl.Height - self.Font.height:
+            if cy < self.textCtrl.Height - fontHeight:
                 self.cursorY += self.cursorSpeed
             else:
                 self.textCtrl.YWin += self.cursorSpeed
@@ -446,9 +435,10 @@ class Menu(Widget):
 
     def draw(self, xoffset = 0, yoffset = 0):
         self.textCtrl.draw(self.x + xoffset, self.y + yoffset)
+        fontHeight = self.textCtrl.font.height
         self.cursor.draw(
             self.x + self.textCtrl.x + xoffset,
-            self.y + self.textCtrl.y + yoffset + self.cursorY + (self.Font.height // 2)
+            self.y + self.textCtrl.y + yoffset + self.cursorY + (fontHeight // 2)
             )
 
 class Spacer(object):
