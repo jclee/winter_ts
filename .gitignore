@@ -3,6 +3,9 @@
 *.swo
 *~
 
+# macOS Preview
+.DS_Store
+
 # external dependencies
 /node_modules/
 
