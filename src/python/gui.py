@@ -38,7 +38,6 @@ class ImageCursor(object):
 
     Width = property(lambda self: self._img.width)
     Height = property(lambda self: self._img.height)
-    Size = property(lambda self: (self.Width, self.Height))
     HotSpot = property(lambda self: self.hotspot, _setHotSpot)
 
     def draw(self, x, y):
@@ -77,17 +76,8 @@ class Widget(object):
     def _setBottom(self, value):
         self.y = value - self.height
 
-    def _setSize(self, value):
-        self.Width, self.Height = value
-
     def _setPosition(self, value):
         self.X, self.Y = value
-
-    def _setRect(self, rect):
-        (x, y, width, height) = rect
-        self.Position = (x, y)
-        self.Width = width
-        self.Height = height
 
     def _setBorder(self, value):
         self.border = value
@@ -127,8 +117,6 @@ class Widget(object):
     Width = property(lambda self: self.width, _setWidth, doc='Gets or sets the width of the widget')
     Height = property(lambda self: self.height, _setHeight, doc='Gets or sets the height of the widget')
     Position = property(lambda self: (self.x, self.y), _setPosition, doc='Gets or sets the position of the upper left corner of the widget.  Position is a tuple, ie (x,y)')
-    Size = property(lambda self: (self.width, self.height), _setSize, doc='Gets or sets the size of the widget.  Size is a tuple.  ie (width, height)')
-    Rect = property(lambda self: self.Position + self.Size, _setRect, doc='Gets or sets the window rect of the widget.  ie (x, y, width, height)')
     Border = property(lambda self: self.border, _setBorder, doc='Gets or sets the size of the border around the widget.')
 
     def draw(self, xofs = 0, yofs = 0):
@@ -386,13 +374,11 @@ class Menu(Widget):
         self.textCtrl.Width = value - self.cursor.Width
 
     def _setHeight(self, value): self.height = self.textCtrl.Height = value
-    def _setSize(self, value):   self.Width, self.Height = value
     def _setText(self, value):   self.textCtrl.Text = value
     def _setBorder(self, value): self.textCtrl.Border = value
 
     Width = property(lambda self: self.width, _setWidth)
     Height = property(lambda self: self.height, _setHeight)
-    Size = property(lambda self: (self.width, self.height), _setSize)
     CursorY = property(lambda self: self.cursorY)
     CursorPos = property(lambda self: self.cursorPos, _setCursorPos)
     Font = property(lambda self: self.textCtrl.Font)
@@ -406,7 +392,8 @@ class Menu(Widget):
         w = self.cursor.Width
         self.textCtrl.Position = (w, 0)
         self.textCtrl.autoSize()
-        self.Size = (self.textCtrl.Width + w, self.textCtrl.Height)
+        self.Width = self.textCtrl.Width + w
+        self.Height = self.textCtrl.Height
 
     def update(self):
         '''
@@ -508,7 +495,6 @@ class Layout(object):
     Position = property(lambda self: (self.x, self.y), _setPosition)
     Width = property(lambda self: self.width)
     Height = property(lambda self: self.height)
-    Size = property(lambda self: (self.width, self.height))
 
     def addChild(self, child):
         assert child not in self.children, '%o is already a child!' % child
