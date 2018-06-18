@@ -266,29 +266,14 @@ class Picture(Widget):
     A widget that takes the shape of an image.
     Little else to say.
     '''
-    def __init__(self, x = 0, y = 0, width = 0, height = 0, **kwargs):
-        Widget.__init__(self, x, y, width, height)
-        assert 'img' in kwargs, 'Must specify an img argument to Picture constructor.'
-        self._img = kwargs['img']
-        if isinstance(self._img, str):
-            self._img = ika.Image(self._img)
-
-        self.Size = (width or self._img.width), (height or self._img.height)
-
-        self.drawImage = Picture.drawImage
-
-    def drawImage(img, x, y, width, height):
-        '''
-        Does the actual drawing.
-        The cool part of this is that you can assign a new drawImage method
-        to a Picture object to override how it does the drawing.
-        '''
-        ika.Video.ScaleBlit(img, x, y, width, height)
-
-    drawImage = staticmethod(drawImage)
+    def __init__(self, img):
+        Widget.__init__(self, 0, 0, 0, 0)
+        self._img = ika.Image(img)
+        self.Width = self._img.width
+        self.Height = self._img.height
 
     def draw(self, xoffset = 0, yoffset = 0):
-        self.drawImage(self._img, self.x + xoffset, self.y + yoffset, self.width, self.height)
+        ika.Video.ScaleBlit(self._img, self.x + xoffset, self.y + yoffset, self.width, self.height)
 
 class ScrollableTextLabel(StaticText):
     '''
