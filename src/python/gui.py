@@ -11,20 +11,7 @@
 import ika
 import controls
 
-default_font = None
-default_cursor = None
-default_window = None
-
-def init(font, wnd, csr):
-    '''
-    Initializes defaults for the GUI system.  This MUST be called before
-    creating any instances.
-    '''
-    global default_font, default_window, default_cursor
-
-    default_font = font
-    default_window = wnd
-    default_cursor = csr
+default_font = ika.Font('system.fnt')
 
 class ImageCursor(object):
     def __init__(self, filename, hotspot = None):
@@ -151,7 +138,7 @@ class Frame(Widget):
     def __init__(self, x = 0, y = 0, width = 0, height = 0, **kwargs):
         Widget.__init__(self, x, y, width, height)
 
-        self.wnd = kwargs.get('wnd', default_window)
+        self.wnd = Window('gfx/ui/win_%s.png')
         self.Border = int(self.wnd.Left * 2.0)
 
     def draw(self, xofs = 0, yofs = 0):
@@ -347,7 +334,7 @@ class Menu(Widget):
     def __init__(self, *args, **kwargs):
         Widget.__init__(self, *args)
         self.textCtrl = kwargs.get('textctrl') or ScrollableTextLabel()
-        self.cursor = kwargs.get('cursor') or default_cursor
+        self.cursor = ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
         self.cursorY = 0
         self.cursorPos = 0
         self.cursorSpeed = 2 # speed at which the cursor moves (in pixels per update)

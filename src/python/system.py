@@ -1,15 +1,8 @@
 import engine
-import gui
 import ika
 import intro
 
 def _mainTask():
-    gui.init(
-        font=ika.Font('system.fnt'),
-        wnd=gui.Window('gfx/ui/win_%s.png'),
-        csr=gui.ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
-        )
-
     introMusic = ika.Sound('music/Existing.s3m')
 
     engineObj = engine.Engine()
