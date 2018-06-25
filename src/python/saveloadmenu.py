@@ -7,12 +7,12 @@ import ika
 from saveload import SaveGame
 
 class SaveGameFrame(gui.Frame):
-    def __init__(self, *args, **kw):
-        gui.Frame.__init__(self, *args, **kw)
-        self.save = kw.get('save', None)
+    def __init__(self, icons, save=None):
+        gui.Frame.__init__(self)
+        self.save = save
         self.layout = gui.VerticalBoxLayout()
         self.addChild(self.layout)
-        self.update(kw['icons'])
+        self.update(icons)
 
     def update(self, icons):
         if self.save:
@@ -47,7 +47,7 @@ class SaveLoadMenu(object):
 
         self.saves = saves
 
-        boxes = [SaveGameFrame(save=s, icons=self.icons) for s in saves]
+        boxes = [SaveGameFrame(icons=self.icons, save=s) for s in saves]
         if saving:
             boxes.append(gui.TextFrame(text='Create New'))
         elif not boxes:

@@ -80,8 +80,8 @@ class WindowMover(object):
         self.theWindow.draw()
 
 class SubScreenWindow(gui.Frame):
-    def __init__(self, *args, **kw):
-        super(SubScreenWindow, self).__init__(*args, **kw)
+    def __init__(self):
+        super(SubScreenWindow, self).__init__()
         self.layout = self.createLayout()
         self.addChild(self.layout)
         self.Border = self.wnd.iLeft.width
@@ -95,8 +95,8 @@ class SubScreenWindow(gui.Frame):
         self.autoSize()
 
 class StatWindow(SubScreenWindow):
-    def __init__(self, engineRef, *args, **kw):
-        super(StatWindow, self).__init__(*args, **kw)
+    def __init__(self, engineRef):
+        super(StatWindow, self).__init__()
         self.engineRef = engineRef
 
     def createContents(self):

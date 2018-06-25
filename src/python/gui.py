@@ -130,11 +130,9 @@ class Frame(Widget):
     A widget that appears as a graphical frame of some sort.
     Frames are most commonly used as container widgets.
     '''
-    def __init__(self, x = 0, y = 0, width = 0, height = 0, **kwargs):
+    def __init__(self, x = 0, y = 0, width = 0, height = 0):
         Widget.__init__(self, x, y, width, height)
-
-        self.wnd = Window('gfx/ui/win_%s.png')
-        self.Border = int(self.wnd.Left * 2.0)
+        self.wnd = Window()
 
     def draw(self, xofs = 0, yofs = 0):
         self.wnd.draw(self.x + xofs, self.y + yofs, self.width, self.height)
@@ -199,7 +197,7 @@ class TextFrame(Frame):
     Frame and StaticText controls into a single convenient object.
     '''
     def __init__(self, x = 0, y = 0, width = 0, height = 0, *args, **kwargs):
-        Frame.__init__(self, x, y, width, height, *args, **kwargs)
+        Frame.__init__(self, x, y, width, height)
 
         # way cool.  since keyword arguments are passed on, the font will be set properly.
         # additionally, text will be added just like StaticText.  Consistency totally rules.
@@ -291,8 +289,8 @@ class ScrollableTextFrame(Frame):
     a Frame at the same time.
     '''
 
-    def __init__(self, *args, **kwargs):
-        Frame.__init__(self, *args, **kwargs)
+    def __init__(self):
+        Frame.__init__(self)
 
         self.text = ScrollableTextLabel()
         self.font = self.text.font
@@ -562,41 +560,30 @@ class Window(object):
     its images from separate image files instead of cutting up a single
     image.
     '''
-    def __init__(self, nameTemplate):
-        self.iTopleft, self.iTopright, self.iBottomleft, self.iBottomright = [
-            ika.Image(nameTemplate % i) for i in
-                ('top_left', 'top_right', 'bottom_left', 'bottom_right')]
-        self.iLeft, self.iRight, self.iTop, self.iBottom = [
-            ika.Image(nameTemplate % i) for i in
-                ('left', 'right', 'top', 'bottom')]
-
-        self.iCentre = ika.Image(nameTemplate % 'background')
-
-        self.Blit = ika.Video.ScaleBlit
-        self.border = 0
+    def __init__(self):
+        self.iTopleft = ika.Image('gfx/ui/win_top_left.png')
+        self.iTopright = ika.Image('gfx/ui/win_top_right.png')
+        self.iBottomleft = ika.Image('gfx/ui/win_bottom_left.png')
+        self.iBottomright = ika.Image('gfx/ui/win_bottom_right.png')
+        self.iLeft = ika.Image('gfx/ui/win_left.png')
+        self.iRight = ika.Image('gfx/ui/win_right.png')
+        self.iTop = ika.Image('gfx/ui/win_top.png')
+        self.iBottom = ika.Image('gfx/ui/win_bottom.png')
+        self.iCentre = ika.Image('gfx/ui/win_background.png')
 
     def draw(self, x, y, w, h):
-        b = self.Left // 2
-        x2 = x + w + b
-        y2 = y + h + b
-        x -= b
-        y -= b
+        x2 = x + w
+        y2 = y + h
 
         ika.Video.Blit(self.iTopleft,  x - self.iTopleft.width, y - self.iTopleft.height)
         ika.Video.Blit(self.iTopright, x2, y - self.iTopright.height)
         ika.Video.Blit(self.iBottomleft, x - self.iBottomleft.width, y2)
         ika.Video.Blit(self.iBottomright, x2, y2)
 
-        self.Blit(self.iLeft, x - self.iLeft.width, y, self.iLeft.width, y2 - y)
-        self.Blit(self.iRight, x2, y, self.iRight.width, y2 - y)
+        ika.Video.ScaleBlit(self.iLeft, x - self.iLeft.width, y, self.iLeft.width, y2 - y)
+        ika.Video.ScaleBlit(self.iRight, x2, y, self.iRight.width, y2 - y)
 
-        self.Blit(self.iTop, x, y - self.iTop.height, x2 - x, self.iTop.height)
-        self.Blit(self.iBottom, x, y2, x2 - x, self.iBottom.height)
+        ika.Video.ScaleBlit(self.iTop, x, y - self.iTop.height, x2 - x, self.iTop.height)
+        ika.Video.ScaleBlit(self.iBottom, x, y2, x2 - x, self.iBottom.height)
 
-        self.Blit(self.iCentre, x, y, x2 - x, y2 - y)
-
-    Left   = property(lambda self: 0)
-    Right  = property(lambda self: 0)
-    Top    = property(lambda self: 0)
-    Bottom = property(lambda self: 0)
-
+        ika.Video.ScaleBlit(self.iCentre, x, y, x2 - x, y2 - y)
