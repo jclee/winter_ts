@@ -19,13 +19,8 @@ class ImageCursor(object):
         self._img = img
         self.hotspot = hotspot or (img.width, img.height // 2)
 
-    def _setHotSpot(self, p):
-        (x, y) = p
-        self.hotspot = int(x), int(y)
-
     Width = property(lambda self: self._img.width)
     Height = property(lambda self: self._img.height)
-    HotSpot = property(lambda self: self.hotspot, _setHotSpot)
 
     def draw(self, x, y):
         ika.Video.Blit(self._img, x - self.hotspot[0], y - self.hotspot[1])
@@ -340,10 +335,6 @@ class Menu(Widget):
         self.cursorSpeed = 2 # speed at which the cursor moves (in pixels per update)
         self.addChild(self.textCtrl)
 
-    def _setCursorPos(self, value):
-        value = max(0, value)
-        self.cursorPos = min(len(self.Text), value)
-
     def _setWidth(self, value):
         self.width = value
         self.textCtrl.Width = value - self.cursor.Width
@@ -354,8 +345,6 @@ class Menu(Widget):
 
     Width = property(lambda self: self.width, _setWidth)
     Height = property(lambda self: self.height, _setHeight)
-    CursorY = property(lambda self: self.cursorY)
-    CursorPos = property(lambda self: self.cursorPos, _setCursorPos)
     Text = property(lambda self: self.textCtrl.Text, _setText)
     Border = property(lambda self: self.textCtrl.Border, _setBorder)
 
