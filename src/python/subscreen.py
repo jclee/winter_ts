@@ -223,12 +223,11 @@ class PauseScreen(object):
 
             ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
-            self.draw(o)
+            self.draw()
             ika.Video.ShowPage()
             yield None
 
-    def draw(self, opacity = 255):
-        gui.default_window.opacity = opacity
+    def draw(self):
         self.statWnd.draw()
         self.attribWnd.draw()
         self.magWnd.draw()
