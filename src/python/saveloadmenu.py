@@ -60,14 +60,14 @@ class SaveLoadMenu(object):
         self.oldY = 0 # current offset
         self.curY = 0 # offset we should be at
         if boxes:
-            self.wndHeight = self.layout.children[0].Height + 16
+            self.wndHeight = self.layout.children[0].getHeight() + 16
         else:
             self.wndHeight = 0 # What should we do here?
 
-        self.layout.X = 16 # doesn't change
+        self.layout.setX(16) # doesn't change
 
     def draw(self):
-        self.layout.Y = (ika.Video.yres - self.wndHeight) // 2 - self.oldY + 16
+        self.layout.setY((ika.Video.yres - self.wndHeight) // 2 - self.oldY + 16)
         self.layout.draw()
         self.cursor.draw(16, ika.Video.yres // 2) # cursor doesn't move, everything else does
 
@@ -105,7 +105,7 @@ def readSaves(engineRef):
 
 def loadMenuTask(engineRef, resultRef, fadeOut=True):
     title = gui.TextFrame(text='Load Game')
-    title.Position = (16, 16)
+    title.setPosition((16, 16))
     saves = readSaves(engineRef)
     m = SaveLoadMenu(saves, saving=False)
 
@@ -136,7 +136,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
 
 def saveMenuTask(engineRef):
     title = gui.TextFrame(text='Save Game')
-    title.Position = (16, 16)
+    title.setPosition((16, 16))
     saves = readSaves(engineRef)
     m = SaveLoadMenu(saves, saving=True)
 

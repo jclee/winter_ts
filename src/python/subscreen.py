@@ -11,7 +11,7 @@ class Transition(object):
         self.children = []
 
     def addChild(self, child, startPos = None, endPos = None, time = None):
-        p = child.Position
+        p = child.getPosition()
         self.children.append(WindowMover(child, startPos or p, endPos or p, time or DEFAULT_TIME))
 
     def update(self, timeDelta):
@@ -58,8 +58,8 @@ class WindowMover(object):
         self.delta = [(e - s) / self.endTime for s, e in zip(startPos, endPos)]
 
         # Looks like "window" is special for Brython...
-        #self.window.Position = startPos
-        self.theWindow.Position = startPos
+        #self.window.setPosition(startPos)
+        self.theWindow.setPosition(startPos)
 
     def isDone(self):
         return self.time >= self.endTime
@@ -67,14 +67,14 @@ class WindowMover(object):
     def update(self, timeDelta):
         if self.time + timeDelta >= self.endTime:
             self.time = self.endTime
-            self.theWindow.Position = self.endPos
+            self.theWindow.setPosition(self.endPos)
         else:
             self.time += timeDelta
 
             # typical interpolation stuff
             # maybe parameterize the algorithm, so that we can have nonlinear movement.
             # Maybe just use a matrix to express the transform.
-            self.theWindow.Position = [int(d * self.time + s) for s, d in zip(self.startPos, self.delta)]
+            self.theWindow.setPosition([int(d * self.time + s) for s, d in zip(self.startPos, self.delta)])
 
     def draw(self):
         self.theWindow.draw()
@@ -84,7 +84,7 @@ class SubScreenWindow(gui.Frame):
         super(SubScreenWindow, self).__init__()
         self.layout = self.createLayout()
         self.addChild(self.layout)
-        self.Border = self.wnd.iLeft.width
+        self.setBorder(self.wnd.iLeft.width)
 
     def createLayout(self):
         return gui.VerticalBoxLayout()
@@ -164,7 +164,7 @@ class MenuWindow(gui.Menu):
             'Exit'
         ])
         self.autoSize()
-        self.Border = self.textCtrl.wnd.iLeft.width
+        self.setBorder(self.textCtrl.wnd.iLeft.width)
 
 class PauseScreen(object):
     def __init__(self, engineRef):
@@ -178,8 +178,8 @@ class PauseScreen(object):
         self.attribWnd.update()
         self.magWnd.update()
         self.statWnd.dockTop().dockLeft()
-        self.attribWnd.Position = (self.statWnd.Left, self.statWnd.Bottom + self.statWnd.Border * 2) # eek
-        self.magWnd.Position = (self.statWnd.Left, self.attribWnd.Bottom + self.attribWnd.Border * 2)
+        self.attribWnd.setPosition((self.statWnd.getX(), self.statWnd.getBottom() + self.statWnd.getBorder() * 2)) # eek
+        self.magWnd.setPosition((self.statWnd.getX(), self.attribWnd.getBottom() + self.attribWnd.getBorder() * 2))
         self.menu.dockRight().dockTop()
 
     def showTask(self):
@@ -190,10 +190,10 @@ class PauseScreen(object):
         self.update()
 
         t = Transition()
-        t.addChild(self.statWnd, startPos=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
-        t.addChild(self.attribWnd, startPos=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
-        t.addChild(self.magWnd, startPos=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
-        t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.Top), time=TIME - 5)
+        t.addChild(self.statWnd, startPos=(-self.statWnd.getRight(), self.statWnd.getY()), time=TIME - 5)
+        t.addChild(self.attribWnd, startPos=(-self.attribWnd.getRight(), self.attribWnd.getY()), time=TIME - 5)
+        t.addChild(self.magWnd, startPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
+        t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
         for i in range(TIME):
             t.update(1)
@@ -211,10 +211,10 @@ class PauseScreen(object):
     def hideTask(self):
         TIME = 40
         t = Transition()
-        t.addChild(self.statWnd, endPos=(-self.statWnd.Right, self.statWnd.Top), time=TIME - 5)
-        t.addChild(self.attribWnd, endPos=(-self.attribWnd.Right, self.attribWnd.Top), time=TIME - 5)
-        t.addChild(self.magWnd, endPos=(-self.magWnd.Right, self.magWnd.Top), time=TIME - 5)
-        t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.Top), time=TIME - 5)
+        t.addChild(self.statWnd, endPos=(-self.statWnd.getRight(), self.statWnd.getY()), time=TIME - 5)
+        t.addChild(self.attribWnd, endPos=(-self.attribWnd.getRight(), self.attribWnd.getY()), time=TIME - 5)
+        t.addChild(self.magWnd, endPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
+        t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
         for i in range(TIME - 1, -1, -1):
             t.update(1)

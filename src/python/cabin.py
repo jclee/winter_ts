@@ -55,9 +55,9 @@ def textBox(ent, txt):
     if y > ika.Video.yres // 2:
         y += 32
     else:
-        y -= frame.Height + 16
+        y -= frame.getHeight() + 16
 
-    frame.Position = x, y
+    frame.setPosition((x, y))
     return frame
 
 #------------------------------------------------------------------------------

@@ -67,12 +67,12 @@ class IceChunks(_Obstacle):
 
     def freeze(self):
         lay = self.layer
-        X = self.x // 16
-        Y = self.y // 16
+        tx = self.x // 16
+        ty = self.y // 16
         for y in range(3):
             for x in range(3):
-                ika.Map.SetTile(x + X, y + Y, lay, self._frozenTiles[y][x])
-                ika.Map.SetObs(x + X, y + Y, lay, False)
+                ika.Map.SetTile(x + tx, y + ty, lay, self._frozenTiles[y][x])
+                ika.Map.SetObs(x + tx, y + ty, lay, False)
 
         self.engineRef.saveFlags[self.flagName] = 'True'
 

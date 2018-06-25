@@ -19,8 +19,10 @@ class ImageCursor(object):
         self._img = img
         self.hotspot = hotspot or (img.width, img.height // 2)
 
-    Width = property(lambda self: self._img.width)
-    Height = property(lambda self: self._img.height)
+    def getWidth(self):
+        return self._img.width
+    def getHeight(self):
+        return self._img.height
 
     def draw(self, x, y):
         ika.Video.Blit(self._img, x - self.hotspot[0], y - self.hotspot[1])
@@ -40,66 +42,68 @@ class Widget(object):
         self.children = []
         self.border = 0
 
-    def _setX(self, value):      self.x = value
-    def _setY(self, value):
-        self.y = value
+    def setX(self, value): self.x = value
+    def setY(self, value): self.y = value
+    def getX(self): return self.x
+    def getY(self): return self.y
 
-    def _setWidth(self, value):
+    def setWidth(self, value):
         assert value > 0, 'Width must be positive!! (%i)' % value
         self.width = value
+    def getWidth(self): return self.width
 
-    def _setHeight(self, value):
+    def setHeight(self, value):
         assert value > 0, 'Height must be positive!!! (%i)' % value
         self.height = value
+    def getHeight(self):
+        return self.height
 
-    def _setRight(self, value):
+    def getRight(self):
+        return self.x + self.width
+    def setRight(self, value):
         self.x = value - self.width
 
-    def _setBottom(self, value):
+    def getBottom(self):
+        return self.y + self.height
+    def setBottom(self, value):
         self.y = value - self.height
 
-    def _setPosition(self, value):
-        self.X, self.Y = value
+    def getPosition(self):
+        return (self.x, self.y)
+    def setPosition(self, value):
+        self.setX(value[0])
+        self.setY(value[1])
 
-    def _setBorder(self, value):
+    def getBorder(self):
+        return self.border
+    def setBorder(self, value):
         self.border = value
 
     def stretchHorizontally(self, x1, x2):
         assert x1 < x2, 'x1 (%i) must be smaller than x2! (%i)' % (x1, x2)
-        self.Left = x1
-        self.Width = x2 - x1
+        self.setX(x1)
+        self.setWidth(x2 - x1)
 
     def stretchVertically(self, y1, y2):
         assert y1 < y2, 'y1 (%i) must be smaller than y2! (%i)' % (y1, y2)
-        self.Top = y1
-        self.Height = y2 - y1
+        self.setY(y1)
+        self.setHeight(y2 - y1)
 
     def dockTop(self):
-        self.Top = self.Border
+        self.setY(self.getBorder())
         return self
 
     def dockBottom(self):
-        self.Bottom = ika.Video.yres - self.Border
+        self.setBottom(ika.Video.yres - self.getBorder())
         return self
 
     def dockLeft(self):
-        self.Left = self.Border
+        self.setX(self.getBorder())
         return self
 
     def dockRight(self):
-        self.Right = ika.Video.xres - self.Border
+        self.setRight(ika.Video.xres - self.getBorder())
         return self
-
-    X = property(lambda self: self.x, _setX, doc='Gets or sets the x coordinate of the left edge of the widget')
-    Y = property(lambda self: self.y, _setY, doc='Gets or sets the y coordinate of the top edge of the widget')
-    Left = X
-    Top = Y
-    Bottom = property(lambda self: self.y + self.height, _setBottom, doc='Gets or sets the y coordinate of the bottom edge of the widget.  Setting this does not resize the widget in any case.')
-    Right = property(lambda self: self.y + self.height, _setRight, doc='Gets or sets the x coordinate of the right edge of th widget.  Setting this does not resize the widget in any case.')
-    Width = property(lambda self: self.width, _setWidth, doc='Gets or sets the width of the widget')
-    Height = property(lambda self: self.height, _setHeight, doc='Gets or sets the height of the widget')
-    Position = property(lambda self: (self.x, self.y), _setPosition, doc='Gets or sets the position of the upper left corner of the widget.  Position is a tuple, ie (x,y)')
-    Border = property(lambda self: self.border, _setBorder, doc='Gets or sets the size of the border around the widget.')
 
     def draw(self, xofs = 0, yofs = 0):
         '''
@@ -122,8 +126,8 @@ class Widget(object):
         self.width = 1
         self.height = 1
         for child in self.children:
-            self.width = max(self.width, child.Width + child.X)
-            self.height = max(self.height, child.Height + child.Y)
+            self.width = max(self.width, child.getWidth() + child.getX())
+            self.height = max(self.height, child.getHeight() + child.getY())
 
 class Frame(Widget):
     '''
@@ -158,10 +162,10 @@ class StaticText(Widget):
 
         self.autoSize()
 
-    def _setText(self, value):
+    def getText(self):
+        return self.text
+    def setText(self, value):
         self.text = value[:]
-
-    Text = property(lambda self: self.text, _setText, doc='Gets or sets the text that is to be displayed.')
 
     def addText(self, text):
         'Appends text to what is already stored'
@@ -206,10 +210,10 @@ class TextFrame(Frame):
         self.addChild(self.text)
         self.autoSize()
 
-    def _setText(self, text):
-        self.text.Text = text
-
-    Text = property(lambda self: self.text.Text, _setText, doc='Gets or sets the text contained by the control.')
+    def getText(self):
+        return self.text.getText()
+    def setText(self, text):
+        self.text.setText(text)
 
     def addText(self, text):
         'Appends text to what is already contained.'
@@ -219,8 +223,8 @@ class TextFrame(Frame):
     def autoSize(self):
         'Autosizes the frame such that it is just large enough to contain its text.'
         self.text.autoSize()
-        self.Width = self.text.Width
-        self.Height = self.text.Height
+        self.setWidth(self.text.getWidth())
+        self.setHeight(self.text.getHeight())
 
 class Picture(Widget):
     '''
@@ -230,8 +234,8 @@ class Picture(Widget):
     def __init__(self, img):
         Widget.__init__(self, 0, 0, 0, 0)
         self._img = ika.Image(img)
-        self.Width = self._img.width
-        self.Height = self._img.height
+        self.setWidth(self._img.width)
+        self.setHeight(self._img.height)
 
     def draw(self, xoffset = 0, yoffset = 0):
         ika.Video.ScaleBlit(self._img, self.x + xoffset, self.y + yoffset, self.width, self.height)
@@ -250,18 +254,18 @@ class ScrollableTextLabel(StaticText):
         self.ywin = 0
         self.ymax = 0
 
-    def _setYWin(self, value):
+    def getYWin(self):
+        return self.ywin
+    def setYWin(self, value):
         self.ywin = min(self.ymax - self.height, value)
         if self.ywin < 0:
             self.ywin = 0
 
-    def _setText(self, value):
+    def getText(self):
+        return self.text
+    def setText(self, value):
         self.text = value[:]
         self.ymax = len(self.text) * self.font.height
-
-    YWin = property(lambda self: self.ywin, _setYWin)
-    YMax = property(lambda self: self.ymax - self.height)
-    Text = property(lambda self: self.text, _setText)
 
     def addText(self, text):
         StaticText.addText(self, text)
@@ -296,20 +300,22 @@ class ScrollableTextFrame(Frame):
         self.font = self.text.font
         self.addChild(self.text)
 
-    def _setYWin(self, value):   self.text.YWin = value
-    def _setText(self, value):   self.text.Text = value
-
-    YWin = property(lambda self: self.text.YWin, _setYWin)
-    YMax = property(lambda self: self.text.YMax)
-    Text = property(lambda self: self.text.Text, _setText)
+    def getYWin(self):
+        return self.text.getYWin()
+    def setYWin(self, value):
+        self.text.setYWin(value)
+    def getText(self):
+        return self.text.getText()
+    def setText(self, value):
+        self.text.setText(value)
 
     def addText(self, text):
         self.text.addText(text)
 
     def autoSize(self):
         self.text.autoSize()
-        self.Width = self.text.Width
-        self.Height = self.text.Height
+        self.setWidth(self.text.getWidth())
+        self.setHeight(self.text.getHeight())
 
 # unique object returned when the user cancels a menu.
 # this object's identity is its only attribute, like None.
@@ -333,28 +339,37 @@ class Menu(Widget):
         self.cursorSpeed = 2 # speed at which the cursor moves (in pixels per update)
         self.addChild(self.textCtrl)
 
-    def _setWidth(self, value):
+    def getWidth(self):
+        return self.width
+    def setWidth(self, value):
         self.width = value
-        self.textCtrl.Width = value - self.cursor.Width
+        self.textCtrl.setWidth(value - self.cursor.getWidth())
 
-    def _setHeight(self, value): self.height = self.textCtrl.Height = value
-    def _setText(self, value):   self.textCtrl.Text = value
-    def _setBorder(self, value): self.textCtrl.Border = value
+    def getHeight(self):
+        return self.height
+    def setHeight(self, value):
+        self.height = value
+        self.textCtrl.setHeight(value)
 
-    Width = property(lambda self: self.width, _setWidth)
-    Height = property(lambda self: self.height, _setHeight)
-    Text = property(lambda self: self.textCtrl.Text, _setText)
-    Border = property(lambda self: self.textCtrl.Border, _setBorder)
+    def getText(self):
+        return self.textCtrl.getText()
+    def setText(self, value):
+        self.textCtrl.setText(value)
+
+    def getBorder(self):
+        return self.textCtrl.getBorder()
+    def setBorder(self, value):
+        self.textCtrl.setBorder(value)
 
     def addText(self, text):
         self.textCtrl.addText(text)
 
     def autoSize(self):
-        w = self.cursor.Width
-        self.textCtrl.Position = (w, 0)
+        w = self.cursor.getWidth()
+        self.textCtrl.setPosition((w, 0))
         self.textCtrl.autoSize()
-        self.Width = self.textCtrl.Width + w
-        self.Height = self.textCtrl.Height
+        self.setWidth(self.textCtrl.getWidth() + w)
+        self.setHeight(self.textCtrl.getHeight())
 
     def update(self):
         '''
@@ -371,20 +386,20 @@ class Menu(Widget):
 
         # update the cursor
         fontHeight = self.textCtrl.font.height
-        ymax = max(0, len(self.Text) * fontHeight - self.textCtrl.Height)
-        assert 0 <= self.cursorPos <= len(self.Text), 'cursorPos out of range 0 <= %i <= %i' % (self.cursorPos, len(self.Text))
+        ymax = max(0, len(self.getText()) * fontHeight - self.textCtrl.getHeight())
+        assert 0 <= self.cursorPos <= len(self.getText()), 'cursorPos out of range 0 <= %i <= %i' % (self.cursorPos, len(self.getText()))
 
-        delta = self.cursorPos * fontHeight - self.textCtrl.YWin - cy
+        delta = self.cursorPos * fontHeight - self.textCtrl.getYWin() - cy
         if delta > 0:
-            if cy < self.textCtrl.Height - fontHeight:
+            if cy < self.textCtrl.getHeight() - fontHeight:
                 self.cursorY += self.cursorSpeed
             else:
-                self.textCtrl.YWin += self.cursorSpeed
+                self.textCtrl.setYWin(self.textCtrl.getYWin() + self.cursorSpeed)
         elif delta < 0:
             if cy > 0:
                 self.cursorY -= self.cursorSpeed
-            elif self.textCtrl.YWin > 0:
-                self.textCtrl.YWin -= self.cursorSpeed
+            elif self.textCtrl.getYWin() > 0:
+                self.textCtrl.setYWin(self.textCtrl.getYWin() - self.cursorSpeed)
         else:
             # Maybe this isn't a good idea.  Maybe it is.
             # only move the cursor if delta is zero
@@ -394,7 +409,7 @@ class Menu(Widget):
                 if not unpress:
                     self.cursorPos -= 1
                     unpress = True
-            elif controls.down() and self.cursorPos < len(self.Text) - 1:
+            elif controls.down() and self.cursorPos < len(self.getText()) - 1:
                 if not unpress:
                     self.cursorPos += 1
                     unpress = True
@@ -417,11 +432,35 @@ class Menu(Widget):
 class Spacer(object):
     'Non-widget.  Use this to make gaps between children of a layout manager.'
     def __init__(self, width = 0, height = 0):
-        self.X, self.Y = 0, 0
-        self.Width, self.Height= width, height
+        self.setX(0)
+        self.setY(0)
+        self.setWidth(width)
+        self.setHeight(height)
 
-    Right = property(lambda self: self.X + self.Width)
-    Bottom = property(lambda self: self.Y + self.Height)
+    def setPosition(self, p):
+        (self.x, self.y) = p
+
+    def setX(self, value):
+        self.x = value
+    def getX(self):
+        return self.x
+    def setY(self, value):
+        self.y = value
+    def getY(self):
+        return self.y
+    def setWidth(self, value):
+        self.width = value
+    def getWidth(self):
+        return self.width
+    def setHeight(self, value):
+        self.height = value
+    def getHeight(self):
+        return self.height
+
+    def getRight(self):
+        return self.getX() + self.getWidth()
+    def getBottom(self):
+        return self.getY() + self.getHeight()
 
     def draw(self, *args):
         pass
@@ -432,32 +471,34 @@ class Layout(object):
         self.x = self.y = 0
         self.width = self.height = 0
 
-    def _setX(self, value):
+    def getX(self):
+        return self.x
+    def setX(self, value):
         for child in self.children:
-            child.X += value - self.x
+            child.setX(child.getX() + value - self.x)
         self.x = value
 
-    def _setY(self, value):
+    def getY(self):
+        return self.y
+    def setY(self, value):
         for child in self.children:
-            child.Y += value - self.y
+            child.setY(child.getY() + value - self.y)
         self.y = value
 
-    def _setPosition(self, p):
+    def getWidth(self):
+        return self.width
+
+    def getHeight(self):
+        return self.height
+
+    def getPosition(self):
+        return (self.x, self.y)
+    def setPosition(self, p):
         (x, y) = p
         for child in self.children:
-            child.X += x - self.x
-            child.Y += y - self.y
+            child.setX(child.getX() + x - self.x)
+            child.setY(child.getY() + y - self.y)
         self.x, self.y = x, y
-
-    X = property(lambda self: self.x, _setX)
-    Y = property(lambda self: self.y, _setY)
-    Left = X
-    Top = Y
-    Right = property(lambda self: self.x + self.width)
-    Bottom = property(lambda self: self.y + self.height)
-    Position = property(lambda self: (self.x, self.y), _setPosition)
-    Width = property(lambda self: self.width)
-    Height = property(lambda self: self.height)
 
     def addChild(self, child):
         assert child not in self.children, '%o is already a child!' % child
@@ -482,10 +523,10 @@ class VerticalBoxLayout(Layout):
             if (isinstance(child, Layout)):
                 child.layout()
 
-            child.Position = (self.x, y)
-            y += child.Height + self.pad
+            child.setPosition((self.x, y))
+            y += child.getHeight() + self.pad
 
-        self.width = max([child.Width + self.pad for child in self.children]) - self.pad - self.x
+        self.width = max([child.getWidth() + self.pad for child in self.children]) - self.pad - self.x
         self.height = y - self.y - self.pad
 
 class HorizontalBoxLayout(Layout):
@@ -500,11 +541,11 @@ class HorizontalBoxLayout(Layout):
             if (isinstance(child, Layout)):
                 child.layout()
 
-            child.Position = (x, self.y)
-            x += child.Width + self.pad
+            child.setPosition((x, self.y))
+            x += child.getWidth() + self.pad
 
         self.width = x - self.x
-        self.height = max([child.Height + self.pad for child in self.children]) - self.pad - self.y
+        self.height = max([child.getHeight() + self.pad for child in self.children]) - self.pad - self.y
 
 class FlexGridLayout(Layout):
     '''
@@ -528,14 +569,14 @@ class FlexGridLayout(Layout):
 
         # Get the widest child in each column
         rowWidths = [
-            max([cell.Width + self.pad for cell in col])
+            max([cell.getWidth() + self.pad for cell in col])
             for col in cols
             ]
 
         # get the tallest child in each row
         colSize = len(cols[0]) # cols[0] will always be the biggest column
         colHeights = [
-                max([cell.Height + self.pad for cell in
+                max([cell.getHeight() + self.pad for cell in
                         [col[rowIndex] for col in cols if rowIndex < len(col)]
                     ])
                 for rowIndex in range(colSize)
@@ -544,15 +585,15 @@ class FlexGridLayout(Layout):
         row, col = 0, 0
         x, y = 0, 0
         for child in self.children:
-            child.Position = x + self.x, y + self.y
+            child.setPosition((x + self.x, y + self.y))
             x += rowWidths[col]
             col += 1
             if col >= self.cols:
                 x, y = 0, y + colHeights[row]
                 row, col = row + 1, 0
 
-        self.width = max([child.Right for child in self.children]) - self.pad - self.x
-        self.height = max([child.Bottom for child in self.children]) - self.pad - self.y
+        self.width = max([child.getRight() for child in self.children]) - self.pad - self.x
+        self.height = max([child.getBottom() for child in self.children]) - self.pad - self.y
 
 class Window(object):
     '''
