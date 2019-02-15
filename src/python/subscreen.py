@@ -200,7 +200,7 @@ class PauseScreen(object):
             o = i * 128 // TIME # tint intensity for this frame
             f = i * len(self.images) // TIME # blur image to draw
 
-            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
+            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
             self.draw()
             ika.Video.ShowPage()
@@ -221,7 +221,7 @@ class PauseScreen(object):
             o = i * 255 // TIME # menu opacity for this frame
             f = i * len(self.images) // TIME # blur image to draw
 
-            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
+            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
             self.draw()
             ika.Video.ShowPage()
@@ -236,7 +236,7 @@ class PauseScreen(object):
     def runTask(self):
         yield from self.showTask()
         while True:
-            ika.Video.ScaleBlit(self.images[-1], 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
+            ika.Video.ScaleBlit(self.images[-1], 0, 0, ika.Video.xres, ika.Video.yres)
             ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
             self.draw()
             ika.Video.ShowPage()

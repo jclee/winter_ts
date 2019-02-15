@@ -13,7 +13,7 @@ def blurScreen(factor):
     h = int(ika.Video.yres * factor)
 
     bleh = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
-    ika.Video.ScaleBlit(bleh, 0, 0, w, h, ika.Opaque)
+    ika.Video.ScaleBlit(bleh, 0, 0, w, h)
     return ika.Video.GrabImage(0, 0, w, h)
 
 def createBlurImages():
@@ -23,7 +23,7 @@ def createBlurImages():
     while i < 2:
         img = blurScreen(1.0 / i)
         images.append(img)
-        ika.Video.ScaleBlit(img, 0, 0, ika.Video.xres, ika.Video.yres, ika.Opaque)
+        ika.Video.ScaleBlit(img, 0, 0, ika.Video.xres, ika.Video.yres)
 
         ika.Video.ScaleBlit(img, -BLEH, -BLEH, ika.Video.xres + BLEH * 2, ika.Video.yres + BLEH * 2)
 

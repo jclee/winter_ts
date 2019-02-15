@@ -171,7 +171,7 @@ def creditsTask(engineRef):
     font = ika.Font('system.fnt')
 
     def draw():
-        ika.Video.Blit(bg, 0, 0, ika.Opaque)
+        ika.Video.Blit(bg, 0, 0)
         ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
 
         firstLine = int(y) // font.height

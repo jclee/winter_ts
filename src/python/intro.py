@@ -40,10 +40,10 @@ def introTask():
         yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
 
         for x in range(3):
-            yield from delayTask(lambda: v.Blit(yourmom, 0, 0, ika.Opaque), d, snowObj)
+            yield from delayTask(lambda: v.Blit(yourmom, 0, 0), d, snowObj)
             yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
 
-        yield from delayTask(lambda: v.Blit(isabitch, 0, 0, ika.Opaque), d // 2, snowObj)
+        yield from delayTask(lambda: v.Blit(isabitch, 0, 0), d // 2, snowObj)
         yield from delayTask(lambda: v.ClearScreen(), d, snowObj)
     except _DoneException:
         return
@@ -58,7 +58,7 @@ def menuTask(resultRef):
     FADE_TIME = 60
 
     def draw():
-        ika.Video.Blit(bg, 0, 0, ika.Opaque)
+        ika.Video.Blit(bg, 0, 0)
         ika.Video.Blit(cursor, 68, 128 + cursorPos * 26)
 
     for i in range(FADE_TIME - 1, -1, -1):

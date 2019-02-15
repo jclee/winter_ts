@@ -905,25 +905,7 @@ class VideoClass {
         this._getEngine = ()=>engine
     }
 
-    private _assertBlendmodeSupported(blendmode?: number) {
-        const Opaque = 0
-        const Matte = 1
-        //AlphaBlend = 2
-        //AddBlend = 3
-        //SubtractBlend = 4
-        //MultiplyBlend = 5
-        //PreserveBlend = 6
-
-        if (blendmode !== undefined && blendmode != Opaque && blendmode != Matte) {
-            throw new Error("Unsupported blendmode") // TODO: Handle more complicated blendmodes.
-        }
-    }
-
-    Blit(image: Image, x: number, y: number, blendmode?: number) {
-        // Theoretically, we should be discarding the alpha channel of anything
-        // that we blit as "opaque", but it's likely that any such graphics
-        // already lack an alpha channel.
-        this._assertBlendmodeSupported(blendmode)
+    Blit(image: Image, x: number, y: number) {
         this._getEngine().ctx.drawImage(image._el, x, y)
     }
 
@@ -947,14 +929,7 @@ class VideoClass {
         }
     }
 
-    DrawPixel(x: number, y: number, colour: number, blendmode?: number) {
-        this._assertBlendmodeSupported(blendmode)
-        this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
-        this._getEngine().ctx.fillRect(x, y, 1, 1)
-    }
-
-    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number, fill: boolean, blendmode?: number) {
-        this._assertBlendmodeSupported(blendmode)
+    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number, fill: boolean) {
         if (fill) {
             this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
             // TODO: Maybe check on negative dimension behavior?
@@ -974,8 +949,7 @@ class VideoClass {
         return new Canvas(width, height, canvasEl, ctx)
     }
 
-    ScaleBlit(image: Image, x: number, y: number, width: number, height: number, blendmode?: number) {
-        this._assertBlendmodeSupported(blendmode)
+    ScaleBlit(image: Image, x: number, y: number, width: number, height: number) {
         this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
     }
 
@@ -985,15 +959,15 @@ class VideoClass {
         //this.ClipScreen()
     }
 
-    TintBlit(image: Image, x: number, y: number, tintColor: number, blendMode?: number) {
+    TintBlit(image: Image, x: number, y: number, tintColor: number) {
         // TODO: actually only need alpha -- we only otherwise use white
         this._getEngine().ctx.save()
         this._getEngine().ctx.globalAlpha = ((tintColor >> 24) & 0xff) / 255.0
-        this.Blit(image, x, y, blendMode)
+        this.Blit(image, x, y)
         this._getEngine().ctx.restore()
     }
 
-    TintDistortBlit(image: Image, upLeft: any, _upRight: any, downRight: any, _downLeft: any, blendmode?: number) {
+    TintDistortBlit(image: Image, upLeft: any, _upRight: any, downRight: any, _downLeft: any) {
         // TODO: We actually only use TintDistortBlit as a version of ScaleBlit
         // with alpha.
         this._getEngine().ctx.save()
@@ -1004,8 +978,7 @@ class VideoClass {
             upLeft[0],
             upLeft[1],
             downRight[0] - upLeft[0],
-            downRight[1] - upLeft[1],
-            blendmode)
+            downRight[1] - upLeft[1])
         this._getEngine().ctx.restore()
     }
 

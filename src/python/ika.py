@@ -1,13 +1,5 @@
 from browser import window
 
-Opaque = 0
-Matte = 1
-AlphaBlend = 2
-AddBlend = 3
-SubtractBlend = 4
-MultiplyBlend = 5
-PreserveBlend = 6
-
 def DelayTask(time):
     targetEnd = window.Date.now() + (time * 10)
     # Busy waiting, sort of... :(
