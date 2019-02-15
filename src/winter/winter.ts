@@ -1187,9 +1187,8 @@ class Engine {
             'winter/system_font.png',
         ]
 
-        let promises: Promise<void>[] = []
-        for (let path of imagePaths) {
-            const loadImage = (resolve: ()=>void, _reject: any) => {
+        const loadImage = (path: string) => {
+            return new Promise<void>((resolve: ()=>void, _reject: any) => {
                 const imageEl = window.document.createElement('img')
                 // TODO: Handle image load failure?
                 imageEl.addEventListener('load', resolve)
@@ -1207,12 +1206,11 @@ class Engine {
                 imageEl.style.left = "0"
                 imageEl.style.opacity = "0"
                 window.document.body.appendChild(imageEl)
-            }
-            promises.push(new Promise(loadImage))
-        }
+            })
+        };
 
         const loadJson = (path: string) => {
-            const fn = (resolve: (json:any)=>void, _reject: any) => {
+            return new Promise((resolve: (json:any)=>void, _reject: any) => {
                 const xhr = new XMLHttpRequest()
                 const onLoad = () => {
                     // TODO: Error handling?
@@ -1223,20 +1221,18 @@ class Engine {
                 // TODO: Error handling?
                 xhr.open('GET', path)
                 xhr.send()
-            }
-            return new Promise(fn)
+            })
         }
 
-        const setMapJson = (json: any) => {
-            this.maps = json
-        }
-
-        const setSpriteJson = (json: any) => {
-            this.sprites = json
-        }
-
-        promises.push(loadJson('winter/maps.json').then(setMapJson))
-        promises.push(loadJson('winter/sprites.json').then(setSpriteJson))
+        let promises: Promise<void>[] = [
+            ...imagePaths.map(loadImage),
+            loadJson('winter/maps.json').then((json: any) => {
+                this.maps = json
+            }),
+            loadJson('winter/sprites.json').then((json: any) => {
+                this.sprites = json
+            }),
+        ]
 
         const _KeycodeMap: {[key: string]: string} = {
             'ArrowUp': 'UP',
