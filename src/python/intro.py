@@ -63,7 +63,7 @@ def menuTask(resultRef):
 
     for i in range(FADE_TIME - 1, -1, -1):
         draw()
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME), True)
+        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME))
         snowObj.update()
         snowObj.draw()
         ika.Video.ShowPage()
@@ -97,7 +97,7 @@ def menuTask(resultRef):
 
     #for i in range(FADE_TIME):
     #    draw()
-    #    ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME), True)
+    #    ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, i * 255 // FADE_TIME))
     #    snowObj.update()
     #    snowObj.draw()
     #    ika.Video.ShowPage()

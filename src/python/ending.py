@@ -172,7 +172,7 @@ def creditsTask(engineRef):
 
     def draw():
         ika.Video.Blit(bg, 0, 0)
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
+        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128))
 
         firstLine = int(y) // font.height
         adjust = int(y) % font.height

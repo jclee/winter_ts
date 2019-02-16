@@ -201,7 +201,7 @@ class PauseScreen(object):
             f = i * len(self.images) // TIME # blur image to draw
 
             ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o))
             self.draw()
             ika.Video.ShowPage()
             yield None
@@ -222,7 +222,7 @@ class PauseScreen(object):
             f = i * len(self.images) // TIME # blur image to draw
 
             ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2), True)
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2))
             self.draw()
             ika.Video.ShowPage()
             yield None
@@ -237,7 +237,7 @@ class PauseScreen(object):
         yield from self.showTask()
         while True:
             ika.Video.ScaleBlit(self.images[-1], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128), True)
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, 128))
             self.draw()
             ika.Video.ShowPage()
             yield None

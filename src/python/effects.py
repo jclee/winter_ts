@@ -72,9 +72,7 @@ def fadeTask(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 
         draw()
         colour = [int(a + b * saturation) for a, b in zip(startColour, deltaColour)]
 
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres,
-            ika.RGB(*colour),
-            True)
+        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(*colour))
 
         ika.Video.ShowPage()
         yield None

@@ -82,7 +82,7 @@ class Gauge(Thing):
 
     def drawRect(self, x, y, w, h, opacity):
         'Used to draw in the filled part of the gauge.'
-        ika.Video.DrawRect(x, y, w, h, ika.RGB(*(self.colour + (opacity,))), True)
+        ika.Video.DrawRect(x, y, w, h, ika.RGB(*(self.colour + (opacity,))))
 
     curVal = property(lambda self: None) # ditto
     curMax = property(lambda self: None) # override.  Needs to be readable.

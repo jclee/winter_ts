@@ -422,7 +422,7 @@ class Engine(object):
 
             # darken the screen, draw the game over message:
             o = i * 255 // t
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o), True)
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o))
             c.draw()
 
             ika.Video.ShowPage()

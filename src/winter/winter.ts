@@ -895,7 +895,6 @@ class VideoClass {
     // Resolution used in this game...
     readonly xres = 320
     readonly yres = 240
-    //colours = None // TODO
     // TODO: Only necessary to hide cyclical reference from Brython:
     private _getEngine: ()=>Engine
 
@@ -929,14 +928,10 @@ class VideoClass {
         }
     }
 
-    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number, fill: boolean) {
-        if (fill) {
-            this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
-            // TODO: Maybe check on negative dimension behavior?
-            this._getEngine().ctx.fillRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
-        } else {
-            throw new Error("unfilled DrawRect not implemented") // TODO
-        }
+    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number) {
+        this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
+        // TODO: Maybe check on negative dimension behavior?
+        this._getEngine().ctx.fillRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
     }
 
     GrabImage(x1: number, y1: number, x2: number, y2: number) {
