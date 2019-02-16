@@ -2,7 +2,7 @@ import ika
 
 # Some neat-O special effects
 
-def blurScreen(factor):
+def _blurScreen(factor):
     '''Grabs the screen, blurs it up a bit, then returns the image.
     Returns tinier images.  Use scaleblit to bring them back.
 
@@ -21,10 +21,8 @@ def createBlurImages():
     images = []
     i = 1.0
     while i < 2:
-        img = blurScreen(1.0 / i)
+        img = _blurScreen(1.0 / i)
         images.append(img)
-        ika.Video.ScaleBlit(img, 0, 0, ika.Video.xres, ika.Video.yres)
-
         ika.Video.ScaleBlit(img, -BLEH, -BLEH, ika.Video.xres + BLEH * 2, ika.Video.yres + BLEH * 2)
 
         i += 0.1
@@ -38,39 +36,32 @@ def blurFadeTask(time, startImages, endImages):
     while now < endTime:
         imageIndex = (now - startTime) * len(startImages) // time
         opacity = (now - startTime) / time
-        startfade = 1.0 - opacity
-        endfade = opacity
 
-        ika.Video.TintScaleBlit(startImages[imageIndex], 0, 0, ika.Video.xres, ika.Video.yres, startfade)
-        ika.Video.TintScaleBlit(endImages[-(imageIndex+1)], 0, 0, ika.Video.xres, ika.Video.yres, endfade)
+        ika.Video.ScaleBlit(startImages[imageIndex], 0, 0, ika.Video.xres, ika.Video.yres)
+        ika.Video.TintScaleBlit(endImages[-(imageIndex+1)], 0, 0, ika.Video.xres, ika.Video.yres, opacity)
 
         ika.Video.ShowPage()
         yield None
         now = ika.GetTime()
 
-def fadeTask(time, startColour = ika.RGB(0, 0, 0, 0), endColour = ika.RGB(0, 0, 0, 255), draw = ika.Map.Render):
-    startColour = ika.GetRGB(startColour)
-    endColour   = ika.GetRGB(endColour)
-    deltaColour = [ s - e for e, s in zip(startColour, endColour) ]
+def _fadeTask(time, startAlpha, endAlpha, draw):
+    deltaAlpha = endAlpha - startAlpha
 
-    t = ika.GetTime()
-    endtime = t + time
-    saturation = 0.0
+    startTime = ika.GetTime()
+    now = startTime
+    endtime = now + time
 
-    while t < endtime:
-        i = ika.GetTime() - t
-        t = ika.GetTime()
-        saturation = min(saturation + float(i) / time, 1.0)
+    while now < endtime:
         draw()
-        colour = [int(a + b * saturation) for a, b in zip(startColour, deltaColour)]
-
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(*colour))
+        alpha = startAlpha + deltaAlpha * (now - startTime) / time
+        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, int(alpha * 255)))
 
         ika.Video.ShowPage()
         yield None
+        now = ika.GetTime()
 
-def fadeInTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    yield from fadeTask(time, colour, ika.RGB(0, 0, 0, 0), draw)
+def fadeInTask(time, draw = ika.Map.Render):
+    yield from _fadeTask(time, 1.0, 0.0, draw)
 
-def fadeOutTask(time, colour = ika.RGB(0, 0, 0), draw = ika.Map.Render):
-    yield from fadeTask(time, ika.RGB(0, 0, 0, 0), colour, draw)
+def fadeOutTask(time, draw = ika.Map.Render):
+    yield from _fadeTask(time, 0.0, 1.0, draw)

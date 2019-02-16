@@ -25,26 +25,6 @@ class Transition(object):
         for child in self.children:
             child.draw()
 
-    def executeTask(self):
-        now = ika.GetTime()
-        done = False
-        while not done:
-            done = True
-
-            yield None
-            ika.Map.Render()
-
-            t = ika.GetTime()
-            delta = t - now
-            now = t
-            for child in self.children:
-                if not child.isDone():
-                    done = False
-                    child.update(delta)
-                child.draw()
-
-            ika.Video.ShowPage()
-
 class WindowMover(object):
     def __init__(self, theWindow, startPos, endPos, time):
         self.endTime = float(time)
@@ -195,16 +175,25 @@ class PauseScreen(object):
         t.addChild(self.magWnd, startPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
         t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
-        for i in range(TIME):
-            t.update(1)
-            o = i * 128 // TIME # tint intensity for this frame
-            f = i * len(self.images) // TIME # blur image to draw
+        startTime = ika.GetTime()
+        now = startTime
+        endTime = now + TIME
+        prevTime = 0
+        while now < endTime:
+            time = int(now - startTime)
+            deltaTime = time - prevTime
+            prevTime = time
+            if deltaTime > 0:
+                t.update(deltaTime)
+                o = time * 128 // TIME # tint intensity for this frame
+                f = time * len(self.images) // TIME # blur image to draw
 
-            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o))
-            self.draw()
-            ika.Video.ShowPage()
+                ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
+                ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o))
+                self.draw()
+                ika.Video.ShowPage()
             yield None
+            now = ika.GetTime()
 
         self.background = self.images[-1]
 
@@ -216,16 +205,25 @@ class PauseScreen(object):
         t.addChild(self.magWnd, endPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
         t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
-        for i in range(TIME - 1, -1, -1):
-            t.update(1)
-            o = i * 255 // TIME # menu opacity for this frame
-            f = i * len(self.images) // TIME # blur image to draw
+        startTime = ika.GetTime()
+        now = startTime
+        endTime = now + TIME
+        prevTime = 0
+        while now < endTime:
+            time = int(now - startTime)
+            deltaTime = time - prevTime
+            prevTime = time
+            if deltaTime > 0:
+                t.update(deltaTime)
+                o = (TIME - time) * 255 // TIME # menu opacity for this frame
+                f = int((TIME - time) * len(self.images) // TIME) # blur image to draw
 
-            ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2))
-            self.draw()
-            ika.Video.ShowPage()
+                ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
+                ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, o // 2))
+                self.draw()
+                ika.Video.ShowPage()
             yield None
+            now = ika.GetTime()
 
     def draw(self):
         self.statWnd.draw()
