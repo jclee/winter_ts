@@ -135,10 +135,6 @@ const _makeCanvasAndContext = (width: number, height: number): [HTMLCanvasElemen
     if (ctx === null) {
         throw new Error("Couldn't get 2D context")
     }
-    ctx.mozImageSmoothingEnabled = false
-    ctx.webkitImageSmoothingEnabled = false
-    // TypeScript doesn't know about msImageSmoothingEnabled...
-    //ctx.msImageSmoothingEnabled = false
     ctx.imageSmoothingEnabled = false
     // We maintain one pristine state on the stack for resetting
     // clipping.
@@ -945,7 +941,10 @@ class VideoClass {
     }
 
     ScaleBlit(image: Image, x: number, y: number, width: number, height: number) {
+        this._getEngine().ctx.save()
+        this._getEngine().ctx.imageSmoothingEnabled = true
         this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
+        this._getEngine().ctx.restore()
     }
 
     ShowPage() {
@@ -964,6 +963,7 @@ class VideoClass {
     TintScaleBlit(image: Image, x: number, y: number, width: number, height: number, alpha: number) {
         this._getEngine().ctx.save()
         this._getEngine().ctx.globalAlpha = alpha
+        this._getEngine().ctx.imageSmoothingEnabled = true
         this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
         this._getEngine().ctx.restore()
     }
