@@ -954,26 +954,17 @@ class VideoClass {
         //this.ClipScreen()
     }
 
-    TintBlit(image: Image, x: number, y: number, tintColor: number) {
-        // TODO: actually only need alpha -- we only otherwise use white
+    TintBlit(image: Image, x: number, y: number, alpha: number) {
         this._getEngine().ctx.save()
-        this._getEngine().ctx.globalAlpha = ((tintColor >> 24) & 0xff) / 255.0
+        this._getEngine().ctx.globalAlpha = alpha
         this.Blit(image, x, y)
         this._getEngine().ctx.restore()
     }
 
-    TintDistortBlit(image: Image, upLeft: any, _upRight: any, downRight: any, _downLeft: any) {
-        // TODO: We actually only use TintDistortBlit as a version of ScaleBlit
-        // with alpha.
+    TintScaleBlit(image: Image, x: number, y: number, width: number, height: number, alpha: number) {
         this._getEngine().ctx.save()
-        const tintColor: number = upLeft[2]
-        this._getEngine().ctx.globalAlpha = ((tintColor >> 24) & 0xff) / 255.0
-        this.ScaleBlit(
-            image,
-            upLeft[0],
-            upLeft[1],
-            downRight[0] - upLeft[0],
-            downRight[1] - upLeft[1])
+        this._getEngine().ctx.globalAlpha = alpha
+        this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
         this._getEngine().ctx.restore()
     }
 

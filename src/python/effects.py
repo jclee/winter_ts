@@ -37,20 +37,12 @@ def blurFadeTask(time, startImages, endImages):
     now = startTime
     while now < endTime:
         imageIndex = (now - startTime) * len(startImages) // time
-        opacity = (now - startTime) * 255 // time
-        startfade = ika.RGB(255, 255, 255, 255 - opacity)
-        endfade = ika.RGB(255, 255, 255, opacity)
+        opacity = (now - startTime) / time
+        startfade = 1.0 - opacity
+        endfade = opacity
 
-        ika.Video.TintDistortBlit(
-            startImages[imageIndex],
-            (0, 0, startfade), (ika.Video.xres, 0, startfade),
-            (ika.Video.xres, ika.Video.yres, startfade),
-            (0, ika.Video.yres, startfade))
-        ika.Video.TintDistortBlit(
-            endImages[-(imageIndex+1)],
-            (0, 0, endfade), (ika.Video.xres, 0, endfade),
-            (ika.Video.xres, ika.Video.yres, endfade),
-            (0, ika.Video.yres, endfade))
+        ika.Video.TintScaleBlit(startImages[imageIndex], 0, 0, ika.Video.xres, ika.Video.yres, startfade)
+        ika.Video.TintScaleBlit(endImages[-(imageIndex+1)], 0, 0, ika.Video.xres, ika.Video.yres, endfade)
 
         ika.Video.ShowPage()
         yield None

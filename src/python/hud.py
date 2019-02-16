@@ -45,7 +45,7 @@ class Gauge(Thing):
         if self.opacity == 0:
             return
 
-        o = min(255, self.opacity)
+        o = min(1.0, self.opacity / 255.0)
 
         # the width of the repeated span image thingo.
         # each end of the gauge occupies two pixels, so we subtract four.
@@ -57,14 +57,14 @@ class Gauge(Thing):
         else:
             x = ika.Video.xres - width - self.left.width - self.right.width - self.x - 2
 
-        ika.Video.TintBlit(self.left, x, self.y, ika.RGB(255, 255, 255, o))
-        ika.Video.TintBlit(self.right, x + width + self.left.width, self.y, ika.RGB(255, 255, 255, o))
+        ika.Video.TintBlit(self.left, x, self.y, o)
+        ika.Video.TintBlit(self.right, x + width + self.left.width, self.y, o)
 
         x += self.left.width
 
         ika.Video.ClipScreen(x, 0, x + width + 1, ika.Video.yres)
         for X in range(0, width, self.span.width):
-            ika.Video.TintBlit(self.span, x + X, self.y, ika.RGB(255, 255, 255, o))
+            ika.Video.TintBlit(self.span, x + X, self.y, o)
         ika.Video.ClipScreen()
 
         x -= 2

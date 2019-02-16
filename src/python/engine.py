@@ -245,9 +245,9 @@ class Engine(object):
         endTime = ika.GetTime() + time
         now = ika.GetTime()
         while now < endTime:
-            opacity = (endTime - now) * 255 // time
+            opacity = (endTime - now) / time
             ika.Video.Blit(endImage, 0, 0)
-            ika.Video.TintBlit(startImage, 0, 0, ika.RGB(255, 255, 255, opacity))
+            ika.Video.TintBlit(startImage, 0, 0, opacity)
             ika.Video.ShowPage()
             yield None
             now = ika.GetTime()
