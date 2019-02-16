@@ -57,11 +57,13 @@ export class WinterSnow {
         if (ctx === null) {
             return
         }
+        ctx.save()
         ctx.imageSmoothingEnabled = false
         for (let p of this.flakes) {
             const a = Math.sin(p.life / WinterSnow.MaxLife * Math.PI)
             ctx.fillStyle = this.colorPrefix + a + ')'
             ctx.fillRect(Math.floor(p.x), Math.floor(p.y), 1, 1)
         }
+        ctx.restore()
     }
 }
