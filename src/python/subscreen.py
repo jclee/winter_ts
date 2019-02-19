@@ -4,15 +4,13 @@ import ika
 
 from gameover import GameQuitException
 
-DEFAULT_TIME = 30
-
 class Transition(object):
     def __init__(self):
         self.children = []
 
-    def addChild(self, child, startPos = None, endPos = None, time = None):
+    def addChild(self, child, startPos = None, endPos = None, time):
         p = child.getPosition()
-        self.children.append(WindowMover(child, startPos or p, endPos or p, time or DEFAULT_TIME))
+        self.children.append(WindowMover(child, startPos or p, endPos or p, time))
 
     def update(self, timeDelta):
         for i, iter in enumerate(self.children):
