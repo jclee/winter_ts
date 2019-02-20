@@ -21,9 +21,6 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
 import { StatSet } from "./StatSet.js";
 (window as any).StatSet = StatSet
 
-import { WinterSnow } from "./Snow.js";
-(window as any).WinterSnow = WinterSnow
-
 interface Size {
     width: number
     height: number
@@ -94,53 +91,29 @@ interface MapZoneScript {
 }
 
 interface Image {
-    _el: HTMLImageElement | HTMLCanvasElement
+    _texture: WebGLTexture
     width: number
     height: number
+    yScale: number
 }
 
 class Canvas {
     constructor(
-        public width: number,
-        public height: number,
-        public _el: HTMLCanvasElement,
-        public _ctx: CanvasRenderingContext2D,
+        public _image: Image,
+        public _framebuffer: WebGLFramebuffer,
     ) {
     }
 }
 
 const RGB = (r: number, g: number, b: number, a: number): number => {
-    return (
-        (Math.floor(r) & 0xff)
-        | ((Math.floor(g) & 0xff) << 8)
-        | ((Math.floor(b) & 0xff) << 16)
-        | ((Math.floor(a) & 0xff) << 24)
-    )
+    return ((
+        ((r | 0) & 0xff)
+        | (((g | 0) & 0xff) << 8)
+        | (((b | 0) & 0xff) << 16)
+        | (((a | 0) & 0xff) << 24)
+    ) >>> 0)
 }
 (window as any).RGB = RGB
-
-const _RGBAToCSS = (colorValue: number): string => {
-    const r = colorValue & 0xff
-    const g = (colorValue >> 8) & 0xff
-    const b = (colorValue >> 16) & 0xff
-    const a = ((colorValue >> 24) & 0xff) / 255.0
-    return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")"
-}
-
-const _makeCanvasAndContext = (width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] => {
-    const el = window.document.createElement('canvas')
-    el.width = width
-    el.height = height
-    const ctx = el.getContext('2d')
-    if (ctx === null) {
-        throw new Error("Couldn't get 2D context")
-    }
-    ctx.imageSmoothingEnabled = false
-    // We maintain one pristine state on the stack for resetting
-    // clipping.
-    ctx.save()
-    return [el, ctx]
-}
 
 class Entity {
     // TODO: Probably a bunch of these members can be private, as the game does
@@ -500,20 +473,13 @@ class FontClass {
     }
 
     PrintWithOpacity(x: number, y: number, text: string, opacity: number) {
-        const ctx = this._engine.ctx
-        ctx.save()
-        ctx.globalAlpha = opacity / 255.0
-        this.Print(x, y, text)
-        ctx.restore()
-    }
-
-    Print(x: number, y: number, text: string) {
-        const imageEl = this._engine.getImageEl('system_font.png')
+        this._engine.targetPageFramebuffer()
+        const image = this._engine.getImage('system_font.png')
         let cursorX = Math.floor(x)
         let cursorY = Math.floor(y)
         for (let glyph of this._genGlyphs(text)) {
-            this._engine.ctx.drawImage(
-                imageEl,
+            this._engine.drawImage(
+                image,
                 glyph.tileX,
                 glyph.tileY,
                 glyph.width,
@@ -521,9 +487,14 @@ class FontClass {
                 cursorX,
                 cursorY,
                 glyph.width,
-                glyph.height)
+                glyph.height,
+                opacity)
             cursorX += glyph.width
         }
+    }
+
+    Print(x: number, y: number, text: string) {
+        this.PrintWithOpacity(x, y, text, 1.0)
     }
 
     *_genGlyphs(text:string) {
@@ -632,8 +603,10 @@ class MapClass {
             layerEnt.sort()
         }
 
+        this._engine.targetPageFramebuffer()
+
         // This game only uses a single tile map:
-        const imageEl = this._engine.getImageEl('snowy.png')
+        const image = this._engine.getImage('snowy.png')
 
         // SetCameraTarget (and SetPlayer, which calls it) are not used by the
         // game.
@@ -684,8 +657,8 @@ class MapClass {
                     }
                     const tileX = (tileIndex % tilesPerRow) * tileW
                     const tileY = Math.floor(tileIndex / tilesPerRow) * tileH
-                    this._engine.ctx.drawImage(
-                        imageEl,
+                    this._engine.drawImage(
+                        image,
                         tileX,
                         tileY,
                         tileW,
@@ -693,7 +666,8 @@ class MapClass {
                         x * tileW - adjustX,
                         y * tileH - adjustY,
                         tileW,
-                        tileH
+                        tileH,
+                        1.0
                     )
                 }
             }
@@ -702,15 +676,15 @@ class MapClass {
                 // This game doesn't seem to use custom renderscripts
 
                 const spritePath = 'sprite/' + ent.spritename.replace('.ika-sprite', '.png')
-                const spriteImageEl = this._engine.getImageEl(spritePath)
+                const spriteImage = this._engine.getImage(spritePath)
 
                 const frameIndex = Math.max(0, ent.specframe)
                 const frameX = (frameIndex % 8) * ent.spritewidth
                 const frameY = Math.floor(frameIndex / 8) * ent.spriteheight
 
                 // This game doesn't use sprite visibility toggling.
-                this._engine.ctx.drawImage(
-                    spriteImageEl,
+                this._engine.drawImage(
+                    spriteImage,
                     frameX,
                     frameY,
                     ent.spritewidth,
@@ -718,11 +692,12 @@ class MapClass {
                     ent.x - ent.hotx - xw,
                     ent.y - ent.hoty - yw,
                     ent.spritewidth,
-                    ent.spriteheight
+                    ent.spriteheight,
+                    1.0
                 )
             }
         }
-        // TODO: Hookretrace?
+        // This game doesn't use hookretrace.
     }
 
     SetTile(x: number, y: number, layerIndex: number, tileIndex: number) {
@@ -887,6 +862,261 @@ interface SpriteData {
     hotspotHeight: number
 }
 
+
+interface ShaderSpec {
+    vertex: string
+    fragment: string
+}
+
+interface GfxProgram {
+    program: WebGLProgram
+    attributes: {[key: string]: number}
+    uniforms: {[key: string]: WebGLUniformLocation}
+    attributeLocations: number[]
+}
+
+// Not a general solution, but good enough for our purposes:
+const _attributeRegex = /\battribute\s+\S+\s+([^;]+);/g
+const _uniformRegex = /\buniform\s+\S+\s+([^;]+);/g
+
+const _makeProgram = (gl: WebGLRenderingContext, shaderSpec: ShaderSpec) => {
+    const makeShader = (gl: WebGLRenderingContext, type: number, source: string) => {
+        const shader = gl.createShader(type)
+        if (shader === null) {
+            throw new Error("Couldn't create shader")
+        }
+        gl.shaderSource(shader, source)
+        gl.compileShader(shader)
+        const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
+        if (!success) {
+            console.log(gl.getShaderInfoLog(shader))
+            gl.deleteShader(shader)
+            throw new Error("Couldn't compile shader")
+        }
+        return shader
+    }
+
+    const vertexShader = makeShader(gl, gl.VERTEX_SHADER, shaderSpec.vertex)
+    const fragmentShader = makeShader(gl, gl.FRAGMENT_SHADER, shaderSpec.fragment)
+    const combined = (shaderSpec.vertex + '\n' + shaderSpec.fragment);
+    const getMatching = (regexp: RegExp) => {
+        const regexpCopy = new RegExp(regexp)
+        let captures = []
+        let match
+        while (match = regexpCopy.exec(combined)) {
+            captures.push(match[1])
+        }
+        return [...new Set(captures)]
+    }
+
+    const attributeNames = getMatching(_attributeRegex)
+    const uniformNames = getMatching(_uniformRegex)
+
+    const program = gl.createProgram()
+    if (program === null) {
+        throw new Error("Couldn't create shader program")
+    }
+    try {
+        gl.attachShader(program, vertexShader)
+        gl.attachShader(program, fragmentShader)
+        gl.linkProgram(program)
+        const success = gl.getProgramParameter(program, gl.LINK_STATUS)
+        if (!success) {
+            console.log(gl.getProgramInfoLog(program))
+            throw new Error("Couldn't link program")
+        }
+        const attributes: {[key: string]: number} = {}
+        const attributeLocations: number[] = []
+        attributeNames.forEach((name) => {
+            const loc = gl.getAttribLocation(program, name)
+            attributes[name] = loc
+            attributeLocations.push(loc)
+        })
+        const uniforms: {[key: string]: WebGLUniformLocation} = {}
+        uniformNames.forEach((name) => {
+            const loc = gl.getUniformLocation(program, name)
+            if (loc === null) {
+                throw new Error(`Couldn't get shader uniform location: ${name}`)
+            } else {
+                uniforms[name] = loc
+            }
+        })
+
+        attributeLocations.sort()
+
+        const gfxProgram: GfxProgram = {
+            program: program,
+            attributes: attributes,
+            uniforms: uniforms,
+            attributeLocations: attributeLocations,
+        }
+        return gfxProgram
+    } catch (e) {
+        gl.deleteProgram(program)
+        throw e
+    }
+}
+
+const _makeTexture = (gl: WebGLRenderingContext) => {
+    const texture = gl.createTexture()
+    if (texture === null) {
+        throw new Error("Couldn't create texture")
+    }
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    // Filters could be nearest, except Chrome doesn't like min filter
+    // nearest with NPOT textures.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    return texture
+}
+
+const _makeEmptyTexture = (gl: WebGLRenderingContext, width: number, height: number) => {
+    const texture = _makeTexture(gl)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, width, height, 0, gl.RGB, gl.UNSIGNED_BYTE, null)
+    return texture
+}
+
+const _makeImageTexture = (gl: WebGLRenderingContext, imageEl: HTMLImageElement) => {
+    const texture = _makeTexture(gl)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imageEl)
+    return texture
+}
+
+const _makeFramebuffer = (gl: WebGLRenderingContext, texture: WebGLTexture) => {
+    const buffer = gl.createFramebuffer()
+    if (buffer === null) {
+        throw new Error("Couldn't create framebuffer")
+    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, buffer)
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
+    return buffer
+}
+
+const _makeBuffer = (gl: WebGLRenderingContext, vals: number[]) => {
+    const buffer = gl.createBuffer()
+    if (buffer === null) {
+        throw new Error("Couldn't create buffer")
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vals), gl.STATIC_DRAW)
+    return buffer
+}
+
+const _textureShaderSpec = {
+    vertex: (`
+        precision mediump float;
+
+        attribute vec4 a_position;
+        attribute vec2 a_texCoord;
+        // TODO: We use very few of these matrix entries...
+        uniform mat4 u_matrix;
+        uniform mat3 u_texMatrix;
+        varying vec2 v_texCoord;
+
+        void main() {
+          gl_Position = u_matrix * a_position;
+          v_texCoord = (u_texMatrix * vec3(a_texCoord, 1)).xy;
+        }
+    `),
+    fragment: (`
+        precision mediump float;
+
+        uniform sampler2D u_image;
+        uniform float u_opacity;
+        varying vec2 v_texCoord;
+
+        void main() {
+          vec4 color = texture2D(u_image, v_texCoord);
+          gl_FragColor = vec4(color.rgb, color.a * u_opacity);
+        }
+    `),
+}
+
+const _flatShaderSpec = {
+    vertex: (`
+        precision mediump float;
+
+        attribute vec4 a_position;
+        // TODO: We use very few of these matrix entries...
+        uniform mat4 u_matrix;
+
+        void main() {
+          gl_Position = u_matrix * a_position;
+        }
+    `),
+    fragment: (`
+        precision mediump float;
+
+        uniform vec4 u_color;
+
+        void main() {
+          gl_FragColor = u_color;
+        }
+    `),
+}
+
+const _snowShaderSpec = {
+    vertex: (`
+        precision mediump float;
+
+        attribute vec4 a_position;
+        attribute vec2 a_texCoord;
+        varying vec2 v_texCoord;
+
+        void main() {
+          gl_Position = vec4(
+              2.0 * a_position.xy - vec2(1.0, 1.0),
+              0.0,
+              1.0
+          );
+          v_texCoord = vec3(a_texCoord, 1).xy;
+        }
+    `),
+    fragment: (`
+        #define M_PI 3.14159265358979323846
+
+        precision mediump float;
+
+        uniform float u_time;
+        uniform float u_count;
+        uniform vec2 u_size;
+        uniform vec2 u_velocity;
+        uniform vec3 u_color;
+        varying vec2 v_texCoord;
+
+        // From: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
+        float rand(vec2 n) {
+            return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+        }
+        float noise(vec2 n) {
+            const vec2 d = vec2(0.0, 1.0);
+            vec2 b = floor(n), f = smoothstep(vec2(0.0), vec2(1.0), fract(n));
+            return mix(mix(rand(b), rand(b + d.yx), f.x), mix(rand(b + d.xy), rand(b + d.yy), f.x), f.y);
+        }
+
+        float sortaSnow(vec2 v, float t) {
+          float x = noise(v * 160.0);
+
+          return clamp(mix(-100000.0 / u_count, 1.0, abs(fract(x * 2.0 + t * u_count * 0.0000001) * 2.0 - 1.0)), 0.0, 1.0);
+        }
+
+        void main() {
+          float t = floor(u_time / 16.667) + 1000.0;
+          vec2 s = vec2(1.0 / u_size.x, 1.0 / u_size.y);
+          vec2 d1 = (u_velocity + vec2(0.0, 1.0)) * t;
+          vec2 d2 = (u_velocity + vec2(1.0, 1.0)) * t;
+          vec2 d3 = (u_velocity + vec2(-1.0, 1.0)) * t;
+          float snow1 = sortaSnow(v_texCoord + floor(d1) * s, t);
+          float snow2 = sortaSnow(v_texCoord + floor(d2) * s, t + 10000.0);
+          float snow3 = sortaSnow(v_texCoord + floor(d3) * s, t - 10000.0);
+          float a = clamp(snow1 + snow2 + snow3, 0.0, 1.0);
+          gl_FragColor = a * vec4(u_color, 1.0);
+        }
+    `),
+}
+
 let _canvases: Canvas[] = []
 
 class VideoClass {
@@ -903,60 +1133,97 @@ class VideoClass {
     }
 
     Blit(image: Image, x: number, y: number) {
-        this._getEngine().ctx.drawImage(image._el, x, y)
+        this.TintScaleBlit(image, x, y, image.width, image.height, 1.0)
     }
 
     ClearScreen() {
-        this._getEngine().ctx.fillStyle = 'rgb(0, 0, 0)'
-        this._getEngine().ctx.fillRect(0, 0, this._getEngine().width, this._getEngine().height)
+        const engine = this._getEngine()
+        const gl = engine.gl
+        engine.targetPageFramebuffer()
+        gl.clearColor(0, 0, 0, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
     }
 
-    DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number) {
-        this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
-        // TODO: Maybe check on negative dimension behavior?
-        this._getEngine().ctx.fillRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
+    DrawRect(x1: number, y1: number, x2: number, y2: number, color: number) {
+        const engine = this._getEngine()
+        engine.targetPageFramebuffer()
+        const r = (color & 0xff) / 255.0
+        const g = ((color >> 8) & 0xff) / 255.0
+        const b = ((color >> 16) & 0xff) / 255.0
+        const a = ((color >> 24) & 0xff) / 255.0
+        engine.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1, r, g, b, a)
     }
 
     GrabImage(x1: number, y1: number, x2: number, y2: number) {
+        const engine = this._getEngine()
+        const gl = engine.gl
+
         const width = x2 - x1
         const height = y2 - y1
-        var canvasEl
-        var ctx
-        ;[canvasEl, ctx] = _makeCanvasAndContext(width, height)
-        ctx.drawImage(this._getEngine().canvasEl, -x1, -y1)
-        const canvas = new Canvas(width, height, canvasEl, ctx)
+        const image = {
+            _texture: _makeEmptyTexture(gl, width, height),
+            width: width,
+            height: height,
+            yScale: -1.0,
+        }
+        const framebuffer = _makeFramebuffer(gl, image._texture)
+
+        const canvas = new Canvas(image, framebuffer)
+        engine.targetCanvas(canvas)
+
+        gl.clearColor(1.0, 0, 0, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+
+        engine.drawImage(engine.pageImage, 0, 0, engine.pageImage.width, engine.pageImage.height, -x1, -y1, engine.pageImage.width, engine.pageImage.height, 1.0)
+
         _canvases.push(canvas)
-        return canvas
+        return canvas._image
     }
 
-    FreeImage(canvas: Canvas) {
-        _canvases = _canvases.filter(x => x !== canvas);
+    FreeImage(image: Image) {
+        const engine = this._getEngine()
+        const gl = engine.gl
+
+        let canvas: Canvas | null = null
+        _canvases = _canvases.filter((x: Canvas) => {
+            if (x._image === image) {
+                canvas = x
+            }
+            return x._image !== image
+        })
+        if (canvas === null) {
+            throw new Error("Tried to free inactive canvas")
+        } else {
+            const canvas2: Canvas = canvas
+            // Good idea?
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+            gl.bindTexture(gl.TEXTURE_2D, null)
+            gl.deleteFramebuffer(canvas2._framebuffer)
+            gl.deleteTexture(canvas2._image._texture)
+        }
     }
 
     ScaleBlit(image: Image, x: number, y: number, width: number, height: number) {
-        this._getEngine().ctx.save()
-        this._getEngine().ctx.imageSmoothingEnabled = true
-        this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
-        this._getEngine().ctx.restore()
+        this.TintScaleBlit(image, x, y, width, height, 1.0)
     }
 
     ShowPage() {
-        this._getEngine().displayCtx.drawImage(this._getEngine().canvasEl, 0, 0)
+        const engine = this._getEngine()
+        engine.targetCanvasFramebuffer()
+        engine.drawImage(engine.pageImage, 0, 0, engine.pageImage.width, engine.pageImage.height, 0, 0, engine.pageImage.width, engine.pageImage.height, 1.0)
+
+        // Makes compositing more reliable.  Some maps don't draw the whole screen.
+        this.ClearScreen()
     }
 
     TintBlit(image: Image, x: number, y: number, alpha: number) {
-        this._getEngine().ctx.save()
-        this._getEngine().ctx.globalAlpha = alpha
-        this.Blit(image, x, y)
-        this._getEngine().ctx.restore()
+        this.TintScaleBlit(image, x, y, image.width, image.height, alpha)
     }
 
     TintScaleBlit(image: Image, x: number, y: number, width: number, height: number, alpha: number) {
-        this._getEngine().ctx.save()
-        this._getEngine().ctx.globalAlpha = alpha
-        this._getEngine().ctx.imageSmoothingEnabled = true
-        this._getEngine().ctx.drawImage(image._el, 0, 0, image.width, image.height, x, y, width, height)
-        this._getEngine().ctx.restore()
+        const engine = this._getEngine()
+        engine.targetPageFramebuffer()
+        engine.drawImage(image, 0, 0, image.width, image.height, x, y, width, height, alpha)
     }
 
     // TODO other members...
@@ -965,26 +1232,229 @@ class VideoClass {
 
 class Engine {
     maps: {[key: string]: MapData}
-    imageEls: {[key: string]: HTMLImageElement}
+    images: {[key: string]: Image}
     sprites: {[key: string]: SpriteData}
     width: number
     height: number
     startMsec: number
-    canvasEl: HTMLCanvasElement
-    ctx: CanvasRenderingContext2D
-    displayCanvasEl: HTMLCanvasElement
-    displayCtx: CanvasRenderingContext2D
+    gl: WebGLRenderingContext
+    private enabledAttributeLocations: number[]
+    pageImage: Image
+    private pageBuffer: WebGLFramebuffer
+    private textureProgram: GfxProgram
+    private flatProgram: GfxProgram
+    private snowProgram: GfxProgram
+    private viewWidth: number
+    private viewHeight: number
+    quadPositionBuffer: WebGLBuffer
+    quadTexCoordBuffer: WebGLBuffer
     map: MapClass
     _video: VideoClass
 
     constructor(
         private _getKey: (key: string) => Control,
     ) {
-        this.imageEls = {}
+        this.images = {}
         this.maps = {}
         this.sprites = {}
         this._video = new VideoClass(this)
         this.map = new MapClass(this, this._video)
+        this.enabledAttributeLocations = []
+    }
+
+    targetCanvasFramebuffer() {
+        const gl = this.gl
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+        this.viewWidth = gl.canvas.width
+        this.viewHeight = gl.canvas.height
+    }
+
+    targetPageFramebuffer() {
+        const gl = this.gl
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.pageBuffer)
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+        this.viewWidth = gl.canvas.width
+        this.viewHeight = gl.canvas.height
+    }
+
+    targetCanvas(canvas: Canvas) {
+        const gl = this.gl
+        gl.bindFramebuffer(gl.FRAMEBUFFER, canvas._framebuffer)
+        gl.viewport(0, 0, canvas._image.width, canvas._image.height)
+        this.viewWidth = canvas._image.width
+        this.viewHeight = canvas._image.height
+    }
+
+    private _enableAttributes(program: GfxProgram) {
+        if (program.attributeLocations === this.enabledAttributeLocations) {
+            return
+        }
+        this.enabledAttributeLocations.forEach(x => {
+            if (undefined === program.attributeLocations.find(y => y === x)) {
+                this.gl.disableVertexAttribArray(x)
+            }
+        })
+        program.attributeLocations.forEach(x => {
+            if (undefined === this.enabledAttributeLocations.find(y => y === x)) {
+                this.gl.enableVertexAttribArray(x)
+            }
+        })
+        this.enabledAttributeLocations = program.attributeLocations
+    }
+
+    drawRect(
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        r: number,
+        g: number,
+        b: number,
+        a: number
+    ) {
+        const gl = this.gl
+
+        gl.enable(gl.BLEND)
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+        gl.useProgram(this.flatProgram.program)
+        this._enableAttributes(this.flatProgram)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadPositionBuffer)
+        gl.vertexAttribPointer(this.flatProgram.attributes.a_position, 2, gl.FLOAT, false, 0, 0)
+
+        const viewW = this.viewWidth
+        const viewH = this.viewHeight
+
+        // Build xform from destination texture space to world space.
+        const xs1 = w
+        const xo1 = x
+        const ys1 = h
+        const yo1 = (viewH - (y + h))
+
+        // Concat xform from world space to clip space.
+        const xs2 = xs1 * 2.0 / viewW
+        const xo2 = xo1 * 2.0 / viewW - 1.0
+        const ys2 = ys1 * 2.0 / viewH
+        const yo2 = yo1 * 2.0 / viewH - 1.0
+
+        gl.uniformMatrix4fv(this.flatProgram.uniforms.u_matrix, false, [
+            xs2, 0  , 0, 0,
+            0  , ys2, 0, 0,
+            0  , 0  , 1, 0,
+            xo2, yo2, 0, 1,
+        ])
+
+        gl.uniform4f(this.flatProgram.uniforms.u_color, r, g, b, a)
+        gl.drawArrays(gl.TRIANGLES, 0, 6)
+    }
+
+    drawImage(
+        image: Image,
+        srcX: number,
+        srcY: number,
+        srcW: number,
+        srcH: number,
+        destX: number,
+        destY: number,
+        destW: number,
+        destH: number,
+        opacity: number
+    ) {
+        const gl = this.gl
+
+        gl.enable(gl.BLEND)
+        // Dynamically generated textures are probably premultiplied, but
+        // should have solid alpha so it shouldn't matter.
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+        gl.useProgram(this.textureProgram.program)
+        this._enableAttributes(this.textureProgram)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadPositionBuffer)
+        gl.vertexAttribPointer(this.textureProgram.attributes.a_position, 2, gl.FLOAT, false, 0, 0)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadTexCoordBuffer)
+        gl.vertexAttribPointer(this.textureProgram.attributes.a_texCoord, 2, gl.FLOAT, false, 0, 0)
+
+        const viewW = this.viewWidth
+        const viewH = this.viewHeight
+
+        // Build xform from destination texture space to world space.
+        const xs1 = destW
+        const xo1 = destX
+        const ys1 = destH
+        const yo1 = (viewH - (destY + destH))
+
+        // Concat xform from world space to clip space.
+        const xs2 = xs1 * 2.0 / viewW
+        const xo2 = xo1 * 2.0 / viewW - 1.0
+        const ys2 = ys1 * 2.0 / viewH
+        const yo2 = yo1 * 2.0 / viewH - 1.0
+
+        gl.uniformMatrix4fv(this.textureProgram.uniforms.u_matrix, false, [
+            xs2, 0  , 0, 0,
+            0  , ys2, 0, 0,
+            0  , 0  , 1, 0,
+            xo2, yo2, 0, 1,
+        ])
+
+        // Build xform from unit square to source texture space
+        const xs3 = srcW / image.width
+        const xo3 = srcX / image.width
+        const ys3 = -srcH / image.height
+        const yo3 = (srcY + srcH) / image.height
+
+        // Concat xform from source texture space to (maybe flipped) image space
+        const xs4 = xs3
+        const xo4 = xo3
+        const ys4 = ys3 * image.yScale
+        const yo4 = yo3 * image.yScale + 0.5 - image.yScale * 0.5
+
+        gl.uniformMatrix3fv(this.textureProgram.uniforms.u_texMatrix, false, [
+            xs4, 0  , 0,
+            0  , ys4, 0,
+            xo4, yo4, 1,
+        ])
+
+        gl.uniform1f(this.textureProgram.uniforms.u_opacity, opacity)
+        gl.bindTexture(gl.TEXTURE_2D, image._texture)
+        if (image._texture === undefined) {
+            console.error("drawImage texture null")
+        }
+        gl.uniform1i(this.textureProgram.uniforms.u_image, 0)
+        gl.drawArrays(gl.TRIANGLES, 0, 6)
+    }
+
+    drawSnow(
+        time: number,
+        count: number,
+        vx: number,
+        vy: number,
+        r: number,
+        g: number,
+        b: number
+    ) {
+        this.targetPageFramebuffer()
+
+        const gl = this.gl
+
+        gl.enable(gl.BLEND)
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
+
+        gl.useProgram(this.snowProgram.program)
+        this._enableAttributes(this.snowProgram)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadPositionBuffer)
+        gl.vertexAttribPointer(this.snowProgram.attributes.a_position, 2, gl.FLOAT, false, 0, 0)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadTexCoordBuffer)
+        gl.vertexAttribPointer(this.snowProgram.attributes.a_texCoord, 2, gl.FLOAT, false, 0, 0)
+
+        gl.uniform1f(this.snowProgram.uniforms.u_time, time)
+        gl.uniform1f(this.snowProgram.uniforms.u_count, count)
+        gl.uniform2f(this.snowProgram.uniforms.u_size, this.viewWidth, this.viewHeight)
+        gl.uniform2f(this.snowProgram.uniforms.u_velocity, vx, vy)
+        gl.uniform3f(this.snowProgram.uniforms.u_color, r, g, b)
+        // TODO - also, count, velocity?
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6)
     }
 
     run(taskFn: ()=>boolean) {
@@ -992,22 +1462,58 @@ class Engine {
         this.width = 320
         this.height = 240
 
-        ;[this.canvasEl, this.ctx] = _makeCanvasAndContext(this.width, this.height)
-        ;[this.displayCanvasEl, this.displayCtx] = _makeCanvasAndContext(this.width, this.height)
+        const displayCanvasEl = window.document.createElement('canvas')
+        displayCanvasEl.width = this.width
+        displayCanvasEl.height = this.height
 
-        // Typescript doesn't know about imageRendering yet.
-        const style = this.displayCanvasEl.style as any
+        const style = displayCanvasEl.style
         style.border = "1px solid"
-        style.imageRendering = "optimizeSpeed"
-        style.imageRendering = "-moz-crisp-edges"
-        style.imageRendering = "pixelated"
+        // Typescript doesn't know about imageRendering yet.
+        ;(style as any).imageRendering = "optimizeSpeed"
+        ;(style as any).imageRendering = "-moz-crisp-edges"
+        ;(style as any).imageRendering = "pixelated"
         style.width = "" + this.width * 2
         style.height = "" + this.height * 2
         style.display = "block"
         style.marginLeft = "auto"
         style.marginRight = "auto"
-        window.document.body.appendChild(this.displayCanvasEl)
+        window.document.body.appendChild(displayCanvasEl)
         window.document.body.style.backgroundColor = "#dddddd"
+
+        const gl = displayCanvasEl.getContext('webgl', {alpha: false})
+        if (gl === null) {
+            throw new Error("Couldn't get WebGL context")
+        }
+        this.gl = gl
+
+        this.pageImage = {
+            _texture: _makeEmptyTexture(gl, this.width, this.height),
+            width: this.width,
+            height: this.height,
+            yScale: -1.0,
+        }
+        this.pageBuffer = _makeFramebuffer(gl, this.pageImage._texture)
+
+        this.textureProgram = _makeProgram(gl, _textureShaderSpec)
+        this.flatProgram = _makeProgram(gl, _flatShaderSpec)
+        this.snowProgram = _makeProgram(gl, _snowShaderSpec)
+
+        this.quadPositionBuffer = _makeBuffer(gl, [
+            0, 0,
+            0, 1,
+            1, 0,
+            1, 0,
+            0, 1,
+            1, 1,
+        ])
+        this.quadTexCoordBuffer = _makeBuffer(gl, [
+            0, 0,
+            0, 1,
+            1, 0,
+            1, 0,
+            0, 1,
+            1, 1,
+        ])
 
         const imagePaths = [
             'winter/gfx/credits_vignette.png',
@@ -1108,9 +1614,16 @@ class Engine {
             return new Promise<void>((resolve: ()=>void, _reject: any) => {
                 const imageEl: HTMLImageElement = new Image()
                 // TODO: Handle image load failure?
-                imageEl.addEventListener('load', resolve)
+                imageEl.addEventListener('load', () => {
+                    this.images[path] = {
+                        _texture: _makeImageTexture(gl, imageEl),
+                        width: imageEl.width,
+                        height: imageEl.height,
+                        yScale: 1.0,
+                    }
+                    resolve()
+                })
                 imageEl.src = path
-                this.imageEls[path] = imageEl
             })
         };
 
@@ -1163,30 +1676,28 @@ class Engine {
             'm': 'M',
         }
 
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (event.defaultPrevented) {
-                return
+        const makeControlHandler = (fn: (control: Control)=>void) => {
+            return (event: KeyboardEvent) => {
+                if (event.defaultPrevented) {
+                    return
+                }
+                if (!(event.key in _KeycodeMap)) {
+                    return
+                }
+                const control = this._getKey(_KeycodeMap[event.key])
+                fn(control)
+                event.preventDefault()
             }
-            if (!(event.key in _KeycodeMap)) {
-                return
-            }
-            const control = this._getKey(_KeycodeMap[event.key])
-            control._pressed = 1
-            control._position = 1
-            event.preventDefault()
         }
 
-        const onKeyUp = (event: KeyboardEvent) => {
-            if (event.defaultPrevented) {
-                return
-            }
-            if (!(event.key in _KeycodeMap)) {
-                return
-            }
-            const control = this._getKey(_KeycodeMap[event.key])
+        const onKeyDown = makeControlHandler((control: Control) => {
+            control._pressed = 1
+            control._position = 1
+        })
+
+        const onKeyUp = makeControlHandler((control: Control) => {
             control._position = 0
-            event.preventDefault()
-        }
+        })
 
         window.addEventListener('keydown', onKeyDown, true)
         window.addEventListener('keyup', onKeyUp, true)
@@ -1201,6 +1712,7 @@ class Engine {
 
         const startEngine = () => {
             console.log("Starting engine...")
+            this._video.ClearScreen()
             window.requestAnimationFrame(runFrame)
         }
 
@@ -1215,21 +1727,12 @@ class Engine {
         return mapData
     }
 
-    getImageEl(imagePath: string): HTMLImageElement {
-        const imageEl = this.imageEls['winter/' + imagePath]
-        if (!imageEl) {
+    getImage(imagePath: string): Image {
+        const image = this.images['winter/' + imagePath]
+        if (!image) {
             throw new Error("Image element not found:" + imagePath)
         }
-        return imageEl
-    }
-
-    getImage(imagePath: string): Image {
-        const el = this.getImageEl(imagePath)
-        return {
-            _el: el,
-            width: el.width,
-            height: el.height,
-        }
+        return image
     }
 
     detectEntityCollision(
@@ -1314,6 +1817,7 @@ interface BrythonOptions {
 declare var brython: (options: BrythonOptions) => void
 
 removeChildren(document.body)
+
 addPythonScript('system.py')
 brython({
     debug: BrythonDebugLevel.ShowErrors,
