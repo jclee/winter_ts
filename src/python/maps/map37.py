@@ -9,7 +9,7 @@ def AutoExec(engineRef):
     global spawned
     spawned = 0
     engineRef.mapThings.append(snow.Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to36(engineRef):
     yield from engineRef.mapSwitchTask('map36.ika-map', (engineRef.player.x, 1 * 16))

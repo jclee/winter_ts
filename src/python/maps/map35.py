@@ -1,7 +1,7 @@
 import ika
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to34(engineRef):
     offset_from = 11 * 16  # first vertical pos possible

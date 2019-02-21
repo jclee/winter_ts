@@ -1,7 +1,7 @@
 import ika
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to21(engineRef):
     yield from engineRef.mapSwitchTask('map21.ika-map', (1 * 16, engineRef.player.y))

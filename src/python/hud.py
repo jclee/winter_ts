@@ -6,8 +6,8 @@ def sgn(i):
     elif i < 0: return -1
     else: return 0
 
-class Gauge(Thing):
-    def __init__(self, imageName, x, y, justify = 'left', colour = ika.RGB(255, 255, 255)):
+class _Gauge(Thing):
+    def __init__(self, engineRef, imageName, x, y, justify = 'left', colour = ika.RGB(255, 255, 255)):
         '''
         imageName - name of the image series to use.
          ie 'gfx/ui/barhp%i.png'
@@ -15,8 +15,9 @@ class Gauge(Thing):
         justify is either 'left' or 'right'
         '''
 
+        self.engineRef = engineRef
         (self.span, self.left, self.middle, self.right) =\
-            [ika.Image(imageName % i) for i in range(4)]
+            [engineRef.getImage(imageName % i) for i in range(4)]
         self.oldVal = self.oldMax = 0
         self.x, self.y = x,y
         self.justify = justify.lower()
@@ -87,20 +88,18 @@ class Gauge(Thing):
     curVal = property(lambda self: None) # ditto
     curMax = property(lambda self: None) # override.  Needs to be readable.
 
-class HPBar(Gauge):
+class HPBar(_Gauge):
     def __init__(self, engineRef):
-        Gauge.__init__(self, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
-        self.engineRef = engineRef
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
         self.y = ika.Video.yres - self.left.height - 1
         self.colour = (255, 0, 0)
 
     curVal = property(lambda self: self.engineRef.player.stats.hp)
     curMax = property(lambda self: self.engineRef.player.stats.maxhp)
 
-class MPBar(Gauge):
+class MPBar(_Gauge):
     def __init__(self, engineRef):
-        Gauge.__init__(self, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
-        self.engineRef = engineRef
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
         self.y = ika.Video.yres - self.left.height * 2 - 1
         self.colour = (0, 0, 255)
         self.oldMax = self.curMax
@@ -109,10 +108,9 @@ class MPBar(Gauge):
     curVal = property(lambda self: self.engineRef.player.stats.mp)
     curMax = property(lambda self: self.engineRef.player.stats.maxmp)
 
-class EXPBar(Gauge):
+class EXPBar(_Gauge):
     def __init__(self, engineRef):
-        Gauge.__init__(self, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
-        self.engineRef = engineRef
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
         #self.y = ika.Video.yres - self.left.height * 2 - 1
         self.width = 100
         self.colour = (0, 128, 128)

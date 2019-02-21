@@ -16,7 +16,7 @@ def _mainTask():
         introMusic.Play()
         # Workaround for Brython "yield from" expression bugs:
         resultRef = [None]
-        yield from intro.menuTask(resultRef)
+        yield from intro.menuTask(engineObj, resultRef)
 
         if resultRef[0] == 0:
             introMusic.Pause()

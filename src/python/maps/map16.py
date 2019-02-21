@@ -6,7 +6,7 @@ from thing import Thing
 from rune import WindRune
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
     if 'bridge_broken' not in engineRef.saveFlags:
         for x in range(19, 22):

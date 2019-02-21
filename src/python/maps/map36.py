@@ -3,7 +3,7 @@ import snow
 
 def AutoExec(engineRef):
     engineRef.mapThings.append(snow.Snow(600, velocity=(.4, 1), colour=ika.RGB(192,192,255)))
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to35(engineRef):
     offset_from = 4 * 16  # first vertical pos possible

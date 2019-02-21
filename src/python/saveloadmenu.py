@@ -7,8 +7,8 @@ import ika
 from saveload import SaveGame
 
 class SaveGameFrame(gui.Frame):
-    def __init__(self, icons, save=None):
-        gui.Frame.__init__(self)
+    def __init__(self, engineRef, icons, save=None):
+        gui.Frame.__init__(self, engineRef)
         self.save = save
         self.layout = gui.VerticalBoxLayout()
         self.addChild(self.layout)
@@ -37,21 +37,21 @@ class SaveGameFrame(gui.Frame):
             assert False
 
 class SaveLoadMenu(object):
-    def __init__(self, saves, saving = False):
+    def __init__(self, engineRef, saves, saving = False):
         self.icons = dict(
-            [(s, gui.Picture(img='gfx/ui/icon_%s.png' % s))
+            [(s, gui.Picture(engineRef, img='gfx/ui/icon_%s.png' % s))
                 for s in ('att', 'mag', 'pres', 'mres')]
         )
 
-        self.cursor = gui.ImageCursor('gfx/ui/pointer.png')
+        self.cursor = gui.ImageCursor(engineRef, 'gfx/ui/pointer.png')
 
         self.saves = saves
 
-        boxes = [SaveGameFrame(icons=self.icons, save=s) for s in saves]
+        boxes = [SaveGameFrame(engineRef, icons=self.icons, save=s) for s in saves]
         if saving:
-            boxes.append(gui.TextFrame(text='Create New'))
+            boxes.append(gui.TextFrame(engineRef, text='Create New'))
         elif not boxes:
-            boxes.append(gui.TextFrame(text='No Saves'))
+            boxes.append(gui.TextFrame(engineRef, text='No Saves'))
 
         self.layout = gui.VerticalBoxLayout(pad=16, *boxes)
         self.layout.layout()
@@ -104,10 +104,10 @@ def readSaves(engineRef):
         return saves
 
 def loadMenuTask(engineRef, resultRef, fadeOut=True):
-    title = gui.TextFrame(text='Load Game')
+    title = gui.TextFrame(engineRef, text='Load Game')
     title.setPosition((16, 16))
     saves = readSaves(engineRef)
-    m = SaveLoadMenu(saves, saving=False)
+    m = SaveLoadMenu(engineRef, saves, saving=False)
 
     def draw():
         ika.Video.ClearScreen() # fix this
@@ -135,10 +135,10 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         resultRef[0] = saves[i]
 
 def saveMenuTask(engineRef):
-    title = gui.TextFrame(text='Save Game')
+    title = gui.TextFrame(engineRef, text='Save Game')
     title.setPosition((16, 16))
     saves = readSaves(engineRef)
-    m = SaveLoadMenu(saves, saving=True)
+    m = SaveLoadMenu(engineRef, saves, saving=True)
 
     def draw():
         ika.Video.ClearScreen() # fix this

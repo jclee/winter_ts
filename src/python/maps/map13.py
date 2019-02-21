@@ -3,7 +3,7 @@ import snow
 
 def AutoExec(engineRef):
     engineRef.mapThings.append(snow.Snow(4000, velocity=(-1, 1.5)))
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to7(engineRef):
     yield from engineRef.mapSwitchTask('map07.ika-map', (78 * 16, engineRef.player.y))

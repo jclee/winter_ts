@@ -58,8 +58,8 @@ class WindowMover(object):
         self.theWindow.draw()
 
 class SubScreenWindow(gui.Frame):
-    def __init__(self):
-        super(SubScreenWindow, self).__init__()
+    def __init__(self, engineRef):
+        super(SubScreenWindow, self).__init__(engineRef)
         self.layout = self.createLayout()
         self.addChild(self.layout)
         self.setBorder(self.wnd.iLeft.width)
@@ -74,7 +74,7 @@ class SubScreenWindow(gui.Frame):
 
 class StatWindow(SubScreenWindow):
     def __init__(self, engineRef):
-        super(StatWindow, self).__init__()
+        super(StatWindow, self).__init__(engineRef)
         self.engineRef = engineRef
 
     def createContents(self):
@@ -92,10 +92,10 @@ class StatWindow(SubScreenWindow):
 
 class AttribWindow(SubScreenWindow):
     def __init__(self, engineRef):
-        super(AttribWindow, self).__init__()
+        super(AttribWindow, self).__init__(engineRef)
         self.engineRef = engineRef
         self.icons = dict(
-            [(s, gui.Picture(img='gfx/ui/icon_%s.png' % s))
+            [(s, gui.Picture(engineRef, img='gfx/ui/icon_%s.png' % s))
                 for s in ('att', 'mag', 'pres', 'mres')]
         )
 
@@ -113,7 +113,7 @@ class AttribWindow(SubScreenWindow):
 
 class MagicWindow(SubScreenWindow):
     def __init__(self, engineRef):
-        SubScreenWindow.__init__(self)
+        SubScreenWindow.__init__(self, engineRef)
         self.engineRef = engineRef
 
     def createLayout(self):
@@ -133,8 +133,8 @@ class MagicWindow(SubScreenWindow):
         return (gui.StaticText(text=txt),)
 
 class MenuWindow(gui.Menu):
-    def __init__(self):
-        gui.Menu.__init__(self, textctrl=gui.ScrollableTextFrame())
+    def __init__(self, engineRef):
+        gui.Menu.__init__(self, engineRef, textctrl=gui.ScrollableTextFrame(engineRef))
         self.addText([
             'Resume',
             #'Controls',
@@ -149,7 +149,7 @@ class PauseScreen(object):
         self.statWnd = StatWindow(engineRef)
         self.attribWnd = AttribWindow(engineRef)
         self.magWnd = MagicWindow(engineRef)
-        self.menu = MenuWindow()
+        self.menu = MenuWindow(engineRef)
 
     def update(self):
         self.statWnd.update()

@@ -19,11 +19,11 @@ def delayTask(draw, count, snowObj):
         if controls.attack():
             raise _DoneException()
 
-def introTask():
+def introTask(engineRef):
     snowObj = snow.Snow(velocity=(0,0.5))
-    gba = ika.Image('gfx/gba.png')
-    yourmom = ika.Image('gfx/yourmother.png')
-    isabitch = ika.Image('gfx/isabigfatbitch.png')
+    gba = engineRef.getImage('gfx/gba.png')
+    yourmom = engineRef.getImage('gfx/yourmother.png')
+    isabitch = engineRef.getImage('gfx/isabigfatbitch.png')
 
     controls.attack() # unpress
 
@@ -48,9 +48,9 @@ def introTask():
     except _DoneException:
         return
 
-def menuTask(resultRef):
-    bg = ika.Image('gfx/title.png')
-    cursor = ika.Image('gfx/ui/pointer.png')
+def menuTask(engineRef, resultRef):
+    bg = engineRef.getImage('gfx/title.png')
+    cursor = engineRef.getImage('gfx/ui/pointer.png')
     snowObj = snow.Snow(velocity=(0, 0.5))
     snowObj.update()
     resultRef[0] = None

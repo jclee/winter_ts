@@ -14,8 +14,8 @@ import controls
 default_font = ika.Font('system.fnt')
 
 class ImageCursor(object):
-    def __init__(self, filename, hotspot = None):
-        img = ika.Image(filename)
+    def __init__(self, engineRef, filename, hotspot = None):
+        img = engineRef.getImage(filename)
         self._img = img
         self.hotspot = hotspot or (img.width, img.height // 2)
 
@@ -134,9 +134,9 @@ class Frame(Widget):
     A widget that appears as a graphical frame of some sort.
     Frames are most commonly used as container widgets.
     '''
-    def __init__(self, x = 0, y = 0, width = 0, height = 0):
+    def __init__(self, engineRef, x = 0, y = 0, width = 0, height = 0):
         Widget.__init__(self, x, y, width, height)
-        self.wnd = Window()
+        self.wnd = Window(engineRef)
 
     def draw(self, xofs = 0, yofs = 0):
         self.wnd.draw(self.x + xofs, self.y + yofs, self.width, self.height)
@@ -200,8 +200,8 @@ class TextFrame(Frame):
     A frame with text in it.  This is a simple convenience class, combining the
     Frame and StaticText controls into a single convenient object.
     '''
-    def __init__(self, x = 0, y = 0, width = 0, height = 0, *args, **kwargs):
-        Frame.__init__(self, x, y, width, height)
+    def __init__(self, engineRef, x = 0, y = 0, width = 0, height = 0, *args, **kwargs):
+        Frame.__init__(self, engineRef, x, y, width, height)
 
         # way cool.  since keyword arguments are passed on, the font will be set properly.
         # additionally, text will be added just like StaticText.  Consistency totally rules.
@@ -231,9 +231,9 @@ class Picture(Widget):
     A widget that takes the shape of an image.
     Little else to say.
     '''
-    def __init__(self, img):
+    def __init__(self, engineRef, img):
         Widget.__init__(self, 0, 0, 0, 0)
-        self._img = ika.Image(img)
+        self._img = engineRef.getImage(img)
         self.setWidth(self._img.width)
         self.setHeight(self._img.height)
 
@@ -293,8 +293,8 @@ class ScrollableTextFrame(Frame):
     a Frame at the same time.
     '''
 
-    def __init__(self):
-        Frame.__init__(self)
+    def __init__(self, engineRef):
+        Frame.__init__(self, engineRef)
 
         self.text = ScrollableTextLabel()
         self.font = self.text.font
@@ -330,10 +330,10 @@ class Menu(Widget):
     this class is not very realistic, but it could be implemented as its own class. (and
     probably should, considering how different it is from this.
     '''
-    def __init__(self, *args, **kwargs):
+    def __init__(self, engineRef, *args, **kwargs):
         Widget.__init__(self, *args)
         self.textCtrl = kwargs.get('textctrl') or ScrollableTextLabel()
-        self.cursor = ImageCursor('gfx/ui/pointer.png', hotspot=(14, 6))
+        self.cursor = ImageCursor(engineRef, 'gfx/ui/pointer.png', hotspot=(14, 6))
         self.cursorY = 0
         self.cursorPos = 0
         self.cursorSpeed = 2 # speed at which the cursor moves (in pixels per update)
@@ -595,22 +595,23 @@ class FlexGridLayout(Layout):
         self.width = max([child.getRight() for child in self.children]) - self.pad - self.x
         self.height = max([child.getBottom() for child in self.children]) - self.pad - self.y
 
+# TODO - could merge into Frame?
 class Window(object):
     '''
     Specialized xi window.  The only real differences are that it pulls
     its images from separate image files instead of cutting up a single
     image.
     '''
-    def __init__(self):
-        self.iTopleft = ika.Image('gfx/ui/win_top_left.png')
-        self.iTopright = ika.Image('gfx/ui/win_top_right.png')
-        self.iBottomleft = ika.Image('gfx/ui/win_bottom_left.png')
-        self.iBottomright = ika.Image('gfx/ui/win_bottom_right.png')
-        self.iLeft = ika.Image('gfx/ui/win_left.png')
-        self.iRight = ika.Image('gfx/ui/win_right.png')
-        self.iTop = ika.Image('gfx/ui/win_top.png')
-        self.iBottom = ika.Image('gfx/ui/win_bottom.png')
-        self.iCentre = ika.Image('gfx/ui/win_background.png')
+    def __init__(self, engineRef):
+        self.iTopleft = engineRef.getImage('gfx/ui/win_top_left.png')
+        self.iTopright = engineRef.getImage('gfx/ui/win_top_right.png')
+        self.iBottomleft = engineRef.getImage('gfx/ui/win_bottom_left.png')
+        self.iBottomright = engineRef.getImage('gfx/ui/win_bottom_right.png')
+        self.iLeft = engineRef.getImage('gfx/ui/win_left.png')
+        self.iRight = engineRef.getImage('gfx/ui/win_right.png')
+        self.iTop = engineRef.getImage('gfx/ui/win_top.png')
+        self.iBottom = engineRef.getImage('gfx/ui/win_bottom.png')
+        self.iCentre = engineRef.getImage('gfx/ui/win_background.png')
 
     def draw(self, x, y, w, h):
         x2 = x + w

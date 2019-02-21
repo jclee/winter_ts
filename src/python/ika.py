@@ -70,13 +70,9 @@ def Font(file_name):
     global _engine
     return window.FontClass.new(_engine)
 
-def Image(init_arg):
+def GetImage(init_arg):
     global _engine
-    if isinstance(init_arg, str):
-        return _engine.getImage(init_arg)
-    else:
-        raise NotImplementedError() # TODO: Also handle case where first arg is a canvas?
-    # TODO other members...
+    return _engine.getImage(init_arg)
 
 class _InputClass(object):
     def __init__(self):

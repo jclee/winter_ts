@@ -1,7 +1,7 @@
 import ika
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def manaPool(engineRef):
     engineRef.player.stats.mp += 1

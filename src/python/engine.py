@@ -167,6 +167,9 @@ class Engine(object):
             yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
             yield from self.runTask()
 
+    def getImage(self, key):
+        return ika.GetImage(key)
+
     def setLocalStorageItem(self, key, data):
         ika.SetLocalStorageItem(key, data)
 

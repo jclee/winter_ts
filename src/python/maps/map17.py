@@ -1,7 +1,7 @@
 import ika
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
     ika.Map.SetObs(10,3,3,0)
 
 def to16(engineRef):

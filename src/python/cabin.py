@@ -30,7 +30,7 @@ def draw():
 
 #------------------------------------------------------------------------------
 
-def textBox(ent, txt):
+def textBox(engineRef, ent, txt):
     WIDTH = 200
     width = WIDTH
     text = WrapText(txt, width, gui.default_font)
@@ -48,7 +48,7 @@ def textBox(ent, txt):
         width = max([gui.default_font.StringWidth(s) for s in text])
         height = len(text) * gui.default_font.height
 
-    frame = gui.ScrollableTextFrame()
+    frame = gui.ScrollableTextFrame(engineRef)
     frame.addText(text)
     frame.autoSize()
 
@@ -62,12 +62,12 @@ def textBox(ent, txt):
 
 #------------------------------------------------------------------------------
 
-def textTask(where, txt):
+def speech(engineRef, where, txt):
     """Displays a text frame.
 
     Where can be either a point or an ika entity.
     """
-    frame = textBox(where, txt)
+    frame = textBox(engineRef, where, txt)
 
     while not controls.attack():
         draw()
@@ -92,12 +92,12 @@ def animateHelper(ent, frames, delay, loop):
         if not loop:
             return
 
-def animate(ent, frames, delay, thing=None, loop=True, text=None):
+def animate(engineRef, ent, frames, delay, thing=None, loop=True, text=None):
     # frames should be a list of (frame, delay) pairs.
     if thing is not None:
         crap.append(thing)
     if text is not None:
-        text = textBox(ent, text)
+        text = textBox(engineRef, ent, text)
         crap.append(text)
 
     yield from animateHelper(ent, frames, delay, loop)
@@ -130,7 +130,7 @@ def sceneTask(engineRef, name):
 
     yield from effects.fadeInTask(100)
 
-    yield from _scenes[name]()
+    yield from _scenes[name](engineRef)
     engineRef.saveFlags[name] = 'True'
 
     yield from effects.fadeOutTask(100)
@@ -165,72 +165,71 @@ TALKING = (
     [NOD]
 )
 
-speech = textTask
-def narration(t):
-    yield from animate(grandpa, TALKING, 25, text=t)
+def narration(engineRef, t):
+    yield from animate(engineRef, grandpa, TALKING, 25, text=t)
 
 #------------------------------------------------------------------------------
 # Scenes
 #------------------------------------------------------------------------------
 
-def intro():
-    yield from speech(kid1, 'Tell us a story!')
-    yield from animate(kid2, (1,), delay=10, text='Yeah, the one about the ice man!')
-    yield from animate(kid3, (0, 1), delay=20, text="Yeah!!")
-    yield from speech(grandpa, "Isn't that story a little scary?")
-    yield from speech(kid1, 'No!')
-    yield from speech(kid2, 'Please tell us!')
-    yield from speech(grandpa, 'Oh all right.  Ahem.')
-    yield from animate(kid3, (0, 1), delay=20, text="I'm scared!!")
+def intro(engineRef):
+    yield from speech(engineRef, kid1, 'Tell us a story!')
+    yield from animate(engineRef, kid2, (1,), delay=10, text='Yeah, the one about the ice man!')
+    yield from animate(engineRef, kid3, (0, 1), delay=20, text="Yeah!!")
+    yield from speech(engineRef, grandpa, "Isn't that story a little scary?")
+    yield from speech(engineRef, kid1, 'No!')
+    yield from speech(engineRef, kid2, 'Please tell us!')
+    yield from speech(engineRef, grandpa, 'Oh all right.  Ahem.')
+    yield from animate(engineRef, kid3, (0, 1), delay=20, text="I'm scared!!")
 
     tint.tint = 200
 
-    yield from narration("""\
+    yield from narration(engineRef, """\
 Across the frozen hills of Kuladriat, hunters pursue a man like any other \
 prey.  Ever-northward their prey runs, till at last, at the foot of Mount \
 Durinar, a chasm of ice confronts him.""")
 
-    yield from narration("""\
+    yield from narration(engineRef, """\
 The crack of a bow sounds across the vale; an instant later its arrow burying \
 itself in the leg of the hunted man.  His legs buckle beneath him, and he \
 tumbles down the cold ravine--""")
 
-    yield from narration("""--the sound of stone 'gainst stone resounding.""")
+    yield from narration(engineRef, """--the sound of stone 'gainst stone resounding.""")
     
     tint.tint = 0
 
-    yield from narration("""\
+    yield from narration(engineRef, """\
 A sharp whistle signifies the hunt's end.  The hunters will not bother \
 to claim their prize, for it is far too cold--his fate is come.""")
 
 
-def nearend():
+def nearend(engineRef):
     
     tint.tint = 200
     
-    yield from narration("""\
+    yield from narration(engineRef, """\
 As he neared his journey's end, he grew tired, and cold, and hungry.""")
 
-    yield from narration("""He was willing to do anything to make such neverending \
+    yield from narration(engineRef, """He was willing to do anything to make such neverending \
 misery cease, once and for all.""")
 
-    yield from narration("""\
+    yield from narration(engineRef, """\
 He considered... going back from whence he came, then.""")
 
-    yield from narration("""But, if he were to do so, he would then have to face the \
+    yield from narration(engineRef, """But, if he were to do so, he would then have to face the \
 same trials which had taken such a weary toll on his spirit to begin with.""")
 
     tint.tint = 0
     
-    yield from speech(kid1, 'Did he go back?')
-    yield from speech(kid2, 'Yeah!')
-    yield from speech(kid3, "No way! He's way too brave!! Yeah!!")
+    yield from speech(engineRef, kid1, 'Did he go back?')
+    yield from speech(engineRef, kid2, 'Yeah!')
+    yield from speech(engineRef, kid3, "No way! He's way too brave!! Yeah!!")
     
-    yield from narration("""\
+    yield from narration(engineRef, """\
 In the end, no one knows whether he attempted to return... all that is important \
 is the outcome.""")
 
-    yield from narration("""But should he have gone back, he would have found the greatest reward \
+    yield from narration(engineRef, """But should he have gone back, he would have found the greatest reward \
 of all.  Not peace... and not relief... but courage.  The courage to continue again.""")
 
 

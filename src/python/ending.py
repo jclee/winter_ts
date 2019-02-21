@@ -165,7 +165,7 @@ def creditsTask(engineRef):
     engineRef.fader.kill()
     engineRef.fader.reset(m)
 
-    bg = ika.Image('gfx/mountains.png')
+    bg = engineRef.getImage('gfx/mountains.png')
     snowObj = snow.Snow(velocity=(0, 1))
     y = -ika.Video.yres
     font = ika.Font('system.fnt')

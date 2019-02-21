@@ -2,7 +2,7 @@ import ika
 import snow
 
 def AutoExec(engineRef):
-    engineRef.background = ika.Image('gfx/mountains.png')
+    engineRef.background = engineRef.getImage('gfx/mountains.png')
     engineRef.mapThings.append(snow.Snow(velocity=(0, 0.5)))
 
 def to6(engineRef):
