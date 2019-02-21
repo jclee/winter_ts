@@ -70,13 +70,6 @@ def Font(file_name):
     global _engine
     return window.FontClass.new(_engine)
 
-class Canvas(object):
-    def __init__(self, width, height, el, ctx):
-        self.width = width
-        self.height = height
-        self._el = el
-        self._ctx = ctx
-
 def Image(init_arg):
     global _engine
     if isinstance(init_arg, str):
