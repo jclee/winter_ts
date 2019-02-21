@@ -57,8 +57,8 @@ class IceChunks(_Obstacle):
         (139, 148, 138)
     )
 
-    def __init__(self, ent):
-        _Obstacle.__init__(self, ent, self._anim)
+    def __init__(self, engineRef, ent):
+        _Obstacle.__init__(self, engineRef, ent, self._anim)
         self.startAnimation('default')
 
     def remove(self):

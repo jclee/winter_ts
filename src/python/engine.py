@@ -3,7 +3,7 @@ from browser import window
 
 import effects
 
-from player import Player
+from player import Player, PLAYER_SPRITE
 from anklebiter import AnkleBiter
 from carnivore import Carnivore
 from devourer import Devourer
@@ -174,6 +174,7 @@ class Engine(object):
         return ika.GetLocalStorageItem(key)
 
     def mapSwitchTask(self, mapName, dest = None, fade = True):
+        print("switching to map", mapName)
         if fade:
             self.draw()
             startImages = effects.createBlurImages()
@@ -379,9 +380,9 @@ class Engine(object):
 
         for entKey in ika.Map.entities:
             ent = ika.Map.entities[entKey]
-            try:
+            if ent.spritename in spawnMap:
                 self.addEntity(spawnMap[ent.spritename](self, ent))
-            except KeyError:
+            elif ent.spritename != PLAYER_SPRITE:
                 print('Unknown entity sprite %s.  Ignoring.' % ent.spritename)
 
     def clearKillQueue(self):

@@ -127,7 +127,7 @@ class DeathListener(Thing):
             if 'windrune' not in self.engineRef.saveFlags:
                 e = ika.Entity(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
-                engineRef.addEntity(
+                self.engineRef.addEntity(
                     WindRune(e)
                     )
             else:
@@ -146,9 +146,9 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
-            engineRef.addEntity(y)
-            engineRef.mapThings.append(DeathListener(self.engineRef, y))
+            y = SoulReaver(self.engineRef, ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
+            self.engineRef.addEntity(y)
+            self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
 
     def draw(self):

@@ -54,7 +54,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
