@@ -231,7 +231,7 @@ class Engine(object):
         self.draw()
         startImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
 
-        self.player.direction = self.engineRef.dir.Down
+        self.player.direction = self.dir.Down
         self.player.state = self.player.defaultState()
         self.player.startAnimation('stand')
         self.player.animate()
