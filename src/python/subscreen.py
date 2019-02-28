@@ -193,6 +193,7 @@ class PauseScreen(object):
             yield None
             now = ika.GetTime()
 
+        # TODO: Not used, but maybe should be?:
         self.background = self.images[-1]
 
     def hideTask(self):
@@ -222,6 +223,9 @@ class PauseScreen(object):
                 ika.Video.ShowPage()
             yield None
             now = ika.GetTime()
+
+        self.background = None
+        effects.freeBlurImages(self.images)
 
     def draw(self):
         self.statWnd.draw()

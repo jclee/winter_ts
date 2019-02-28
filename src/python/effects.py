@@ -14,6 +14,7 @@ def _blurScreen(factor):
 
     bleh = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
     ika.Video.ScaleBlit(bleh, 0, 0, w, h)
+    ika.Video.FreeImage(bleh)
     return ika.Video.GrabImage(0, 0, w, h)
 
 def createBlurImages():
@@ -28,6 +29,10 @@ def createBlurImages():
         i += 0.1
 
     return images
+
+def freeBlurImages(images):
+    for img in images:
+        ika.Video.FreeImage(img)
 
 def blurFadeTask(time, startImages, endImages):
     startTime = ika.GetTime()

@@ -887,6 +887,8 @@ interface SpriteData {
     hotspotHeight: number
 }
 
+let _canvases: Canvas[] = []
+
 class VideoClass {
     // Resolution used in this game...
     readonly xres = 320
@@ -937,7 +939,13 @@ class VideoClass {
         var ctx
         ;[canvasEl, ctx] = _makeCanvasAndContext(width, height)
         ctx.drawImage(this._getEngine().canvasEl, -x1, -y1)
-        return new Canvas(width, height, canvasEl, ctx)
+        const canvas = new Canvas(width, height, canvasEl, ctx)
+        _canvases.push(canvas)
+        return canvas
+    }
+
+    FreeImage(canvas: Canvas) {
+        _canvases = _canvases.filter(x => x !== canvas);
     }
 
     ScaleBlit(image: Image, x: number, y: number, width: number, height: number) {

@@ -148,9 +148,12 @@ class Engine(object):
         yield from self.initTask()
 
         # insanely inefficient:
-        bleh = effects.createBlurImages()
+        startImages = effects.createBlurImages()
         self.draw()
-        yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
+        endImages = effects.createBlurImages()
+        yield from effects.blurFadeTask(50, startImages, endImages)
+        effects.freeBlurImages(startImages)
+        effects.freeBlurImages(endImages)
         yield from self.runTask()
 
     def loadGameTask(self):
@@ -159,12 +162,15 @@ class Engine(object):
         yield from saveloadmenu.loadMenuTask(self, resultRef, fadeOut=False)
         [result] = resultRef
         if result:
-            bleh = effects.createBlurImages()
+            startImages = effects.createBlurImages()
             self.saveFlags = {}
             yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
             yield from self.initTask(result)
             self.draw()
-            yield from effects.blurFadeTask(50, bleh, effects.createBlurImages())
+            endImages = effects.createBlurImages()
+            yield from effects.blurFadeTask(50, startImages, endImages)
+            effects.freeBlurImages(startImages)
+            effects.freeBlurImages(endImages)
             yield from self.runTask()
 
     def getImage(self, key):
@@ -227,6 +233,8 @@ class Engine(object):
             self.draw()
             endImages = effects.createBlurImages()
             yield from effects.blurFadeTask(50, startImages, endImages)
+            effects.freeBlurImages(startImages)
+            effects.freeBlurImages(endImages)
 
         self.synchTime()
 
@@ -256,6 +264,8 @@ class Engine(object):
             yield None
             now = ika.GetTime()
 
+        ika.Video.FreeImage(startImage)
+        ika.Video.FreeImage(endImage)
         self.synchTime()
 
     def runTask(self):
