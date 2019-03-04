@@ -1139,23 +1139,11 @@ class Engine {
 
         const loadImage = (path: string) => {
             return new Promise<void>((resolve: ()=>void, _reject: any) => {
-                const imageEl = window.document.createElement('img')
+                const imageEl: HTMLImageElement = new Image()
                 // TODO: Handle image load failure?
                 imageEl.addEventListener('load', resolve)
                 imageEl.src = path
                 this.imageEls[path] = imageEl
-
-                // TODO: Not sure what's going on, but for some reason it seems
-                // adding the image element to the page with a non-none display
-                // is a prerequisite to having its width and height properties
-                // populated, even after waiting for the load event, contrary to
-                // all documentation seen online.  Observed in Chrome 59,
-                // Firefox 54.
-                imageEl.style.position = "absolute"
-                imageEl.style.top = "0"
-                imageEl.style.left = "0"
-                imageEl.style.opacity = "0"
-                window.document.body.appendChild(imageEl)
             })
         };
 
