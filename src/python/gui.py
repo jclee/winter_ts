@@ -274,7 +274,6 @@ class ScrollableTextLabel(StaticText):
     def draw(self, xoffset = 0, yoffset = 0):
         x = self.x + xoffset
         y = self.y + yoffset
-        ika.Video.ClipScreen(x, y, x + self.width, y + self.height)
 
         firstLine = self.ywin // self.font.height
         lastLine = (self.height + self.ywin) // self.font.height + 1
@@ -283,8 +282,6 @@ class ScrollableTextLabel(StaticText):
         for line in self.text[firstLine:lastLine]:
             self.font.Print(x, curY, line)
             curY += self.font.height
-
-        ika.Video.ClipScreen()
 
 class ScrollableTextFrame(Frame):
     '''

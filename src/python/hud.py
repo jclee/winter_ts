@@ -63,10 +63,7 @@ class _Gauge(Thing):
 
         x += self.left.width
 
-        ika.Video.ClipScreen(x, 0, x + width + 1, ika.Video.yres)
-        for X in range(0, width, self.span.width):
-            ika.Video.TintBlit(self.span, x + X, self.y, o)
-        ika.Video.ClipScreen()
+        ika.Video.TintScaleBlit(self.span, x, self.y, width, self.span.height, o)
 
         x -= 2
 

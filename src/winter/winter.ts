@@ -911,21 +911,6 @@ class VideoClass {
         this._getEngine().ctx.fillRect(0, 0, this._getEngine().width, this._getEngine().height)
     }
 
-    ResetClipScreen() {
-        // Pop and immediately save pristine state
-        this._getEngine().ctx.restore()
-        this._getEngine().ctx.save()
-    }
-
-    ClipScreen(left?: number, top?: number, right?: number, bottom?: number) {
-        // TODO: Migrate empty param calls to ResetClipScreen() instead.
-        this.ResetClipScreen()
-        if (left !== undefined && top !== undefined && right !== undefined && bottom !== undefined) {
-            this._getEngine().ctx.rect(left, top, right - left, bottom - top)
-            this._getEngine().ctx.clip()
-        }
-    }
-
     DrawRect(x1: number, y1: number, x2: number, y2: number, colour: number) {
         this._getEngine().ctx.fillStyle = _RGBAToCSS(colour)
         // TODO: Maybe check on negative dimension behavior?
@@ -957,8 +942,6 @@ class VideoClass {
 
     ShowPage() {
         this._getEngine().displayCtx.drawImage(this._getEngine().canvasEl, 0, 0)
-        // Pretty sure any clipping gets reset here...
-        //this.ClipScreen()
     }
 
     TintBlit(image: Image, x: number, y: number, alpha: number) {
