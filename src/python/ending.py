@@ -165,6 +165,7 @@ def creditsTask(engineRef):
     engineRef.fader.kill()
     engineRef.fader.reset(m)
 
+    vignette = engineRef.getImage('gfx/credits_vignette.png')
     bg = engineRef.getImage('gfx/mountains.png')
     snowObj = snow.Snow(velocity=(0, 1))
     y = -ika.Video.yres
@@ -187,15 +188,7 @@ def creditsTask(engineRef):
             Y += font.height
             firstLine += 1
 
-        ika.Video.DrawTriangle(
-            (0, 0, ika.RGB(0, 0, 0)),
-            (ika.Video.xres, 0, ika.RGB(0, 0, 0, 0)),
-            (0, 60, ika.RGB(0, 0, 0, 0)))
-
-        ika.Video.DrawTriangle(
-            (ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0)),
-            (0, ika.Video.yres, ika.RGB(0, 0, 0, 0)),
-            (ika.Video.xres, ika.Video.yres - 60, ika.RGB(0, 0, 0, 0)))
+        ika.Video.Blit(vignette, 0, 0)
 
         snowObj.draw()
 

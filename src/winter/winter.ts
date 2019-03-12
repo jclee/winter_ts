@@ -959,40 +959,6 @@ class VideoClass {
         this._getEngine().ctx.restore()
     }
 
-    DrawTriangle(v1: any, v2: any, v3: any) {
-        // TODO: We actually only use DrawTriangle in the credits scene, to
-        // draw a gradiated black triangle.
-        const ctx = this._getEngine().ctx
-
-        const dx = v3[0] - v2[0]
-        const dy = v3[1] - v2[1]
-        const len = Math.sqrt(dx * dx + dy * dy)
-        const ndx = dx / len
-        const ndy = dy / len
-
-        const dx1 = v1[0] - v2[0]
-        const dy1 = v1[1] - v2[1]
-        const projLen = dx1 * ndx + dy1 * ndy
-        const projx = ndx * projLen
-        const projy = ndy * projLen
-
-        const x2 = dx1 - projx
-        const y2 = dy1 - projy
-
-        const gradientEndX = v1[0] - x2
-        const gradientEndY = v1[1] - y2
-        const gradient = ctx.createLinearGradient(v1[0], v1[1], gradientEndX, gradientEndY)
-        gradient.addColorStop(0, 'rgb(0, 0, 0)')
-        gradient.addColorStop(1, 'rgb(0, 0, 0, 0)')
-
-        ctx.fillStyle = gradient
-        ctx.beginPath()
-        ctx.moveTo(v1[0], v1[1])
-        ctx.lineTo(v2[0], v2[1])
-        ctx.lineTo(v3[0], v3[1])
-        ctx.fill()
-    }
-
     // TODO other members...
 }
 (window as any).VideoClass = VideoClass
@@ -1044,6 +1010,7 @@ class Engine {
         window.document.body.style.backgroundColor = "#dddddd"
 
         const imagePaths = [
+            'winter/gfx/credits_vignette.png',
             'winter/gfx/gba.png',
             'winter/gfx/isabigfatbitch.png',
             'winter/gfx/mountains.png',
