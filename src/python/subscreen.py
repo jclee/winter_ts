@@ -80,15 +80,18 @@ class StatWindow(SubScreenWindow):
     def createContents(self):
         stats = self.engineRef.player.stats
         return (
-            gui.StaticText(text='Level %02i' % stats.level),
-            gui.StaticText(text='Exp'), gui.StaticText(text=' %06i/' % stats.exp),
-            gui.StaticText(text='  %06i' % stats.next),
+            gui.StaticText(self.engineRef, text='Level %02i' % stats.level),
+            gui.StaticText(self.engineRef, text='Exp'),
+            gui.StaticText(self.engineRef, text=' %06i/' % stats.exp),
+            gui.StaticText(self.engineRef, text='  %06i' % stats.next),
             # expbar thingie goes here
-            gui.StaticText(text='HP'), gui.StaticText(text=' %03i/%03i' % (stats.hp, stats.maxhp)),
+            gui.StaticText(self.engineRef, text='HP'),
+            gui.StaticText(self.engineRef, text=' %03i/%03i' % (stats.hp, stats.maxhp)),
             # hp bar
-            gui.StaticText(text='MP'), gui.StaticText(text=' %03i/%03i' % (stats.mp, stats.maxmp))
+            gui.StaticText(self.engineRef, text='MP'),
+            gui.StaticText(self.engineRef, text=' %03i/%03i' % (stats.mp, stats.maxmp))
             # mp bar
-            )
+        )
 
 class AttribWindow(SubScreenWindow):
     def __init__(self, engineRef):
@@ -105,10 +108,10 @@ class AttribWindow(SubScreenWindow):
     def createContents(self):
         stats = self.engineRef.player.stats
         return (
-            self.icons['att'], gui.StaticText(text='...%03i' % stats.att),
-            self.icons['mag'], gui.StaticText(text='...%03i' % stats.mag),
-            self.icons['pres'], gui.StaticText(text='...%03i' % stats.pres),
-            self.icons['mres'], gui.StaticText(text='...%03i' % stats.mres)
+            self.icons['att'], gui.StaticText(self.engineRef, text='...%03i' % stats.att),
+            self.icons['mag'], gui.StaticText(self.engineRef, text='...%03i' % stats.mag),
+            self.icons['pres'], gui.StaticText(self.engineRef, text='...%03i' % stats.pres),
+            self.icons['mres'], gui.StaticText(self.engineRef, text='...%03i' % stats.mres)
             )
 
 class MagicWindow(SubScreenWindow):
@@ -130,11 +133,11 @@ class MagicWindow(SubScreenWindow):
         if 'cowardrune' in self.engineRef.saveFlags:
             txt.append('B...Shiver')
 
-        return (gui.StaticText(text=txt),)
+        return (gui.StaticText(self.engineRef, text=txt),)
 
 class MenuWindow(gui.Menu):
     def __init__(self, engineRef):
-        gui.Menu.__init__(self, engineRef, textctrl=gui.ScrollableTextFrame(engineRef))
+        gui.Menu.__init__(self, engineRef)
         self.addText([
             'Resume',
             #'Controls',

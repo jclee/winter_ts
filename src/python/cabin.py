@@ -33,9 +33,9 @@ def draw():
 def textBox(engineRef, ent, txt):
     WIDTH = 200
     width = WIDTH
-    text = WrapText(txt, width, gui.default_font)
-    width = max([gui.default_font.StringWidth(s) for s in text])
-    height = len(text) * gui.default_font.height
+    text = WrapText(txt, width, engineRef.font)
+    width = max([engineRef.font.StringWidth(s) for s in text])
+    height = len(text) * engineRef.font.height
 
     x, y = ent.x + ent.hotwidth // 2 - ika.Map.xwin, ent.y - ika.Map.ywin
 
@@ -44,9 +44,9 @@ def textBox(engineRef, ent, txt):
 
     width = WIDTH
     if x + width + 16 > ika.Video.xres:
-        text = WrapText(txt, ika.Video.xres - x - 16, gui.default_font)
-        width = max([gui.default_font.StringWidth(s) for s in text])
-        height = len(text) * gui.default_font.height
+        text = WrapText(txt, ika.Video.xres - x - 16, engineRef.font)
+        width = max([engineRef.font.StringWidth(s) for s in text])
+        height = len(text) * engineRef.font.height
 
     frame = gui.ScrollableTextFrame(engineRef)
     frame.addText(text)

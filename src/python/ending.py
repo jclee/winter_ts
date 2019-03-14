@@ -169,7 +169,7 @@ def creditsTask(engineRef):
     bg = engineRef.getImage('gfx/mountains.png')
     snowObj = snow.Snow(velocity=(0, 1))
     y = -ika.Video.yres
-    font = ika.Font('system.fnt')
+    font = engineRef.font
 
     def draw():
         ika.Video.Blit(bg, 0, 0)

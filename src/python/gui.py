@@ -11,8 +11,6 @@
 import ika
 import controls
 
-default_font = ika.Font('system.fnt')
-
 class ImageCursor(object):
     def __init__(self, engineRef, filename, hotspot = None):
         img = engineRef.getImage(filename)
@@ -147,7 +145,7 @@ class StaticText(Widget):
     A widget that appears as some lines of text.
     No frame is drawn.
     '''
-    def __init__(self, x = 0, y = 0, w = 0, h = 0, *args, **kwargs):
+    def __init__(self, engineRef, x = 0, y = 0, w = 0, h = 0, *args, **kwargs):
         Widget.__init__(self, x, y, w, h)
 
         if 'text' in kwargs:
@@ -158,7 +156,7 @@ class StaticText(Widget):
         else:
             self.text = list(args)
 
-        self.font = default_font
+        self.font = engineRef.font
 
         self.autoSize()
 
@@ -205,7 +203,7 @@ class TextFrame(Frame):
 
         # way cool.  since keyword arguments are passed on, the font will be set properly.
         # additionally, text will be added just like StaticText.  Consistency totally rules.
-        self.text = StaticText(0, 0, width, height, *args, **kwargs)
+        self.text = StaticText(engineRef, 0, 0, width, height, *args, **kwargs)
 
         self.addChild(self.text)
         self.autoSize()
@@ -293,7 +291,7 @@ class ScrollableTextFrame(Frame):
     def __init__(self, engineRef):
         Frame.__init__(self, engineRef)
 
-        self.text = ScrollableTextLabel()
+        self.text = ScrollableTextLabel(engineRef)
         self.font = self.text.font
         self.addChild(self.text)
 
@@ -329,7 +327,7 @@ class Menu(Widget):
     '''
     def __init__(self, engineRef, *args, **kwargs):
         Widget.__init__(self, *args)
-        self.textCtrl = kwargs.get('textctrl') or ScrollableTextLabel()
+        self.textCtrl = ScrollableTextFrame(engineRef)
         self.cursor = ImageCursor(engineRef, 'gfx/ui/pointer.png', hotspot=(14, 6))
         self.cursorY = 0
         self.cursorPos = 0

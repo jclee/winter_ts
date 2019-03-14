@@ -7,34 +7,28 @@ import ika
 from saveload import SaveGame
 
 class SaveGameFrame(gui.Frame):
-    def __init__(self, engineRef, icons, save=None):
+    def __init__(self, engineRef, icons, save):
         gui.Frame.__init__(self, engineRef)
-        self.save = save
         self.layout = gui.VerticalBoxLayout()
         self.addChild(self.layout)
-        self.update(icons)
 
-    def update(self, icons):
-        if self.save:
-            stats = self.save.stats
-            self.layout.setChildren([
-                gui.HorizontalBoxLayout(
-                    gui.StaticText(text='HP%03i/%03i' % (stats.hp, stats.maxhp)),
-                    gui.Spacer(width=16),
-                    gui.StaticText(text='Lv. %02i' % stats.level)
-                ),
-                gui.FlexGridLayout(4,
-                    icons['att'], gui.StaticText(text='%02i  ' % stats.att),
-                    icons['mag'], gui.StaticText(text='%02i  ' % stats.mag),
-                    icons['pres'], gui.StaticText(text='%02i  ' % stats.pres),
-                    icons['mres'], gui.StaticText(text='%02i  ' % stats.mres)
-                )
-            ])
+        stats = save.stats
+        self.layout.setChildren([
+            gui.HorizontalBoxLayout(
+                gui.StaticText(engineRef, text='HP%03i/%03i' % (stats.hp, stats.maxhp)),
+                gui.Spacer(width=16),
+                gui.StaticText(engineRef, text='Lv. %02i' % stats.level)
+            ),
+            gui.FlexGridLayout(4,
+                icons['att'], gui.StaticText(engineRef, text='%02i  ' % stats.att),
+                icons['mag'], gui.StaticText(engineRef, text='%02i  ' % stats.mag),
+                icons['pres'], gui.StaticText(engineRef, text='%02i  ' % stats.pres),
+                icons['mres'], gui.StaticText(engineRef, text='%02i  ' % stats.mres)
+            )
+        ])
 
-            self.layout.layout()
-            self.autoSize()
-        else:
-            assert False
+        self.layout.layout()
+        self.autoSize()
 
 class SaveLoadMenu(object):
     def __init__(self, engineRef, saves, saving = False):
@@ -47,7 +41,7 @@ class SaveLoadMenu(object):
 
         self.saves = saves
 
-        boxes = [SaveGameFrame(engineRef, icons=self.icons, save=s) for s in saves]
+        boxes = [SaveGameFrame(engineRef, self.icons, s) for s in saves]
         if saving:
             boxes.append(gui.TextFrame(engineRef, text='Create New'))
         elif not boxes:
