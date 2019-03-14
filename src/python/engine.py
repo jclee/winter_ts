@@ -100,6 +100,10 @@ class Engine(object):
         }
         self.saveFlags = {}
 
+        def getEngine():
+            return ika.getEngine()
+        self.getEngine = getEngine
+
     def initTask(self, saveData = None):
         'barf'
 

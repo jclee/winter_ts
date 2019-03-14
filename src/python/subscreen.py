@@ -57,102 +57,12 @@ class WindowMover(object):
     def draw(self):
         self.theWindow.draw()
 
-class SubScreenWindow(gui.Frame):
-    def __init__(self, engineRef):
-        super(SubScreenWindow, self).__init__(engineRef)
-        self.layout = self.createLayout()
-        self.addChild(self.layout)
-        self.setBorder(self.wnd.iLeft.width)
-
-    def createLayout(self):
-        return gui.VerticalBoxLayout()
-
-    def update(self):
-        self.layout.setChildren(self.createContents())
-        self.layout.layout()
-        self.autoSize()
-
-class StatWindow(SubScreenWindow):
-    def __init__(self, engineRef):
-        super(StatWindow, self).__init__(engineRef)
-        self.engineRef = engineRef
-
-    def createContents(self):
-        stats = self.engineRef.player.stats
-        return (
-            gui.StaticText(self.engineRef, text='Level %02i' % stats.level),
-            gui.StaticText(self.engineRef, text='Exp'),
-            gui.StaticText(self.engineRef, text=' %06i/' % stats.exp),
-            gui.StaticText(self.engineRef, text='  %06i' % stats.next),
-            # expbar thingie goes here
-            gui.StaticText(self.engineRef, text='HP'),
-            gui.StaticText(self.engineRef, text=' %03i/%03i' % (stats.hp, stats.maxhp)),
-            # hp bar
-            gui.StaticText(self.engineRef, text='MP'),
-            gui.StaticText(self.engineRef, text=' %03i/%03i' % (stats.mp, stats.maxmp))
-            # mp bar
-        )
-
-class AttribWindow(SubScreenWindow):
-    def __init__(self, engineRef):
-        super(AttribWindow, self).__init__(engineRef)
-        self.engineRef = engineRef
-        self.icons = dict(
-            [(s, gui.Picture(engineRef, img='gfx/ui/icon_%s.png' % s))
-                for s in ('att', 'mag', 'pres', 'mres')]
-        )
-
-    def createLayout(self):
-        return gui.FlexGridLayout(cols=2, pad=0)
-
-    def createContents(self):
-        stats = self.engineRef.player.stats
-        return (
-            self.icons['att'], gui.StaticText(self.engineRef, text='...%03i' % stats.att),
-            self.icons['mag'], gui.StaticText(self.engineRef, text='...%03i' % stats.mag),
-            self.icons['pres'], gui.StaticText(self.engineRef, text='...%03i' % stats.pres),
-            self.icons['mres'], gui.StaticText(self.engineRef, text='...%03i' % stats.mres)
-            )
-
-class MagicWindow(SubScreenWindow):
-    def __init__(self, engineRef):
-        SubScreenWindow.__init__(self, engineRef)
-        self.engineRef = engineRef
-
-    def createLayout(self):
-        return gui.VerticalBoxLayout()
-
-    def createContents(self):
-        txt = ['Magic:']
-        if 'firerune' in self.engineRef.saveFlags:
-            txt.append('Z...Hearth Rend')
-        if 'windrune' in self.engineRef.saveFlags:
-            txt.append('X...Crushing Gale')
-        if 'waterrune' in self.engineRef.saveFlags:
-            txt.append('C...Healing Rain')
-        if 'cowardrune' in self.engineRef.saveFlags:
-            txt.append('B...Shiver')
-
-        return (gui.StaticText(self.engineRef, text=txt),)
-
-class MenuWindow(gui.Menu):
-    def __init__(self, engineRef):
-        gui.Menu.__init__(self, engineRef)
-        self.addText([
-            'Resume',
-            #'Controls',
-            #'Load Game',
-            'Exit'
-        ])
-        self.autoSize()
-        self.setBorder(self.textCtrl.wnd.iLeft.width)
-
 class PauseScreen(object):
     def __init__(self, engineRef):
-        self.statWnd = StatWindow(engineRef)
-        self.attribWnd = AttribWindow(engineRef)
-        self.magWnd = MagicWindow(engineRef)
-        self.menu = MenuWindow(engineRef)
+        self.statWnd = gui.StatWindow.new(engineRef)
+        self.attribWnd = gui.AttribWindow.new(engineRef)
+        self.magWnd = gui.MagicWindow.new(engineRef)
+        self.menu = gui.MenuWindow.new(engineRef)
 
     def update(self):
         self.statWnd.update()
@@ -246,7 +156,7 @@ class PauseScreen(object):
             yield None
 
             result = self.menu.update()
-            if result is gui.Cancel or result == 0:
+            if result == 'cancel' or result == 0:
                 break
             elif result is not None:
                 if result == 0:

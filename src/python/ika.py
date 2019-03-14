@@ -18,38 +18,13 @@ def GetRGB(colorValue):
 
 def GetTime():
     global _engine
-    deltaMsec = window.Date.now() - _engine.startMsec
-    return (deltaMsec // 10)
+    return _engine.getTime()
 
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 
 def RGB(r, g, b, a = 255):
     return window.RGB(r, g, b, a)
-
-class _ControlClass(object):
-    def __init__(self):
-        self._pressed = 0
-        self._position = 0
-
-    def Pressed(self):
-        p = self._pressed
-        self._pressed = 0
-        return p
-
-    def Position(self):
-        return self._position
-
-class _KeyboardClass(object):
-    def __init__(self):
-        self._keys = {}
-
-    def __getitem__(self, key):
-        if key not in self._keys:
-            self._keys[key] = _ControlClass()
-        return self._keys[key]
-
-    # TODO other members...
 
 class _Point(object):
     def __init__(self, x, y):
@@ -69,15 +44,6 @@ def Font(file_name):
 def GetImage(init_arg):
     global _engine
     return _engine.getImage(init_arg)
-
-class _InputClass(object):
-    def __init__(self):
-        self.keyboard = _KeyboardClass()
-
-    def getKey(self, key):
-        return self.keyboard[key]
-
-Input = _InputClass()
 
 class Sound(object):
     def __init__(self, file_name):
@@ -109,9 +75,15 @@ class Snow(object):
         global _engine
         _engine.drawSnow(self._time, self._count, self._vx, self._vy, self._r, self._g, self._b)
 
-_engine = window.Engine.new(Input.getKey)
+_engine = window.Engine.new()
 Map = _engine.map
-Video = _engine._video
+Input = _engine.input
+Controls = _engine.controls
+Video = _engine.video
+
+def getEngine():
+    global _engine
+    return _engine
 
 def hypot(x, y):
     return window.Math.sqrt(x * x + y * y)

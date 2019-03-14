@@ -48,7 +48,7 @@ def textBox(engineRef, ent, txt):
         width = max([engineRef.font.StringWidth(s) for s in text])
         height = len(text) * engineRef.font.height
 
-    frame = gui.ScrollableTextFrame(engineRef)
+    frame = gui.ScrollableTextFrame.new(engineRef)
     frame.addText(text)
     frame.autoSize()
 
@@ -94,6 +94,8 @@ def animateHelper(ent, frames, delay, loop):
 
 def animate(engineRef, ent, frames, delay, thing=None, loop=True, text=None):
     # frames should be a list of (frame, delay) pairs.
+    global crap
+    oldCrap = crap[:]
     if thing is not None:
         crap.append(thing)
     if text is not None:
@@ -102,10 +104,7 @@ def animate(engineRef, ent, frames, delay, thing=None, loop=True, text=None):
 
     yield from animateHelper(ent, frames, delay, loop)
 
-    if thing is not None:
-        crap.remove(thing)
-    if text is not None:
-        crap.remove(text)
+    crap = oldCrap
     ent.specframe = 0
 
 #------------------------------------------------------------------------------

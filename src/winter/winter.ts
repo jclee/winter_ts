@@ -1,9 +1,9 @@
 
-import { Animator } from "./Animator.js";
-(window as any).Animator = Animator
+import { Animator } from "./Animator.js"
+;(window as any).Animator = Animator
 
-import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
-(window as any).Dir = {
+import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
+;(window as any).Dir = {
     Left: Direction.Left,
     Right: Direction.Right,
     Up: Direction.Up,
@@ -18,27 +18,61 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
     toDelta: toDelta,
 }
 
-import { loadGame, SaveData, saveGame } from "./saveload.js";
-(window as any).saveload = {
+import {
+    AttribWindow,
+    FlexGridLayout,
+    Frame,
+    HorizontalBoxLayout,
+    ImageCursor,
+    MagicWindow,
+    MenuWindow,
+    Picture,
+    SaveGameFrame,
+    SaveLoadMenu,
+    ScrollableTextFrame,
+    ScrollableTextLabel,
+    StaticText,
+    StatWindow,
+    TextFrame,
+    VerticalBoxLayout,
+    Widget
+} from "./gui.js"
+;(window as any).gui = {
+    AttribWindow: AttribWindow,
+    FlexGridLayout: FlexGridLayout,
+    Frame: Frame,
+    HorizontalBoxLayout: HorizontalBoxLayout,
+    ImageCursor: ImageCursor,
+    MagicWindow: MagicWindow,
+    MenuWindow: MenuWindow,
+    Picture: Picture,
+    SaveGameFrame: SaveGameFrame,
+    SaveLoadMenu: SaveLoadMenu,
+    ScrollableTextFrame: ScrollableTextFrame,
+    ScrollableTextLabel: ScrollableTextLabel,
+    StaticText: StaticText,
+    StatWindow: StatWindow,
+    TextFrame: TextFrame,
+    VerticalBoxLayout: VerticalBoxLayout,
+    Widget: Widget,
+}
+
+import { loadGame, SaveData, saveGame } from "./saveload.js"
+;(window as any).saveload = {
     loadGame, SaveData, saveGame
 }
 
-import { StatSet } from "./StatSet.js";
-(window as any).StatSet = StatSet
+import { StatSet } from "./StatSet.js"
+;(window as any).StatSet = StatSet
 
 interface Size {
     width: number
     height: number
 }
 
-class Point {
+export class Point {
     x: number
     y: number
-}
-
-interface Control {
-    _pressed: number
-    _position: number
 }
 
 interface MapData {
@@ -95,11 +129,50 @@ interface MapZoneScript {
     script: string
 }
 
-interface Image {
+export interface Image {
     _texture: WebGLTexture
     width: number
     height: number
     yScale: number
+}
+
+class Control {
+    private pressed: number = 0
+    private position: number = 0
+
+    handleKeyDown() {
+        this.pressed = 1
+        this.position = 1
+    }
+
+    handleKeyUp() {
+        this.position = 0
+    }
+
+    getPressed() {
+        const p = this.pressed
+        this.pressed = 0
+        return p
+    }
+
+    getPosition() {
+        return this.position
+    }
+}
+
+export class InputClass {
+    private keys: {[key:string]: Control}
+
+    constructor() {
+        this.keys = {}
+    }
+
+    getKey(key: string): Control {
+        if (this.keys[key] === undefined) {
+            this.keys[key] = new Control()
+        }
+        return this.keys[key]
+    }
 }
 
 class Canvas {
@@ -454,8 +527,8 @@ const _fontData : FontData = {
     ],
 }
 
-class FontClass {
-    private height: number
+export class FontClass {
+    height: number
 
     constructor(
         private _engine: Engine,
@@ -1235,7 +1308,28 @@ class VideoClass {
 }
 (window as any).VideoClass = VideoClass
 
-class Engine {
+export interface PyEngine {
+    getEngine: ()=>{js: Engine}
+    font: {js: FontClass}
+    player: {stats: {js: StatSet}}
+    saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}
+}
+
+export interface Controls {
+    up: ()=>boolean
+    down: ()=>boolean
+    left: ()=>boolean
+    right: ()=>boolean
+    attack: ()=>boolean
+    enter: ()=>boolean
+    cancel: ()=>boolean
+    rend: ()=>boolean
+    gale: ()=>boolean
+    heal: ()=>boolean
+    shiver: ()=>boolean
+}
+
+export class Engine {
     maps: {[key: string]: MapData}
     images: {[key: string]: Image}
     sprites: {[key: string]: SpriteData}
@@ -1254,17 +1348,45 @@ class Engine {
     quadPositionBuffer: WebGLBuffer
     quadTexCoordBuffer: WebGLBuffer
     map: MapClass
-    _video: VideoClass
+    input: InputClass
+    controls: Controls
+    video: VideoClass
 
-    constructor(
-        private _getKey: (key: string) => Control,
-    ) {
+    constructor() {
         this.images = {}
         this.maps = {}
         this.sprites = {}
-        this._video = new VideoClass(this)
-        this.map = new MapClass(this, this._video)
+        this.input = new InputClass()
+        this.video = new VideoClass(this)
+        this.map = new MapClass(this, this.video)
         this.enabledAttributeLocations = []
+
+        const posControl = (s: string) => {
+            const key = this.input.getKey(s)
+            return () => key.getPosition() > 0
+        }
+        const pressControl = (s: string) => {
+            const key = this.input.getKey(s)
+            return () => key.getPressed() !== 0
+        }
+        this.controls = {
+            up: posControl('UP'),
+            down: posControl('DOWN'),
+            left: posControl('LEFT'),
+            right: posControl('RIGHT'),
+            attack: pressControl('SPACE'),
+            enter: pressControl('SPACE'),
+            cancel: pressControl('ESCAPE'),
+            rend: pressControl('Z'),
+            gale: pressControl('X'),
+            heal: pressControl('C'),
+            shiver: pressControl('V'),
+        }
+    }
+
+    getTime() {
+        const deltaMsec = Date.now() - this.startMsec
+        return Math.floor(deltaMsec / 10)
     }
 
     targetCanvasFramebuffer() {
@@ -1657,6 +1779,7 @@ class Engine {
             }),
         ]
 
+        // TODO: Some mechanism to customize inputs
         const _KeycodeMap: {[key: string]: string} = {
             'ArrowUp': 'UP',
             'ArrowDown': 'DOWN',
@@ -1689,20 +1812,14 @@ class Engine {
                 if (!(event.key in _KeycodeMap)) {
                     return
                 }
-                const control = this._getKey(_KeycodeMap[event.key])
+                const control = this.input.getKey(_KeycodeMap[event.key])
                 fn(control)
                 event.preventDefault()
             }
         }
 
-        const onKeyDown = makeControlHandler((control: Control) => {
-            control._pressed = 1
-            control._position = 1
-        })
-
-        const onKeyUp = makeControlHandler((control: Control) => {
-            control._position = 0
-        })
+        const onKeyDown = makeControlHandler((c: Control) => c.handleKeyDown())
+        const onKeyUp = makeControlHandler((c: Control) => c.handleKeyUp())
 
         window.addEventListener('keydown', onKeyDown, true)
         window.addEventListener('keyup', onKeyUp, true)
@@ -1717,7 +1834,7 @@ class Engine {
 
         const startEngine = () => {
             console.log("Starting engine...")
-            this._video.ClearScreen()
+            this.video.ClearScreen()
             window.requestAnimationFrame(runFrame)
         }
 

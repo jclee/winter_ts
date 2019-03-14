@@ -1,25 +1,13 @@
 import ika
 
-class _PosControl(object):
-    def __init__(self, key):
-        self._inputKey = ika.Input.keyboard[key]
-    def __call__(self):
-        return self._inputKey.Position() > 0
-
-class _PressControl(object):
-    def __init__(self, key):
-        self._inputKey = ika.Input.keyboard[key]
-    def __call__(self):
-        return self._inputKey.Pressed()
-
-up = _PosControl('UP')
-down = _PosControl('DOWN')
-left = _PosControl('LEFT')
-right = _PosControl('RIGHT')
-attack = _PressControl('SPACE')
-enter = _PressControl('SPACE')
-cancel = _PressControl('ESCAPE')
-rend = _PressControl('Z')
-gale = _PressControl('X')
-heal = _PressControl('C')
-shiver = _PressControl('V')
+up = ika.Controls.up
+down = ika.Controls.down
+left = ika.Controls.left
+right = ika.Controls.right
+attack = ika.Controls.attack
+enter = ika.Controls.enter
+cancel = ika.Controls.cancel
+rend = ika.Controls.rend
+gale = ika.Controls.gale
+heal = ika.Controls.heal
+shiver = ika.Controls.shiver
