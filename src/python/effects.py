@@ -35,9 +35,9 @@ def freeBlurImages(images):
         ika.Video.FreeImage(img)
 
 def blurFadeTask(time, startImages, endImages):
-    startTime = ika.GetTime()
-    endTime = ika.GetTime() + time
-    now = startTime
+    now = ika.GetTime()
+    startTime = now
+    endTime = now + time
     while now < endTime:
         imageIndex = (now - startTime) * len(startImages) // time
         opacity = (now - startTime) / time
