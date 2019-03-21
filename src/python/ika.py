@@ -116,18 +116,13 @@ Video = _engine._video
 def hypot(x, y):
     return window.Math.sqrt(x * x + y * y)
 
-def SetLocalStorageItem(key, value):
-    window.localStorage.setItem('wintergame/' + key, value)
-
-def GetLocalStorageItem(key):
-    return window.localStorage.getItem('wintergame/' + key)
-
 def Run(task):
     global _engine
 
     def taskFn():
         nonlocal task
         try:
+            # TODO: May be able to use yielded generator as a goto.
             value = next(task)
         except StopIteration:
             return False

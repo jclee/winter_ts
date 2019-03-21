@@ -52,8 +52,8 @@ def blurFadeTask(time, startImages, endImages):
 def _fadeTask(time, startAlpha, endAlpha, draw):
     deltaAlpha = endAlpha - startAlpha
 
-    startTime = ika.GetTime()
-    now = startTime
+    now = ika.GetTime()
+    startTime = now
     endtime = now + time
 
     while now < endtime:

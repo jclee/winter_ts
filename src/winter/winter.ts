@@ -18,6 +18,11 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js";
     toDelta: toDelta,
 }
 
+import { loadGame, SaveData, saveGame } from "./saveload.js";
+(window as any).saveload = {
+    loadGame, SaveData, saveGame
+}
+
 import { StatSet } from "./StatSet.js";
 (window as any).StatSet = StatSet
 

@@ -4,7 +4,6 @@ import controls
 import effects
 import gui
 import ika
-from saveload import SaveGame
 
 class SaveGameFrame(gui.Frame):
     def __init__(self, engineRef, icons, save):
@@ -38,9 +37,6 @@ class SaveLoadMenu(object):
         )
 
         self.cursor = gui.ImageCursor(engineRef, 'gfx/ui/pointer.png')
-
-        self.saves = saves
-
         boxes = [SaveGameFrame(engineRef, self.icons, s) for s in saves]
         if saving:
             boxes.append(gui.TextFrame(engineRef, text='Create New'))
@@ -86,21 +82,10 @@ class SaveLoadMenu(object):
 
             return None
 
-def readSaves(engineRef):
-    saves = []
-
-    try:
-        i = 0
-        while True:
-            saves.append(SaveGame(engineRef, 'save%i' % i))
-            i += 1
-    except IOError:
-        return saves
-
 def loadMenuTask(engineRef, resultRef, fadeOut=True):
     title = gui.TextFrame(engineRef, text='Load Game')
     title.setPosition((16, 16))
-    saves = readSaves(engineRef)
+    saves = engineRef.readSaves()
     m = SaveLoadMenu(engineRef, saves, saving=False)
 
     def draw():
@@ -131,7 +116,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
 def saveMenuTask(engineRef):
     title = gui.TextFrame(engineRef, text='Save Game')
     title.setPosition((16, 16))
-    saves = readSaves(engineRef)
+    saves = engineRef.readSaves()
     m = SaveLoadMenu(engineRef, saves, saving=True)
 
     def draw():
@@ -149,7 +134,6 @@ def saveMenuTask(engineRef):
         yield None
 
     if i is not gui.Cancel:
-        s = SaveGame.currentGame(engineRef)
-        s.save(engineRef, 'save%i' % i)
+        engineRef.writeSave(i)
 
     yield from effects.fadeOutTask(50, draw=draw)

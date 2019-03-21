@@ -2,6 +2,7 @@ import ika
 from browser import window
 
 import effects
+import saveloadmenu
 
 from player import Player, PLAYER_SPRITE
 from anklebiter import AnkleBiter
@@ -112,6 +113,7 @@ class Engine(object):
         # ika Entity : Entity
         self.entFromEnt = {}
 
+        # TODO - redundant with map switches in beginNewGameTask/loadGameTask? (pos parameter differs...)
         if saveData:
             # evil
             yield from self.mapSwitchTask(saveData.mapName, None, fade=False)
@@ -123,8 +125,11 @@ class Engine(object):
         self.addEntity(self.player)
 
         if saveData:
-            self.player.x, self.player.y, self.player.layer = saveData.pos
-            saveData.setCurrent(self) # set stats, flags
+            self.player.x = saveData.playerX
+            self.player.y = saveData.playerY
+            self.player.layer = saveData.playerLayer
+            self.player.stats = saveData.stats.clone()
+            self.saveFlags = dict(saveData.flags)
         else:
             self.player.x, self.player.y = START_POS
             lay = ika.Map.GetMetaData()['entityLayer']
@@ -156,15 +161,35 @@ class Engine(object):
         effects.freeBlurImages(endImages)
         yield from self.runTask()
 
+    def readSaves(self):
+        saves = []
+        index = 0
+        while True:
+            save = window.saveload.loadGame(index)
+            if save is None:
+                return saves
+            saves.append(save)
+            index += 1
+
+    def writeSave(self, index):
+        window.saveload.saveGame(index, window.saveload.SaveData.new(
+            self.player.stats.clone(),
+            dict(self.saveFlags),
+            self.mapName,
+            self.player.x,
+            self.player.y,
+            self.player.layer
+        ))
+
     def loadGameTask(self):
-        import saveloadmenu
         resultRef = [None]
         yield from saveloadmenu.loadMenuTask(self, resultRef, fadeOut=False)
         [result] = resultRef
         if result:
             startImages = effects.createBlurImages()
             self.saveFlags = {}
-            yield from self.mapSwitchTask(result.mapName, result.pos,  fade=False)
+            pos = [result.playerX, result.playerY, result.playerLayer]
+            yield from self.mapSwitchTask(result.mapName, pos,  fade=False)
             yield from self.initTask(result)
             self.draw()
             endImages = effects.createBlurImages()
@@ -175,12 +200,6 @@ class Engine(object):
 
     def getImage(self, key):
         return ika.GetImage(key)
-
-    def setLocalStorageItem(self, key, data):
-        ika.SetLocalStorageItem(key, data)
-
-    def getLocalStorageItem(self, key):
-        return ika.GetLocalStorageItem(key)
 
     def mapSwitchTask(self, mapName, dest = None, fade = True):
         print("switching to map", mapName)
