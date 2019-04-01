@@ -13,9 +13,9 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
     DownLeft: Direction.DownLeft,
     DownRight: Direction.DownRight,
 
-    fromDelta: fromDelta,
-    invert: invert,
-    toDelta: toDelta,
+    fromDelta,
+    invert,
+    toDelta,
 }
 
 import {
@@ -38,23 +38,28 @@ import {
     Widget
 } from "./gui.js"
 ;(window as any).gui = {
-    AttribWindow: AttribWindow,
-    FlexGridLayout: FlexGridLayout,
-    Frame: Frame,
-    HorizontalBoxLayout: HorizontalBoxLayout,
-    ImageCursor: ImageCursor,
-    MagicWindow: MagicWindow,
-    MenuWindow: MenuWindow,
-    Picture: Picture,
-    SaveGameFrame: SaveGameFrame,
-    SaveLoadMenu: SaveLoadMenu,
-    ScrollableTextFrame: ScrollableTextFrame,
-    ScrollableTextLabel: ScrollableTextLabel,
-    StaticText: StaticText,
-    StatWindow: StatWindow,
-    TextFrame: TextFrame,
-    VerticalBoxLayout: VerticalBoxLayout,
-    Widget: Widget,
+    AttribWindow,
+    FlexGridLayout,
+    Frame,
+    HorizontalBoxLayout,
+    ImageCursor,
+    MagicWindow,
+    MenuWindow,
+    Picture,
+    SaveGameFrame,
+    SaveLoadMenu,
+    ScrollableTextFrame,
+    ScrollableTextLabel,
+    StaticText,
+    StatWindow,
+    TextFrame,
+    VerticalBoxLayout,
+    Widget,
+}
+
+import { introTask, menuTask } from "./intro.js"
+;(window as any).intro = {
+    introTask, menuTask
 }
 
 import { loadGame, SaveData, saveGame } from "./saveload.js"
@@ -64,6 +69,10 @@ import { loadGame, SaveData, saveGame } from "./saveload.js"
 
 import { StatSet } from "./StatSet.js"
 ;(window as any).StatSet = StatSet
+
+;(window as any).hasProperty = (obj: any, name: string) => {
+    return obj.hasOwnProperty(name) && obj[name] !== undefined
+}
 
 interface Size {
     width: number
@@ -183,7 +192,7 @@ class Canvas {
     }
 }
 
-const RGB = (r: number, g: number, b: number, a: number): number => {
+export const RGB = (r: number, g: number, b: number, a: number): number => {
     return ((
         ((r | 0) & 0xff)
         | (((g | 0) & 0xff) << 8)
@@ -1327,6 +1336,44 @@ export interface Controls {
     gale: ()=>boolean
     heal: ()=>boolean
     shiver: ()=>boolean
+}
+
+export class Snow {
+    private time: number
+    private vx: number
+    private vy: number
+    private r: number
+    private g: number
+    private b: number
+    constructor(
+        private engine: Engine,
+        private count=100,
+        velocity=[0, 0.5],
+        color=RGB(255, 255, 255, 255),
+    ) {
+        this.time = 0.0
+        this.vx = velocity[0]
+        this.vy = velocity[1]
+        this.r = (color & 0xff) / 255.0
+        this.g = ((color >> 8) & 0xff) / 255.0
+        this.b = ((color >> 16) & 0xff) / 255.0
+    }
+
+    update() {
+        this.time += 10.0
+    }
+
+    draw() {
+        this.engine.drawSnow(this.time, this.count, this.vx, this.vy, this.r, this.g, this.b)
+    }
+}
+
+export function *delayTask(time: number) {
+    const targetEnd = Date.now() + (time * 10)
+    // Busy waiting, sort of... :(
+    while (targetEnd > Date.now()) {
+        yield null
+    }
 }
 
 export class Engine {

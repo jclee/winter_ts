@@ -1,3 +1,4 @@
+from browser import window
 import controls
 import effects
 import gui

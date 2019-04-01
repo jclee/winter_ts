@@ -1,6 +1,6 @@
+from browser import window
 import engine
 import ika
-import intro
 
 def _mainTask():
     introMusic = ika.Sound('music/Existing.s3m')
@@ -8,7 +8,7 @@ def _mainTask():
     engineObj = engine.Engine()
 
     # TODO: Reenable
-    #yield from intro.introTask()
+    #yield from ika.asTask(window.intro.introTask(engineObj))
     
     while True:
         engineObj.fader.kill()
@@ -16,7 +16,8 @@ def _mainTask():
         introMusic.Play()
         # Workaround for Brython "yield from" expression bugs:
         resultRef = [None]
-        yield from intro.menuTask(engineObj, resultRef)
+        def setResult(r): resultRef[0] = r
+        yield from ika.asTask(window.intro.menuTask(engineObj, setResult))
 
         if resultRef[0] == 0:
             introMusic.Pause()
