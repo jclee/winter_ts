@@ -1,7 +1,6 @@
 import ika
 from browser import window
 
-import effects
 import saveloadmenu
 
 from player import Player, PLAYER_SPRITE
@@ -157,12 +156,12 @@ class Engine(object):
         yield from self.initTask()
 
         # insanely inefficient:
-        startImages = effects.createBlurImages()
+        startImages = window.effects.createBlurImages(self)
         self.draw()
-        endImages = effects.createBlurImages()
-        yield from effects.blurFadeTask(50, startImages, endImages)
-        effects.freeBlurImages(startImages)
-        effects.freeBlurImages(endImages)
+        endImages = window.effects.createBlurImages(self)
+        yield from ika.asTask(window.effects.blurFadeTask(self, 50, startImages, endImages))
+        window.effects.freeBlurImages(self, startImages)
+        window.effects.freeBlurImages(self, endImages)
         yield from self.runTask()
 
     def readSaves(self):
@@ -190,16 +189,16 @@ class Engine(object):
         yield from saveloadmenu.loadMenuTask(self, resultRef, fadeOut=False)
         [result] = resultRef
         if result:
-            startImages = effects.createBlurImages()
+            startImages = window.effects.createBlurImages(self)
             self.saveFlags = {}
             pos = [result.playerX, result.playerY, result.playerLayer]
             yield from self.mapSwitchTask(result.mapName, pos,  fade=False)
             yield from self.initTask(result)
             self.draw()
-            endImages = effects.createBlurImages()
-            yield from effects.blurFadeTask(50, startImages, endImages)
-            effects.freeBlurImages(startImages)
-            effects.freeBlurImages(endImages)
+            endImages = window.effects.createBlurImages(self)
+            yield from ika.asTask(window.effects.blurFadeTask(self, 50, startImages, endImages))
+            window.effects.freeBlurImages(self, startImages)
+            window.effects.freeBlurImages(self, endImages)
             yield from self.runTask()
 
     def getImage(self, key):
@@ -209,7 +208,7 @@ class Engine(object):
         print("switching to map", mapName)
         if fade:
             self.draw()
-            startImages = effects.createBlurImages()
+            startImages = window.effects.createBlurImages(self)
 
         self.mapName = mapName
 
@@ -254,10 +253,10 @@ class Engine(object):
 
         if fade:
             self.draw()
-            endImages = effects.createBlurImages()
-            yield from effects.blurFadeTask(50, startImages, endImages)
-            effects.freeBlurImages(startImages)
-            effects.freeBlurImages(endImages)
+            endImages = window.effects.createBlurImages(self)
+            yield from ika.asTask(window.effects.blurFadeTask(self, 50, startImages, endImages))
+            window.effects.freeBlurImages(self, startImages)
+            window.effects.freeBlurImages(self, endImages)
 
         self.synchTime()
 
@@ -325,7 +324,7 @@ class Engine(object):
             self.clearKillQueue()
 
         except GameWinException:
-            yield from effects.fadeOutTask(200, draw=self.draw)
+            yield from ika.asTask(window.effects.fadeOutTask(self, 200, self.draw))
             self.killList = self.entities[:]
             self.clearKillQueue()
             yield from ending.creditsTask(self)

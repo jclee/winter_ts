@@ -8,9 +8,7 @@
 # There is no warranty, express or implied on the functionality, or
 # suitability of this code for any purpose.
 
-import ika
 from browser import window
-import controls
 
 AttribWindow = window.gui.AttribWindow
 FlexGridLayout = window.gui.FlexGridLayout

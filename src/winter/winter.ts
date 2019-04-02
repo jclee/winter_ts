@@ -57,6 +57,9 @@ import {
     Widget,
 }
 
+import { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages } from "./effects.js"
+;(window as any).effects = { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages }
+
 import { introTask, menuTask } from "./intro.js"
 ;(window as any).intro = {
     introTask, menuTask

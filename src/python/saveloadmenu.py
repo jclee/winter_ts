@@ -1,7 +1,6 @@
 # Stand-in load/save menu code
 
 import controls
-import effects
 import gui
 import ika
 from browser import window
@@ -17,7 +16,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         m.draw()
         title.draw()
 
-    yield from effects.fadeInTask(50, draw=draw)
+    yield from ika.asTask(window.effects.fadeInTask(engineRef, 50, draw))
 
     i = None
     while i is None:
@@ -27,7 +26,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         yield None
 
     if fadeOut:
-        yield from effects.fadeOutTask(50, draw=draw)
+        yield from ika.asTask(window.effects.fadeOutTask(engineRef, 50, draw))
 
     draw()
     # Hack to get around brython's lack of support for returning values through
@@ -48,7 +47,7 @@ def saveMenuTask(engineRef):
         m.draw()
         title.draw()
 
-    yield from effects.fadeInTask(50, draw=draw)
+    yield from ika.asTask(window.effects.fadeInTask(engineRef, 50, draw))
 
     i = None
     while i is None:
@@ -60,4 +59,4 @@ def saveMenuTask(engineRef):
     if i != 'cancel':
         engineRef.writeSave(i)
 
-    yield from effects.fadeOutTask(50, draw=draw)
+    yield from ika.asTask(window.effects.fadeOutTask(engineRef, 50, draw))

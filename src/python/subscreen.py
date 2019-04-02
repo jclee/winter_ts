@@ -1,4 +1,4 @@
-import effects
+from browser import window
 import gui
 import ika
 
@@ -59,6 +59,7 @@ class WindowMover(object):
 
 class PauseScreen(object):
     def __init__(self, engineRef):
+        self.engineRef = engineRef
         self.statWnd = gui.StatWindow.new(engineRef)
         self.attribWnd = gui.AttribWindow.new(engineRef)
         self.magWnd = gui.MagicWindow.new(engineRef)
@@ -75,7 +76,7 @@ class PauseScreen(object):
 
     def showTask(self):
         # assume the backbuffer is already filled
-        self.images = effects.createBlurImages()
+        self.images = window.effects.createBlurImages(self.engineRef)
         TIME = 40
 
         self.update()
@@ -138,7 +139,7 @@ class PauseScreen(object):
             now = ika.GetTime()
 
         self.background = None
-        effects.freeBlurImages(self.images)
+        window.effects.freeBlurImages(self.engineRef, self.images)
 
     def draw(self):
         self.statWnd.draw()

@@ -1,6 +1,5 @@
 from browser import window
 import controls
-import effects
 import gui
 import ika
 from misc import WrapText
@@ -128,12 +127,14 @@ def sceneTask(engineRef, name):
     kid2 = ika.Map.entities['kid2']
     kid3 = ika.Map.entities['kid3']
 
-    yield from effects.fadeInTask(100)
+    def draw():
+        ika.Map.Render()
+    yield from ika.asTask(window.effects.fadeInTask(engineRef, 100, draw))
 
     yield from _scenes[name](engineRef)
     engineRef.saveFlags[name] = 'True'
 
-    yield from effects.fadeOutTask(100)
+    yield from ika.asTask(window.effects.fadeOutTask(engineRef, 100, draw))
 
     grandpa = kid1 = kid2 = kid3 = None
 
