@@ -1,15 +1,14 @@
 # Stand-in load/save menu code
 
 import controls
-import gui
 import ika
 from browser import window
 
 def loadMenuTask(engineRef, resultRef, fadeOut=True):
-    title = gui.TextFrame.new(engineRef, ['Load Game'])
+    title = window.gui.TextFrame.new(engineRef, ['Load Game'])
     title.setPosition((16, 16))
     saves = engineRef.readSaves()
-    m = gui.SaveLoadMenu.new(engineRef, saves, False)
+    m = window.gui.SaveLoadMenu.new(engineRef, saves, False)
 
     def draw():
         ika.Video.ClearScreen() # fix this
@@ -37,10 +36,10 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
         resultRef[0] = saves[i]
 
 def saveMenuTask(engineRef):
-    title = gui.TextFrame.new(engineRef, ['Save Game'])
+    title = window.gui.TextFrame.new(engineRef, ['Save Game'])
     title.setPosition((16, 16))
     saves = engineRef.readSaves()
-    m = gui.SaveLoadMenu.new(engineRef, saves, True)
+    m = window.gui.SaveLoadMenu.new(engineRef, saves, True)
 
     def draw():
         ika.Video.ClearScreen() # fix this

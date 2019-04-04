@@ -1,6 +1,5 @@
 from browser import window
 import controls
-import gui
 import ika
 
 #------------------------------------------------------------------------------
@@ -47,7 +46,7 @@ def textBox(engineRef, ent, txt):
         width = max([engineRef.font.StringWidth(s) for s in text])
         height = len(text) * engineRef.font.height
 
-    frame = gui.ScrollableTextFrame.new(engineRef)
+    frame = window.gui.ScrollableTextFrame.new(engineRef)
     frame.addText(text)
     frame.autoSize()
 

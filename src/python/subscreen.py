@@ -1,5 +1,4 @@
 from browser import window
-import gui
 import ika
 
 from gameover import GameQuitException
@@ -60,10 +59,10 @@ class WindowMover(object):
 class PauseScreen(object):
     def __init__(self, engineRef):
         self.engineRef = engineRef
-        self.statWnd = gui.StatWindow.new(engineRef)
-        self.attribWnd = gui.AttribWindow.new(engineRef)
-        self.magWnd = gui.MagicWindow.new(engineRef)
-        self.menu = gui.MenuWindow.new(engineRef)
+        self.statWnd = window.gui.StatWindow.new(engineRef)
+        self.attribWnd = window.gui.AttribWindow.new(engineRef)
+        self.magWnd = window.gui.MagicWindow.new(engineRef)
+        self.menu = window.gui.MenuWindow.new(engineRef)
 
     def update(self):
         self.statWnd.update()
