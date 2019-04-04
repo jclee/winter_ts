@@ -18,7 +18,6 @@ from savepoint import SavePoint
 from obstacle import IceWall, Gap, IceChunks, Boulder
 from rune import WaterRune, FireRune, WindRune, CowardRune, StrengthRune, PowerRune, GuardRune
 
-from field import Field
 from hud import HPBar, MPBar, EXPBar
 from caption import Caption
 from camera import Camera
@@ -359,9 +358,15 @@ class Engine(object):
         self.clearKillQueue()
 
         # check fields
+        rlayer = self.player.layer
+        rx = self.player.x
+        ry = self.player.y
+        rw = self.player.ent.hotwidth
+        rh = self.player.ent.hotheight
         for f in self.fields:
-            if f.test(self.player):
-                yield from f.fireTask(self)
+            if f.test(rlayer, rx, ry, rw, rh):
+                scriptTask  = f.scriptTask
+                yield from scriptTask(self)
                 break
             brython_generator_bug_workaround = 'blah'
 
@@ -402,7 +407,8 @@ class Engine(object):
         for i in range(ika.Map.layercount):
             zones = ika.Map.GetZones(i)
             for (x, y, w, h, scriptTaskName) in zones:
-                self.addField(Field((x,y,w,h), i, mapModule.__dict__[scriptTaskName]))
+                scriptTask = mapModule.__dict__[scriptTaskName]
+                self.addField(window.field.Field.new([x,y,w,h], i, scriptTask))
 
     def readEnts(self, mapModule):
         '''Grabs all entities from the map, and adds them to the engine.'''
