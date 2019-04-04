@@ -18,7 +18,7 @@ function *showTask(engine: Engine, draw: ()=>void, count: number, snowObj: Snow)
 
 export function *introTask(engineRef: PyEngine) {
     const engine = engineRef.getEngine().js
-    const snowObj = new Snow(engine, 100, [0, 0.5])
+    const snowObj = new Snow(engineRef, 100, [0, 0.5])
     const gba = engine.getImage('gfx/gba.png')
     const yourmom = engine.getImage('gfx/yourmother.png')
     const isabitch = engine.getImage('gfx/isabigfatbitch.png')
@@ -60,7 +60,7 @@ export function *menuTask(engineRef: PyEngine, setResult: (r: number)=>void) {
     const engine = engineRef.getEngine().js
     const bg = engine.getImage('gfx/title.png')
     const cursor = engine.getImage('gfx/ui/pointer.png')
-    const snowObj = new Snow(engine, 100, [0, 0.5])
+    const snowObj = new Snow(engineRef, 100, [0, 0.5])
     snowObj.update()
     let result: number | null = null
     let cursorPos = 0

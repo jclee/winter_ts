@@ -1,8 +1,7 @@
-import ika
-import snow
+from browser import window
 
 def AutoExec(engineRef):
-    engineRef.mapThings.append(snow.Snow(4000, velocity=(-1, 1.5)))
+    engineRef.mapThings.append(window.Snow.new(engineRef, 4000, [-1, 1.5]))
     engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to7(engineRef):

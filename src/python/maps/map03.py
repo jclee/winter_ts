@@ -1,7 +1,7 @@
-import snow
+from browser import window
 
 def AutoExec(engineRef):
-    engineRef.mapThings.append(snow.Snow(5000, velocity=(-.5, 2)))
+    engineRef.mapThings.append(window.Snow.new(engineRef, 5000, [-.5, 2]))
 
 def to2(engineRef):
     offset_from = 6 * 16  # first horizontal pos possible

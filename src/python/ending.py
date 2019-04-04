@@ -1,5 +1,5 @@
+from browser import window
 import ika
-import snow
 
 _text = '''\
 Winter
@@ -167,7 +167,7 @@ def creditsTask(engineRef):
 
     vignette = engineRef.getImage('gfx/credits_vignette.png')
     bg = engineRef.getImage('gfx/mountains.png')
-    snowObj = snow.Snow(velocity=(0, 1))
+    snowObj = window.Snow.new(engineRef, 100, [0, 1])
     y = -ika.Video.yres
     font = engineRef.font
 

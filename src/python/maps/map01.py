@@ -1,11 +1,11 @@
+from browser import window
 import ika
 
 from yeti import Yeti
-import snow
 
 
 def AutoExec(engineRef):
-    engineRef.mapThings.append(snow.Snow(velocity=(0, 0.5)))
+    engineRef.mapThings.append(window.Snow.new(engineRef))
     if 'cowardrune' not in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
 

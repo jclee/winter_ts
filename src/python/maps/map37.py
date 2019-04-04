@@ -1,5 +1,5 @@
+from browser import window
 import ika
-import snow
 
 from carnivore import Carnivore
 
@@ -8,7 +8,7 @@ spawned = 0
 def AutoExec(engineRef):
     global spawned
     spawned = 0
-    engineRef.mapThings.append(snow.Snow(100, velocity=(.4, 1), colour=ika.RGB(255,192,255)))
+    engineRef.mapThings.append(window.Snow.new(engineRef, 100, [.4, 1], [255,192,255]))
     engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to36(engineRef):

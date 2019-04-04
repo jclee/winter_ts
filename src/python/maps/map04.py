@@ -1,13 +1,12 @@
+from browser import window
 import ika
 import sound
 from thing import Thing
 from yeti import Yeti
 from soulreaver import SoulReaver
 
-import snow
-
 def AutoExec(engineRef):
-    engineRef.mapThings.append(snow.Snow(8000, velocity=(-.2, 3)))
+    engineRef.mapThings.append(window.Snow.new(engineRef, 8000, [-.2, 3]))
     if 'waterrune' not in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
     if 'nearend' in engineRef.saveFlags:

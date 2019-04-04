@@ -1,9 +1,8 @@
-import ika
-import snow
+from browser import window
 
 def AutoExec(engineRef):
     engineRef.background = engineRef.getImage('gfx/mountains.png')
-    engineRef.mapThings.append(snow.Snow(velocity=(0, 0.5)))
+    engineRef.mapThings.append(window.Snow.new(engineRef))
 
 def to6(engineRef):
     offset_from = 21 * 16  # first vertical pos possible

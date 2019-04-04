@@ -61,24 +61,6 @@ class Sound(object):
         pass # TODO
     # TODO other members...
 
-class Snow(object):
-    def __init__(self, count=100, velocity=(0, 0.5), colour=RGB(255, 255, 255)):
-        self._time = 0.0
-        r, g, b, a = GetRGB(colour)
-
-        self._count = count
-        (self._vx, self._vy) = velocity
-        self._r = r / 255.0
-        self._g = g / 255.0
-        self._b = b / 255.0
-
-    def update(self):
-        self._time += 10.0
-
-    def draw(self):
-        global _engine
-        _engine.drawSnow(self._time, self._count, self._vx, self._vy, self._r, self._g, self._b)
-
 _engine = window.Engine.new()
 Map = _engine.map
 Input = _engine.input

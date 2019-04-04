@@ -1328,6 +1328,7 @@ export interface Controls {
 }
 
 export class Snow {
+    private engine: Engine
     private time: number
     private vx: number
     private vy: number
@@ -1335,27 +1336,30 @@ export class Snow {
     private g: number
     private b: number
     constructor(
-        private engine: Engine,
+        engineRef: PyEngine,
         private count=100,
         velocity=[0, 0.5],
-        color=RGB(255, 255, 255, 255),
+        color=[255, 255, 255],
     ) {
+        this.engine = engineRef.getEngine().js
         this.time = 0.0
         this.vx = velocity[0]
         this.vy = velocity[1]
-        this.r = (color & 0xff) / 255.0
-        this.g = ((color >> 8) & 0xff) / 255.0
-        this.b = ((color >> 16) & 0xff) / 255.0
+        this.r = color[0] / 255.0
+        this.g = color[1] / 255.0
+        this.b = color[2] / 255.0
     }
 
     update() {
         this.time += 10.0
+        return false
     }
 
     draw() {
         this.engine.drawSnow(this.time, this.count, this.vx, this.vy, this.r, this.g, this.b)
     }
 }
+;(window as any).Snow = Snow
 
 export function *delayTask(time: number) {
     const targetEnd = Date.now() + (time * 10)
