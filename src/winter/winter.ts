@@ -73,8 +73,8 @@ import { loadGame, SaveData, saveGame } from "./saveload.js"
     loadGame, SaveData, saveGame
 }
 
-import { StatSet } from "./StatSet.js"
-;(window as any).StatSet = StatSet
+import { StatSet } from "./statset.js"
+;(window as any).statset = { StatSet }
 
 import { wrapText } from "./wraptext.js"
 ;(window as any).wraptext = { wrapText }

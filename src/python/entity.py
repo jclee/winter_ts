@@ -1,8 +1,6 @@
 from browser import window
 import ika
 
-from statset import StatSet
-
 def _temp():
     yield None
 GeneratorType = _temp().__class__
@@ -18,7 +16,7 @@ class Entity(object):
         'ent can be None if all of the entity manipulating methods (below) are overridden.'
         self.engineRef = engineRef
         self.ent = ent
-        self.stats = StatSet()
+        self.stats = window.statset.StatSet.new()
         self.stats.hp = 1
 
         self._animator = window.animator.Animator.new()

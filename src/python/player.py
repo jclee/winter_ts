@@ -4,7 +4,6 @@ import ika
 import controls
 import sound
 
-from statset import StatSet
 from caption import Caption
 from gameover import GameLoseException
 
@@ -205,7 +204,6 @@ class Player(Entity):
         Entity.__init__(self, engineRef, ika.Entity(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.state = self.standState()
 
-        self.stats = StatSet()
         self.stats.maxhp = 80
         self.stats.maxmp = 40
         self.stats.att = 5
