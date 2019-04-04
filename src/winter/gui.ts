@@ -2,7 +2,7 @@ import { Engine, FontClass, Image, PyEngine } from "./winter.js";
 
 import { SaveData } from "./saveload.js";
 
-export class ImageCursor {
+class ImageCursor {
     private engine: Engine
     private image: Image
 
@@ -24,7 +24,7 @@ export class ImageCursor {
     }
 }
 
-export class Widget {
+class Widget {
     // Basic GUI element class.  By itself, the Widget is an invisible container.
     // While this may be useful in and of itself, widgets probably won't see much
     // direct use.  Subclasses are where the action usually is.
@@ -123,7 +123,7 @@ export class Widget {
     layout() {}
 }
 
-export class Layout extends Widget {
+class Layout extends Widget {
     constructor(
         engineRef: PyEngine,
         children: Widget[] = [],
@@ -155,7 +155,7 @@ export class Layout extends Widget {
     }
 }
 
-export class VerticalBoxLayout extends Layout {
+class VerticalBoxLayout extends Layout {
     // Arranges its children in a vertical column.
 
     layout() {
@@ -171,7 +171,7 @@ export class VerticalBoxLayout extends Layout {
     }
 }
 
-export class HorizontalBoxLayout extends Layout {
+class HorizontalBoxLayout extends Layout {
     // Arranges its children in a horizontal row.
 
     layout() {
@@ -187,7 +187,7 @@ export class HorizontalBoxLayout extends Layout {
     }
 }
 
-export class FlexGridLayout extends Layout {
+class FlexGridLayout extends Layout {
     // More robust GridLayout.  Each row/column is as big as it needs to be.  No
     // bigger.
 
@@ -239,7 +239,7 @@ export class FlexGridLayout extends Layout {
     }
 }
 
-export class Frame extends Widget {
+class Frame extends Widget {
     // A widget that appears as a graphical frame of some sort.
     // Frames are most commonly used as container widgets.
 
@@ -297,7 +297,7 @@ export class Frame extends Widget {
     }
 }
 
-export class Picture extends Widget {
+class Picture extends Widget {
     private image: Image
 
     constructor(
@@ -315,7 +315,7 @@ export class Picture extends Widget {
     }
 }
 
-export class StaticText extends Widget {
+class StaticText extends Widget {
     // A widget that appears as some lines of text.
     // No frame is drawn.
 
@@ -362,7 +362,7 @@ export class StaticText extends Widget {
     }
 }
 
-export class ScrollableTextLabel extends StaticText {
+class ScrollableTextLabel extends StaticText {
     // A text label that can potentially hold more text than it can visually display, given
     // whatever size it may be at the time.
 
@@ -472,7 +472,7 @@ export class ScrollableTextFrame extends Frame {
     }
 }
 
-export class SaveGameFrame extends Frame {
+class SaveGameFrame extends Frame {
     constructor(
         engineRef: PyEngine,
         icons: {[key: string]: Picture},
@@ -579,7 +579,7 @@ export class SaveLoadMenu {
     }
 }
 
-export class SubScreenWindow extends Frame {
+class SubScreenWindow extends Frame {
     protected layoutObj: Layout
     // TODO: eliminate:
     protected engineRef: PyEngine

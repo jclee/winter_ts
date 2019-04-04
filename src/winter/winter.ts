@@ -20,41 +20,21 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
 
 import {
     AttribWindow,
-    FlexGridLayout,
-    Frame,
-    HorizontalBoxLayout,
-    ImageCursor,
     MagicWindow,
     MenuWindow,
-    Picture,
-    SaveGameFrame,
     SaveLoadMenu,
     ScrollableTextFrame,
-    ScrollableTextLabel,
-    StaticText,
     StatWindow,
     TextFrame,
-    VerticalBoxLayout,
-    Widget
 } from "./gui.js"
 ;(window as any).gui = {
     AttribWindow,
-    FlexGridLayout,
-    Frame,
-    HorizontalBoxLayout,
-    ImageCursor,
     MagicWindow,
     MenuWindow,
-    Picture,
-    SaveGameFrame,
     SaveLoadMenu,
     ScrollableTextFrame,
-    ScrollableTextLabel,
-    StaticText,
     StatWindow,
     TextFrame,
-    VerticalBoxLayout,
-    Widget,
 }
 
 import { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages } from "./effects.js"
