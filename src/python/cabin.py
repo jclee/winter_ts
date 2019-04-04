@@ -2,7 +2,6 @@ from browser import window
 import controls
 import gui
 import ika
-from misc import WrapText
 
 #------------------------------------------------------------------------------
 
@@ -33,7 +32,7 @@ def draw():
 def textBox(engineRef, ent, txt):
     WIDTH = 200
     width = WIDTH
-    text = WrapText(txt, width, engineRef.font)
+    text = window.wraptext.wrapText(txt, width, engineRef.font)
     width = max([engineRef.font.StringWidth(s) for s in text])
     height = len(text) * engineRef.font.height
 
@@ -44,7 +43,7 @@ def textBox(engineRef, ent, txt):
 
     width = WIDTH
     if x + width + 16 > ika.Video.xres:
-        text = WrapText(txt, ika.Video.xres - x - 16, engineRef.font)
+        text = window.wraptext.wrapText(txt, ika.Video.xres - x - 16, engineRef.font)
         width = max([engineRef.font.StringWidth(s) for s in text])
         height = len(text) * engineRef.font.height
 

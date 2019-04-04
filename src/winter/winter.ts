@@ -76,6 +76,9 @@ import { loadGame, SaveData, saveGame } from "./saveload.js"
 import { StatSet } from "./StatSet.js"
 ;(window as any).StatSet = StatSet
 
+import { wrapText } from "./wraptext.js"
+;(window as any).wraptext = { wrapText }
+
 ;(window as any).hasProperty = (obj: any, name: string) => {
     return obj.hasOwnProperty(name) && obj[name] !== undefined
 }
