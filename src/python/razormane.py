@@ -1,21 +1,21 @@
+from browser import window
 import ika
 
 from enemy import Enemy
 import player
 import Brain
-import animator
 import sound
 
 _razorManeAnim = {
     'walk': ((
-        animator.makeAnim(range(7,14), 9),
-        animator.makeAnim(range(14, 21), 9),
-        animator.makeAnim(range(21, 28), 9),
-        animator.makeAnim(range(0,7), 9),
-        animator.makeAnim(range(7,14), 9),
-        animator.makeAnim(range(14, 21), 9),
-        animator.makeAnim(range(7,14), 9),
-        animator.makeAnim(range(14, 21), 9),
+        window.animator.makeAnimRange(7, 14, 9),
+        window.animator.makeAnimRange(14, 21, 9),
+        window.animator.makeAnimRange(21, 28, 9),
+        window.animator.makeAnimRange(0, 7, 9),
+        window.animator.makeAnimRange(7, 14, 9),
+        window.animator.makeAnimRange(14, 21, 9),
+        window.animator.makeAnimRange(7, 14, 9),
+        window.animator.makeAnimRange(14, 21, 9),
         ),
         True
     ),

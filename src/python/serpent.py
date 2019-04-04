@@ -1,6 +1,6 @@
+from browser import window
 
 import ika
-import animator
 import Brain
 
 from anklebiter import AnkleBiter
@@ -9,12 +9,12 @@ from enemy import Enemy
 from gameover import GameWinException
 
 # arbitrary :D
-_idleAnim = animator.makeAnim((0, 4, 0, 0, 0, 4, 0, 0, 1, 2, 3, 2, 1, 0), 50)
-_biteAnim = animator.makeAnim(range(16, 22), 7) # could do some speed-tinkering here.  Make the first and last frames slower than the middle ones.
-_stareAnim = animator.makeAnim((4, 5, 5, 6, 6, 7, 5, 4), 20)
-_roarAnim = animator.makeAnim((12, 13, 13, 14, 15, 16, 16, 16, 14, 12), 20)
-_deathAnim = animator.makeAnim(range(24, 27), 100)
-_appearAnim = animator.makeAnim((26, 25, 24), 20)
+_idleAnim = window.animator.makeAnim([0, 4, 0, 0, 0, 4, 0, 0, 1, 2, 3, 2, 1, 0], 50)
+_biteAnim = window.animator.makeAnimRange(16, 22, 7) # could do some speed-tinkering here.  Make the first and last frames slower than the middle ones.
+_stareAnim = window.animator.makeAnim([4, 5, 5, 6, 6, 7, 5, 4], 20)
+_roarAnim = window.animator.makeAnim([12, 13, 13, 14, 15, 16, 16, 16, 14, 12], 20)
+_deathAnim = window.animator.makeAnimRange(24, 27, 100)
+_appearAnim = window.animator.makeAnim([26, 25, 24], 20)
 _hurtAnim = ((10, 50),)
 
 _anim = {

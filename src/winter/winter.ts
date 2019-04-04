@@ -1,6 +1,6 @@
 
-import { Animator } from "./Animator.js"
-;(window as any).Animator = Animator
+import { Animator, makeAnim, makeAnimRange } from "./animator.js"
+;(window as any).animator = { Animator, makeAnim, makeAnimRange }
 
 import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
 ;(window as any).Dir = {

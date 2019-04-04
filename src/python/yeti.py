@@ -1,9 +1,9 @@
+from browser import window
 
 from enemy import Enemy
 from player import Player
 import ika
 import Brain
-import animator
 import sound
 
 _anim = {
@@ -21,14 +21,14 @@ _anim = {
     ),
 
     'walk': ((
-        animator.makeAnim(range(8, 14), 15),
-        animator.makeAnim(range(15, 21), 15),
-        animator.makeAnim(range(22, 28), 15),
-        animator.makeAnim(range(1, 7), 15),
-        animator.makeAnim(range(8, 14), 15),
-        animator.makeAnim(range(15, 21), 15),
-        animator.makeAnim(range(8, 14), 15),
-        animator.makeAnim(range(15, 21), 15),
+        window.animator.makeAnimRange(8, 14, 15),
+        window.animator.makeAnimRange(15, 21, 15),
+        window.animator.makeAnimRange(22, 28, 15),
+        window.animator.makeAnimRange(1, 7, 15),
+        window.animator.makeAnimRange(8, 14, 15),
+        window.animator.makeAnimRange(15, 21, 15),
+        window.animator.makeAnimRange(8, 14, 15),
+        window.animator.makeAnimRange(15, 21, 15),
         ),
         True
     ),

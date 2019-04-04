@@ -1,21 +1,21 @@
+from browser import window
 import ika
 
 from enemy import Enemy
 import player
 import Brain
-import animator
 import sound
 
 _ankleBiterAnim = {
     'walk': ((
-        animator.makeAnim(range(10, 15), 10),
-        animator.makeAnim(range(15, 20), 10),
-        animator.makeAnim(range(5,10), 10),
-        animator.makeAnim(range(0,5), 10),
-        animator.makeAnim(range(10, 15), 10),
-        animator.makeAnim(range(15, 20), 10),
-        animator.makeAnim(range(10, 15), 10),
-        animator.makeAnim(range(15, 20), 10),
+        window.animator.makeAnimRange(10, 15, 10),
+        window.animator.makeAnimRange(15, 20, 10),
+        window.animator.makeAnimRange(5, 10, 10),
+        window.animator.makeAnimRange(0, 5, 10),
+        window.animator.makeAnimRange(10, 15, 10),
+        window.animator.makeAnimRange(15, 20, 10),
+        window.animator.makeAnimRange(10, 15, 10),
+        window.animator.makeAnimRange(15, 20, 10),
         ),
         True
     ),

@@ -1,6 +1,6 @@
+from browser import window
 import ika
 
-from animator import Animator
 from statset import StatSet
 
 def _temp():
@@ -21,7 +21,7 @@ class Entity(object):
         self.stats = StatSet()
         self.stats.hp = 1
 
-        self._animator = Animator()
+        self._animator = window.animator.Animator.new()
         self._anim = anim
         self.direction = self.engineRef.dir.Down # as good as any
         self.interruptable = True # if false, no state changes will occur

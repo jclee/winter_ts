@@ -1,3 +1,18 @@
+export function makeAnim(strand: number[], delay: number) {
+    // Quicky function to make a proper strand, given a
+    // list of frames, and a delay between each.
+
+    return strand.map(f => [f, delay])
+}
+
+export function makeAnimRange(start: number, end: number, delay: number) {
+    const strand = []
+    for (let i = start; i < end; ++i) {
+        strand.push(i)
+    }
+    return makeAnim(strand, delay)
+}
+
 export class Animator {
     curFrame: number = 0
     index: number = 0

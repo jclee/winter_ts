@@ -1,6 +1,6 @@
+from browser import window
 import ika
 
-import animator
 import controls
 import sound
 
@@ -18,14 +18,14 @@ PLAYER_SPRITE = 'protagonist.ika-sprite'
 # one entry for each direction
 _playerAnim = {
     'walk' : ((
-        animator.makeAnim(range(28, 36), 8),
-        animator.makeAnim(range(19, 27), 8),
-        animator.makeAnim(range(10, 18), 8),
-        animator.makeAnim(range(1, 9), 8),
-        animator.makeAnim(range(28, 36), 8),
-        animator.makeAnim(range(19, 27), 8),
-        animator.makeAnim(range(28, 36), 8),
-        animator.makeAnim(range(19, 27), 8),
+        window.animator.makeAnimRange(28, 36, 8),
+        window.animator.makeAnimRange(19, 27, 8),
+        window.animator.makeAnimRange(10, 18, 8),
+        window.animator.makeAnimRange(1, 9, 8),
+        window.animator.makeAnimRange(28, 36, 8),
+        window.animator.makeAnimRange(19, 27, 8),
+        window.animator.makeAnimRange(28, 36, 8),
+        window.animator.makeAnimRange(19, 27, 8),
         ),
         True
     ),
