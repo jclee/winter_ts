@@ -45,10 +45,6 @@ def Entity(x, y, layer, spritename):
 def removeEntity(ent):
     Map.RemoveEntity(ent)
 
-def Font(file_name):
-    global _engine
-    return window.FontClass.new(_engine)
-
 def GetImage(init_arg):
     global _engine
     return _engine.getImage(init_arg)

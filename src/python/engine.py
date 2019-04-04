@@ -88,7 +88,7 @@ class Engine(object):
         self.ticksPerFrame = 100.0 / FRAME_RATE
         self.nextFrameTime = 0
 
-        self.font = ika.Font('system.fnt')
+        self.font = window.FontClass.new(ika.getEngine(), 'system.fnt')
         self.mapName = ''
 
         self.fader = sound.Crossfader()
