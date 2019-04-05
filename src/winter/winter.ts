@@ -158,7 +158,7 @@ class Control {
     }
 }
 
-export class InputClass {
+export class Input {
     private keys: {[key:string]: Control}
 
     constructor() {
@@ -1388,7 +1388,7 @@ export class Engine {
     quadPositionBuffer: WebGLBuffer
     quadTexCoordBuffer: WebGLBuffer
     map: MapClass
-    input: InputClass
+    private input: Input
     controls: Controls
     video: VideoClass
 
@@ -1396,7 +1396,7 @@ export class Engine {
         this.images = {}
         this.maps = {}
         this.sprites = {}
-        this.input = new InputClass()
+        this.input = new Input()
         this.video = new VideoClass(this)
         this.map = new MapClass(this, this.video)
         this.enabledAttributeLocations = []

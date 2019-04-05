@@ -41,7 +41,6 @@ class Sound(object):
 
 _engine = window.Engine.new()
 Map = _engine.map
-Input = _engine.input
 Controls = _engine.controls
 Video = _engine.video
 
