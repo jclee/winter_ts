@@ -162,7 +162,7 @@ class RazorMane(Enemy):
             if dist - DIST > 60:
                 # get closer
                 n = dist - DIST - 1
-                yield self.walkState(d, ika.Random(n // 2, n))
+                yield self.walkState(d, window.random(n // 2, n))
 
                 yield self.idleState(60)
             elif dist < DIST:

@@ -1370,6 +1370,11 @@ export function *delayTask(time: number) {
 }
 ;(window as any).delayTask = delayTask
 
+export function random(low: number, high: number) {
+    return Math.floor(Math.random() * (high - low)) + low
+}
+;(window as any).random = random
+
 export class Engine {
     maps: {[key: string]: MapData}
     images: {[key: string]: Image}

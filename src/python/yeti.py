@@ -115,7 +115,7 @@ class Yeti(Enemy):
 
     def hurtState(self, dist, dir):
         if self.stats.hp > 0:
-            i = ika.Random(0, len(sound.yetiHurt[self.stats.ind]))
+            i = window.random(0, len(sound.yetiHurt[self.stats.ind]))
             sound.yetiHurt[self.stats.ind][i].Play()
 
         self.mood = self.attackMood

@@ -227,14 +227,14 @@ class Player(Entity):
         sound.achievement.Play()
 
         while self.stats.exp >= self.stats.next:
-            self.stats.maxhp += ika.Random(2, 7)
-            self.stats.maxmp += ika.Random(2, 6)
+            self.stats.maxhp += window.random(2, 7)
+            self.stats.maxmp += window.random(2, 6)
 
             statlist = []
             for n in range(3):
                 if not statlist:
                     statlist = ['att', 'mag', 'pres', 'mres']
-                s = statlist[ika.Random(0,len(statlist))]
+                s = statlist[window.random(0,len(statlist))]
                 self.stats[s]+= 1
                 statlist.remove(s)
 
@@ -657,7 +657,7 @@ class Player(Entity):
             yield None
 
         amount = self.stats.mag * 2 + 25
-        amount += int(amount * ika.Random(-10, 10) * 0.01)
+        amount += int(amount * window.random(-10, 10) * 0.01)
         self.stats.hp += min(20, amount)
 
         ents = self.detectCollision((-16, -16, 32, 32, self.layer))
@@ -713,4 +713,4 @@ class Player(Entity):
             yield None
 
     def giveMPforHit(self):
-        self.stats.mp += ika.Random(0,2 + self.stats.level//10)
+        self.stats.mp += window.random(0,2 + self.stats.level//10)

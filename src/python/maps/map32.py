@@ -1,3 +1,4 @@
+from browser import window
 import ika
 from serpent import Serpent
 
@@ -34,8 +35,8 @@ def finalBattle(engineRef):
 
         for n in range(256):
             # teh earthquake
-            engineRef.map.xwin += ika.Random(-4, 5)
-            engineRef.map.ywin += ika.Random(-4, 5)
+            engineRef.map.xwin += window.random(-4, 5)
+            engineRef.map.ywin += window.random(-4, 5)
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()

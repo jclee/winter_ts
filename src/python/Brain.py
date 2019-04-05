@@ -1,3 +1,4 @@
+from browser import window
 import ika
 
 class Brain(object):
@@ -17,7 +18,7 @@ class Brain(object):
         # weighted random pick:
 
         N = sum([x.desirability for x in self.moods])
-        n = ika.Random(0, N)
+        n = window.random(0, N)
 
         for p in self.moods:
             if n < p.desirability:
