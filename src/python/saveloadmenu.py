@@ -1,6 +1,5 @@
 # Stand-in load/save menu code
 
-import controls
 import ika
 from browser import window
 

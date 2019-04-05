@@ -1,7 +1,6 @@
 from browser import window
 import ika
 
-import controls
 import sound
 
 from caption import Caption
@@ -254,21 +253,21 @@ class Player(Entity):
         self.stop()
         self.startAnimation('stand')
         while True:
-            if controls.attack():
+            if self.engineRef.controls.attack():
                 self.state = self.slashState()
-            elif controls.rend():
+            elif self.engineRef.controls.rend():
                 self.state = self.hearthRendState()
                 yield None
-            elif controls.gale():
+            elif self.engineRef.controls.gale():
                 self.state = self.crushingGaleState()
                 yield None
-            elif controls.heal():
+            elif self.engineRef.controls.heal():
                 self.state = self.healingRainState()
                 yield None
-            elif controls.shiver():
+            elif self.engineRef.controls.shiver():
                 self.state = self.shiverState()
                 yield None
-            elif controls.left() or controls.right() or controls.up() or controls.down():
+            elif self.engineRef.controls.left() or self.engineRef.controls.right() or self.engineRef.controls.up() or self.engineRef.controls.down():
                 self.state = self.walkState()
                 next(self._state) # get the walk state started right now.
             yield None
@@ -279,38 +278,38 @@ class Player(Entity):
 
         while True:
 
-            if controls.attack():
+            if self.engineRef.controls.attack():
                 self.state = self.slashState()
                 yield None
-            elif controls.rend():
+            elif self.engineRef.controls.rend():
                 self.state = self.hearthRendState()
                 yield None
-            elif controls.gale():
+            elif self.engineRef.controls.gale():
                 self.state = self.crushingGaleState()
                 yield None
-            elif controls.heal():
+            elif self.engineRef.controls.heal():
                 self.state = self.healingRainState()
                 yield None
-            elif controls.shiver():
+            elif self.engineRef.controls.shiver():
                 self.state = self.shiverState()
                 yield None
-            elif controls.left():
-                if controls.up():
+            elif self.engineRef.controls.left():
+                if self.engineRef.controls.up():
                     d = self.engineRef.dir.UpLeft
-                elif controls.down():
+                elif self.engineRef.controls.down():
                     d = self.engineRef.dir.DownLeft
                 else:
                     d = self.engineRef.dir.Left
-            elif controls.right():
-                if controls.up():
+            elif self.engineRef.controls.right():
+                if self.engineRef.controls.up():
                     d = self.engineRef.dir.UpRight
-                elif controls.down():
+                elif self.engineRef.controls.down():
                     d = self.engineRef.dir.DownRight
                 else:
                     d = self.engineRef.dir.Right
-            elif controls.up():
+            elif self.engineRef.controls.up():
                 d = self.engineRef.dir.Up
-            elif controls.down():
+            elif self.engineRef.controls.down():
                 d = self.engineRef.dir.Down
             else:
                 self.state = self.standState()
@@ -350,12 +349,12 @@ class Player(Entity):
                     x.hurt(self.stats.att, 120, self.direction)
                     self.giveMPforHit()
 
-            if controls.up() and self.direction == self.engineRef.dir.Down:  backthrust = True
-            elif controls.down() and self.direction == self.engineRef.dir.Up:  backthrust = True
-            elif controls.left() and self.direction in [self.engineRef.dir.Right, self.engineRef.dir.UpRight, self.engineRef.dir.DownRight]:  backthrust = True
-            elif controls.right() and self.direction in [self.engineRef.dir.Left, self.engineRef.dir.UpLeft, self.engineRef.dir.DownLeft]:  backthrust = True
+            if self.engineRef.controls.up() and self.direction == self.engineRef.dir.Down:  backthrust = True
+            elif self.engineRef.controls.down() and self.direction == self.engineRef.dir.Up:  backthrust = True
+            elif self.engineRef.controls.left() and self.direction in [self.engineRef.dir.Right, self.engineRef.dir.UpRight, self.engineRef.dir.DownRight]:  backthrust = True
+            elif self.engineRef.controls.right() and self.direction in [self.engineRef.dir.Left, self.engineRef.dir.UpLeft, self.engineRef.dir.DownLeft]:  backthrust = True
 
-            elif controls.attack():
+            elif self.engineRef.controls.attack():
                 backslash = True
 
             yield None
@@ -371,7 +370,7 @@ class Player(Entity):
             count = 10
             while count > 0:
                 count -= 1
-                if controls.attack():
+                if self.engineRef.controls.attack():
                     self.state = self.thrustState()
                 yield None
 
@@ -404,9 +403,9 @@ class Player(Entity):
         count = 10
         while count > 0:
             count -= 1
-            if controls.rend():
+            if self.engineRef.controls.rend():
                 self.state = self.hearthRendState()
-            elif controls.attack():
+            elif self.engineRef.controls.attack():
                 self.state = self.thrustState()
             yield None
 
@@ -488,9 +487,9 @@ class Player(Entity):
         while i > 0:
             i -= 1
             self.speed = max(0, self.speed - 10)
-            if controls.attack():
+            if self.engineRef.controls.attack():
                 thrust = True
-            elif controls.gale():
+            elif self.engineRef.controls.gale():
                 gale = True
             yield None
 

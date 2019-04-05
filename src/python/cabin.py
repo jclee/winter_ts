@@ -1,5 +1,4 @@
 from browser import window
-import controls
 import ika
 
 #------------------------------------------------------------------------------
@@ -67,7 +66,7 @@ def speech(engineRef, where, txt):
     """
     frame = textBox(engineRef, where, txt)
 
-    while not controls.attack():
+    while not engineRef.controls.attack():
         draw(engineRef)
         frame.draw()
         ika.Video.ShowPage()
@@ -85,7 +84,7 @@ def animateHelper(engineRef, ent, frames, delay, loop):
                 draw(engineRef)
                 ika.Video.ShowPage()
                 yield from engineRef.delayTask(1)
-                if controls.attack():
+                if engineRef.controls.attack():
                     return
         if not loop:
             return

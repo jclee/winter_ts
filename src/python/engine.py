@@ -25,7 +25,6 @@ from gameover import GameLoseException, GameQuitException, GameWinException
 
 import subscreen
 
-import controls
 import cabin
 import ending
 import sound
@@ -89,6 +88,7 @@ class Engine(object):
         self.nextFrameTime = 0
 
         self._engine = ika.getEngine()
+        self.controls = self._engine.controls
         self.map = self._engine.map
         self.font = window.FontClass.new(self._engine, 'system.fnt')
         self.mapName = ''
@@ -305,7 +305,7 @@ class Engine(object):
                 if t < self.nextFrameTime:
                     yield from self.delayTask(int(self.nextFrameTime - t))
 
-                if controls.cancel():
+                if self.controls.cancel():
                     yield from self.pauseTask()
 
                 # Do some thinking
@@ -478,7 +478,7 @@ class Engine(object):
             ika.Video.ShowPage()
             yield from self.delayTask(4)
 
-            if i == t and controls.attack():
+            if i == t and self.controls.attack():
                 break
 
     def pauseTask(self):
