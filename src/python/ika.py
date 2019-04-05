@@ -20,9 +20,6 @@ def Exit():
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 
-def RGB(r, g, b, a = 255):
-    return window.RGB(r, g, b, a)
-
 class _Point(object):
     def __init__(self, x, y):
         self.x = x

@@ -15,7 +15,7 @@ class Tinter(object):
         self.curTint -= self.curTint > self.tint
 
         if self.curTint:
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, ika.RGB(0, 0, 0, self.curTint))
+            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, self.curTint))
 
 tint = Tinter()
 
