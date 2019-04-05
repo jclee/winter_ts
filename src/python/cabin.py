@@ -84,7 +84,7 @@ def animateHelper(engineRef, ent, frames, delay, loop):
                 d -= 1
                 draw(engineRef)
                 ika.Video.ShowPage()
-                yield from ika.DelayTask(1)
+                yield from engineRef.delayTask(1)
                 if controls.attack():
                     return
         if not loop:

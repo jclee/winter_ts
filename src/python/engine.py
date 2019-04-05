@@ -104,6 +104,9 @@ class Engine(object):
             return self._engine
         self.getEngine = getEngine
 
+    def delayTask(self, time):
+        yield from ika.asTask(window.delayTask(time))
+
     def initTask(self, saveData = None):
         'barf'
 
@@ -300,7 +303,7 @@ class Engine(object):
 
                 # if we're ahead, delay
                 if t < self.nextFrameTime:
-                    yield from ika.DelayTask(int(self.nextFrameTime - t))
+                    yield from self.delayTask(int(self.nextFrameTime - t))
 
                 if controls.cancel():
                     yield from self.pauseTask()
@@ -473,7 +476,7 @@ class Engine(object):
             c.draw()
 
             ika.Video.ShowPage()
-            yield from ika.DelayTask(4)
+            yield from self.delayTask(4)
 
             if i == t and controls.attack():
                 break

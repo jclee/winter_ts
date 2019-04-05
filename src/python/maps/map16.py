@@ -49,7 +49,7 @@ def bridge_break(engineRef):
 
         engineRef.draw()
         ika.Video.ShowPage()
-        yield from ika.DelayTask(8)
+        yield from engineRef.delayTask(8)
 
         for y in range(32):
             p.y += 1
@@ -57,7 +57,7 @@ def bridge_break(engineRef):
             engineRef.camera.update()
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.DelayTask(1)
+            yield from engineRef.delayTask(1)
 
         p.layer = 1
 
@@ -67,7 +67,7 @@ def bridge_break(engineRef):
             engineRef.camera.update()
             engineRef.draw()
             ika.Video.ShowPage()
-            yield from ika.DelayTask(1)
+            yield from engineRef.delayTask(1)
 
         p.ent.specframe = 92
         t = engineRef.getTime() + 80

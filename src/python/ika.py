@@ -8,12 +8,6 @@ def asTask(jsTask):
         if window.hasProperty(result, 'done') and result['done']:
             break
 
-def DelayTask(time):
-    targetEnd = window.Date.now() + (time * 10)
-    # Busy waiting, sort of... :(
-    while targetEnd > window.Date.now():
-        yield None
-
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 

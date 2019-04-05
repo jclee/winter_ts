@@ -1368,6 +1368,7 @@ export function *delayTask(time: number) {
         yield null
     }
 }
+;(window as any).delayTask = delayTask
 
 export class Engine {
     maps: {[key: string]: MapData}
