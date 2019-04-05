@@ -14,16 +14,8 @@ def DelayTask(time):
     while targetEnd > window.Date.now():
         yield None
 
-def Exit():
-    print("Exiting.") # TODO
-
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
-
-class _Point(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
 
 def Entity(x, y, layer, spritename):
     return Map.addEntity(x, y, layer, spritename)

@@ -30,7 +30,7 @@ def _mainTask():
         else:
             assert False, 'Wacky intro menu result %i! :o' % resultRef[0]
 
-    ika.Exit()
+    print("Exiting.") # TODO
 
 def main():
     ika.Run(_mainTask())
