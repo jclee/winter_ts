@@ -17,13 +17,6 @@ def DelayTask(time):
 def Exit():
     print("Exiting.") # TODO
 
-def GetRGB(colorValue):
-    r = colorValue & 0xff
-    g = (colorValue >> 8) & 0xff
-    b = (colorValue >> 16) & 0xff
-    a = ((colorValue >> 24) & 0xff)
-    return (r, g, b, a)
-
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 

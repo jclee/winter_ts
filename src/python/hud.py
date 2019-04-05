@@ -7,7 +7,7 @@ def sgn(i):
     else: return 0
 
 class _Gauge(Thing):
-    def __init__(self, engineRef, imageName, x, y, justify = 'left', colour = ika.RGB(255, 255, 255)):
+    def __init__(self, engineRef, imageName, x, y, justify = 'left'):
         '''
         imageName - name of the image series to use.
          ie 'gfx/ui/barhp%i.png'
@@ -22,7 +22,7 @@ class _Gauge(Thing):
         self.x, self.y = x,y
         self.justify = justify.lower()
         self.opacity = 0
-        self.colour = ika.GetRGB(colour)[:-1]
+        self.rgb = [255, 255, 255]
         self.width = None
         self.fadeIn = False
 
@@ -80,7 +80,7 @@ class _Gauge(Thing):
 
     def drawRect(self, x, y, w, h, opacity):
         'Used to draw in the filled part of the gauge.'
-        ika.Video.DrawRect(x, y, w, h, ika.RGB(*(self.colour + (opacity,))))
+        ika.Video.DrawRect(x, y, w, h, ika.RGB(*(self.rgb + [opacity])))
 
     curVal = property(lambda self: None) # ditto
     curMax = property(lambda self: None) # override.  Needs to be readable.
@@ -89,7 +89,7 @@ class HPBar(_Gauge):
     def __init__(self, engineRef):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
         self.y = ika.Video.yres - self.left.height - 1
-        self.colour = (255, 0, 0)
+        self.rgb = [255, 0, 0]
 
     curVal = property(lambda self: self.engineRef.player.stats.hp)
     curMax = property(lambda self: self.engineRef.player.stats.maxhp)
@@ -98,7 +98,7 @@ class MPBar(_Gauge):
     def __init__(self, engineRef):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
         self.y = ika.Video.yres - self.left.height * 2 - 1
-        self.colour = (0, 0, 255)
+        self.rgb = [0, 0, 255]
         self.oldMax = self.curMax
         self.oldVal = self.curVal
 
@@ -110,7 +110,7 @@ class EXPBar(_Gauge):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
         #self.y = ika.Video.yres - self.left.height * 2 - 1
         self.width = 100
-        self.colour = (0, 128, 128)
+        self.rgb = [0, 128, 128]
         self.oldMax = self.curMax
         self.oldVal = self.curVal
 
