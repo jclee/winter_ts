@@ -9,19 +9,20 @@ class Tinter(object):
         self.tint = 0
         self.time = 0
 
-    def draw(self):
+    def draw(self, engineRef):
         self.curTint += self.curTint < self.tint
         self.curTint -= self.curTint > self.tint
 
         if self.curTint:
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, self.curTint))
+            engineRef.video.DrawRect(0, 0, engineRef.video.xres, engineRef.video.yres, window.RGB(0, 0, 0, self.curTint))
 
 tint = Tinter()
 
-crap = [tint] # crap to draw along with the map
+crap = [] # crap to draw along with the map
 
 def draw(engineRef):
     engineRef.map.Render()
+    tint.draw(engineRef)
     for c in crap:
         c.draw()
 
@@ -36,12 +37,12 @@ def textBox(engineRef, ent, txt):
 
     x, y = ent.x + ent.hotwidth // 2 - engineRef.map.xwin, ent.y - engineRef.map.ywin
 
-    if x < ika.Video.xres // 2:
+    if x < engineRef.video.xres // 2:
         x -= width // 2
 
     width = WIDTH
-    if x + width + 16 > ika.Video.xres:
-        text = window.wraptext.wrapText(txt, ika.Video.xres - x - 16, engineRef.font)
+    if x + width + 16 > engineRef.video.xres:
+        text = window.wraptext.wrapText(txt, engineRef.video.xres - x - 16, engineRef.font)
         width = max([engineRef.font.StringWidth(s) for s in text])
         height = len(text) * engineRef.font.height
 
@@ -49,7 +50,7 @@ def textBox(engineRef, ent, txt):
     frame.addText(text)
     frame.autoSize()
 
-    if y > ika.Video.yres // 2:
+    if y > engineRef.video.yres // 2:
         y += 32
     else:
         y -= frame.getHeight() + 16
@@ -69,7 +70,7 @@ def speech(engineRef, where, txt):
     while not engineRef.controls.attack():
         draw(engineRef)
         frame.draw()
-        ika.Video.ShowPage()
+        engineRef.video.ShowPage()
         yield None
 
 #------------------------------------------------------------------------------
@@ -82,24 +83,22 @@ def animateHelper(engineRef, ent, frames, delay, loop):
             while d > 0:
                 d -= 1
                 draw(engineRef)
-                ika.Video.ShowPage()
+                engineRef.video.ShowPage()
                 yield from engineRef.delayTask(1)
                 if engineRef.controls.attack():
                     return
         if not loop:
             return
 
-def animate(engineRef, ent, frames, delay, thing=None, loop=True, text=None):
+def animate(engineRef, ent, frames, delay, text=None):
     # frames should be a list of (frame, delay) pairs.
     global crap
     oldCrap = crap[:]
-    if thing is not None:
-        crap.append(thing)
     if text is not None:
         text = textBox(engineRef, ent, text)
         crap.append(text)
 
-    yield from animateHelper(engineRef, ent, frames, delay, loop)
+    yield from animateHelper(engineRef, ent, frames, delay, True)
 
     crap = oldCrap
     ent.specframe = 0

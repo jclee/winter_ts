@@ -92,7 +92,7 @@ class Boulder(_Obstacle):
                 self.engineRef.saveFlags[tnt[0]] = 'False'
                 self.engineRef.saveFlags[self.flagName] = 'Broken'
                 self.engineRef.destroyEntity(self)
-                self.engineRef.things.append(Caption(self.engineRef.font, 'Blew the rock apart!'))
+                self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, 'Blew the rock apart!'))
 
         if False:
             yield None

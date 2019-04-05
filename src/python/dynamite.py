@@ -16,6 +16,6 @@ class Dynamite(Entity):
         if self.touches(self.engineRef.player):
             self.engineRef.saveFlags[self.flagName] = 'True'
             self.engineRef.destroyEntity(self)
-            self.engineRef.things.append(Caption(self.engineRef.font, '~1Got a stick of dynamite!'))
+            self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, '~1Got a stick of dynamite!'))
         if False:
             yield None

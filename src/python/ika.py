@@ -21,7 +21,6 @@ class Sound(object):
     # TODO other members...
 
 _engine = window.Engine.new()
-Video = _engine.video
 
 def getEngine():
     global _engine

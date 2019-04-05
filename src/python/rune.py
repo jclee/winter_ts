@@ -18,7 +18,7 @@ class _Rune(Entity):
     def updateTask(self):
         if self.touches(self.engineRef.player):
             self.engineRef.destroyEntity(self)
-            self.engineRef.addThing(Caption(self.engineRef.font, '~1You got the %s Rune!' % self.element))
+            self.engineRef.addThing(Caption(self.engineRef, self.engineRef.font, '~1You got the %s Rune!' % self.element))
             self.engineRef.saveFlags[self.name] = 'True'
             self.apply()
         if False:

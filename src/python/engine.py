@@ -91,6 +91,7 @@ class Engine(object):
         self.controls = self._engine.controls
         self.map = self._engine.map
         self.font = window.FontClass.new(self._engine, 'system.fnt')
+        self.video = self._engine.video
         self.mapName = ''
 
         self.fader = sound.Crossfader()
@@ -266,7 +267,7 @@ class Engine(object):
 
     def warpTask(self, dest):
         self.draw()
-        startImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
+        startImage = self.video.GrabImage(0, 0, self.video.xres, self.video.yres)
 
         self.player.direction = self.dir.Down
         self.player.state = self.player.defaultState()
@@ -277,21 +278,21 @@ class Engine(object):
         self.camera.center()
 
         self.draw()
-        endImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
+        endImage = self.video.GrabImage(0, 0, self.video.xres, self.video.yres)
 
         time = 50
         endTime = self.getTime() + time
         now = self.getTime()
         while now < endTime:
             opacity = (endTime - now) / time
-            ika.Video.Blit(endImage, 0, 0)
-            ika.Video.TintBlit(startImage, 0, 0, opacity)
-            ika.Video.ShowPage()
+            self.video.Blit(endImage, 0, 0)
+            self.video.TintBlit(startImage, 0, 0, opacity)
+            self.video.ShowPage()
             yield None
             now = self.getTime()
 
-        ika.Video.FreeImage(startImage)
-        ika.Video.FreeImage(endImage)
+        self.video.FreeImage(startImage)
+        self.video.FreeImage(endImage)
         self.synchTime()
 
     def runTask(self):
@@ -317,7 +318,7 @@ class Engine(object):
                 else:
                     skipCount = 0
                     self.draw()
-                    ika.Video.ShowPage()
+                    self.video.ShowPage()
                     yield None
 
                 self.nextFrameTime += self.ticksPerFrame
@@ -342,7 +343,7 @@ class Engine(object):
 
     def draw(self):
         if self.background:
-            ika.Video.ScaleBlit(self.background, 0, 0, ika.Video.xres, ika.Video.yres)
+            self.video.ScaleBlit(self.background, 0, 0, self.video.xres, self.video.yres)
             self.map.Render(*range(self.map.layercount))
         else:
             self.map.Render()
@@ -460,7 +461,7 @@ class Engine(object):
         self.nextFrameTime = self.getTime()
 
     def gameOverTask(self):
-        c = Caption(self.font, 'G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)
+        c = Caption(self, self.font, 'G A M E   O V E R', duration=1000000, y=(self.video.yres - self.font.height) // 2)
         t = 80
         i = 0
         self.fields = []
@@ -472,10 +473,10 @@ class Engine(object):
 
             # darken the screen, draw the game over message:
             o = i * 255 // t
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, o))
+            self.video.DrawRect(0, 0, self.video.xres, self.video.yres, window.RGB(0, 0, 0, o))
             c.draw()
 
-            ika.Video.ShowPage()
+            self.video.ShowPage()
             yield from self.delayTask(4)
 
             if i == t and self.controls.attack():

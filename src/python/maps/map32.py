@@ -23,7 +23,7 @@ def finalBattle(engineRef):
         for n in range(128):
             yield from engineRef.tickTask()
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield None
 
         def noOp():
@@ -39,7 +39,7 @@ def finalBattle(engineRef):
             engineRef.map.ywin += window.random(-4, 5)
             yield from engineRef.tickTask()
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield None
 
         s = Serpent(
@@ -56,7 +56,7 @@ def finalBattle(engineRef):
             engineRef.map.SetObs(n, 38, p.layer, True)
             yield from engineRef.tickTask()
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield None
 
         p.state = p.defaultState()

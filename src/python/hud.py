@@ -57,14 +57,14 @@ class _Gauge(Thing):
         if self.justify == 'left':
             x = self.x + 2
         else:
-            x = ika.Video.xres - width - self.left.width - self.right.width - self.x - 2
+            x = self.engineRef.video.xres - width - self.left.width - self.right.width - self.x - 2
 
-        ika.Video.TintBlit(self.left, x, self.y, o)
-        ika.Video.TintBlit(self.right, x + width + self.left.width, self.y, o)
+        self.engineRef.video.TintBlit(self.left, x, self.y, o)
+        self.engineRef.video.TintBlit(self.right, x + width + self.left.width, self.y, o)
 
         x += self.left.width
 
-        ika.Video.TintScaleBlit(self.span, x, self.y, width, self.span.height, o)
+        self.engineRef.video.TintScaleBlit(self.span, x, self.y, width, self.span.height, o)
 
         x -= 2
 
@@ -81,7 +81,7 @@ class _Gauge(Thing):
 
     def drawRect(self, x, y, w, h, opacity):
         'Used to draw in the filled part of the gauge.'
-        ika.Video.DrawRect(x, y, w, h, window.RGB(*(self.rgb + [opacity])))
+        self.engineRef.video.DrawRect(x, y, w, h, window.RGB(*(self.rgb + [opacity])))
 
     curVal = property(lambda self: None) # ditto
     curMax = property(lambda self: None) # override.  Needs to be readable.
@@ -89,7 +89,7 @@ class _Gauge(Thing):
 class HPBar(_Gauge):
     def __init__(self, engineRef):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
-        self.y = ika.Video.yres - self.left.height - 1
+        self.y = self.engineRef.video.yres - self.left.height - 1
         self.rgb = [255, 0, 0]
 
     curVal = property(lambda self: self.engineRef.player.stats.hp)
@@ -98,7 +98,7 @@ class HPBar(_Gauge):
 class MPBar(_Gauge):
     def __init__(self, engineRef):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
-        self.y = ika.Video.yres - self.left.height * 2 - 1
+        self.y = self.engineRef.video.yres - self.left.height * 2 - 1
         self.rgb = [0, 0, 255]
         self.oldMax = self.curMax
         self.oldVal = self.curVal
@@ -109,7 +109,7 @@ class MPBar(_Gauge):
 class EXPBar(_Gauge):
     def __init__(self, engineRef):
         _Gauge.__init__(self, engineRef, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
-        #self.y = ika.Video.yres - self.left.height * 2 - 1
+        #self.y = self.engineRef.video.yres - self.left.height * 2 - 1
         self.width = 100
         self.rgb = [0, 128, 128]
         self.oldMax = self.curMax

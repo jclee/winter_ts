@@ -168,27 +168,27 @@ def creditsTask(engineRef):
     vignette = engineRef.getImage('gfx/credits_vignette.png')
     bg = engineRef.getImage('gfx/mountains.png')
     snowObj = window.Snow.new(engineRef, 100, [0, 1])
-    y = -ika.Video.yres
+    y = -engineRef.video.yres
     font = engineRef.font
 
     def draw():
-        ika.Video.Blit(bg, 0, 0)
-        ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, 128))
+        engineRef.video.Blit(bg, 0, 0)
+        engineRef.video.DrawRect(0, 0, engineRef.video.xres, engineRef.video.yres, window.RGB(0, 0, 0, 128))
 
         firstLine = int(y) // font.height
         adjust = int(y) % font.height
-        length = (ika.Video.yres // font.height) + 1
+        length = (engineRef.video.yres // font.height) + 1
 
         #print(firstLine)
 
         Y = -adjust
-        while Y < ika.Video.yres and firstLine < len(_text):
+        while Y < engineRef.video.yres and firstLine < len(_text):
             if firstLine >= 0:
                 font.CenterPrint(160, Y, _text[firstLine])
             Y += font.height
             firstLine += 1
 
-        ika.Video.Blit(vignette, 0, 0)
+        engineRef.video.Blit(vignette, 0, 0)
 
         snowObj.draw()
 
@@ -201,5 +201,5 @@ def creditsTask(engineRef):
         snowObj.update()
 
         draw()
-        ika.Video.ShowPage()
+        engineRef.video.ShowPage()
         yield None

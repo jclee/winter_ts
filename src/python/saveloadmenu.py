@@ -10,7 +10,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
     m = window.gui.SaveLoadMenu.new(engineRef, saves, False)
 
     def draw():
-        ika.Video.ClearScreen() # fix this
+        engineRef.video.ClearScreen() # fix this
         m.draw()
         title.draw()
 
@@ -20,7 +20,7 @@ def loadMenuTask(engineRef, resultRef, fadeOut=True):
     while i is None:
         i = m.update()
         draw()
-        ika.Video.ShowPage()
+        engineRef.video.ShowPage()
         yield None
 
     if fadeOut:
@@ -41,7 +41,7 @@ def saveMenuTask(engineRef):
     m = window.gui.SaveLoadMenu.new(engineRef, saves, True)
 
     def draw():
-        ika.Video.ClearScreen() # fix this
+        engineRef.video.ClearScreen() # fix this
         m.draw()
         title.draw()
 
@@ -51,7 +51,7 @@ def saveMenuTask(engineRef):
     while i is None:
         i = m.update()
         draw()
-        ika.Video.ShowPage()
+        engineRef.video.ShowPage()
         yield None
 
     if i != 'cancel':

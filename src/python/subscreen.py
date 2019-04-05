@@ -84,7 +84,7 @@ class PauseScreen(object):
         t.addChild(self.statWnd, startPos=(-self.statWnd.getRight(), self.statWnd.getY()), time=TIME - 5)
         t.addChild(self.attribWnd, startPos=(-self.attribWnd.getRight(), self.attribWnd.getY()), time=TIME - 5)
         t.addChild(self.magWnd, startPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
-        t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
+        t.addChild(self.menu, startPos=(self.engineRef.video.xres, self.menu.getY()), time=TIME - 5)
 
         startTime = self.engineRef.getTime()
         now = startTime
@@ -99,10 +99,10 @@ class PauseScreen(object):
                 o = time * 128 // TIME # tint intensity for this frame
                 f = time * len(self.images) // TIME # blur image to draw
 
-                ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-                ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, o))
+                self.engineRef.video.ScaleBlit(self.images[f], 0, 0, self.engineRef.video.xres, self.engineRef.video.yres)
+                self.engineRef.video.DrawRect(0, 0, self.engineRef.video.xres, self.engineRef.video.yres, window.RGB(0, 0, 0, o))
                 self.draw()
-                ika.Video.ShowPage()
+                self.engineRef.video.ShowPage()
             yield None
             now = self.engineRef.getTime()
 
@@ -115,7 +115,7 @@ class PauseScreen(object):
         t.addChild(self.statWnd, endPos=(-self.statWnd.getRight(), self.statWnd.getY()), time=TIME - 5)
         t.addChild(self.attribWnd, endPos=(-self.attribWnd.getRight(), self.attribWnd.getY()), time=TIME - 5)
         t.addChild(self.magWnd, endPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
-        t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
+        t.addChild(self.menu, endPos=(self.engineRef.video.xres, self.menu.getY()), time=TIME - 5)
 
         startTime = self.engineRef.getTime()
         now = startTime
@@ -130,10 +130,10 @@ class PauseScreen(object):
                 o = (TIME - time) * 255 // TIME # menu opacity for this frame
                 f = int((TIME - time) * len(self.images) // TIME) # blur image to draw
 
-                ika.Video.ScaleBlit(self.images[f], 0, 0, ika.Video.xres, ika.Video.yres)
-                ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, o // 2))
+                self.engineRef.video.ScaleBlit(self.images[f], 0, 0, self.engineRef.video.xres, self.engineRef.video.yres)
+                self.engineRef.video.DrawRect(0, 0, self.engineRef.video.xres, self.engineRef.video.yres, window.RGB(0, 0, 0, o // 2))
                 self.draw()
-                ika.Video.ShowPage()
+                self.engineRef.video.ShowPage()
             yield None
             now = self.engineRef.getTime()
 
@@ -149,10 +149,10 @@ class PauseScreen(object):
     def runTask(self):
         yield from self.showTask()
         while True:
-            ika.Video.ScaleBlit(self.images[-1], 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Video.DrawRect(0, 0, ika.Video.xres, ika.Video.yres, window.RGB(0, 0, 0, 128))
+            self.engineRef.video.ScaleBlit(self.images[-1], 0, 0, self.engineRef.video.xres, self.engineRef.video.yres)
+            self.engineRef.video.DrawRect(0, 0, self.engineRef.video.xres, self.engineRef.video.yres, window.RGB(0, 0, 0, 128))
             self.draw()
-            ika.Video.ShowPage()
+            self.engineRef.video.ShowPage()
             yield None
 
             result = self.menu.update()

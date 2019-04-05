@@ -3,16 +3,17 @@ from thing import Thing
 
 class Caption(Thing):
 
-    def __init__(self, font, text, x = None, y = None, duration=200):
+    def __init__(self, engineRef, font, text, x = None, y = None, duration=200):
+        self.engineRef = engineRef
         self.font = font
 
         width = self.font.StringWidth(text)
         height = self.font.height
 
-        if x is None:   self.x = (ika.Video.xres - width) // 2
+        if x is None:   self.x = (self.engineRef.video.xres - width) // 2
         else:           self.x = x
 
-        if y is None:   self.y = ika.Video.yres - height - 40
+        if y is None:   self.y = self.engineRef.video.yres - height - 40
         else:           self.y = y
 
         self.text = text

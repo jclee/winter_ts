@@ -48,7 +48,7 @@ def bridge_break(engineRef):
         p._state = lambda: None # keep the player from moving
 
         engineRef.draw()
-        ika.Video.ShowPage()
+        engineRef.video.ShowPage()
         yield from engineRef.delayTask(8)
 
         for y in range(32):
@@ -56,7 +56,7 @@ def bridge_break(engineRef):
             engineRef.map.ProcessEntities()
             engineRef.camera.update()
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield from engineRef.delayTask(1)
 
         p.layer = 1
@@ -66,14 +66,14 @@ def bridge_break(engineRef):
             engineRef.map.ProcessEntities()
             engineRef.camera.update()
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield from engineRef.delayTask(1)
 
         p.ent.specframe = 92
         t = engineRef.getTime() + 80
         while t > engineRef.getTime():
             engineRef.draw()
-            ika.Video.ShowPage()
+            engineRef.video.ShowPage()
             yield None
 
         p.state = p.standState()
