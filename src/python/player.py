@@ -201,7 +201,7 @@ backSlashRange = [x[::-1] for x in slashRange]
 
 class Player(Entity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
-        Entity.__init__(self, engineRef, ika.Entity(x, y, layer, PLAYER_SPRITE), _playerAnim)
+        Entity.__init__(self, engineRef, engineRef.map.addEntity(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.state = self.standState()
 
         self.stats.maxhp = 80
@@ -342,7 +342,7 @@ class Player(Entity):
             rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = ika.Map.EntitiesAt(*rect)
+            ents = self.engineRef.map.EntitiesAt(*rect)
             for e in ents:
                 x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -390,7 +390,7 @@ class Player(Entity):
             rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = ika.Map.EntitiesAt(*rect)
+            ents = self.engineRef.map.EntitiesAt(*rect)
             for e in ents:
                 x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -439,7 +439,7 @@ class Player(Entity):
 
                 rect[0] = r[0] + self.x
                 rect[1] = r[1] + self.y
-                ents = ika.Map.EntitiesAt(*rect)
+                ents = self.engineRef.map.EntitiesAt(*rect)
                 for e in ents:
                     x = self.engineRef.entFromEnt[e.name]
                     if isinstance(x, Enemy) and not x.invincible:
@@ -527,7 +527,7 @@ class Player(Entity):
         for i in range(12):
             yield None
 
-        fire = ika.Entity(self.x, self.y, self.layer, 'rend.ika-sprite')
+        fire = self.engineRef.map.addEntity(self.x, self.y, self.layer, 'rend.ika-sprite')
         f = self.direction * 5 # hack.
 
         # when we hit an entity, we append it here so that
@@ -553,7 +553,7 @@ class Player(Entity):
 
             yield None
 
-        ika.removeEntity(fire)
+        self.engineRef.map.RemoveEntity(fire)
 
         # stall period:
         for i in range(30):
@@ -595,8 +595,8 @@ class Player(Entity):
         sound.crushingGale.Play()
 
         for i in range(30):
-            ika.Map.xwin += delta.x * 2
-            ika.Map.ywin += delta.y * 2
+            self.engineRef.map.xwin += delta.x * 2
+            self.engineRef.map.ywin += delta.y * 2
             yield None
 
         self.invincible = True

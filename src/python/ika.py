@@ -17,12 +17,6 @@ def DelayTask(time):
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 
-def Entity(x, y, layer, spritename):
-    return Map.addEntity(x, y, layer, spritename)
-
-def removeEntity(ent):
-    Map.RemoveEntity(ent)
-
 def GetImage(init_arg):
     global _engine
     return _engine.getImage(init_arg)
@@ -40,7 +34,6 @@ class Sound(object):
     # TODO other members...
 
 _engine = window.Engine.new()
-Map = _engine.map
 Controls = _engine.controls
 Video = _engine.video
 

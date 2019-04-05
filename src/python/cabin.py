@@ -21,8 +21,8 @@ tint = Tinter()
 
 crap = [tint] # crap to draw along with the map
 
-def draw():
-    ika.Map.Render()
+def draw(engineRef):
+    engineRef.map.Render()
     for c in crap:
         c.draw()
 
@@ -35,7 +35,7 @@ def textBox(engineRef, ent, txt):
     width = max([engineRef.font.StringWidth(s) for s in text])
     height = len(text) * engineRef.font.height
 
-    x, y = ent.x + ent.hotwidth // 2 - ika.Map.xwin, ent.y - ika.Map.ywin
+    x, y = ent.x + ent.hotwidth // 2 - engineRef.map.xwin, ent.y - engineRef.map.ywin
 
     if x < ika.Video.xres // 2:
         x -= width // 2
@@ -68,21 +68,21 @@ def speech(engineRef, where, txt):
     frame = textBox(engineRef, where, txt)
 
     while not controls.attack():
-        draw()
+        draw(engineRef)
         frame.draw()
         ika.Video.ShowPage()
         yield None
 
 #------------------------------------------------------------------------------
 
-def animateHelper(ent, frames, delay, loop):
+def animateHelper(engineRef, ent, frames, delay, loop):
     while True:
         for frame in frames:
             ent.specframe = frame
             d = delay
             while d > 0:
                 d -= 1
-                draw()
+                draw(engineRef)
                 ika.Video.ShowPage()
                 yield from ika.DelayTask(1)
                 if controls.attack():
@@ -100,7 +100,7 @@ def animate(engineRef, ent, frames, delay, thing=None, loop=True, text=None):
         text = textBox(engineRef, ent, text)
         crap.append(text)
 
-    yield from animateHelper(ent, frames, delay, loop)
+    yield from animateHelper(engineRef, ent, frames, delay, loop)
 
     crap = oldCrap
     ent.specframe = 0
@@ -119,14 +119,14 @@ def sceneTask(engineRef, name):
     for e in engineRef.entities:
         e.x, e.y = -100, -100
 
-    ika.Map.Switch('maps/cabinmap.ika-map')
-    grandpa = ika.Map.entities['grandpa']
-    kid1 = ika.Map.entities['kid1']
-    kid2 = ika.Map.entities['kid2']
-    kid3 = ika.Map.entities['kid3']
+    engineRef.map.Switch('maps/cabinmap.ika-map')
+    grandpa = engineRef.map.entities['grandpa']
+    kid1 = engineRef.map.entities['kid1']
+    kid2 = engineRef.map.entities['kid2']
+    kid3 = engineRef.map.entities['kid3']
 
     def draw():
-        ika.Map.Render()
+        engineRef.map.Render()
     yield from ika.asTask(window.effects.fadeInTask(engineRef, 100, draw))
 
     yield from _scenes[name](engineRef)
@@ -138,8 +138,8 @@ def sceneTask(engineRef, name):
 
     if engineRef.mapName:
         # We now only call AutoExec in engine.mapSwitchTask, not
-        # ika.Map.Switch, so this should be an OK way to restore the map.
-        ika.Map.Switch('maps/' + engineRef.mapName)
+        # engineRef.map.Switch, so this should be an OK way to restore the map.
+        engineRef.map.Switch('maps/' + engineRef.mapName)
         for e, pos in zip(engineRef.entities, savedPos):
             e.x, e.y = pos
 

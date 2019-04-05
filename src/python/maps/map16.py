@@ -10,10 +10,10 @@ def AutoExec(engineRef):
 
     if 'bridge_broken' not in engineRef.saveFlags:
         for x in range(19, 22):
-            ika.Map.SetTile(x, 28, 3, 152)
-            ika.Map.SetTile(x, 29, 3, 158)
-            ika.Map.SetTile(x, 30, 3, 164)
-            ika.Map.entities['break_gap'].x = -100
+            engineRef.map.SetTile(x, 28, 3, 152)
+            engineRef.map.SetTile(x, 29, 3, 158)
+            engineRef.map.SetTile(x, 30, 3, 164)
+            engineRef.map.entities['break_gap'].x = -100
 
     if 'windguard' not in engineRef.saveFlags and 'nearend' in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
@@ -33,10 +33,10 @@ def bridge_break(engineRef):
         )
 
         for x in range(3):
-            ika.Map.SetTile(x + 19, 28, 3, bridge[0][x])
-            ika.Map.SetTile(x + 19, 29, 3, bridge[1][x])
-            ika.Map.SetTile(x + 19, 30, 3, bridge[2][x])
-            ika.Map.entities['break_gap'].x = 320
+            engineRef.map.SetTile(x + 19, 28, 3, bridge[0][x])
+            engineRef.map.SetTile(x + 19, 29, 3, bridge[1][x])
+            engineRef.map.SetTile(x + 19, 30, 3, bridge[2][x])
+            engineRef.map.entities['break_gap'].x = 320
 
         # This is really cheap.  Probably fragile too.  I'm stepping beyond
         # the game engine and directly twiddling with ika.
@@ -53,7 +53,7 @@ def bridge_break(engineRef):
 
         for y in range(32):
             p.y += 1
-            ika.Map.ProcessEntities()
+            engineRef.map.ProcessEntities()
             engineRef.camera.update()
             engineRef.draw()
             ika.Video.ShowPage()
@@ -63,7 +63,7 @@ def bridge_break(engineRef):
 
         for y in range(32):
             p.y += 1
-            ika.Map.ProcessEntities()
+            engineRef.map.ProcessEntities()
             engineRef.camera.update()
             engineRef.draw()
             ika.Video.ShowPage()
@@ -78,7 +78,7 @@ def bridge_break(engineRef):
 
         p.state = p.standState()
 
-        y = Yeti(engineRef, ika.Entity(304, 64, 1, 'yeti.ika-sprite'))
+        y = Yeti(engineRef, engineRef.map.addEntity(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp
@@ -125,7 +125,7 @@ class DeathListener(Thing):
     def update(self):
         if self.yeti.stats.hp == 0:
             if 'windrune' not in self.engineRef.saveFlags:
-                e = ika.Entity(304, 304, 1, 'windrune.ika-sprite')
+                e = self.engineRef.map.addEntity(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
                 self.engineRef.addEntity(
                     WindRune(e)
@@ -146,7 +146,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, ika.Entity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, self.engineRef.map.addEntity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True

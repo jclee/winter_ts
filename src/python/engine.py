@@ -89,6 +89,7 @@ class Engine(object):
         self.nextFrameTime = 0
 
         self._engine = ika.getEngine()
+        self.map = self._engine.map
         self.font = window.FontClass.new(self._engine, 'system.fnt')
         self.mapName = ''
 
@@ -135,8 +136,8 @@ class Engine(object):
             self.saveFlags = dict(saveData.flags)
         else:
             self.player.x, self.player.y = START_POS
-            lay = ika.Map.GetMetaData()['entityLayer']
-            self.player.layer = ika.Map.FindLayerByName(lay)
+            lay = self.map.GetMetaData()['entityLayer']
+            self.player.layer = self.map.FindLayerByName(lay)
 
         self.things.append(HPBar(self))
         self.things.append(MPBar(self))
@@ -151,7 +152,7 @@ class Engine(object):
         yield from cabin.sceneTask(self, 'intro')
 
         yield from self.mapSwitchTask(START_MAP, START_POS, fade = False)
-        lay = ika.Map.GetMetaData()['entityLayer']
+        lay = self.map.GetMetaData()['entityLayer']
 
         yield from self.initTask()
 
@@ -217,20 +218,20 @@ class Engine(object):
         self.background = None
         self.mapThings = []
         self.fields = []
-        # TODO: Already called in ika.Map.Switch() below?
-        ika.Map.clearMapEntities()
+        # TODO: Already called in self.map.Switch() below?
+        self.map.clearMapEntities()
 
         # drop the extension, convert slashes to dots, and prepend the maps package
         # ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
         moduleName = mapName[:mapName.rfind('.')].replace('/', '.')
         mapModule = __import__(moduleName, globals(), locals(), [''])
-        ika.Map.Switch(mapName)
+        self.map.Switch(mapName)
 
         autoExecFunc = mapModule.__dict__.get('AutoExec', None)
         if autoExecFunc is not None:
             autoExecFunc(self)
 
-        metaData = ika.Map.GetMetaData()
+        metaData = self.map.GetMetaData()
 
         self.readZones(mapModule)
         self.readEnts(mapModule)
@@ -240,7 +241,7 @@ class Engine(object):
             if len(dest) == 2:
                 self.player.x, self.player.y = dest
                 lay = metaData['entityLayer']
-                self.player.layer = ika.Map.FindLayerByName(lay)
+                self.player.layer = self.map.FindLayerByName(lay)
             elif len(dest) == 3:
                 self.player.x, self.player.y, self.player.layer = dest
             else:
@@ -339,9 +340,9 @@ class Engine(object):
     def draw(self):
         if self.background:
             ika.Video.ScaleBlit(self.background, 0, 0, ika.Video.xres, ika.Video.yres)
-            ika.Map.Render(*range(ika.Map.layercount))
+            self.map.Render(*range(self.map.layercount))
         else:
-            ika.Map.Render()
+            self.map.Render()
 
         for t in self.things:
             t.draw()
@@ -351,7 +352,7 @@ class Engine(object):
     def tickTask(self):
         # We let ika do most of the work concerning entity movement.
         # (in particular, collision detection)
-        ika.Map.ProcessEntities()
+        self.map.ProcessEntities()
 
         # update entities
         for ent in self.entities:
@@ -405,8 +406,8 @@ class Engine(object):
         '''Read all the zones on the map, and create fields.'''
         self.fields = []
 
-        for i in range(ika.Map.layercount):
-            zones = ika.Map.GetZones(i)
+        for i in range(self.map.layercount):
+            zones = self.map.GetZones(i)
             for (x, y, w, h, scriptTaskName) in zones:
                 scriptTask = mapModule.__dict__[scriptTaskName]
                 self.addField(window.field.Field.new([x,y,w,h], i, scriptTask))
@@ -420,8 +421,8 @@ class Engine(object):
             self.killList.remove(self.player)
             self.clearKillQueue()
 
-        for entKey in ika.Map.entities:
-            ent = ika.Map.entities[entKey]
+        for entKey in self.map.entities:
+            ent = self.map.entities[entKey]
             if ent.spritename in spawnMap:
                 self.addEntity(spawnMap[ent.spritename](self, ent))
             elif ent.spritename != PLAYER_SPRITE:
@@ -436,7 +437,7 @@ class Engine(object):
             ent.ent.x, ent.ent.y = -100,0
             ent.ent.Stop()
             del self.entFromEnt[ent.ent.name]
-            ika.Map.RemoveEntity(ent)
+            self.map.RemoveEntity(ent)
             # brython workaround?
             #self.entities.remove(ent)
             for i, e in enumerate(self.entities):

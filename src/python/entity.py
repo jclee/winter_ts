@@ -122,7 +122,7 @@ class Entity(object):
             self.layer)
 
         return [self.engineRef.entFromEnt[e.name] for e in
-            ika.Map.EntitiesAt(*rect) if e.name in self.engineRef.entFromEnt]
+            self.engineRef.map.EntitiesAt(*rect) if e.name in self.engineRef.entFromEnt]
 
     def touches(self, ent):
         return self.ent.Touches(ent.ent)

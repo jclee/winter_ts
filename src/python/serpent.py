@@ -134,19 +134,19 @@ class Serpent(Enemy):
         offsets = [0, 1, 1, 2, 3, 4, 4, 4, 2, 0]
         for wait in range(200):
             offset = offsets[wait // 20]
-            ika.Map.xwin += ika.Random(-offset, offset + 1)
-            ika.Map.ywin += ika.Random(-offset, offset + 1)
+            self.engineRef.map.xwin += ika.Random(-offset, offset + 1)
+            self.engineRef.map.ywin += ika.Random(-offset, offset + 1)
             yield None
 
         for q in range(ika.Random(1, 4)):
             x, y = 320 + (q * 60), 588
-            n = ika.Map.EntitiesAt(x, y, x + 16, y + 16, self.layer)
+            n = self.engineRef.map.EntitiesAt(x, y, x + 16, y + 16, self.layer)
 
             if not n:
                 if ika.Random(0, 2):
-                    e = Carnivore(self.engineRef, ika.Entity(x, y, self.layer, 'carnivore.ika-sprite'))
+                    e = Carnivore(self.engineRef, self.engineRef.map.addEntity(x, y, self.layer, 'carnivore.ika-sprite'))
                 else:
-                    e = AnkleBiter(self.engineRef, ika.Entity(x, y, self.layer, 'anklebiter.ika-sprite'))
+                    e = AnkleBiter(self.engineRef, self.engineRef.map.addEntity(x, y, self.layer, 'anklebiter.ika-sprite'))
                 self.engineRef.addEntity(e)
                 e.mood = e.attackMood
 

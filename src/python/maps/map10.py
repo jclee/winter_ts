@@ -9,7 +9,7 @@ def AutoExec(engineRef):
         engineRef.mapThings.append(RuneListener(engineRef))
 
     if 'firerune' in engineRef.saveFlags:
-        ika.Map.RemoveEntity(ika.Map.entities['demiyeti'])
+        engineRef.map.RemoveEntity(engineRef.map.entities['demiyeti'])
     else:
         engineRef.mapThings.append(DeathListener(engineRef))
 
@@ -29,11 +29,11 @@ class DeathListener(Thing):
             # doing this)
             sound.playMusic("music/Competative.xm")
             self.yeti = self.engineRef.entFromEnt[
-                ika.Map.entities['demiyeti'].name
+                engineRef.map.entities['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in self.engineRef.saveFlags:
-                e = ika.Entity(71, 132, 2, 'firerune.ika-sprite')
+                e = self.engineRef.map.addEntity(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
                 self.engineRef.addEntity(
                     FireRune(e)
@@ -54,7 +54,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, ika.Entity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, self.engineRef.map.addEntity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True

@@ -25,7 +25,7 @@ class RuneListener(object):
     def update(self):
         if 'waterguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags:
             self.engineRef.addEntity(
-                Yeti(self.engineRef, ika.Entity(35 * 16, 19 * 16, self.engineRef.player.layer, 'yeti.ika-sprite')))
+                Yeti(self.engineRef, self.engineRef.map.addEntity(35 * 16, 19 * 16, self.engineRef.player.layer, 'yeti.ika-sprite')))
             return True
 
     def draw(self):

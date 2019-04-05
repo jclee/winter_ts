@@ -34,8 +34,8 @@ def finalBattle(engineRef):
 
         for n in range(256):
             # teh earthquake
-            ika.Map.xwin += ika.Random(-4, 5)
-            ika.Map.ywin += ika.Random(-4, 5)
+            engineRef.map.xwin += ika.Random(-4, 5)
+            engineRef.map.ywin += ika.Random(-4, 5)
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()
@@ -43,16 +43,16 @@ def finalBattle(engineRef):
 
         s = Serpent(
             engineRef,
-            ika.Entity(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
+            engineRef.map.addEntity(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
             )
         s.startAnimation('appear')
         engineRef.addEntity(s)
 
         for n in range(19, 32):
             # close off the way back
-            ika.Map.SetTile(n, 38, p.layer, 26)
-            ika.Map.SetTile(n, 39, p.layer, 32)
-            ika.Map.SetObs(n, 38, p.layer, True)
+            engineRef.map.SetTile(n, 38, p.layer, 26)
+            engineRef.map.SetTile(n, 39, p.layer, 32)
+            engineRef.map.SetObs(n, 38, p.layer, True)
             yield from engineRef.tickTask()
             engineRef.draw()
             ika.Video.ShowPage()
