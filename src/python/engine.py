@@ -203,7 +203,7 @@ class Engine(object):
             yield from self.runTask()
 
     def getImage(self, key):
-        return ika.GetImage(key)
+        return self._engine.getImage(key)
 
     def mapSwitchTask(self, mapName, dest = None, fade = True):
         print("switching to map", mapName)

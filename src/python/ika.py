@@ -17,10 +17,6 @@ def DelayTask(time):
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 
-def GetImage(init_arg):
-    global _engine
-    return _engine.getImage(init_arg)
-
 class Sound(object):
     def __init__(self, file_name):
         self._file_name = file_name
