@@ -70,7 +70,7 @@ class Engine(object):
 
     dir = window.Dir
 
-    def __init__(self):
+    def __init__(self, engine):
         self.entities = []
         self.killList = []
         self.things = []
@@ -87,7 +87,7 @@ class Engine(object):
         self.ticksPerFrame = 100.0 / FRAME_RATE
         self.nextFrameTime = 0
 
-        self._engine = ika.getEngine()
+        self._engine = engine
         self.controls = self._engine.controls
         self.map = self._engine.map
         self.font = window.FontClass.new(self._engine, 'system.fnt')

@@ -19,23 +19,3 @@ class Sound(object):
     def Pause(self):
         pass # TODO
     # TODO other members...
-
-_engine = window.Engine.new()
-
-def getEngine():
-    global _engine
-    return _engine
-
-def Run(task):
-    global _engine
-
-    def taskFn():
-        nonlocal task
-        try:
-            # TODO: May be able to use yielded generator as a goto.
-            value = next(task)
-        except StopIteration:
-            return False
-        else:
-            return True
-    _engine.run(taskFn)

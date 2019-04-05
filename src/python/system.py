@@ -2,10 +2,11 @@ from browser import window
 import engine
 import ika
 
-def _mainTask():
+def _mainTask(_engine):
     introMusic = ika.Sound('music/Existing.s3m')
 
-    engineObj = engine.Engine()
+    # TODO: clean up... :|
+    engineObj = engine.Engine(_engine)
 
     # TODO: Reenable
     #yield from ika.asTask(window.intro.introTask(engineObj))
@@ -33,7 +34,18 @@ def _mainTask():
     print("Exiting.") # TODO
 
 def main():
-    ika.Run(_mainTask())
+    _engine = window.Engine.new()
+    task = _mainTask(_engine)
+    def taskFn():
+        nonlocal task
+        try:
+            # TODO: May be able to use yielded generator as a goto.
+            value = next(task)
+        except StopIteration:
+            return False
+        else:
+            return True
+    _engine.run(taskFn)
 
 if __name__ == '__main__':
     main()
