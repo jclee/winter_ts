@@ -24,10 +24,6 @@ def GetRGB(colorValue):
     a = ((colorValue >> 24) & 0xff)
     return (r, g, b, a)
 
-def GetTime():
-    global _engine
-    return _engine.getTime()
-
 def Random(low, high):
     return window.Math.floor(window.Math.random() * (high - low)) + low
 

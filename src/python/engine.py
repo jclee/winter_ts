@@ -88,7 +88,8 @@ class Engine(object):
         self.ticksPerFrame = 100.0 / FRAME_RATE
         self.nextFrameTime = 0
 
-        self.font = window.FontClass.new(ika.getEngine(), 'system.fnt')
+        self._engine = ika.getEngine()
+        self.font = window.FontClass.new(self._engine, 'system.fnt')
         self.mapName = ''
 
         self.fader = sound.Crossfader()
@@ -99,7 +100,7 @@ class Engine(object):
         self.saveFlags = {}
 
         def getEngine():
-            return ika.getEngine()
+            return self._engine
         self.getEngine = getEngine
 
     def initTask(self, saveData = None):
@@ -275,15 +276,15 @@ class Engine(object):
         endImage = ika.Video.GrabImage(0, 0, ika.Video.xres, ika.Video.yres)
 
         time = 50
-        endTime = ika.GetTime() + time
-        now = ika.GetTime()
+        endTime = self.getTime() + time
+        now = self.getTime()
         while now < endTime:
             opacity = (endTime - now) / time
             ika.Video.Blit(endImage, 0, 0)
             ika.Video.TintBlit(startImage, 0, 0, opacity)
             ika.Video.ShowPage()
             yield None
-            now = ika.GetTime()
+            now = self.getTime()
 
         ika.Video.FreeImage(startImage)
         ika.Video.FreeImage(endImage)
@@ -292,9 +293,9 @@ class Engine(object):
     def runTask(self):
         try:
             skipCount = 0
-            self.nextFrameTime = ika.GetTime() + self.ticksPerFrame
+            self.nextFrameTime = self.getTime() + self.ticksPerFrame
             while True:
-                t = ika.GetTime()
+                t = self.getTime()
 
                 # if we're ahead, delay
                 if t < self.nextFrameTime:
@@ -445,11 +446,14 @@ class Engine(object):
 
         self.killList = []
 
+    def getTime(self):
+        return self._engine.getTime()
+
     def synchTime(self):
         '''Used to keep the engine from thinking it has to catch up
         after executing an event or something.'''
 
-        self.nextFrameTime = ika.GetTime()
+        self.nextFrameTime = self.getTime()
 
     def gameOverTask(self):
         c = Caption(self.font, 'G A M E   O V E R', duration=1000000, y=(ika.Video.yres - self.font.height) // 2)

@@ -70,8 +70,8 @@ def bridge_break(engineRef):
             yield from ika.DelayTask(1)
 
         p.ent.specframe = 92
-        t = ika.GetTime() + 80
-        while t > ika.GetTime():
+        t = engineRef.getTime() + 80
+        while t > engineRef.getTime():
             engineRef.draw()
             ika.Video.ShowPage()
             yield None

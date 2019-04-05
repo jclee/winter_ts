@@ -192,9 +192,9 @@ def creditsTask(engineRef):
 
         snowObj.draw()
 
-    now = ika.GetTime()
+    now = engineRef.getTime()
     while True:
-        t = ika.GetTime()
+        t = engineRef.getTime()
         delta = (t - now) / 10.0
         y += delta
         now = t

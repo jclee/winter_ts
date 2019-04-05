@@ -86,7 +86,7 @@ class PauseScreen(object):
         t.addChild(self.magWnd, startPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
         t.addChild(self.menu, startPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
-        startTime = ika.GetTime()
+        startTime = self.engineRef.getTime()
         now = startTime
         endTime = now + TIME
         prevTime = 0
@@ -104,7 +104,7 @@ class PauseScreen(object):
                 self.draw()
                 ika.Video.ShowPage()
             yield None
-            now = ika.GetTime()
+            now = self.engineRef.getTime()
 
         # TODO: Not used, but maybe should be?:
         self.background = self.images[-1]
@@ -117,7 +117,7 @@ class PauseScreen(object):
         t.addChild(self.magWnd, endPos=(-self.magWnd.getRight(), self.magWnd.getY()), time=TIME - 5)
         t.addChild(self.menu, endPos=(ika.Video.xres, self.menu.getY()), time=TIME - 5)
 
-        startTime = ika.GetTime()
+        startTime = self.engineRef.getTime()
         now = startTime
         endTime = now + TIME
         prevTime = 0
@@ -135,7 +135,7 @@ class PauseScreen(object):
                 self.draw()
                 ika.Video.ShowPage()
             yield None
-            now = ika.GetTime()
+            now = self.engineRef.getTime()
 
         self.background = None
         window.effects.freeBlurImages(self.engineRef, self.images)
