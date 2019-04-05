@@ -139,7 +139,7 @@ class RazorMane(Enemy):
 
     def playerDist(self):
         p = self.engineRef.player
-        return ika.hypot(p.x - self.x - 10, p.y - self.y - 7)
+        return window.hypot(p.x - self.x - 10, p.y - self.y - 7)
 
     def attackMood(self):
         for q in range(5):

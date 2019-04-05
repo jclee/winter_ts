@@ -1375,6 +1375,11 @@ export function random(low: number, high: number) {
 }
 ;(window as any).random = random
 
+export function hypot(x: number, y: number) {
+    return Math.sqrt(x * x + y * y)
+}
+;(window as any).hypot = hypot
+
 export class Engine {
     maps: {[key: string]: MapData}
     images: {[key: string]: Image}

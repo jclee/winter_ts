@@ -140,7 +140,7 @@ class AnkleBiter(Enemy):
         p = self.engineRef.player
         for q in range(5):
             d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = ika.hypot(p.x - self.x, p.y - self.y)
+            dist = window.hypot(p.x - self.x, p.y - self.y)
             if dist < 40:
                 yield self.attackState(d)
                 yield self.idleState(20)
@@ -152,7 +152,7 @@ class AnkleBiter(Enemy):
         p = self.engineRef.player
         for q in range(5):
             d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = ika.hypot(p.x - self.x, p.y - self.y)
+            dist = window.hypot(p.x - self.x, p.y - self.y)
 
             if dist > MIN_DIST:
                 break
@@ -166,7 +166,7 @@ class AnkleBiter(Enemy):
         p = self.engineRef.player
         self.stopAnimation()
         while True:
-            dist = ika.hypot(p.x - self.x, p.y - self.y)
+            dist = window.hypot(p.x - self.x, p.y - self.y)
 
             yield self.idleState()
 

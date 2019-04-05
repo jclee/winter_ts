@@ -28,9 +28,6 @@ def getEngine():
     global _engine
     return _engine
 
-def hypot(x, y):
-    return window.Math.sqrt(x * x + y * y)
-
 def Run(task):
     global _engine
 
