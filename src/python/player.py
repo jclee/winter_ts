@@ -200,7 +200,7 @@ backSlashRange = [x[::-1] for x in slashRange]
 
 class Player(Entity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
-        Entity.__init__(self, engineRef, engineRef.map.addEntity(x, y, layer, PLAYER_SPRITE), _playerAnim)
+        Entity.__init__(self, engineRef, engineRef.map.addSprite(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.state = self.standState()
 
         self.stats.maxhp = 80
@@ -526,7 +526,7 @@ class Player(Entity):
         for i in range(12):
             yield None
 
-        fire = self.engineRef.map.addEntity(self.x, self.y, self.layer, 'rend.ika-sprite')
+        fire = self.engineRef.map.addSprite(self.x, self.y, self.layer, 'rend.ika-sprite')
         f = self.direction * 5 # hack.
 
         # when we hit an entity, we append it here so that

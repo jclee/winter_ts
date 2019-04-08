@@ -33,7 +33,7 @@ class DeathListener(Thing):
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in self.engineRef.saveFlags:
-                e = self.engineRef.map.addEntity(71, 132, 2, 'firerune.ika-sprite')
+                e = self.engineRef.map.addSprite(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
                 self.engineRef.addEntity(
                     FireRune(e)
@@ -54,7 +54,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, self.engineRef.map.addEntity(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True

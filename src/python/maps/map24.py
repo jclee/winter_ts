@@ -17,7 +17,7 @@ class AddRune(object):
         self.engineRef = engineRef
 
     def update(self):
-        e = self.engineRef.map.addEntity(315, 320, 1, 'cowardrune.ika-sprite')
+        e = self.engineRef.map.addSprite(315, 320, 1, 'cowardrune.ika-sprite')
         e.name = 'cowardrune'
         self.engineRef.addEntity(CowardRune(e))
         return True

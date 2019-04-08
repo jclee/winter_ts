@@ -141,9 +141,9 @@ class Serpent(Enemy):
 
             if not n:
                 if window.random(0, 2):
-                    e = Carnivore(self.engineRef, self.engineRef.map.addEntity(x, y, self.layer, 'carnivore.ika-sprite'))
+                    e = Carnivore(self.engineRef, self.engineRef.map.addSprite(x, y, self.layer, 'carnivore.ika-sprite'))
                 else:
-                    e = AnkleBiter(self.engineRef, self.engineRef.map.addEntity(x, y, self.layer, 'anklebiter.ika-sprite'))
+                    e = AnkleBiter(self.engineRef, self.engineRef.map.addSprite(x, y, self.layer, 'anklebiter.ika-sprite'))
                 self.engineRef.addEntity(e)
                 e.mood = e.attackMood
 

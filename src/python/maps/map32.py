@@ -44,7 +44,7 @@ def finalBattle(engineRef):
 
         s = Serpent(
             engineRef,
-            engineRef.map.addEntity(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
+            engineRef.map.addSprite(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
             )
         s.startAnimation('appear')
         engineRef.addEntity(s)

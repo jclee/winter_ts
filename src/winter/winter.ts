@@ -870,8 +870,7 @@ class MapClass {
         return null
     }
 
-    // Adding some methods to replace direct access of python dict...
-    addEntity(x: number, y: number, layer: number, spritename: string) {
+    addSprite(x: number, y: number, layer: number, spritename: string) {
         this._spriteID += 1
         const name = "sprite_" + this._spriteID
         const spriteData = this._engine.sprites[spritename]

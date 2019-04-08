@@ -78,7 +78,7 @@ def bridge_break(engineRef):
 
         p.state = p.standState()
 
-        y = Yeti(engineRef, engineRef.map.addEntity(304, 64, 1, 'yeti.ika-sprite'))
+        y = Yeti(engineRef, engineRef.map.addSprite(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp
@@ -125,7 +125,7 @@ class DeathListener(Thing):
     def update(self):
         if self.yeti.stats.hp == 0:
             if 'windrune' not in self.engineRef.saveFlags:
-                e = self.engineRef.map.addEntity(304, 304, 1, 'windrune.ika-sprite')
+                e = self.engineRef.map.addSprite(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
                 self.engineRef.addEntity(
                     WindRune(e)
@@ -146,7 +146,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, self.engineRef.map.addEntity(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
