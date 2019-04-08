@@ -251,7 +251,7 @@ class Sprite {
         this.destVector = new Point()
     }
 
-    MoveTo(x: number, y: number) {
+    moveTo(x: number, y: number) {
         this.destLocation.x = x
         this.destLocation.y = y
         this.destVector.x = x - this.x
@@ -272,7 +272,7 @@ class Sprite {
         this.isMoving = false
     }
 
-    Update() {
+    _update() {
         let newDir = ''
 
         // TODO: Don't know if animation scripts are being used yet.
@@ -346,11 +346,11 @@ class Sprite {
         if (newDir == '') {
             this.Stop()
         } else {
-            this._Move(newDir)
+            this._move(newDir)
         }
     }
 
-    private _MoveDiagonally(d: string): string {
+    private _moveDiagonally(d: string): string {
         let d1 = ''
         let d2 = ''
         if (d == 'upleft') {
@@ -389,8 +389,8 @@ class Sprite {
         }
     }
 
-    private _Move(newDir: string) {
-        const moveDir = this._MoveDiagonally(newDir)
+    private _move(newDir: string) {
+        const moveDir = this._moveDiagonally(newDir)
         this._direction = newDir
 
         // TODO Not dealing with animscript
@@ -435,7 +435,7 @@ class Sprite {
         )
     }
 
-    Touches(otherSprite: Sprite): boolean {
+    touches(otherSprite: Sprite): boolean {
         const x1 = this.x
         const y1 = this.y
         const w = this.hotwidth
@@ -919,7 +919,7 @@ class MapClass {
             const sprite = this.sprites[key]
             sprite._speedCount += sprite.speed
             while (sprite._speedCount >= _TIME_RATE) {
-                sprite.Update()
+                sprite._update()
                 sprite._speedCount -= _TIME_RATE
             }
         }

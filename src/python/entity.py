@@ -125,21 +125,21 @@ class Entity(object):
             self.engineRef.map.spritesAt(*rect) if e.name in self.engineRef.entFromEnt]
 
     def touches(self, ent):
-        return self.ent.Touches(ent.ent)
+        return self.ent.touches(ent.ent)
 
     # Entity methods.  Most everything that involves an ika sprite should be done here.
-    def up(self):           self.ent.MoveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.Up
-    def down(self):         self.ent.MoveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.Down
-    def left(self):         self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Left
-    def right(self):        self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Right
-    def upLeft(self):       self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpLeft
-    def upRight(self):      self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpRight
-    def downLeft(self):     self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownLeft
-    def downRight(self):    self.ent.MoveTo(self.ent.x + self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownRight
+    def up(self):           self.ent.moveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.Up
+    def down(self):         self.ent.moveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.Down
+    def left(self):         self.ent.moveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Left
+    def right(self):        self.ent.moveTo(self.ent.x + self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Right
+    def upLeft(self):       self.ent.moveTo(self.ent.x - self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpLeft
+    def upRight(self):      self.ent.moveTo(self.ent.x + self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpRight
+    def downLeft(self):     self.ent.moveTo(self.ent.x - self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownLeft
+    def downRight(self):    self.ent.moveTo(self.ent.x + self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownRight
     def move(self, d, dist = DIST):
         delta = self.engineRef.dir.toDelta(d)
         self.direction = d
-        self.ent.MoveTo(int(self.ent.x + dist * delta.x), int(self.ent.y + dist * delta.y))
+        self.ent.moveTo(int(self.ent.x + dist * delta.x), int(self.ent.y + dist * delta.y))
 
     def isMoving(self):     return self.ent.isMoving
     def stop(self):         self.ent.Stop()
