@@ -3,7 +3,6 @@ import ika
 
 from enemy import Enemy
 import player
-import Brain
 import sound
 
 _ankleBiterAnim = {
@@ -99,14 +98,11 @@ _attackRange = [
 
 class AnkleBiter(Enemy):
     def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _ankleBiterAnim, Brain.Brain())
+        Enemy.__init__(self, engineRef, ent, _ankleBiterAnim)
 
         # Test code:
         # Equal probability of attacking or doing nothing.
-        self.addMoods(
-            (Brain.Attack(1), self.attackMood),
-            (Brain.Flee(1), self.passiveMood)
-        )
+        self.addMoods([self.attackMood, self.passiveMood])
 
         self.mood = self.passiveMood
         self.stats.maxhp = self.stats.hp = 20

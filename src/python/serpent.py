@@ -1,7 +1,6 @@
 from browser import window
 
 import ika
-import Brain
 
 from anklebiter import AnkleBiter
 from carnivore import Carnivore
@@ -38,11 +37,9 @@ _biteRange = (
 
 class Serpent(Enemy):
     def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _anim, Brain.Brain())
+        Enemy.__init__(self, engineRef, ent, _anim)
 
-        self.addMoods(
-            (Brain.Attack(1), self.watchMood)
-            )
+        self.addMoods([self.watchMood])
 
         self.stats.maxhp = 300
         self.stats.hp = self.stats.maxhp

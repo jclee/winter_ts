@@ -3,7 +3,6 @@ from browser import window
 from enemy import Enemy
 from player import Player
 import ika
-import Brain
 import sound
 
 _anim = {
@@ -99,13 +98,10 @@ _attackRange = (
 
 class Yeti(Enemy):
     def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _anim, Brain.Brain())
+        Enemy.__init__(self, engineRef, ent, _anim)
         self.speed = 80
 
-        self.addMoods(
-            (Brain.Attack(1), self.attackMood),
-            (Brain.Passive(1), self.passiveMood)
-        )
+        self.addMoods([self.attackMood, self.passiveMood])
 
         self.stats.maxhp = 100
         self.stats.hp = self.stats.maxhp

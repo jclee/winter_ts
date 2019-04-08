@@ -1,4 +1,4 @@
-import Brain
+from browser import window
 import sound
 from entity import Entity
 
@@ -24,18 +24,13 @@ class Enemy(Entity):
     Maybe it would be a good idea to send the brain information about why
     it is reconsidering its options.
     '''
-    def __init__(self, engineRef, ent, anim, brain):
+    def __init__(self, engineRef, ent, anim):
         Entity.__init__(self, engineRef, ent, anim)
-        self.brain = brain
         self.state = self.idleState()
         self.stats.hp = 15
         self._mood = None
 
-        # Describe how we implement various moods
-        self.actions = {
-            Brain.Attack : self.idleState,
-            Brain.Flee : self.idleState
-        }
+        self._moods = []
 
     @property
     def mood(self):
@@ -48,13 +43,8 @@ class Enemy(Entity):
             return
         self._mood = GenWrapper(value)
 
-    def addMood(self, mood, func):
-        self.brain.moods.append(mood)
-        self.actions[mood] = func
-
-    def addMoods(self, *args):
-        for m, f in args:
-            self.addMood(m, f)
+    def addMoods(self, moods):
+        self._moods += moods
 
     def think(self):
         try:
@@ -65,14 +55,13 @@ class Enemy(Entity):
             self.state = s
         except StopIteration:
             #self.interruptable = True
-            action = self.brain.think()
-            m = self.actions[action]
+            n = window.random(0, len(self._moods))
+            m = self._moods[n]
             self.mood = m
             self.state = self.mood()
 
     def die(self, recoilSpeed = 0, recoilDir = None):
         self._mood = None
-        self.brain = None
         self.interruptable = True
         self.state = self.deathState(recoilSpeed, recoilDir)
         self.engineRef.player.giveXP(self.stats.exp)

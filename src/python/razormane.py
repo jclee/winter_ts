@@ -3,7 +3,6 @@ import ika
 
 from enemy import Enemy
 import player
-import Brain
 import sound
 
 _razorManeAnim = {
@@ -99,12 +98,9 @@ _attackRange = [
 
 class RazorMane(Enemy):
     def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _razorManeAnim, Brain.Brain())
+        Enemy.__init__(self, engineRef, ent, _razorManeAnim)
 
-        self.addMoods(
-            (Brain.Attack(1), self.stalkMood),
-            (Brain.Flee(1), self.passiveMood)
-        )
+        self.addMoods([self.stalkMood, self.passiveMood])
 
         self.mood = self.passiveMood
         self.speed = 150
