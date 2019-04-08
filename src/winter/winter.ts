@@ -191,7 +191,7 @@ export const RGB = (r: number, g: number, b: number, a: number): number => {
 }
 (window as any).RGB = RGB
 
-class Entity {
+class Sprite {
     // TODO: Probably a bunch of these members can be private, as the game does
     // not access them.
 
@@ -431,20 +431,20 @@ class Entity {
         const engine = this._getEngine()
         return (
             (this.mapobs && engine.detectMapCollision(x, y, this.hotwidth, this.hotheight, this.layer))
-            || (this.entobs && engine.detectEntityCollision(this.name, x, y, this.hotwidth, this.hotheight, this.layer))
+            || (this.entobs && engine.detectSpriteCollision(this.name, x, y, this.hotwidth, this.hotheight, this.layer))
         )
     }
 
-    Touches(otherEnt: Entity): boolean {
+    Touches(otherSprite: Sprite): boolean {
         const x1 = this.x
         const y1 = this.y
         const w = this.hotwidth
         const h = this.hotheight
 
-        if (x1     > otherEnt.x + otherEnt.hotwidth ||
-            y1     > otherEnt.y + otherEnt.hotheight ||
-            x1 + w < otherEnt.x ||
-            y1 + h < otherEnt.y)
+        if (x1     > otherSprite.x + otherSprite.hotwidth ||
+            y1     > otherSprite.y + otherSprite.hotheight ||
+            x1 + w < otherSprite.x ||
+            y1 + h < otherSprite.y)
         {
             return false
         } else {
@@ -614,8 +614,8 @@ class MapClass {
     _currentMapName: string
     private _spriteID: number
     // TODO: make private and provide different accessor?
-    sprites: {[key: string]: Entity}
-    mapEntityNames_: string[]
+    sprites: {[key: string]: Sprite}
+    mapSpriteNames_: string[]
     layercount: number
 
     constructor(
@@ -624,7 +624,7 @@ class MapClass {
     ) {
         this._spriteID = 0
         this.sprites = {}
-        this.mapEntityNames_ = []
+        this.mapSpriteNames_ = []
     }
 
     get xwin(): number {
@@ -666,17 +666,17 @@ class MapClass {
         const tilesPerRow = 16
 
         const layerCount = mapData.layers.length
-        const layerEnts: [number, Entity][][] = []
+        const layerSprites: [number, Sprite][][] = []
         for (let i = 0; i < layerCount; ++i) {
-            layerEnts.push([])
+            layerSprites.push([])
         }
         // TODO: Better way to do this in typescript?  For..of something?
         for (let key in this.sprites) {
-            const ent = this.sprites[key]
-            layerEnts[ent.layer].push([ent.y, ent])
+            const sprite = this.sprites[key]
+            layerSprites[sprite.layer].push([sprite.y, sprite])
         }
-        for (let layerEnt of layerEnts) {
-            layerEnt.sort()
+        for (let layerSprite of layerSprites) {
+            layerSprite.sort()
         }
 
         this._engine.targetPageFramebuffer()
@@ -748,27 +748,27 @@ class MapClass {
                 }
             }
 
-            for (let [_, ent] of layerEnts[i]) {
+            for (let [_, sprite] of layerSprites[i]) {
                 // This game doesn't seem to use custom renderscripts
 
-                const spritePath = 'sprite/' + ent.spritename.replace('.ika-sprite', '.png')
+                const spritePath = 'sprite/' + sprite.spritename.replace('.ika-sprite', '.png')
                 const spriteImage = this._engine.getImage(spritePath)
 
-                const frameIndex = Math.max(0, ent.specframe)
-                const frameX = (frameIndex % 8) * ent.spritewidth
-                const frameY = Math.floor(frameIndex / 8) * ent.spriteheight
+                const frameIndex = Math.max(0, sprite.specframe)
+                const frameX = (frameIndex % 8) * sprite.spritewidth
+                const frameY = Math.floor(frameIndex / 8) * sprite.spriteheight
 
                 // This game doesn't use sprite visibility toggling.
                 this._engine.drawImage(
                     spriteImage,
                     frameX,
                     frameY,
-                    ent.spritewidth,
-                    ent.spriteheight,
-                    ent.x - ent.hotx - xw,
-                    ent.y - ent.hoty - yw,
-                    ent.spritewidth,
-                    ent.spriteheight,
+                    sprite.spritewidth,
+                    sprite.spriteheight,
+                    sprite.x - sprite.hotx - xw,
+                    sprite.y - sprite.hoty - yw,
+                    sprite.spritewidth,
+                    sprite.spriteheight,
                     1.0
                 )
             }
@@ -816,7 +816,7 @@ class MapClass {
             const layer = mapData.layers[i]
             for (let entity of layer.entities) {
                 const spriteData = this._engine.sprites[entity.sprite]
-                const ent = new Entity(
+                const sprite = new Sprite(
                     entity.x,
                     entity.y,
                     i,
@@ -825,8 +825,8 @@ class MapClass {
                     spriteData,
                     this._engine,
                 )
-                this.sprites[ent.name] = ent
-                this.mapEntityNames_.push(ent.name)
+                this.sprites[sprite.name] = sprite
+                this.mapSpriteNames_.push(sprite.name)
             }
         }
     }
@@ -874,18 +874,18 @@ class MapClass {
         this._spriteID += 1
         const name = "sprite_" + this._spriteID
         const spriteData = this._engine.sprites[spritename]
-        const ent = new Entity(x, y, layer, spritename, name, spriteData, this._engine)
-        this.sprites[ent.name] = ent
-        return ent
+        const sprite = new Sprite(x, y, layer, spritename, name, spriteData, this._engine)
+        this.sprites[sprite.name] = sprite
+        return sprite
     }
-    removeSprite(entity: Entity) {
-        delete this.sprites[entity.name]
+    removeSprite(sprite: Sprite) {
+        delete this.sprites[sprite.name]
     }
     clearSprites() {
-        for (let name of this.mapEntityNames_) {
+        for (let name of this.mapSpriteNames_) {
             delete this.sprites[name]
         }
-        this.mapEntityNames_ = []
+        this.mapSpriteNames_ = []
     }
     spritesAt(x: number, y: number, width: number, height: number, layer: number) {
         const x2 = x + width
@@ -893,34 +893,34 @@ class MapClass {
 
         const found = []
         for (let key in this.sprites) {
-            const ent = this.sprites[key]
-            if (ent.layer != layer) {
+            const sprite = this.sprites[key]
+            if (sprite.layer != layer) {
                 continue
             }
-            if (x > ent.x + ent.hotwidth) {
+            if (x > sprite.x + sprite.hotwidth) {
                 continue
             }
-            if (y > ent.y + ent.hotheight) {
+            if (y > sprite.y + sprite.hotheight) {
                 continue
             }
-            if (x2 < ent.x) {
+            if (x2 < sprite.x) {
                 continue
             }
-            if (y2 < ent.y) {
+            if (y2 < sprite.y) {
                 continue
             }
-            found.push(ent)
+            found.push(sprite)
         }
         return found
     }
-    ProcessEntities() {
+    processSprites() {
         const _TIME_RATE = 100
         for (let key in this.sprites) {
-            const ent = this.sprites[key]
-            ent._speedCount += ent.speed
-            while (ent._speedCount >= _TIME_RATE) {
-                ent.Update()
-                ent._speedCount -= _TIME_RATE
+            const sprite = this.sprites[key]
+            sprite._speedCount += sprite.speed
+            while (sprite._speedCount >= _TIME_RATE) {
+                sprite.Update()
+                sprite._speedCount -= _TIME_RATE
             }
         }
     }
@@ -1907,17 +1907,17 @@ export class Engine {
         return image
     }
 
-    detectEntityCollision(
-        entName: string,
+    detectSpriteCollision(
+        spriteName: string,
         x: number,
         y: number,
         w: number,
         h: number,
         layerIndex: number
     ): boolean {
-        const ents = this.map.spritesAt(x + 1, y + 1, w - 2, h - 2, layerIndex)
-        for (let ent of ents) {
-            if (ent.isobs && ent.name != entName) {
+        const sprites = this.map.spritesAt(x + 1, y + 1, w - 2, h - 2, layerIndex)
+        for (let sprite of sprites) {
+            if (sprite.isobs && sprite.name != spriteName) {
                 return true
             }
         }

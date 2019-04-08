@@ -53,7 +53,7 @@ def bridge_break(engineRef):
 
         for y in range(32):
             p.y += 1
-            engineRef.map.ProcessEntities()
+            engineRef.map.processSprites()
             engineRef.camera.update()
             engineRef.draw()
             engineRef.video.ShowPage()
@@ -63,7 +63,7 @@ def bridge_break(engineRef):
 
         for y in range(32):
             p.y += 1
-            engineRef.map.ProcessEntities()
+            engineRef.map.processSprites()
             engineRef.camera.update()
             engineRef.draw()
             engineRef.video.ShowPage()

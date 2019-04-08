@@ -127,7 +127,7 @@ class Entity(object):
     def touches(self, ent):
         return self.ent.Touches(ent.ent)
 
-    # Entity methods.  Most everything that involves an ika entity should be done here.
+    # Entity methods.  Most everything that involves an ika sprite should be done here.
     def up(self):           self.ent.MoveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.Up
     def down(self):         self.ent.MoveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.Down
     def left(self):         self.ent.MoveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Left

@@ -63,7 +63,7 @@ def textBox(engineRef, ent, txt):
 def speech(engineRef, where, txt):
     """Displays a text frame.
 
-    Where can be either a point or an ika entity.
+    Where can be either a point or an ika sprite.
     """
     frame = textBox(engineRef, where, txt)
 

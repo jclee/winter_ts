@@ -77,7 +77,7 @@ class Engine(object):
         self.mapThings = [] # same as self.things, but is cleared every mapSwitch
         self.fields = []
 
-        # ika Entity : Entity
+        # ika sprite : Entity
         self.entFromEnt = {}
 
         self.player = None
@@ -118,7 +118,7 @@ class Engine(object):
         self.mapThings = []
         self.fields = []
 
-        # ika Entity : Entity
+        # ika sprite : Entity
         self.entFromEnt = {}
 
         # TODO - redundant with map switches in beginNewGameTask/loadGameTask? (pos parameter differs...)
@@ -354,9 +354,9 @@ class Engine(object):
             t.draw()
 
     def tickTask(self):
-        # We let ika do most of the work concerning entity movement.
+        # We let ika do most of the work concerning sprite movement.
         # (in particular, collision detection)
-        self.map.ProcessEntities()
+        self.map.processSprites()
 
         # update entities
         for ent in self.entities:
