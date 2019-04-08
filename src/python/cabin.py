@@ -118,10 +118,10 @@ def sceneTask(engineRef, name):
         e.x, e.y = -100, -100
 
     engineRef.map.Switch('maps/cabinmap.ika-map')
-    grandpa = engineRef.map.entities['grandpa']
-    kid1 = engineRef.map.entities['kid1']
-    kid2 = engineRef.map.entities['kid2']
-    kid3 = engineRef.map.entities['kid3']
+    grandpa = engineRef.map.sprites['grandpa']
+    kid1 = engineRef.map.sprites['kid1']
+    kid2 = engineRef.map.sprites['kid2']
+    kid3 = engineRef.map.sprites['kid3']
 
     def draw():
         engineRef.map.Render()

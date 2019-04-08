@@ -614,7 +614,7 @@ class MapClass {
     _currentMapName: string
     private _spriteID: number
     // TODO: make private and provide different accessor?
-    entities: {[key: string]: Entity}
+    sprites: {[key: string]: Entity}
     mapEntityNames_: string[]
     layercount: number
 
@@ -623,7 +623,7 @@ class MapClass {
         private _video: VideoClass
     ) {
         this._spriteID = 0
-        this.entities = {}
+        this.sprites = {}
         this.mapEntityNames_ = []
     }
 
@@ -671,8 +671,8 @@ class MapClass {
             layerEnts.push([])
         }
         // TODO: Better way to do this in typescript?  For..of something?
-        for (let key in this.entities) {
-            const ent = this.entities[key]
+        for (let key in this.sprites) {
+            const ent = this.sprites[key]
             layerEnts[ent.layer].push([ent.y, ent])
         }
         for (let layerEnt of layerEnts) {
@@ -793,7 +793,7 @@ class MapClass {
     }
 
     Switch(path: string) {
-        this.clearMapEntities()
+        this.clearSprites()
 
         this._currentMapName = path.replace('maps/', '').replace('.ika-map', '')
         this._xwin = 0
@@ -825,7 +825,7 @@ class MapClass {
                     spriteData,
                     this._engine,
                 )
-                this.entities[ent.name] = ent
+                this.sprites[ent.name] = ent
                 this.mapEntityNames_.push(ent.name)
             }
         }
@@ -875,25 +875,25 @@ class MapClass {
         const name = "sprite_" + this._spriteID
         const spriteData = this._engine.sprites[spritename]
         const ent = new Entity(x, y, layer, spritename, name, spriteData, this._engine)
-        this.entities[ent.name] = ent
+        this.sprites[ent.name] = ent
         return ent
     }
-    RemoveEntity(entity: Entity) {
-        delete this.entities[entity.name]
+    removeSprite(entity: Entity) {
+        delete this.sprites[entity.name]
     }
-    clearMapEntities() {
+    clearSprites() {
         for (let name of this.mapEntityNames_) {
-            delete this.entities[name]
+            delete this.sprites[name]
         }
         this.mapEntityNames_ = []
     }
-    EntitiesAt(x: number, y: number, width: number, height: number, layer: number) {
+    spritesAt(x: number, y: number, width: number, height: number, layer: number) {
         const x2 = x + width
         const y2 = y + height
 
         const found = []
-        for (let key in this.entities) {
-            const ent = this.entities[key]
+        for (let key in this.sprites) {
+            const ent = this.sprites[key]
             if (ent.layer != layer) {
                 continue
             }
@@ -915,8 +915,8 @@ class MapClass {
     }
     ProcessEntities() {
         const _TIME_RATE = 100
-        for (let key in this.entities) {
-            const ent = this.entities[key]
+        for (let key in this.sprites) {
+            const ent = this.sprites[key]
             ent._speedCount += ent.speed
             while (ent._speedCount >= _TIME_RATE) {
                 ent.Update()
@@ -1915,7 +1915,7 @@ export class Engine {
         h: number,
         layerIndex: number
     ): boolean {
-        const ents = this.map.EntitiesAt(x + 1, y + 1, w - 2, h - 2, layerIndex)
+        const ents = this.map.spritesAt(x + 1, y + 1, w - 2, h - 2, layerIndex)
         for (let ent of ents) {
             if (ent.isobs && ent.name != entName) {
                 return true

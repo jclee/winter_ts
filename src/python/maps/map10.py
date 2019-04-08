@@ -9,7 +9,7 @@ def AutoExec(engineRef):
         engineRef.mapThings.append(RuneListener(engineRef))
 
     if 'firerune' in engineRef.saveFlags:
-        engineRef.map.RemoveEntity(engineRef.map.entities['demiyeti'])
+        engineRef.map.removeSprite(engineRef.map.sprites['demiyeti'])
     else:
         engineRef.mapThings.append(DeathListener(engineRef))
 
@@ -29,7 +29,7 @@ class DeathListener(Thing):
             # doing this)
             sound.playMusic("music/Competative.xm")
             self.yeti = self.engineRef.entFromEnt[
-                engineRef.map.entities['demiyeti'].name
+                engineRef.map.sprites['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:
             if 'nearend' not in self.engineRef.saveFlags:

@@ -137,7 +137,7 @@ class Serpent(Enemy):
 
         for q in range(window.random(1, 4)):
             x, y = 320 + (q * 60), 588
-            n = self.engineRef.map.EntitiesAt(x, y, x + 16, y + 16, self.layer)
+            n = self.engineRef.map.spritesAt(x, y, x + 16, y + 16, self.layer)
 
             if not n:
                 if window.random(0, 2):

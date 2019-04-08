@@ -223,7 +223,7 @@ class Engine(object):
         self.mapThings = []
         self.fields = []
         # TODO: Already called in self.map.Switch() below?
-        self.map.clearMapEntities()
+        self.map.clearSprites()
 
         # drop the extension, convert slashes to dots, and prepend the maps package
         # ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
@@ -425,8 +425,8 @@ class Engine(object):
             self.killList.remove(self.player)
             self.clearKillQueue()
 
-        for entKey in self.map.entities:
-            ent = self.map.entities[entKey]
+        for entKey in self.map.sprites:
+            ent = self.map.sprites[entKey]
             if ent.spritename in spawnMap:
                 self.addEntity(spawnMap[ent.spritename](self, ent))
             elif ent.spritename != PLAYER_SPRITE:
@@ -441,7 +441,7 @@ class Engine(object):
             ent.ent.x, ent.ent.y = -100,0
             ent.ent.Stop()
             del self.entFromEnt[ent.ent.name]
-            self.map.RemoveEntity(ent)
+            self.map.removeSprite(ent)
             # brython workaround?
             #self.entities.remove(ent)
             for i, e in enumerate(self.entities):

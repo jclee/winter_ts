@@ -341,7 +341,7 @@ class Player(Entity):
             rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = self.engineRef.map.EntitiesAt(*rect)
+            ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -389,7 +389,7 @@ class Player(Entity):
             rect = list(r[self.getAnimationIndex()]) + [self.layer]
             rect[0] += self.x
             rect[1] += self.y
-            ents = self.engineRef.map.EntitiesAt(*rect)
+            ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.entFromEnt[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
@@ -438,7 +438,7 @@ class Player(Entity):
 
                 rect[0] = r[0] + self.x
                 rect[1] = r[1] + self.y
-                ents = self.engineRef.map.EntitiesAt(*rect)
+                ents = self.engineRef.map.spritesAt(*rect)
                 for e in ents:
                     x = self.engineRef.entFromEnt[e.name]
                     if isinstance(x, Enemy) and not x.invincible:
@@ -552,7 +552,7 @@ class Player(Entity):
 
             yield None
 
-        self.engineRef.map.RemoveEntity(fire)
+        self.engineRef.map.removeSprite(fire)
 
         # stall period:
         for i in range(30):

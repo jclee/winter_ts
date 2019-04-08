@@ -119,7 +119,7 @@ class RazorMane(Enemy):
         # When one dies, the others scatter
 
         ents = [self.engineRef.entFromEnt[x.name] for x in
-            self.engineRef.map.EntitiesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
+            self.engineRef.map.spritesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
             if x.name in self.engineRef.entFromEnt]
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 

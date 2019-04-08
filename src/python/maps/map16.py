@@ -13,7 +13,7 @@ def AutoExec(engineRef):
             engineRef.map.SetTile(x, 28, 3, 152)
             engineRef.map.SetTile(x, 29, 3, 158)
             engineRef.map.SetTile(x, 30, 3, 164)
-            engineRef.map.entities['break_gap'].x = -100
+            engineRef.map.sprites['break_gap'].x = -100
 
     if 'windguard' not in engineRef.saveFlags and 'nearend' in engineRef.saveFlags:
         engineRef.mapThings.append(RuneListener(engineRef))
@@ -36,7 +36,7 @@ def bridge_break(engineRef):
             engineRef.map.SetTile(x + 19, 28, 3, bridge[0][x])
             engineRef.map.SetTile(x + 19, 29, 3, bridge[1][x])
             engineRef.map.SetTile(x + 19, 30, 3, bridge[2][x])
-            engineRef.map.entities['break_gap'].x = 320
+            engineRef.map.sprites['break_gap'].x = 320
 
         # This is really cheap.  Probably fragile too.  I'm stepping beyond
         # the game engine and directly twiddling with ika.
