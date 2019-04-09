@@ -361,7 +361,7 @@ class Engine(object):
 
         # update entities
         for ent in self.entities:
-            yield from ent.updateTask()
+            ent.update()
         self.clearKillQueue()
 
         # check fields

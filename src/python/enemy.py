@@ -93,7 +93,7 @@ class Enemy(Entity):
         while True:
             yield None
 
-    def updateTask(self):
+    def update(self):
         self.animate()
         if not self._state:
             self.think()
@@ -101,8 +101,6 @@ class Enemy(Entity):
             next(self._state)
         except StopIteration:
             self.think()
-        if False:
-            yield None
 
     def defaultState(self):
         yield None

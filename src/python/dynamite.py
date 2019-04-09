@@ -11,11 +11,9 @@ class Dynamite(Entity):
             sprite.x = sprite.y = -100
             self.engineRef.destroyEntity(self)
 
-    def updateTask(self):
+    def update(self):
         assert self.flagName not in self.__dict__, 'Already have this.  Why are we updating?'
         if self.touches(self.engineRef.player):
             self.engineRef.saveFlags[self.flagName] = 'True'
             self.engineRef.destroyEntity(self)
             self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, '~1Got a stick of dynamite!'))
-        if False:
-            yield None

@@ -10,7 +10,7 @@ class SavePoint(Entity):
         self.interruptable = False
         self.invincible = True
 
-    def updateTask(self):
+    def update(self):
         if self.touches(self.engineRef.player):
             p = self.engineRef.player
             p.stats.hp = 999
@@ -21,6 +21,3 @@ class SavePoint(Entity):
             p.x, p.y = p.x + delta.x * 3, p.y + delta.y * 3
 
             self.engineRef.showSaveMenuAtEndOfTick = True
-
-        if False:
-            yield None

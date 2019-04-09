@@ -15,14 +15,12 @@ class _Rune(Entity):
     def apply(self):
         pass
 
-    def updateTask(self):
+    def update(self):
         if self.touches(self.engineRef.player):
             self.engineRef.destroyEntity(self)
             self.engineRef.addThing(Caption(self.engineRef, self.engineRef.font, '~1You got the %s Rune!' % self.element))
             self.engineRef.saveFlags[self.name] = 'True'
             self.apply()
-        if False:
-            yield None
 
 
 class WaterRune(_Rune):

@@ -28,7 +28,7 @@ class Entity(object):
         self._onStateExit = None
         self.state = self.defaultState()
 
-    def updateTask(self):
+    def update(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()
         if self._state is None:
@@ -40,8 +40,6 @@ class Entity(object):
             self.state = self.defaultState()
             next(self._state)
             return
-        if False:
-            yield None
 
     def die(self, *args):
         self.engineRef.destroyEntity(self)

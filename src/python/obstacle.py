@@ -20,9 +20,8 @@ class _Obstacle(Entity):
         self.x = self.y = -100
         self.engineRef.destroyEntity(self)
 
-    def updateTask(self):
-        if False:
-            yield None
+    def update(self):
+        pass
 
 class IceWall(_Obstacle):
     '''
@@ -80,7 +79,7 @@ class Boulder(_Obstacle):
     def __init__(self, *args):
         _Obstacle.__init__(self, *args)
 
-    def updateTask(self):
+    def update(self):
         if self.touches(self.engineRef.player):
             # find a stick of TNT
             tnt = [k for k in self.engineRef.saveFlags
@@ -93,6 +92,3 @@ class Boulder(_Obstacle):
                 self.engineRef.saveFlags[self.flagName] = 'Broken'
                 self.engineRef.destroyEntity(self)
                 self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, 'Blew the rock apart!'))
-
-        if False:
-            yield None
