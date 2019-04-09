@@ -5,8 +5,8 @@ from entity import Entity
 import saveloadmenu
 
 class SavePoint(Entity):
-    def __init__(self, engineRef, ent):
-        Entity.__init__(self, engineRef, ent, None)
+    def __init__(self, engineRef, sprite):
+        Entity.__init__(self, engineRef, sprite, None)
         self.interruptable = False
         self.invincible = True
 

@@ -36,8 +36,8 @@ _biteRange = (
 )
 
 class Serpent(Enemy):
-    def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _anim)
+    def __init__(self, engineRef, sprite):
+        Enemy.__init__(self, engineRef, sprite, _anim)
 
         self.addMoods([self.watchMood])
 
@@ -46,7 +46,7 @@ class Serpent(Enemy):
         self.stats.att = 35
         self.invincible = True
 
-        ent.mapobs = ent.entobs = False
+        sprite.mapobs = sprite.entobs = False
         self.bleh = self.watchMood()
 
     def die(self):
@@ -83,7 +83,7 @@ class Serpent(Enemy):
             #self._state = None
 
             for n in range(window.random(1, 8)):
-                x = self.x + self.ent.hotwidth // 2
+                x = self.x + self.sprite.hotwidth // 2
                 d = self.engineRef.dir.fromDelta(p.x - x, 0)
                 yield self.moveState(d, abs(p.x - x))
 

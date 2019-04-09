@@ -343,7 +343,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
-                x = self.engineRef.entFromEnt[e.name]
+                x = self.engineRef.nameToEntityMap[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 120, self.direction)
@@ -391,7 +391,7 @@ class Player(Entity):
             rect[1] += self.y
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
-                x = self.engineRef.entFromEnt[e.name]
+                x = self.engineRef.nameToEntityMap[e.name]
                 if isinstance(x, Enemy) and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 130, self.direction)
@@ -440,7 +440,7 @@ class Player(Entity):
                 rect[1] = r[1] + self.y
                 ents = self.engineRef.map.spritesAt(*rect)
                 for e in ents:
-                    x = self.engineRef.entFromEnt[e.name]
+                    x = self.engineRef.nameToEntityMap[e.name]
                     if isinstance(x, Enemy) and not x.invincible:
                         x.hurt(int(self.stats.att * 1.5), 300, self.direction)
                         self.giveMPforHit()
@@ -560,12 +560,12 @@ class Player(Entity):
 
     def crushingGaleState(self):
         oldSpeed = self.speed
-        oldObs = self.ent.entobs
+        oldObs = self.sprite.entobs
         oldInvincible = self.invincible
         oldCameraLocked = self.engineRef.camera.locked
         def restoreVars(self=self, oldSpeed=oldSpeed, oldObs=oldObs, oldInvincible=oldInvincible, oldCameraLocked=oldCameraLocked):
             self.speed = oldSpeed
-            self.ent.entobs = oldObs
+            self.sprite.entobs = oldObs
             self.invincible = oldInvincible
             self.engineRef.camera.locked = oldCameraLocked
         self._onStateExit = restoreVars
@@ -599,7 +599,7 @@ class Player(Entity):
             yield None
 
         self.invincible = True
-        self.ent.entobs = False
+        self.sprite.entobs = False
 
         self.startAnimation('thrust')
         r = galeRange[self.direction] + (self.layer,)
@@ -616,7 +616,7 @@ class Player(Entity):
             self.speed = max(oldSpeed, self.speed - 20)
 
         while True:
-            ents = [x for x in self.detectCollision((0, 0, self.ent.hotwidth, self.ent.hotheight, self.layer)) if isinstance(x, Gap)]
+            ents = [x for x in self.detectCollision((0, 0, self.sprite.hotwidth, self.sprite.hotheight, self.layer)) if isinstance(x, Gap)]
             if not ents:
                 break
             else:

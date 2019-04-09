@@ -77,8 +77,8 @@ class Engine(object):
         self.mapThings = [] # same as self.things, but is cleared every mapSwitch
         self.fields = []
 
-        # ika sprite : Entity
-        self.entFromEnt = {}
+        # ika sprite "name" : Entity
+        self.nameToEntityMap = {}
 
         self.player = None
         self.background = None
@@ -118,8 +118,8 @@ class Engine(object):
         self.mapThings = []
         self.fields = []
 
-        # ika sprite : Entity
-        self.entFromEnt = {}
+        # ika sprite "name" : Entity
+        self.nameToEntityMap = {}
 
         # TODO - redundant with map switches in beginNewGameTask/loadGameTask? (pos parameter differs...)
         if saveData:
@@ -367,8 +367,8 @@ class Engine(object):
         rlayer = self.player.layer
         rx = self.player.x
         ry = self.player.y
-        rw = self.player.ent.hotwidth
-        rh = self.player.ent.hotheight
+        rw = self.player.sprite.hotwidth
+        rh = self.player.sprite.hotheight
         for f in self.fields:
             if f.test(rlayer, rx, ry, rw, rh):
                 scriptTask  = f.scriptTask
@@ -392,7 +392,7 @@ class Engine(object):
         assert ent not in self.entities
 
         self.entities.append(ent)
-        self.entFromEnt[ent.ent.name] = ent
+        self.nameToEntityMap[ent.sprite.name] = ent
 
     def destroyEntity(self, ent):
         ent.x = ent.y = -1000
@@ -425,12 +425,12 @@ class Engine(object):
             self.killList.remove(self.player)
             self.clearKillQueue()
 
-        for entKey in self.map.sprites:
-            ent = self.map.sprites[entKey]
-            if ent.spritename in spawnMap:
-                self.addEntity(spawnMap[ent.spritename](self, ent))
-            elif ent.spritename != PLAYER_SPRITE:
-                print('Unknown entity sprite %s.  Ignoring.' % ent.spritename)
+        for spriteKey in self.map.sprites:
+            sprite = self.map.sprites[spriteKey]
+            if sprite.spritename in spawnMap:
+                self.addEntity(spawnMap[sprite.spritename](self, sprite))
+            elif sprite.spritename != PLAYER_SPRITE:
+                print('Unknown entity sprite %s.  Ignoring.' % sprite.spritename)
 
     def clearKillQueue(self):
         # it's a bad idea to tweak the entity list in the middle of an iteration,
@@ -438,9 +438,9 @@ class Engine(object):
         for ent in self.killList:
             if ent is self.player:
                 self.player = None
-            ent.ent.x, ent.ent.y = -100,0
-            ent.ent.Stop()
-            del self.entFromEnt[ent.ent.name]
+            ent.sprite.x, ent.sprite.y = -100,0
+            ent.sprite.Stop()
+            del self.nameToEntityMap[ent.sprite.name]
             self.map.removeSprite(ent)
             # brython workaround?
             #self.entities.remove(ent)

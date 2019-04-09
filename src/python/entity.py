@@ -12,10 +12,10 @@ class Entity(object):
     # arbitrary, and meaningless for the most part.
     DIST = 48
 
-    def __init__(self, engineRef, ent, anim):
-        'ent can be None if all of the entity manipulating methods (below) are overridden.'
+    def __init__(self, engineRef, sprite, anim):
+        'sprite can be None if all of the entity manipulating methods (below) are overridden.'
         self.engineRef = engineRef
-        self.ent = ent
+        self.sprite = sprite
         self.stats = window.statset.StatSet.new()
         self.stats.hp = 1
 
@@ -106,7 +106,7 @@ class Entity(object):
             if t <= 0 or self.speed <= 0: break
 
         self.direction = self.engineRef.dir.invert(self.direction)
-        self.ent.Stop()
+        self.sprite.Stop()
         yield None
 
     def detectCollision(self, rect):
@@ -121,61 +121,61 @@ class Entity(object):
             rect[2], rect[3],
             self.layer)
 
-        return [self.engineRef.entFromEnt[e.name] for e in
-            self.engineRef.map.spritesAt(*rect) if e.name in self.engineRef.entFromEnt]
+        return [self.engineRef.nameToEntityMap[s.name] for s in
+            self.engineRef.map.spritesAt(*rect) if s.name in self.engineRef.nameToEntityMap]
 
     def touches(self, ent):
-        return self.ent.touches(ent.ent)
+        return self.sprite.touches(ent.sprite)
 
     # Entity methods.  Most everything that involves an ika sprite should be done here.
-    def up(self):           self.ent.moveTo(self.ent.x, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.Up
-    def down(self):         self.ent.moveTo(self.ent.x, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.Down
-    def left(self):         self.ent.moveTo(self.ent.x - self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Left
-    def right(self):        self.ent.moveTo(self.ent.x + self.DIST, self.ent.y);    self.direction = self.engineRef.dir.Right
-    def upLeft(self):       self.ent.moveTo(self.ent.x - self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpLeft
-    def upRight(self):      self.ent.moveTo(self.ent.x + self.DIST, self.ent.y - self.DIST);    self.direction = self.engineRef.dir.UpRight
-    def downLeft(self):     self.ent.moveTo(self.ent.x - self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownLeft
-    def downRight(self):    self.ent.moveTo(self.ent.x + self.DIST, self.ent.y + self.DIST);    self.direction = self.engineRef.dir.DownRight
+    def up(self):           self.sprite.moveTo(self.sprite.x, self.sprite.y - self.DIST);    self.direction = self.engineRef.dir.Up
+    def down(self):         self.sprite.moveTo(self.sprite.x, self.sprite.y + self.DIST);    self.direction = self.engineRef.dir.Down
+    def left(self):         self.sprite.moveTo(self.sprite.x - self.DIST, self.sprite.y);    self.direction = self.engineRef.dir.Left
+    def right(self):        self.sprite.moveTo(self.sprite.x + self.DIST, self.sprite.y);    self.direction = self.engineRef.dir.Right
+    def upLeft(self):       self.sprite.moveTo(self.sprite.x - self.DIST, self.sprite.y - self.DIST);    self.direction = self.engineRef.dir.UpLeft
+    def upRight(self):      self.sprite.moveTo(self.sprite.x + self.DIST, self.sprite.y - self.DIST);    self.direction = self.engineRef.dir.UpRight
+    def downLeft(self):     self.sprite.moveTo(self.sprite.x - self.DIST, self.sprite.y + self.DIST);    self.direction = self.engineRef.dir.DownLeft
+    def downRight(self):    self.sprite.moveTo(self.sprite.x + self.DIST, self.sprite.y + self.DIST);    self.direction = self.engineRef.dir.DownRight
     def move(self, d, dist = DIST):
         delta = self.engineRef.dir.toDelta(d)
         self.direction = d
-        self.ent.moveTo(int(self.ent.x + dist * delta.x), int(self.ent.y + dist * delta.y))
+        self.sprite.moveTo(int(self.sprite.x + dist * delta.x), int(self.sprite.y + dist * delta.y))
 
-    def isMoving(self):     return self.ent.isMoving
-    def stop(self):         self.ent.Stop()
+    def isMoving(self):     return self.sprite.isMoving
+    def stop(self):         self.sprite.Stop()
 
     def animate(self):
         self._animator.update()
-        self.ent.specframe = self._animator.curFrame
+        self.sprite.specframe = self._animator.curFrame
 
     # properties.  Because they're high in fibre.
     @property
     def x(self):
-        return self.ent.x
+        return self.sprite.x
     @x.setter
     def x(self, value):
-        self.ent.x = value
+        self.sprite.x = value
 
     @property
     def y(self):
-        return self.ent.y
+        return self.sprite.y
     @y.setter
     def y(self, value):
-        self.ent.y = value
+        self.sprite.y = value
 
     @property
     def speed(self):
-        return self.ent.speed
+        return self.sprite.speed
     @speed.setter
     def speed(self, value):
-        self.ent.speed = value
+        self.sprite.speed = value
 
     @property
     def layer(self):
-        return self.ent.layer
+        return self.sprite.layer
     @layer.setter
     def layer(self, value):
-        self.ent.layer = value
+        self.sprite.layer = value
 
     def startAnimation(self, name):
         a, loop = self._anim[name]

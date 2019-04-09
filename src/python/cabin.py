@@ -28,14 +28,14 @@ def draw(engineRef):
 
 #------------------------------------------------------------------------------
 
-def textBox(engineRef, ent, txt):
+def textBox(engineRef, sprite, txt):
     WIDTH = 200
     width = WIDTH
     text = window.wraptext.wrapText(txt, width, engineRef.font)
     width = max([engineRef.font.StringWidth(s) for s in text])
     height = len(text) * engineRef.font.height
 
-    x, y = ent.x + ent.hotwidth // 2 - engineRef.map.xwin, ent.y - engineRef.map.ywin
+    x, y = sprite.x + sprite.hotwidth // 2 - engineRef.map.xwin, sprite.y - engineRef.map.ywin
 
     if x < engineRef.video.xres // 2:
         x -= width // 2
@@ -75,10 +75,10 @@ def speech(engineRef, where, txt):
 
 #------------------------------------------------------------------------------
 
-def animateHelper(engineRef, ent, frames, delay, loop):
+def animateHelper(engineRef, sprite, frames, delay, loop):
     while True:
         for frame in frames:
-            ent.specframe = frame
+            sprite.specframe = frame
             d = delay
             while d > 0:
                 d -= 1
@@ -90,18 +90,18 @@ def animateHelper(engineRef, ent, frames, delay, loop):
         if not loop:
             return
 
-def animate(engineRef, ent, frames, delay, text=None):
+def animate(engineRef, sprite, frames, delay, text=None):
     # frames should be a list of (frame, delay) pairs.
     global crap
     oldCrap = crap[:]
     if text is not None:
-        text = textBox(engineRef, ent, text)
+        text = textBox(engineRef, sprite, text)
         crap.append(text)
 
-    yield from animateHelper(engineRef, ent, frames, delay, True)
+    yield from animateHelper(engineRef, sprite, frames, delay, True)
 
     crap = oldCrap
-    ent.specframe = 0
+    sprite.specframe = 0
 
 #------------------------------------------------------------------------------
 # Scene code

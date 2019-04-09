@@ -8,9 +8,9 @@ from entity import Entity
 from caption import Caption
 
 class _Obstacle(Entity):
-    def __init__(self, engineRef, ent, anim = None):
-        self.flagName = ent.name
-        Entity.__init__(self, engineRef, ent, anim)
+    def __init__(self, engineRef, sprite, anim = None):
+        self.flagName = sprite.name
+        Entity.__init__(self, engineRef, sprite, anim)
         self.invincible = True
 
         if self.flagName in engineRef.saveFlags:
@@ -57,8 +57,8 @@ class IceChunks(_Obstacle):
         (139, 148, 138)
     )
 
-    def __init__(self, engineRef, ent):
-        _Obstacle.__init__(self, engineRef, ent, self._anim)
+    def __init__(self, engineRef, sprite):
+        _Obstacle.__init__(self, engineRef, sprite, self._anim)
         self.startAnimation('default')
 
     def remove(self):

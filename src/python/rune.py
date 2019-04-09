@@ -3,10 +3,10 @@ from caption import Caption
 
 class _Rune(Entity):
 
-    def __init__(self, engineRef, ent):
-        super(_Rune, self).__init__(engineRef, ent, None)
+    def __init__(self, engineRef, sprite):
+        super(_Rune, self).__init__(engineRef, sprite, None)
         self.invincible = True
-        self.name = self.ent.name
+        self.name = self.sprite.name
 
         if self.name in engineRef.saveFlags:
             self.x = -100

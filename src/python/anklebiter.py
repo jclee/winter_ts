@@ -97,8 +97,8 @@ _attackRange = [
 ]
 
 class AnkleBiter(Enemy):
-    def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _ankleBiterAnim)
+    def __init__(self, engineRef, sprite):
+        Enemy.__init__(self, engineRef, sprite, _ankleBiterAnim)
 
         # Test code:
         # Equal probability of attacking or doing nothing.
@@ -119,9 +119,9 @@ class AnkleBiter(Enemy):
     def die(self, *args):
         # When one dies, the others scatter
 
-        ents = [self.engineRef.entFromEnt[x.name] for x in
+        ents = [self.engineRef.nameToEntityMap[x.name] for x in
             self.engineRef.map.spritesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
-            if x.name in self.engineRef.entFromEnt]
+            if x.name in self.engineRef.nameToEntityMap]
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
         for a in allies:

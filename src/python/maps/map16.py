@@ -44,7 +44,7 @@ def bridge_break(engineRef):
         p = engineRef.player
         p.stop()
         p.layer = 2
-        p.ent.specframe = 91
+        p.sprite.specframe = 91
         p._state = lambda: None # keep the player from moving
 
         engineRef.draw()
@@ -69,7 +69,7 @@ def bridge_break(engineRef):
             engineRef.video.ShowPage()
             yield from engineRef.delayTask(1)
 
-        p.ent.specframe = 92
+        p.sprite.specframe = 92
         t = engineRef.getTime() + 80
         while t > engineRef.getTime():
             engineRef.draw()

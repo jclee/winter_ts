@@ -28,7 +28,7 @@ class DeathListener(Thing):
             # in AutoExec. (if we had more time, I'd fix that problem instead of
             # doing this)
             sound.playMusic("music/Competative.xm")
-            self.yeti = self.engineRef.entFromEnt[
+            self.yeti = self.engineRef.nameToEntityMap[
                 engineRef.map.sprites['demiyeti'].name
                 ]
         elif self.yeti.stats.hp == 0:

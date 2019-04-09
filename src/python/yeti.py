@@ -97,8 +97,8 @@ _attackRange = (
 )
 
 class Yeti(Enemy):
-    def __init__(self, engineRef, ent):
-        Enemy.__init__(self, engineRef, ent, _anim)
+    def __init__(self, engineRef, sprite):
+        Enemy.__init__(self, engineRef, sprite, _anim)
         self.speed = 80
 
         self.addMoods([self.attackMood, self.passiveMood])

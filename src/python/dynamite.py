@@ -2,13 +2,13 @@ from entity import Entity
 from caption import Caption
 
 class Dynamite(Entity):
-    def __init__(self, engineRef, ent):
-        self.flagName = ent.name
-        super(Dynamite, self).__init__(engineRef, ent, None)
+    def __init__(self, engineRef, sprite):
+        self.flagName = sprite.name
+        super(Dynamite, self).__init__(engineRef, sprite, None)
         self.invincible = True
 
         if self.flagName in self.engineRef.saveFlags:
-            ent.x = ent.y = -100
+            sprite.x = sprite.y = -100
             self.engineRef.destroyEntity(self)
 
     def updateTask(self):

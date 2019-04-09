@@ -24,8 +24,8 @@ class Enemy(Entity):
     Maybe it would be a good idea to send the brain information about why
     it is reconsidering its options.
     '''
-    def __init__(self, engineRef, ent, anim):
-        Entity.__init__(self, engineRef, ent, anim)
+    def __init__(self, engineRef, sprite, anim):
+        Entity.__init__(self, engineRef, sprite, anim)
         self.state = self.idleState()
         self.stats.hp = 15
         self._mood = None
@@ -88,7 +88,7 @@ class Enemy(Entity):
             yield None
 
 
-        self.ent.isobs = False
+        self.sprite.isobs = False
         # burn cycles until the engine kills us
         while True:
             yield None
