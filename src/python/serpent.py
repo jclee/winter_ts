@@ -145,7 +145,7 @@ class Serpent(Enemy):
                 else:
                     e = AnkleBiter(self.engineRef, self.engineRef.map.addSprite(x, y, self.layer, 'anklebiter.ika-sprite'))
                 self.engineRef.addEntity(e)
-                e.mood = e.attackMood
+                e.setMood(e.attackMood)
 
         # need to destroy old corpses (a first!)
         for e in self.engineRef.entities:

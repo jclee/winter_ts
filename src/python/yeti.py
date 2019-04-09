@@ -114,7 +114,7 @@ class Yeti(Enemy):
             i = window.random(0, len(sound.yetiHurt[self.stats.ind]))
             sound.yetiHurt[self.stats.ind][i].Play()
 
-        self.mood = self.attackMood
+        self.setMood(self.attackMood)
         yield from super(Yeti, self).hurtState(dist * 2 // 3, dir)
 
     def attackMood(self):
@@ -146,7 +146,7 @@ class Yeti(Enemy):
             yield self.idleState()
 
             if dist < 150:
-                self.mood = self.attackMood
+                self.setMood(self.attackMood)
                 yield self.idleState()
                 break
             brython_generator_bug_workaround = 'blah'

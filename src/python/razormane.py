@@ -102,7 +102,7 @@ class RazorMane(Enemy):
 
         self.addMoods([self.stalkMood, self.passiveMood])
 
-        self.mood = self.passiveMood
+        self.setMood(self.passiveMood)
         self.speed = 150
         self.stats.maxhp = self.stats.hp = 60
         self.stats.att = 20
@@ -112,7 +112,7 @@ class RazorMane(Enemy):
         if self.stats.hp > 0:
             sound.razorManeHurt.Play()
         if self.stats.hp < self.stats.maxhp // 2:
-            self.mood = self.fleeMood
+            self.setMood(self.fleeMood)
         yield from super(RazorMane, self).hurtState(recoilSpeed, recoilDir)
 
     def die(self):
@@ -124,7 +124,7 @@ class RazorMane(Enemy):
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 
         for a in allies:
-            a.mood = a.fleeMood
+            a.setMood(a.fleeMood)
             a.state = a.idleState()
 
         super(RazorMane, self).die()
@@ -168,7 +168,7 @@ class RazorMane(Enemy):
                 self.direction = d
                 yield self.idleState(60)
             else:
-                self.mood = self.attackMood
+                self.setMood(self.attackMood)
                 yield self.idleState(1)
 
     def fleeMood(self):
@@ -182,7 +182,7 @@ class RazorMane(Enemy):
 
             yield self.walkState(self.engineRef.dir.invert(d), MIN_DIST - dist)
 
-        self.mood = self.passiveMood
+        self.setMood(self.passiveMood)
         yield self.idleState()
 
     def passiveMood(self):
@@ -194,7 +194,7 @@ class RazorMane(Enemy):
             yield self.idleState()
 
             if dist < 150:
-                self.mood = self.stalkMood
+                self.setMood(self.stalkMood)
                 yield self.idleState()
                 break
             brython_generator_bug_workaround = 'blah'

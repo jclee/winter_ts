@@ -2,17 +2,6 @@ from browser import window
 import sound
 from entity import Entity
 
-class GenWrapper(object):
-    def __init__(self, gen, *args, **kw):
-        self.fun = gen
-        self.iter = gen(*args, **kw)
-
-    def __call__(self):
-        return next(self.iter)
-
-    def __repr__(self):
-        return repr((self.fun, self.iter))
-
 class Enemy(Entity):
     '''
     Enemy baseclass.  Enemies are entities that die.
@@ -32,33 +21,28 @@ class Enemy(Entity):
 
         self._moods = []
 
-    @property
-    def mood(self):
-        return self._mood
-
-    @mood.setter
-    def mood(self, value):
-        if value is None:
+    def setMood(self, gen):
+        if gen is None:
             self._mood = None
             return
-        self._mood = GenWrapper(value)
+        self._mood = gen()
 
     def addMoods(self, moods):
         self._moods += moods
 
     def think(self):
         try:
-            if self.mood is None:
+            if self._mood is None:
                 raise StopIteration
 
-            s = self.mood()
+            s = next(self._mood)
             self.state = s
         except StopIteration:
             #self.interruptable = True
             n = window.random(0, len(self._moods))
             m = self._moods[n]
-            self.mood = m
-            self.state = self.mood()
+            self.setMood(m)
+            self.state = next(self._mood)
 
     def die(self):
         self._mood = None

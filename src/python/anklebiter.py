@@ -104,7 +104,7 @@ class AnkleBiter(Enemy):
         # Equal probability of attacking or doing nothing.
         self.addMoods([self.attackMood, self.passiveMood])
 
-        self.mood = self.passiveMood
+        self.setMood(self.passiveMood)
         self.stats.maxhp = self.stats.hp = 20
         self.stats.att = 7
         self.stats.exp = 1
@@ -113,7 +113,7 @@ class AnkleBiter(Enemy):
         if self.stats.hp > 0:
             sound.anklebiterHurt.Play()
         if self.stats.hp < self.stats.maxhp // 2:
-            self.mood = self.fleeMood
+            self.setMood(self.fleeMood)
         yield from super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 
     def die(self):
@@ -125,7 +125,7 @@ class AnkleBiter(Enemy):
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
         for a in allies:
-            a.mood = a.fleeMood
+            a.setMood(a.fleeMood)
             a.state = a.idleState()
 
         super(AnkleBiter, self).die()
@@ -155,7 +155,7 @@ class AnkleBiter(Enemy):
 
             yield self.walkState(self.engineRef.dir.invert(d), MIN_DIST - dist)
 
-        self.mood = self.passiveMood
+        self.setMood(self.passiveMood)
         yield self.idleState()
 
     def passiveMood(self):
@@ -168,7 +168,7 @@ class AnkleBiter(Enemy):
 
             if dist < 150:
                 sound.anklebiterStrike.Play()
-                self.mood = self.attackMood
+                self.setMood(self.attackMood)
                 yield self.idleState()
                 break
             brython_generator_bug_workaround = 'blah'
