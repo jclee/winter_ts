@@ -441,7 +441,7 @@ class Engine(object):
             ent.sprite.x, ent.sprite.y = -100,0
             ent.sprite.Stop()
             del self.nameToEntityMap[ent.sprite.name]
-            self.map.removeSprite(ent)
+            self.map.removeSprite(ent.sprite)
             # brython workaround?
             #self.entities.remove(ent)
             for i, e in enumerate(self.entities):
