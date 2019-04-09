@@ -100,6 +100,7 @@ class Engine(object):
             'music/silence': sound.NullSound(),
         }
         self.saveFlags = {}
+        self.showSaveMenuAtEndOfTick = False
 
         def getEngine():
             return self._engine
@@ -387,6 +388,15 @@ class Engine(object):
 
                 if result:  t.pop(i)
                 else:       i += 1
+
+        if self.showSaveMenuAtEndOfTick:
+            self.showSaveMenuAtEndOfTick = False
+
+            yield from ika.asTask(window.effects.fadeOutTask(self, 50, self.draw))
+            self.draw()
+            yield from saveloadmenu.saveMenuTask(self)
+            yield from ika.asTask(window.effects.fadeInTask(self, 50, self.draw))
+            self.synchTime()
 
     def addEntity(self, ent):
         assert ent not in self.entities
