@@ -116,7 +116,7 @@ class AnkleBiter(Enemy):
             self.mood = self.fleeMood
         yield from super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 
-    def die(self, *args):
+    def die(self):
         # When one dies, the others scatter
 
         ents = [self.engineRef.nameToEntityMap[x.name] for x in
@@ -128,7 +128,7 @@ class AnkleBiter(Enemy):
             a.mood = a.fleeMood
             a.state = a.idleState()
 
-        super(AnkleBiter, self).die(*args)
+        super(AnkleBiter, self).die()
 
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
@@ -187,10 +187,10 @@ class AnkleBiter(Enemy):
                 break
         self.stop()
 
-    def deathState(self, *args, **kwargs):
+    def deathState(self):
         sound.anklebiterDie.Play()
         self.startAnimation('die')
-        yield from super(AnkleBiter, self).deathState(*args, **kwargs)
+        yield from super(AnkleBiter, self).deathState()
 
     def attackState(self, dir):
         oldSpeed = self.speed

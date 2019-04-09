@@ -60,17 +60,19 @@ class Enemy(Entity):
             self.mood = m
             self.state = self.mood()
 
-    def die(self, recoilSpeed = 0, recoilDir = None):
+    def die(self):
         self._mood = None
         self.interruptable = True
-        self.state = self.deathState(recoilSpeed, recoilDir)
+        self.state = self.deathState()
         self.engineRef.player.giveXP(self.stats.exp)
         #self.engineRef.player.stats.mp += self.stats.exp # MP Regen for the player.
 
-    def deathState(self, recoilSpeed, recoilDir):
+    def deathState(self):
         self.invincible = True
         self.interruptable = False
 
+        recoilSpeed = 0
+        recoilDir = None
         if recoilDir is None:
             recoilDir = self.direction # bleh
 

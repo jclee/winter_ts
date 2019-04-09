@@ -151,10 +151,10 @@ class Yeti(Enemy):
                 break
             brython_generator_bug_workaround = 'blah'
 
-    def deathState(self, *args, **kwargs):
+    def deathState(self):
         sound.yetiDie[self.stats.ind].Play()
         self.startAnimation('die')
-        yield from super(Yeti, self).deathState(*args, **kwargs)
+        yield from super(Yeti, self).deathState()
 
     def walkState(self, dir, dist):
         self.move(dir, dist)

@@ -41,7 +41,7 @@ class Entity(object):
             next(self._state)
             return
 
-    def die(self, *args):
+    def die(self):
         self.engineRef.destroyEntity(self)
 
     # if recoil is nonzero, the enemy is blown backwards in a direction,
