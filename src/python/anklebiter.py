@@ -120,7 +120,7 @@ class AnkleBiter(Enemy):
         # When one dies, the others scatter
 
         ents = [self.engineRef.nameToEntityMap[x.name] for x in
-            self.engineRef.map.spritesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
+            self.engineRef.map.spritesAt(self.sprite.x - 50, self.sprite.y - 50, 100, 100, self.sprite.layer)
             if x.name in self.engineRef.nameToEntityMap]
         allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
 
@@ -135,8 +135,8 @@ class AnkleBiter(Enemy):
         # for now fuckit.  Attack the player!!
         p = self.engineRef.player
         for q in range(5):
-            d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = window.hypot(p.x - self.x, p.y - self.y)
+            d = self.engineRef.dir.fromDelta(p.sprite.x - self.sprite.x, p.sprite.y - self.sprite.y)
+            dist = window.hypot(p.sprite.x - self.sprite.x, p.sprite.y - self.sprite.y)
             if dist < 40:
                 yield self.attackState(d)
                 yield self.idleState(20)
@@ -147,8 +147,8 @@ class AnkleBiter(Enemy):
         MIN_DIST = 150
         p = self.engineRef.player
         for q in range(5):
-            d = self.engineRef.dir.fromDelta(p.x - self.x, p.y - self.y)
-            dist = window.hypot(p.x - self.x, p.y - self.y)
+            d = self.engineRef.dir.fromDelta(p.sprite.x - self.sprite.x, p.sprite.y - self.sprite.y)
+            dist = window.hypot(p.sprite.x - self.sprite.x, p.sprite.y - self.sprite.y)
 
             if dist > MIN_DIST:
                 break
@@ -162,7 +162,7 @@ class AnkleBiter(Enemy):
         p = self.engineRef.player
         self.stopAnimation()
         while True:
-            dist = window.hypot(p.x - self.x, p.y - self.y)
+            dist = window.hypot(p.sprite.x - self.sprite.x, p.sprite.y - self.sprite.y)
 
             yield self.idleState()
 
@@ -178,12 +178,12 @@ class AnkleBiter(Enemy):
         yield from super(AnkleBiter, self).idleState(*args)
 
     def walkState(self, dir, dist):
-        ox, oy = self.x, self.y
+        ox, oy = self.sprite.x, self.sprite.y
         self.move(dir, dist)
         self.startAnimation('walk')
         while self.isMoving():
             yield None
-            if (ox, oy) == (self.x, self.y):
+            if (ox, oy) == (self.sprite.x, self.sprite.y):
                 break
         self.stop()
 
@@ -193,9 +193,9 @@ class AnkleBiter(Enemy):
         yield from super(AnkleBiter, self).deathState()
 
     def attackState(self, dir):
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
         self._onStateExit = restoreVars
 
         self.direction = dir
@@ -204,7 +204,7 @@ class AnkleBiter(Enemy):
 
         sound.anklebiterStrike.Play()
 
-        self.speed *= 2
+        self.sprite.speed *= 2
 
         # Winding up for the pounce.
         for i in range(30):

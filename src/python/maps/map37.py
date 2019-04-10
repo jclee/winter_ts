@@ -12,7 +12,7 @@ def AutoExec(engineRef):
     engineRef.background = engineRef.getImage('gfx/mountains.png')
 
 def to36(engineRef):
-    yield from engineRef.mapSwitchTask('map36.ika-map', (engineRef.player.x, 1 * 16))
+    yield from engineRef.mapSwitchTask('map36.ika-map', (engineRef.player.sprite.x, 1 * 16))
 
 def releaseAnklebiters(engineRef):
     global spawned

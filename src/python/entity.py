@@ -81,14 +81,14 @@ class Entity(object):
             yield None
 
     def hurtState(self, recoilSpeed, recoilDir):
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         oldInvincible = self.invincible
         def restoreVars(self=self, oldSpeed=oldSpeed, oldInvincible=oldInvincible):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
             self.invincible = oldInvincible
         self._onStateExit = restoreVars
 
-        self.speed = recoilSpeed
+        self.sprite.speed = recoilSpeed
         self.move(recoilDir, 1000000) # just go until I say stop
         self.startAnimation('hurt')
 
@@ -97,11 +97,11 @@ class Entity(object):
         while True:
             t -= 1
             if t <= 34: self.invincible = oldInvincible
-            self.speed -= t // 8
+            self.sprite.speed -= t // 8
 
             yield None
 
-            if t <= 0 or self.speed <= 0: break
+            if t <= 0 or self.sprite.speed <= 0: break
 
         self.direction = self.engineRef.dir.invert(self.direction)
         self.sprite.Stop()
@@ -114,10 +114,10 @@ class Entity(object):
         entity's position.  This is useful for attacks and such.
         '''
         rect = (
-            rect[0] + self.x,
-            rect[1] + self.y,
+            rect[0] + self.sprite.x,
+            rect[1] + self.sprite.y,
             rect[2], rect[3],
-            self.layer)
+            self.sprite.layer)
 
         return [self.engineRef.nameToEntityMap[s.name] for s in
             self.engineRef.map.spritesAt(*rect) if s.name in self.engineRef.nameToEntityMap]
@@ -145,35 +145,6 @@ class Entity(object):
     def animate(self):
         self._animator.update()
         self.sprite.specframe = self._animator.curFrame
-
-    # properties.  Because they're high in fibre.
-    @property
-    def x(self):
-        return self.sprite.x
-    @x.setter
-    def x(self, value):
-        self.sprite.x = value
-
-    @property
-    def y(self):
-        return self.sprite.y
-    @y.setter
-    def y(self, value):
-        self.sprite.y = value
-
-    @property
-    def speed(self):
-        return self.sprite.speed
-    @speed.setter
-    def speed(self, value):
-        self.sprite.speed = value
-
-    @property
-    def layer(self):
-        return self.sprite.layer
-    @layer.setter
-    def layer(self, value):
-        self.sprite.layer = value
 
     def startAnimation(self, name):
         a, loop = self._anim[name]

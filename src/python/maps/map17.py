@@ -5,7 +5,7 @@ def AutoExec(engineRef):
     engineRef.map.SetObs(10,3,3,0)
 
 def to16(engineRef):
-    yield from engineRef.mapSwitchTask('map16.ika-map', (38 * 16, engineRef.player.y))
+    yield from engineRef.mapSwitchTask('map16.ika-map', (38 * 16, engineRef.player.sprite.y))
 
 def Tunnel1_1(engineRef):
     engineRef.map.SetObs(10,3,3,1)

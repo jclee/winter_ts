@@ -44,16 +44,16 @@ def finalBattle(engineRef):
 
         s = Serpent(
             engineRef,
-            engineRef.map.addSprite(25 * 16, 24 * 16, p.layer, 'serpent.ika-sprite')
+            engineRef.map.addSprite(25 * 16, 24 * 16, p.sprite.layer, 'serpent.ika-sprite')
             )
         s.startAnimation('appear')
         engineRef.addEntity(s)
 
         for n in range(19, 32):
             # close off the way back
-            engineRef.map.SetTile(n, 38, p.layer, 26)
-            engineRef.map.SetTile(n, 39, p.layer, 32)
-            engineRef.map.SetObs(n, 38, p.layer, True)
+            engineRef.map.SetTile(n, 38, p.sprite.layer, 26)
+            engineRef.map.SetTile(n, 39, p.sprite.layer, 32)
+            engineRef.map.SetObs(n, 38, p.sprite.layer, True)
             yield from engineRef.tickTask()
             engineRef.draw()
             engineRef.video.ShowPage()

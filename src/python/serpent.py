@@ -83,9 +83,9 @@ class Serpent(Enemy):
             #self._state = None
 
             for n in range(window.random(1, 8)):
-                x = self.x + self.sprite.hotwidth // 2
-                d = self.engineRef.dir.fromDelta(p.x - x, 0)
-                yield self.moveState(d, abs(p.x - x))
+                x = self.sprite.x + self.sprite.hotwidth // 2
+                d = self.engineRef.dir.fromDelta(p.sprite.x - x, 0)
+                yield self.moveState(d, abs(p.sprite.x - x))
 
                 if window.random(0, 100) < 70:
                     yield self.biteState()
@@ -98,7 +98,7 @@ class Serpent(Enemy):
 
         dist *= 100
         while dist > 0:
-            dist -= self.speed
+            dist -= self.sprite.speed
             yield None
 
     def biteState(self):
@@ -106,7 +106,7 @@ class Serpent(Enemy):
         self.invincible = False
 
         while self.isAnimating():
-            r = _biteRange[self.getAnimationIndex()] + (self.layer,)
+            r = _biteRange[self.getAnimationIndex()] + (self.sprite.layer,)
             ents = self.detectCollision(r)
             for e in ents:
                 d = max(1, self.stats.att - self.engineRef.player.stats.pres)
@@ -137,13 +137,13 @@ class Serpent(Enemy):
 
         for q in range(window.random(1, 4)):
             x, y = 320 + (q * 60), 588
-            n = self.engineRef.map.spritesAt(x, y, x + 16, y + 16, self.layer)
+            n = self.engineRef.map.spritesAt(x, y, x + 16, y + 16, self.sprite.layer)
 
             if not n:
                 if window.random(0, 2):
-                    e = Carnivore(self.engineRef, self.engineRef.map.addSprite(x, y, self.layer, 'carnivore.ika-sprite'))
+                    e = Carnivore(self.engineRef, self.engineRef.map.addSprite(x, y, self.sprite.layer, 'carnivore.ika-sprite'))
                 else:
-                    e = AnkleBiter(self.engineRef, self.engineRef.map.addSprite(x, y, self.layer, 'anklebiter.ika-sprite'))
+                    e = AnkleBiter(self.engineRef, self.engineRef.map.addSprite(x, y, self.sprite.layer, 'anklebiter.ika-sprite'))
                 self.engineRef.addEntity(e)
                 e.setMood(e.attackMood)
 

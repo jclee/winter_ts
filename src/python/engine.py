@@ -134,15 +134,15 @@ class Engine(object):
         self.addEntity(self.player)
 
         if saveData:
-            self.player.x = saveData.playerX
-            self.player.y = saveData.playerY
-            self.player.layer = saveData.playerLayer
+            self.player.sprite.x = saveData.playerX
+            self.player.sprite.y = saveData.playerY
+            self.player.sprite.layer = saveData.playerLayer
             self.player.stats = saveData.stats.clone()
             self.saveFlags = dict(saveData.flags)
         else:
-            self.player.x, self.player.y = START_POS
+            self.player.sprite.x, self.player.sprite.y = START_POS
             lay = self.map.GetMetaData()['entityLayer']
-            self.player.layer = self.map.FindLayerByName(lay)
+            self.player.sprite.layer = self.map.FindLayerByName(lay)
 
         self.things.append(HPBar(self))
         self.things.append(MPBar(self))
@@ -185,9 +185,9 @@ class Engine(object):
             self.player.stats.clone(),
             dict(self.saveFlags),
             self.mapName,
-            self.player.x,
-            self.player.y,
-            self.player.layer
+            self.player.sprite.x,
+            self.player.sprite.y,
+            self.player.sprite.layer
         ))
 
     def loadGameTask(self):
@@ -244,11 +244,11 @@ class Engine(object):
             self.player.state = self.player.defaultState()
         if dest and self.player:
             if len(dest) == 2:
-                self.player.x, self.player.y = dest
+                self.player.sprite.x, self.player.sprite.y = dest
                 lay = metaData['entityLayer']
-                self.player.layer = self.map.FindLayerByName(lay)
+                self.player.sprite.layer = self.map.FindLayerByName(lay)
             elif len(dest) == 3:
-                self.player.x, self.player.y, self.player.layer = dest
+                self.player.sprite.x, self.player.sprite.y, self.player.sprite.layer = dest
             else:
                 assert False
 
@@ -275,7 +275,7 @@ class Engine(object):
         self.player.startAnimation('stand')
         self.player.animate()
 
-        self.player.x, self.player.y = dest
+        self.player.sprite.x, self.player.sprite.y = dest
         self.camera.center()
 
         self.draw()
@@ -365,9 +365,9 @@ class Engine(object):
         self.clearKillQueue()
 
         # check fields
-        rlayer = self.player.layer
-        rx = self.player.x
-        ry = self.player.y
+        rlayer = self.player.sprite.layer
+        rx = self.player.sprite.x
+        ry = self.player.sprite.y
         rw = self.player.sprite.hotwidth
         rh = self.player.sprite.hotheight
         for f in self.fields:
@@ -405,7 +405,7 @@ class Engine(object):
         self.nameToEntityMap[ent.sprite.name] = ent
 
     def destroyEntity(self, ent):
-        ent.x = ent.y = -1000
+        ent.sprite.x = ent.sprite.y = -1000
         ent.stop()
         self.killList.append(ent)
 

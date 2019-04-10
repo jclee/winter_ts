@@ -9,8 +9,8 @@ class Camera(Thing):
 
     def update(self):
         if not self.locked:
-            x = self.engineRef.player.x - self.engineRef.video.xres // 2
-            y = self.engineRef.player.y - self.engineRef.video.yres // 2
+            x = self.engineRef.player.sprite.x - self.engineRef.video.xres // 2
+            y = self.engineRef.player.sprite.y - self.engineRef.video.yres // 2
 
             ywin = self.engineRef.map.ywin
             xwin = self.engineRef.map.xwin
@@ -24,5 +24,5 @@ class Camera(Thing):
             self.engineRef.map.xwin = xwin
 
     def center(self):
-        self.engineRef.map.xwin = self.engineRef.player.x - self.engineRef.video.xres // 2
-        self.engineRef.map.ywin = self.engineRef.player.y - self.engineRef.video.yres // 2
+        self.engineRef.map.xwin = self.engineRef.player.sprite.x - self.engineRef.video.xres // 2
+        self.engineRef.map.ywin = self.engineRef.player.sprite.y - self.engineRef.video.yres // 2

@@ -18,6 +18,6 @@ class SavePoint(Entity):
 
             # bump the player backward, so he's not touching us anymore.
             delta = self.engineRef.dir.toDelta(self.engineRef.dir.invert(p.direction))
-            p.x, p.y = p.x + delta.x * 3, p.y + delta.y * 3
+            p.sprite.x, p.sprite.y = p.sprite.x + delta.x * 3, p.sprite.y + delta.y * 3
 
             self.engineRef.showSaveMenuAtEndOfTick = True

@@ -112,10 +112,10 @@ _scenes = {}
 # TODO: transitions
 def sceneTask(engineRef, name):
     global grandpa, kid1, kid2, kid3
-    savedPos = [(e.x, e.y) for e in engineRef.entities]
+    savedPos = [(e.sprite.x, e.sprite.y) for e in engineRef.entities]
     # hide 'em all
     for e in engineRef.entities:
-        e.x, e.y = -100, -100
+        e.sprite.x, e.sprite.y = -100, -100
 
     engineRef.map.Switch('maps/cabinmap.ika-map')
     grandpa = engineRef.map.sprites['grandpa']
@@ -139,7 +139,7 @@ def sceneTask(engineRef, name):
         # engineRef.map.Switch, so this should be an OK way to restore the map.
         engineRef.map.Switch('maps/' + engineRef.mapName)
         for e, pos in zip(engineRef.entities, savedPos):
-            e.x, e.y = pos
+            e.sprite.x, e.sprite.y = pos
 
 # name : function pairs
 def addScene(function):

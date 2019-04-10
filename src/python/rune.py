@@ -9,7 +9,7 @@ class _Rune(Entity):
         self.name = self.sprite.name
 
         if self.name in engineRef.saveFlags:
-            self.x = -100
+            self.sprite.x = -100
             self.engineRef.destroyEntity(self)
 
     def apply(self):

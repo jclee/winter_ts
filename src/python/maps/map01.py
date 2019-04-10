@@ -12,7 +12,7 @@ def AutoExec(engineRef):
 def to2(engineRef):
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 38 * 16  # first vertical pos possible
-    y = engineRef.player.y - offset_from + offset_to
+    y = engineRef.player.sprite.y - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map02.ika-map', (48 * 16, y))
 
 def to49(engineRef):
@@ -25,7 +25,7 @@ class RuneListener(object):
     def update(self):
         if 'waterguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags:
             self.engineRef.addEntity(
-                Yeti(self.engineRef, self.engineRef.map.addSprite(35 * 16, 19 * 16, self.engineRef.player.layer, 'yeti.ika-sprite')))
+                Yeti(self.engineRef, self.engineRef.map.addSprite(35 * 16, 19 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite')))
             return True
 
     def draw(self):

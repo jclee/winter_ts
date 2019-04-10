@@ -8,11 +8,11 @@ def AutoExec(engineRef):
 def to34(engineRef):
     offset_from = 16 * 16  # first vertical pos possible
     offset_to = 8 * 16  # first vertical pos possible
-    y = engineRef.player.y - offset_from + offset_to
+    y = engineRef.player.sprite.y - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map34.ika-map', (1 * 16, y))
 
 def to39(engineRef):
     offset_from = 6 * 16  # first vertical pos possible
     offset_to = 4 * 16  # first vertical pos possible
-    x = engineRef.player.x - offset_from + offset_to
+    x = engineRef.player.sprite.x - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map39.ika-map', (x, 1 * 16))

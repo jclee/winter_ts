@@ -99,7 +99,7 @@ _attackRange = (
 class Yeti(Enemy):
     def __init__(self, engineRef, sprite):
         Enemy.__init__(self, engineRef, sprite, _anim)
-        self.speed = 80
+        self.sprite.speed = 80
 
         self.addMoods([self.attackMood, self.passiveMood])
 
@@ -123,10 +123,10 @@ class Yeti(Enemy):
         p = self.engineRef.player
         for q in range(5):
             # compensate for the yeti's gigantic sprite:
-            sx = self.x + 16
-            sy = self.y + 16
-            d = self.engineRef.dir.fromDelta(p.x - sx, p.y - sy)
-            dist = window.hypot(p.x - sx, p.y - sy)
+            sx = self.sprite.x + 16
+            sy = self.sprite.y + 16
+            d = self.engineRef.dir.fromDelta(p.sprite.x - sx, p.sprite.y - sy)
+            dist = window.hypot(p.sprite.x - sx, p.sprite.y - sy)
             if dist < 50:
                 pass
                 yield self.attackState(d)
@@ -139,9 +139,9 @@ class Yeti(Enemy):
         self.stopAnimation()
         while True:
             # compensate for the yeti's gigantic sprite:
-            sx = self.x + 16
-            sy = self.y + 16
-            dist = window.hypot(p.x - sx, p.y - sy)
+            sx = self.sprite.x + 16
+            sy = self.sprite.y + 16
+            dist = window.hypot(p.sprite.x - sx, p.sprite.y - sy)
 
             yield self.idleState()
 
@@ -161,7 +161,7 @@ class Yeti(Enemy):
         self.startAnimation('walk')
         dist *= 100
         while dist > 0:
-            dist -= self.speed
+            dist -= self.sprite.speed
             yield None
         self.stop()
 

@@ -17,7 +17,7 @@ class _Obstacle(Entity):
             self.remove()
 
     def remove(self):
-        self.x = self.y = -100
+        self.sprite.x = self.sprite.y = -100
         self.engineRef.destroyEntity(self)
 
     def update(self):
@@ -65,9 +65,9 @@ class IceChunks(_Obstacle):
         _Obstacle.remove(self)
 
     def freeze(self):
-        lay = self.layer
-        tx = self.x // 16
-        ty = self.y // 16
+        lay = self.sprite.layer
+        tx = self.sprite.x // 16
+        ty = self.sprite.y // 16
         for y in range(3):
             for x in range(3):
                 self.engineRef.map.SetTile(x + tx, y + ty, lay, self._frozenTiles[y][x])

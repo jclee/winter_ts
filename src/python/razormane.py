@@ -103,7 +103,7 @@ class RazorMane(Enemy):
         self.addMoods([self.stalkMood, self.passiveMood])
 
         self.setMood(self.passiveMood)
-        self.speed = 150
+        self.sprite.speed = 150
         self.stats.maxhp = self.stats.hp = 60
         self.stats.att = 20
         self.stats.exp = 13
@@ -119,7 +119,7 @@ class RazorMane(Enemy):
         # When one dies, the others scatter
 
         ents = [self.engineRef.nameToEntityMap[x.name] for x in
-            self.engineRef.map.spritesAt(self.x - 50, self.y - 50, 100, 100, self.layer)
+            self.engineRef.map.spritesAt(self.sprite.x - 50, self.sprite.y - 50, 100, 100, self.sprite.layer)
             if x.name in self.engineRef.nameToEntityMap]
         allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
 
@@ -131,11 +131,11 @@ class RazorMane(Enemy):
 
     def playerDir(self):
         p = self.engineRef.player
-        return self.engineRef.dir.fromDelta(p.x - self.x - 10, p.y - self.y - 7)
+        return self.engineRef.dir.fromDelta(p.sprite.x - self.sprite.x - 10, p.sprite.y - self.sprite.y - 7)
 
     def playerDist(self):
         p = self.engineRef.player
-        return window.hypot(p.x - self.x - 10, p.y - self.y - 7)
+        return window.hypot(p.sprite.x - self.sprite.x - 10, p.sprite.y - self.sprite.y - 7)
 
     def attackMood(self):
         for q in range(5):
@@ -204,14 +204,14 @@ class RazorMane(Enemy):
         yield from super(RazorMane, self).idleState(*args)
 
     def walkState(self, dir, dist):
-        ox, oy = self.x, self.y
+        ox, oy = self.sprite.x, self.sprite.y
         self.move(dir, dist)
         self.startAnimation('walk')
         dist *= 100
         while dist > 0:
-            dist -= self.speed
+            dist -= self.sprite.speed
             yield None
-            if (ox, oy) == (self.x, self.y):
+            if (ox, oy) == (self.sprite.x, self.sprite.y):
                 break
 
         self.stop()
@@ -222,9 +222,9 @@ class RazorMane(Enemy):
         yield from super(RazorMane, self).deathState()
 
     def attackState(self, dir):
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
         self._onStateExit = restoreVars
 
         self.direction = dir
@@ -233,7 +233,7 @@ class RazorMane(Enemy):
 
         sound.razorManeStrike.Play()
 
-        self.speed *= 2
+        self.sprite.speed *= 2
 
         # Winding up for the pounce.
         for i in range(30):

@@ -338,9 +338,9 @@ class Player(Entity):
         sound.slash1.Play()
 
         while self.isAnimating():
-            rect = list(r[self.getAnimationIndex()]) + [self.layer]
-            rect[0] += self.x
-            rect[1] += self.y
+            rect = list(r[self.getAnimationIndex()]) + [self.sprite.layer]
+            rect[0] += self.sprite.x
+            rect[1] += self.sprite.y
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.nameToEntityMap[e.name]
@@ -386,9 +386,9 @@ class Player(Entity):
         sound.slash2.Play()
 
         while self.isAnimating():
-            rect = list(r[self.getAnimationIndex()]) + [self.layer]
-            rect[0] += self.x
-            rect[1] += self.y
+            rect = list(r[self.getAnimationIndex()]) + [self.sprite.layer]
+            rect[0] += self.sprite.x
+            rect[1] += self.sprite.y
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.nameToEntityMap[e.name]
@@ -415,16 +415,16 @@ class Player(Entity):
         elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
             self.direction = self.engineRef.dir.Right
 
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
         self._onStateExit = restoreVars
 
         self.startAnimation('thrust')
-        self.speed += 800
+        self.sprite.speed += 800
         self.move(self.direction, 1000)
 
-        r = thrustRange[self.direction] + (self.layer,)
+        r = thrustRange[self.direction] + (self.sprite.layer,)
         rect = list(r)
 
         sound.slash3.Play()
@@ -434,10 +434,10 @@ class Player(Entity):
             i = 8
             while i > 0:
                 i -= 1
-                self.speed -= (12 - i) * 10
+                self.sprite.speed -= (12 - i) * 10
 
-                rect[0] = r[0] + self.x
-                rect[1] = r[1] + self.y
+                rect[0] = r[0] + self.sprite.x
+                rect[1] = r[1] + self.sprite.y
                 ents = self.engineRef.map.spritesAt(*rect)
                 for e in ents:
                     x = self.engineRef.nameToEntityMap[e.name]
@@ -454,7 +454,7 @@ class Player(Entity):
         i = 30
         while i > 0:
             i -= 1
-            self.speed = max(10, self.speed - 10)
+            self.sprite.speed = max(10, self.sprite.speed - 10)
             yield None
 
         self.stop()
@@ -465,19 +465,19 @@ class Player(Entity):
         elif self.direction == self.engineRef.dir.UpRight or self.direction == self.engineRef.dir.DownRight:
             self.direction = self.engineRef.dir.Right
 
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
         self._onStateExit = restoreVars
 
         self.startAnimation('backthrust')
-        self.speed += 400
+        self.sprite.speed += 400
         self.move(self.engineRef.dir.invert(self.direction), 1000)
 
         i = 8
         while i > 0:
             i -= 1
-            self.speed -= 40
+            self.sprite.speed -= 40
             yield None
 
         i = 30
@@ -486,7 +486,7 @@ class Player(Entity):
 
         while i > 0:
             i -= 1
-            self.speed = max(0, self.speed - 10)
+            self.sprite.speed = max(0, self.sprite.speed - 10)
             if self.engineRef.controls.attack():
                 thrust = True
             elif self.engineRef.controls.gale():
@@ -526,7 +526,7 @@ class Player(Entity):
         for i in range(12):
             yield None
 
-        fire = self.engineRef.map.addSprite(self.x, self.y, self.layer, 'rend.ika-sprite')
+        fire = self.engineRef.map.addSprite(self.sprite.x, self.sprite.y, self.sprite.layer, 'rend.ika-sprite')
         f = self.direction * 5 # hack.
 
         # when we hit an entity, we append it here so that
@@ -536,7 +536,7 @@ class Player(Entity):
         sound.hearthRend.Play()
 
         while self.isAnimating():
-            ents = self.detectCollision(r[self.getAnimationIndex()] + (self.layer,))
+            ents = self.detectCollision(r[self.getAnimationIndex()] + (self.sprite.layer,))
             fire.specframe = f + self.getAnimationIndex()
 
             for e in ents:
@@ -559,12 +559,12 @@ class Player(Entity):
             yield None
 
     def crushingGaleState(self):
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         oldObs = self.sprite.entobs
         oldInvincible = self.invincible
         oldCameraLocked = self.engineRef.camera.locked
         def restoreVars(self=self, oldSpeed=oldSpeed, oldObs=oldObs, oldInvincible=oldInvincible, oldCameraLocked=oldCameraLocked):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
             self.sprite.entobs = oldObs
             self.invincible = oldInvincible
             self.engineRef.camera.locked = oldCameraLocked
@@ -602,9 +602,9 @@ class Player(Entity):
         self.sprite.entobs = False
 
         self.startAnimation('thrust')
-        r = galeRange[self.direction] + (self.layer,)
+        r = galeRange[self.direction] + (self.sprite.layer,)
         self.move(self.direction, 100000)
-        self.speed *= 10
+        self.sprite.speed *= 10
         camera.locked = False
         for i in range(60):
             ents = self.detectCollision(r)
@@ -613,10 +613,10 @@ class Player(Entity):
                     e.hurt(self.stats.att + self.stats.mag * 2, 300, (self.direction + 2) & 3)
 
             yield None
-            self.speed = max(oldSpeed, self.speed - 20)
+            self.sprite.speed = max(oldSpeed, self.sprite.speed - 20)
 
         while True:
-            ents = [x for x in self.detectCollision((0, 0, self.sprite.hotwidth, self.sprite.hotheight, self.layer)) if isinstance(x, Gap)]
+            ents = [x for x in self.detectCollision((0, 0, self.sprite.hotwidth, self.sprite.hotheight, self.sprite.layer)) if isinstance(x, Gap)]
             if not ents:
                 break
             else:
@@ -659,7 +659,7 @@ class Player(Entity):
         amount += int(amount * window.random(-10, 10) * 0.01)
         self.stats.hp += min(20, amount)
 
-        ents = self.detectCollision((-16, -16, 32, 32, self.layer))
+        ents = self.detectCollision((-16, -16, 32, 32, self.sprite.layer))
 
         for e in ents:
             if isinstance(e, IceChunks):
@@ -682,12 +682,12 @@ class Player(Entity):
         self.stats.mp -= 45
 
         ents = self.detectCollision((
-            self.x-160, self.y-160, 320, 320, self.layer
+            self.sprite.x-160, self.sprite.y-160, 320, 320, self.sprite.layer
             ))
 
         for e in ents:
             if isinstance(e, Enemy) and not e.invincible:
-                d = self.engineRef.dir.fromDelta(self.x - e.x, self.y - e.y)
+                d = self.engineRef.dir.fromDelta(self.sprite.x - e.sprite.x, self.sprite.y - e.sprite.y)
                 e.hurt((self.stats.att + self.stats.mag) * 3, 400, d)
 
         self.stop()

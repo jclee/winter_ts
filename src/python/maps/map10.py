@@ -14,7 +14,7 @@ def AutoExec(engineRef):
         engineRef.mapThings.append(DeathListener(engineRef))
 
 def to9(engineRef):
-    yield from engineRef.mapSwitchTask('map09.ika-map', (engineRef.player.x, 1 * 16))
+    yield from engineRef.mapSwitchTask('map09.ika-map', (engineRef.player.sprite.x, 1 * 16))
 
 class DeathListener(Thing):
     'Waits until the yeti is dead, then drops the fire rune.'

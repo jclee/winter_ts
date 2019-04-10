@@ -14,11 +14,11 @@ def to27(engineRef):
 def to35(engineRef):
     offset_from = 42 * 16  # first vertical pos possible
     offset_to = 11 * 16  # first vertical pos possible
-    x = engineRef.player.x - offset_from + offset_to
+    x = engineRef.player.sprite.x - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map35.ika-map', (x, 23 * 16))
 
 def to38(engineRef):
     offset_from = 8 * 16  # first vertical pos possible
     offset_to = 16 * 16  # first vertical pos possible
-    y = engineRef.player.y - offset_from + offset_to
+    y = engineRef.player.sprite.y - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map38.ika-map', (28 * 16, y))

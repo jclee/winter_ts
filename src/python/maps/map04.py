@@ -15,7 +15,7 @@ def AutoExec(engineRef):
 def to3(engineRef):
     offset_from = 11 * 16  # first horizontal pos possible
     offset_to = 8 * 16  # first horizontal pos possible
-    x = engineRef.player.x - offset_from + offset_to
+    x = engineRef.player.sprite.x - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map03.ika-map', (x, 1 * 16))
 
 def to5(engineRef):
@@ -43,13 +43,13 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags and 'waterguard' not in self.engineRef.saveFlags:
             sound.playMusic("music/resurrection.it")
-            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(15* 16, 17 * 16, self.engineRef.player.layer, 'soulreaver.ika-sprite'))
+            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(15* 16, 17 * 16, self.engineRef.player.sprite.layer, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
         elif 'waterrune' in self.engineRef.saveFlags and 'nearend' not in self.engineRef.saveFlags:
             self.engineRef.addEntity(
-                Yeti(self.engineRef, self.engineRef.map.addSprite(15* 16, 32 * 16, self.engineRef.player.layer, 'yeti.ika-sprite'))
+                Yeti(self.engineRef, self.engineRef.map.addSprite(15* 16, 32 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite'))
             )
             return True
 

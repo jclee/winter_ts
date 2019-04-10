@@ -6,7 +6,7 @@ def AutoExec(engineRef):
 def to8(engineRef):
     offset_from = 21 * 16  # first horizontal pos possible
     offset_to = 23 * 16  # first horizontal pos possible
-    x = engineRef.player.x - offset_from + offset_to
+    x = engineRef.player.sprite.x - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map08.ika-map', (x, 38 * 16))
 
 def to12(engineRef):

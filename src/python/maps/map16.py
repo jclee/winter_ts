@@ -43,7 +43,7 @@ def bridge_break(engineRef):
 
         p = engineRef.player
         p.stop()
-        p.layer = 2
+        p.sprite.layer = 2
         p.sprite.specframe = 91
         p._state = lambda: None # keep the player from moving
 
@@ -52,17 +52,17 @@ def bridge_break(engineRef):
         yield from engineRef.delayTask(8)
 
         for y in range(32):
-            p.y += 1
+            p.sprite.y += 1
             engineRef.map.processSprites()
             engineRef.camera.update()
             engineRef.draw()
             engineRef.video.ShowPage()
             yield from engineRef.delayTask(1)
 
-        p.layer = 1
+        p.sprite.layer = 1
 
         for y in range(32):
-            p.y += 1
+            p.sprite.y += 1
             engineRef.map.processSprites()
             engineRef.camera.update()
             engineRef.draw()
@@ -95,24 +95,24 @@ def manaPool(engineRef):
         yield None
 
 def to13(engineRef):
-    yield from engineRef.mapSwitchTask('map13.ika-map', (78 * 16, engineRef.player.y))
+    yield from engineRef.mapSwitchTask('map13.ika-map', (78 * 16, engineRef.player.sprite.y))
 
 def to17(engineRef):
-    yield from engineRef.mapSwitchTask('map17.ika-map', (1 * 16, engineRef.player.y))
+    yield from engineRef.mapSwitchTask('map17.ika-map', (1 * 16, engineRef.player.sprite.y))
 
 def to19(engineRef):
     offset_from = 4 * 16  # first vertical pos possible
     offset_to = 44 * 16  # first vertical pos possible
-    y = engineRef.player.y - offset_from + offset_to
+    y = engineRef.player.sprite.y - offset_from + offset_to
     yield from engineRef.mapSwitchTask('map19.ika-map', (48 * 16, y))
 
 def toLowerLayer(engineRef):
-    engineRef.player.layer = 1
+    engineRef.player.sprite.layer = 1
     if False:
         yield None
 
 def toUpperLayer(engineRef):
-    engineRef.player.layer = 3
+    engineRef.player.sprite.layer = 3
     if False:
         yield None
 

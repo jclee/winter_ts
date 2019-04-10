@@ -5,22 +5,22 @@ import player
 class Devourer(AnkleBiter):
     def __init__(self, *args):
         super(Devourer, self).__init__(*args)
-        self.speed = 100
+        self.sprite.speed = 100
         self.stats.maxhp = 100
         self.stats.hp = self.stats.maxhp
         self.stats.att = 28
         self.stats.exp = 40
 
     def attackState(self, dir):
-        oldSpeed = self.speed
+        oldSpeed = self.sprite.speed
         def restoreVars(self=self, oldSpeed=oldSpeed):
-            self.speed = oldSpeed
+            self.sprite.speed = oldSpeed
         self._onStateExit = restoreVars
 
         self.direction = dir
         self.startAnimation('windup')
         self.stop()
-        self.speed *= 2
+        self.sprite.speed *= 2
 
         # Winding up for the pounce.
         for i in range(25):
