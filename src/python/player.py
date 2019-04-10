@@ -201,7 +201,7 @@ backSlashRange = [x[::-1] for x in slashRange]
 class Player(Entity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
         Entity.__init__(self, engineRef, engineRef.map.addSprite(x, y, layer, PLAYER_SPRITE), _playerAnim)
-        self.state = self.standState()
+        self.setState(self.standState())
 
         self.stats.maxhp = 80
         self.stats.maxmp = 40
@@ -254,21 +254,21 @@ class Player(Entity):
         self.startAnimation('stand')
         while True:
             if self.engineRef.controls.attack():
-                self.state = self.slashState()
+                self.setState(self.slashState())
             elif self.engineRef.controls.rend():
-                self.state = self.hearthRendState()
+                self.setState(self.hearthRendState())
                 yield None
             elif self.engineRef.controls.gale():
-                self.state = self.crushingGaleState()
+                self.setState(self.crushingGaleState())
                 yield None
             elif self.engineRef.controls.heal():
-                self.state = self.healingRainState()
+                self.setState(self.healingRainState())
                 yield None
             elif self.engineRef.controls.shiver():
-                self.state = self.shiverState()
+                self.setState(self.shiverState())
                 yield None
             elif self.engineRef.controls.left() or self.engineRef.controls.right() or self.engineRef.controls.up() or self.engineRef.controls.down():
-                self.state = self.walkState()
+                self.setState(self.walkState())
                 next(self._state) # get the walk state started right now.
             yield None
 
@@ -279,19 +279,19 @@ class Player(Entity):
         while True:
 
             if self.engineRef.controls.attack():
-                self.state = self.slashState()
+                self.setState(self.slashState())
                 yield None
             elif self.engineRef.controls.rend():
-                self.state = self.hearthRendState()
+                self.setState(self.hearthRendState())
                 yield None
             elif self.engineRef.controls.gale():
-                self.state = self.crushingGaleState()
+                self.setState(self.crushingGaleState())
                 yield None
             elif self.engineRef.controls.heal():
-                self.state = self.healingRainState()
+                self.setState(self.healingRainState())
                 yield None
             elif self.engineRef.controls.shiver():
-                self.state = self.shiverState()
+                self.setState(self.shiverState())
                 yield None
             elif self.engineRef.controls.left():
                 if self.engineRef.controls.up():
@@ -312,7 +312,7 @@ class Player(Entity):
             elif self.engineRef.controls.down():
                 d = self.engineRef.dir.Down
             else:
-                self.state = self.standState()
+                self.setState(self.standState())
                 yield None
 
             self.move(d)
@@ -360,10 +360,10 @@ class Player(Entity):
             yield None
 
         if backthrust:
-            self.state = self.backThrustState()
+            self.setState(self.backThrustState())
             yield None
         elif backslash:
-            self.state = self.backSlashState()
+            self.setState(self.backSlashState())
             yield None
         else:
             # Stall:
@@ -371,7 +371,7 @@ class Player(Entity):
             while count > 0:
                 count -= 1
                 if self.engineRef.controls.attack():
-                    self.state = self.thrustState()
+                    self.setState(self.thrustState())
                 yield None
 
     def backSlashState(self):
@@ -404,9 +404,9 @@ class Player(Entity):
         while count > 0:
             count -= 1
             if self.engineRef.controls.rend():
-                self.state = self.hearthRendState()
+                self.setState(self.hearthRendState())
             elif self.engineRef.controls.attack():
-                self.state = self.thrustState()
+                self.setState(self.thrustState())
             yield None
 
     def thrustState(self):
@@ -496,11 +496,11 @@ class Player(Entity):
         self.direction = self.engineRef.dir.invert(self.direction)
 
         if thrust:
-            self.state = self.thrustState()
+            self.setState(self.thrustState())
             yield None
 
         elif gale:
-            self.state = self.crushingGaleState()
+            self.setState(self.crushingGaleState())
             yield None
 
         self.stop()
@@ -697,7 +697,7 @@ class Player(Entity):
             yield None
 
     def die(self):
-        self.state = self.deathState()
+        self.setState(self.deathState())
         raise GameLoseException()
 
     def deathState(self):
@@ -708,6 +708,10 @@ class Player(Entity):
         for x in s:
             yield None
 
+        while True:
+            yield None
+
+    def noOpState(self):
         while True:
             yield None
 

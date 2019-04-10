@@ -241,7 +241,7 @@ class Engine(object):
         self.readZones(mapModule)
         self.readEnts(mapModule)
         if self.player:
-            self.player.state = self.player.defaultState()
+            self.player.setState(self.player.defaultState())
         if dest and self.player:
             if len(dest) == 2:
                 self.player.sprite.x, self.player.sprite.y = dest
@@ -271,7 +271,7 @@ class Engine(object):
         startImage = self.video.GrabImage(0, 0, self.video.xres, self.video.yres)
 
         self.player.direction = self.dir.Down
-        self.player.state = self.player.defaultState()
+        self.player.setState(self.player.defaultState())
         self.player.startAnimation('stand')
         self.player.animate()
 

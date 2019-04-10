@@ -53,7 +53,7 @@ class Serpent(Enemy):
         raise GameWinException()
 
     def think(self):
-        self.state = next(self.bleh)
+        self.setState(next(self.bleh))
 
     def hurt(self, amount, speed = 0, dir = None):
         Enemy.hurt(self, amount, 0, dir)

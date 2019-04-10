@@ -1,11 +1,6 @@
 from browser import window
 import ika
 
-def _temp():
-    yield None
-GeneratorType = _temp().__class__
-del _temp
-
 class Entity(object):
     'Most every interactive thing in the game is an Entity.'
 
@@ -26,18 +21,18 @@ class Entity(object):
         self.invincible = False
         self._state = None
         self._onStateExit = None
-        self.state = self.defaultState()
+        self.setState(self.defaultState())
 
     def update(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()
         if self._state is None:
-            self.state = self.defaultState()
+            self.setState(self.defaultState())
         try:
             next(self._state)
             return
         except StopIteration:
-            self.state = self.defaultState()
+            self.setState(self.defaultState())
             next(self._state)
             return
 
@@ -58,23 +53,14 @@ class Entity(object):
             self.die()
         else:
             self.stats.hp -= amount
-            self.state = self.hurtState(recoilSpeed, recoilDir)
+            self.setState(self.hurtState(recoilSpeed, recoilDir))
 
-    def _setState(self, newState):
-        '''Tries to be psychic.  Generators are recognized, other crap is assumed
-        to be a function that returns a generator.'''
+    def setState(self, newState):
         if self._onStateExit is not None:
             self._onStateExit()
             self._onStateExit = None
         if self.interruptable or self._state is None:
-            if isinstance(newState, GeneratorType):
-                self._state = newState
-            elif newState is None:
-                self._state = None
-            else:
-                assert False, 'Entity.state property *must* be a generator!!! (got %s)' % repr(newState)
-
-    state = property(None, _setState)
+            self._state = newState
 
     def defaultState(self):
         while True:

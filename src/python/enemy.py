@@ -15,7 +15,7 @@ class Enemy(Entity):
     '''
     def __init__(self, engineRef, sprite, anim):
         Entity.__init__(self, engineRef, sprite, anim)
-        self.state = self.idleState()
+        self.setState(self.idleState())
         self.stats.hp = 15
         self._mood = None
 
@@ -35,19 +35,18 @@ class Enemy(Entity):
             if self._mood is None:
                 raise StopIteration
 
-            s = next(self._mood)
-            self.state = s
+            self.setState(next(self._mood))
         except StopIteration:
             #self.interruptable = True
             n = window.random(0, len(self._moods))
             m = self._moods[n]
             self.setMood(m)
-            self.state = next(self._mood)
+            self.setState(next(self._mood))
 
     def die(self):
         self._mood = None
         self.interruptable = True
-        self.state = self.deathState()
+        self.setState(self.deathState())
         self.engineRef.player.giveXP(self.stats.exp)
         #self.engineRef.player.stats.mp += self.stats.exp # MP Regen for the player.
 

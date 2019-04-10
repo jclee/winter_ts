@@ -126,7 +126,7 @@ class AnkleBiter(Enemy):
 
         for a in allies:
             a.setMood(a.fleeMood)
-            a.state = a.idleState()
+            a.setState(a.idleState())
 
         super(AnkleBiter, self).die()
 

@@ -18,7 +18,7 @@ def finalBattle(engineRef):
             for n in range(128):
                 yield None
 
-        p.state = walkUp()
+        p.setState(walkUp())
 
         for n in range(128):
             yield from engineRef.tickTask()
@@ -26,12 +26,8 @@ def finalBattle(engineRef):
             engineRef.video.ShowPage()
             yield None
 
-        def noOp():
-            while True:
-                yield None
-
         p.startAnimation('stand')
-        p.state = noOp()
+        p.setState(p.noOpState())
 
         for n in range(256):
             # teh earthquake
@@ -59,9 +55,9 @@ def finalBattle(engineRef):
             engineRef.video.ShowPage()
             yield None
 
-        p.state = p.defaultState()
+        p.setState(p.defaultState())
 
-        s.state = s.roarState()
+        s.setState(s.roarState())
         engineRef.synchTime()
 
 def to31(engineRef):

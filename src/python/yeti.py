@@ -192,5 +192,5 @@ class Yeti(Enemy):
 
         self.stop()
 
-        self.state = self.idleState(10)
+        self.setState(self.idleState(10))
         yield None

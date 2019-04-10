@@ -60,7 +60,7 @@ class SoulReaver(Yeti):
 
         self.stop()
 
-        self.state = self.idleState(10)
+        self.setState(self.idleState(10))
         self.sprite.speed = 120
 
         yield None

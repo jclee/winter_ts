@@ -45,7 +45,7 @@ def bridge_break(engineRef):
         p.stop()
         p.sprite.layer = 2
         p.sprite.specframe = 91
-        p._state = lambda: None # keep the player from moving
+        p.setState(p.noOpState()) # keep the player from moving
 
         engineRef.draw()
         engineRef.video.ShowPage()
@@ -76,7 +76,7 @@ def bridge_break(engineRef):
             engineRef.video.ShowPage()
             yield None
 
-        p.state = p.standState()
+        p.setState(p.standState())
 
         y = Yeti(engineRef, engineRef.map.addSprite(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
