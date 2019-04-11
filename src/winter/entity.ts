@@ -9,19 +9,19 @@ const _DIST = 48
 export class Entity {
     // Most every interactive thing in the game is an Entity.
 
-    private engine: Engine
+    protected engine: Engine
     public stats: StatSet
     private _animator: Animator
     private _anim: {[key: string]: [[number, number][][], boolean]}
     public direction: Direction
     public interruptable: boolean
     public invincible: boolean
-    private _state: IterableIterator<any> | null
+    protected _state: IterableIterator<any> | null
     private _onStateExit: (()=>void) | null
 
     constructor(
-        private engineRef: PyEngine,
-        private sprite: Sprite,
+        protected engineRef: PyEngine,
+        public sprite: Sprite,
         anim: {[key: string]: [[number, number][][], boolean]},
     ) {
         this.engine = engineRef.getEngine().js

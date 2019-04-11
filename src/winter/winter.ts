@@ -940,6 +940,18 @@ interface SpriteData {
     hotspotHeight: number
 }
 
+class Sound {
+    position: number = 0.0
+    volume: number = 1.0
+    loop: boolean = false
+
+    constructor(
+        _name: string
+    ) {}
+
+    play() {}
+    pause() {}
+}
 
 interface ShaderSpec {
     vertex: string
@@ -1312,6 +1324,7 @@ export interface PyEngine {
     getEngine: ()=>{js: Engine}
     getEntityForSpriteName: (name: string)=>{js: Entity}
     pyDestroyEntity: (entity: Entity)=>void
+    pyGivePlayerXP: (xp: number)=>void
     font: {js: FontClass}
     player: {stats: {js: StatSet}}
     saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}
@@ -1388,6 +1401,7 @@ export class Engine {
     maps: {[key: string]: MapData}
     images: {[key: string]: Image}
     sprites: {[key: string]: SpriteData}
+    sounds: {[key: string]: Sound}
     width: number
     height: number
     startMsec: number
@@ -1411,6 +1425,7 @@ export class Engine {
         this.images = {}
         this.maps = {}
         this.sprites = {}
+        this.sounds = {}
         this.input = new Input()
         this.video = new VideoClass(this)
         this.map = new MapClass(this, this.video)
@@ -1792,6 +1807,33 @@ export class Engine {
             'winter/system_font.png',
         ]
 
+        //const soundPaths = [
+        //    'sfx/swing1.wav',
+        //    'sfx/swing2.wav',
+        //    'sfx/swing3.wav',
+        //    'sfx/LevelUp.wav',
+        //    'sfx/MenuClick.wav',
+        //    'sfx/MenuBuzz.wav',
+        //    'sfx/HearthRend.wav',
+        //    'sfx/CrushingGale.wav',
+        //    'sfx/HealingRain.wav',
+        //    'sfx/MonsterHit.wav',
+        //    'sfx/AnklebiterStrike.wav',
+        //    //'sfx/AnklebiterHurt.wav',
+        //    'sfx/AnklebiterDie.wav',
+        //    'sfx/YetiHurt1.wav',
+        //    'sfx/YetiHurt2.wav',
+        //    'sfx/YetiHurt3.wav',
+        //    'sfx/SoulReaverHurt1.wav',
+        //    'sfx/SoulReaverHurt2.wav',
+        //    'sfx/SoulReaverHurt3.wav',
+        //    'sfx/YetiDie.wav',
+        //    'sfx/SoulReaverDie.wav',
+        //    'sfx/RazormaneStrike.wav',
+        //    'sfx/RazormaneHurt.wav',
+        //    'sfx/RazormaneDie.wav',
+        //]
+
         const loadImage = (path: string) => {
             return new Promise<void>((resolve: ()=>void, _reject: any) => {
                 const imageEl: HTMLImageElement = new Image()
@@ -1822,6 +1864,30 @@ export class Engine {
                 xhr.open('GET', path)
                 xhr.send()
             })
+        }
+
+        // TODO: Actually load sound data, set up data-to-name mapping
+        this.sounds = {
+            slash1: new Sound(''),
+            slash2: new Sound(''),
+            slash3: new Sound(''),
+            playerHurt: new Sound(''),
+            achievement: new Sound(''),
+            menuClick: new Sound(''),
+            menuBuzz: new Sound(''),
+            hearthRend: new Sound(''),
+            crushingGale: new Sound(''),
+            healingRain: new Sound(''),
+            monsterHit: new Sound(''),
+            anklebiterStrike: new Sound(''),
+            anklebiterHurt: new Sound(''),
+            anklebiterDie: new Sound(''),
+            yetiStrike: new Sound(''),
+            yetiHurt: new Sound(''),
+            yetiDie: new Sound(''),
+            razorManeStrike: new Sound(''),
+            razorManeHurt: new Sound(''),
+            razorManeDie: new Sound(''),
         }
 
         let promises: Promise<void>[] = [

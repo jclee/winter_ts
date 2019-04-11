@@ -114,6 +114,10 @@ class Engine(object):
             self.destroyEntity(ent)
         self.pyDestroyEntity = pyDestroyEntity
 
+        def pyGivePlayerXP(xp):
+            self.player.giveXP(xp)
+        self.pyGivePlayerXP = pyGivePlayerXP
+
     def delayTask(self, time):
         yield from ika.asTask(window.delayTask(time))
 
