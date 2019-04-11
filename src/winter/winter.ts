@@ -40,6 +40,9 @@ import {
 import { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages } from "./effects.js"
 ;(window as any).effects = { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages }
 
+import { Entity } from "./entity.js"
+;(window as any).entity = { Entity }
+
 import { Field } from "./field.js"
 ;(window as any).field = { Field }
 
@@ -191,7 +194,7 @@ export const RGB = (r: number, g: number, b: number, a: number): number => {
 }
 (window as any).RGB = RGB
 
-class Sprite {
+export class Sprite {
     // TODO: Probably a bunch of these members can be private, as the game does
     // not access them.
 
@@ -1307,6 +1310,8 @@ class VideoClass {
 
 export interface PyEngine {
     getEngine: ()=>{js: Engine}
+    getEntityForSpriteName: (name: string)=>{js: Entity}
+    pyDestroyEntity: (entity: Entity)=>void
     font: {js: FontClass}
     player: {stats: {js: StatSet}}
     saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}

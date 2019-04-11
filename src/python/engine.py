@@ -106,6 +106,14 @@ class Engine(object):
             return self._engine
         self.getEngine = getEngine
 
+        def getEntityForSpriteName(name):
+            return self.nameToEntityMap[name]
+        self.getEntityForSpriteName = getEntityForSpriteName
+
+        def pyDestroyEntity(ent):
+            self.destroyEntity(ent)
+        self.pyDestroyEntity = pyDestroyEntity
+
     def delayTask(self, time):
         yield from ika.asTask(window.delayTask(time))
 
