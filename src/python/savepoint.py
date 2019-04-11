@@ -1,12 +1,12 @@
 from browser import window
 import ika
-from entity import Entity
+from entity import OldEntity
 
 import saveloadmenu
 
-class SavePoint(Entity):
+class SavePoint(OldEntity):
     def __init__(self, engineRef, sprite):
-        Entity.__init__(self, engineRef, sprite, None)
+        OldEntity.__init__(self, engineRef, sprite, None)
         self.interruptable = False
         self.invincible = True
 

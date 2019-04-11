@@ -6,7 +6,7 @@ import sound
 from caption import Caption
 from gameover import GameLoseException
 
-from entity import Entity
+from entity import OldEntity
 from enemy import Enemy
 from obstacle import IceWall, IceChunks, Gap
 
@@ -198,9 +198,9 @@ galeRange = (
 
 backSlashRange = [x[::-1] for x in slashRange]
 
-class Player(Entity):
+class Player(OldEntity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
-        Entity.__init__(self, engineRef, engineRef.map.addSprite(x, y, layer, PLAYER_SPRITE), _playerAnim)
+        OldEntity.__init__(self, engineRef, engineRef.map.addSprite(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.setState(self.standState())
 
         self.stats.maxhp = 80

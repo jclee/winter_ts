@@ -1,7 +1,7 @@
-from entity import Entity
+from entity import OldEntity
 from caption import Caption
 
-class Dynamite(Entity):
+class Dynamite(OldEntity):
     def __init__(self, engineRef, sprite):
         self.flagName = sprite.name
         super(Dynamite, self).__init__(engineRef, sprite, None)

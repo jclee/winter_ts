@@ -1,7 +1,7 @@
 from browser import window
 import ika
 
-class Entity(object):
+class OldEntity(object):
     'Most every interactive thing in the game is an Entity.'
 
     # arbitrary, and meaningless for the most part.

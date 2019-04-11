@@ -1,8 +1,8 @@
 from browser import window
 import sound
-from entity import Entity
+from entity import OldEntity
 
-class Enemy(Entity):
+class Enemy(OldEntity):
     '''
     Enemy baseclass.  Enemies are entities that die.
 
@@ -14,7 +14,7 @@ class Enemy(Entity):
     it is reconsidering its options.
     '''
     def __init__(self, engineRef, sprite, anim):
-        Entity.__init__(self, engineRef, sprite, anim)
+        OldEntity.__init__(self, engineRef, sprite, anim)
         self.setState(self.idleState())
         self.stats.hp = 15
         self._mood = None

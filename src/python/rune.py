@@ -1,7 +1,7 @@
-from entity import Entity
+from entity import OldEntity
 from caption import Caption
 
-class _Rune(Entity):
+class _Rune(OldEntity):
 
     def __init__(self, engineRef, sprite):
         super(_Rune, self).__init__(engineRef, sprite, None)

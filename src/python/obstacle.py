@@ -4,13 +4,13 @@ Given the proper skill or item, the player can cross these.
 
 import ika
 
-from entity import Entity
+from entity import OldEntity
 from caption import Caption
 
-class _Obstacle(Entity):
+class _Obstacle(OldEntity):
     def __init__(self, engineRef, sprite, anim = None):
         self.flagName = sprite.name
-        Entity.__init__(self, engineRef, sprite, anim)
+        OldEntity.__init__(self, engineRef, sprite, anim)
         self.invincible = True
 
         if self.flagName in engineRef.saveFlags:
