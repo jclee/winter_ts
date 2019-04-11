@@ -96,7 +96,7 @@ _attackRange = [
     (16, 0, 8, 16),
 ]
 
-class AnkleBiter(Enemy):
+class OldAnkleBiter(Enemy):
     def __init__(self, engineRef, sprite):
         Enemy.__init__(self, engineRef, sprite, _ankleBiterAnim)
 
@@ -110,14 +110,14 @@ class AnkleBiter(Enemy):
         self.stats.exp = 1
 
     def isKind(self, kind):
-        return kind == 'AnkleBiter' or super(AnkleBiter, self).isKind(kind)
+        return kind == 'AnkleBiter' or super(OldAnkleBiter, self).isKind(kind)
 
     def hurtState(self, recoilSpeed, recoilDir):
         if self.stats.hp > 0:
             sound.anklebiterHurt.Play()
         if self.stats.hp < self.stats.maxhp // 2:
             self.setMood(self.fleeMood)
-        yield from super(AnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
+        yield from super(OldAnkleBiter, self).hurtState(int(recoilSpeed * 1.5), recoilDir)
 
     def die(self):
         # When one dies, the others scatter
@@ -131,7 +131,7 @@ class AnkleBiter(Enemy):
             a.setMood(a.fleeMood)
             a.setState(a.idleState())
 
-        super(AnkleBiter, self).die()
+        super(OldAnkleBiter, self).die()
 
     def attackMood(self):
         # if we want to be uber, we can remove this hack.
@@ -178,7 +178,7 @@ class AnkleBiter(Enemy):
 
     def idleState(self, *args):
         self.stopAnimation()
-        yield from super(AnkleBiter, self).idleState(*args)
+        yield from super(OldAnkleBiter, self).idleState(*args)
 
     def walkState(self, dir, dist):
         ox, oy = self.sprite.x, self.sprite.y
@@ -193,7 +193,7 @@ class AnkleBiter(Enemy):
     def deathState(self):
         sound.anklebiterDie.Play()
         self.startAnimation('die')
-        yield from super(AnkleBiter, self).deathState()
+        yield from super(OldAnkleBiter, self).deathState()
 
     def attackState(self, dir):
         oldSpeed = self.sprite.speed

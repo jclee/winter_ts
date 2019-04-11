@@ -1,8 +1,8 @@
 
-from anklebiter import AnkleBiter, _attackRange
+from anklebiter import OldAnkleBiter, _attackRange
 import player
 
-class Devourer(AnkleBiter):
+class Devourer(OldAnkleBiter):
     def __init__(self, *args):
         super(Devourer, self).__init__(*args)
         self.sprite.speed = 100
