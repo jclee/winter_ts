@@ -21,6 +21,9 @@ class Enemy(Entity):
 
         self._moods = []
 
+    def isKind(self, kind):
+        return kind == 'Enemy' or super(Enemy, self).isKind(kind)
+
     def setMood(self, gen):
         if gen is None:
             self._mood = None

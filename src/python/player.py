@@ -216,6 +216,9 @@ class Player(Entity):
         self.stats.hp = 80
         self.stats.mp = 40
 
+    def isKind(self, kind):
+        return kind == 'Player' or super(Player, self).isKind(kind)
+
     def giveXP(self, amount):
         self.stats.exp += amount
         if self.stats.exp >= self.stats.next:
@@ -344,7 +347,7 @@ class Player(Entity):
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.nameToEntityMap[e.name]
-                if isinstance(x, Enemy) and not x.invincible and x not in hitList:
+                if x.isKind('Enemy') and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 120, self.direction)
                     self.giveMPforHit()
@@ -392,7 +395,7 @@ class Player(Entity):
             ents = self.engineRef.map.spritesAt(*rect)
             for e in ents:
                 x = self.engineRef.nameToEntityMap[e.name]
-                if isinstance(x, Enemy) and not x.invincible and x not in hitList:
+                if x.isKind('Enemy') and not x.invincible and x not in hitList:
                     hitList.append(x)
                     x.hurt(self.stats.att, 130, self.direction)
                     self.giveMPforHit()
@@ -441,7 +444,7 @@ class Player(Entity):
                 ents = self.engineRef.map.spritesAt(*rect)
                 for e in ents:
                     x = self.engineRef.nameToEntityMap[e.name]
-                    if isinstance(x, Enemy) and not x.invincible:
+                    if x.isKind('Enemy') and not x.invincible:
                         x.hurt(int(self.stats.att * 1.5), 300, self.direction)
                         self.giveMPforHit()
                         self.stop()
@@ -540,10 +543,10 @@ class Player(Entity):
             fire.specframe = f + self.getAnimationIndex()
 
             for e in ents:
-                if isinstance(e, Enemy) and not e.invincible and e not in hitList:
+                if e.isKind('Enemy') and not e.invincible and e not in hitList:
                     hitList.append(e)
                     e.hurt(int(self.stats.att + self.stats.mag) * 2, 300, self.direction)
-                elif isinstance(e, IceWall):
+                elif e.isKind('IceWall'):
                     # TODO: some sort of nice animation.
                     self.engineRef.saveFlags[e.flagName] = 'Broken'
 
@@ -609,14 +612,14 @@ class Player(Entity):
         for i in range(60):
             ents = self.detectCollision(r)
             for e in ents:
-                if isinstance(e, Enemy) and not e.invincible:
+                if e.isKind('Enemy') and not e.invincible:
                     e.hurt(self.stats.att + self.stats.mag * 2, 300, (self.direction + 2) & 3)
 
             yield None
             self.sprite.speed = max(oldSpeed, self.sprite.speed - 20)
 
         while True:
-            ents = [x for x in self.detectCollision((0, 0, self.sprite.hotwidth, self.sprite.hotheight, self.sprite.layer)) if isinstance(x, Gap)]
+            ents = [x for x in self.detectCollision((0, 0, self.sprite.hotwidth, self.sprite.hotheight, self.sprite.layer)) if x.isKind('Gap')]
             if not ents:
                 break
             else:
@@ -662,7 +665,7 @@ class Player(Entity):
         ents = self.detectCollision((-16, -16, 32, 32, self.sprite.layer))
 
         for e in ents:
-            if isinstance(e, IceChunks):
+            if e.isKind('IceChunks'):
                 e.freeze()
                 self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, '~1The ice froze over!'))
                 self.engineRef.destroyEntity(e)
@@ -686,7 +689,7 @@ class Player(Entity):
             ))
 
         for e in ents:
-            if isinstance(e, Enemy) and not e.invincible:
+            if e.isKind('Enemy') and not e.invincible:
                 d = self.engineRef.dir.fromDelta(self.sprite.x - e.sprite.x, self.sprite.y - e.sprite.y)
                 e.hurt((self.stats.att + self.stats.mag) * 3, 400, d)
 

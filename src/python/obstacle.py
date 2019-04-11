@@ -28,11 +28,15 @@ class IceWall(_Obstacle):
     Not very exciting.  The entity's type is all the information
     we need.
     '''
-    pass
+
+    def isKind(self, kind):
+        return kind == 'IceWall' or super(IceWall, self).isKind(kind)
 
 class Gap(_Obstacle):
     '''A big empty hole. :P'''
-    pass
+
+    def isKind(self, kind):
+        return kind == 'Gap' or super(Gap, self).isKind(kind)
 
 class IceChunks(_Obstacle):
     _anim = {
@@ -59,6 +63,9 @@ class IceChunks(_Obstacle):
     def __init__(self, engineRef, sprite):
         _Obstacle.__init__(self, engineRef, sprite, self._anim)
         self.startAnimation('default')
+
+    def isKind(self, kind):
+        return kind == 'IceChunks' or super(IceChunks, self).isKind(kind)
 
     def remove(self):
         self.freeze()

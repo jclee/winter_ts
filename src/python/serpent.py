@@ -149,5 +149,5 @@ class Serpent(Enemy):
 
         # need to destroy old corpses (a first!)
         for e in self.engineRef.entities:
-            if e.stats.hp == 0 and isinstance(e, Enemy):
+            if e.stats.hp == 0 and e.isKind('Enemy'):
                 self.engineRef.destroyEntity(e)

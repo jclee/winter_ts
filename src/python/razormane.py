@@ -108,6 +108,9 @@ class RazorMane(Enemy):
         self.stats.att = 20
         self.stats.exp = 13
 
+    def isKind(self, kind):
+        return kind == 'RazorMane' or super(RazorMane, self).isKind(kind)
+
     def hurtState(self, recoilSpeed, recoilDir):
         if self.stats.hp > 0:
             sound.razorManeHurt.Play()
@@ -121,7 +124,7 @@ class RazorMane(Enemy):
         ents = [self.engineRef.nameToEntityMap[x.name] for x in
             self.engineRef.map.spritesAt(self.sprite.x - 50, self.sprite.y - 50, 100, 100, self.sprite.layer)
             if x.name in self.engineRef.nameToEntityMap]
-        allies = filter(lambda e: isinstance(e, RazorMane) and e.stats.hp > 0, ents)
+        allies = filter(lambda e: e.isKind('RazorMane') and e.stats.hp > 0, ents)
 
         for a in allies:
             a.setMood(a.fleeMood)
@@ -245,7 +248,7 @@ class RazorMane(Enemy):
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:
-                if isinstance(e, player.Player):
+                if e.isKind('Player'):
                     d = max(1, self.stats.att - e.stats.pres)
                     e.hurt(d, 150, self.direction)
                     yield None

@@ -32,7 +32,7 @@ class Devourer(AnkleBiter):
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:
-                if isinstance(e, player.Player):
+                if e.isKind('Player'):
                     d = max(1, self.stats.att - e.stats.pres)
                     e.hurt(d, 150, self.direction)
                     yield None

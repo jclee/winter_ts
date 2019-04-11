@@ -49,7 +49,7 @@ class SoulReaver(Yeti):
         for i in range(8):
             self.sprite.speed -= (i + 2) * 10
             for e in self.detectCollision(_attackRange[self.direction]):
-                if isinstance(e, Player):
+                if e.isKind('Player'):
                     d = max(1, self.stats.att - e.stats.pres)
                     e.hurt(d, 350, self.direction)
             yield None

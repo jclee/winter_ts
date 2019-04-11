@@ -109,6 +109,9 @@ class AnkleBiter(Enemy):
         self.stats.att = 7
         self.stats.exp = 1
 
+    def isKind(self, kind):
+        return kind == 'AnkleBiter' or super(AnkleBiter, self).isKind(kind)
+
     def hurtState(self, recoilSpeed, recoilDir):
         if self.stats.hp > 0:
             sound.anklebiterHurt.Play()
@@ -122,7 +125,7 @@ class AnkleBiter(Enemy):
         ents = [self.engineRef.nameToEntityMap[x.name] for x in
             self.engineRef.map.spritesAt(self.sprite.x - 50, self.sprite.y - 50, 100, 100, self.sprite.layer)
             if x.name in self.engineRef.nameToEntityMap]
-        allies = filter(lambda e: isinstance(e, AnkleBiter) and e.stats.hp > 0, ents)
+        allies = filter(lambda e: e.isKind('AnkleBiter') and e.stats.hp > 0, ents)
 
         for a in allies:
             a.setMood(a.fleeMood)
@@ -216,7 +219,7 @@ class AnkleBiter(Enemy):
             ents = self.detectCollision(_attackRange[dir])
 
             for e in ents:
-                if isinstance(e, player.Player):
+                if e.isKind('Player'):
                     d = max(1, self.stats.att - e.stats.pres)
                     e.hurt(d, 150, self.direction)
                     yield None

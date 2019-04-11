@@ -23,6 +23,9 @@ class Entity(object):
         self._onStateExit = None
         self.setState(self.defaultState())
 
+    def isKind(self, kind):
+        return False # Well... technically "Entity", but no one cares.
+
     def update(self):
         'Main update routine.  Override if you must, use the state mechanism if you can.'
         self.animate()
