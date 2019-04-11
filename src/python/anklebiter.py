@@ -1,7 +1,7 @@
 from browser import window
 import ika
 
-from enemy import Enemy
+from enemy import OldEnemy
 import player
 import sound
 
@@ -96,9 +96,9 @@ _attackRange = [
     (16, 0, 8, 16),
 ]
 
-class OldAnkleBiter(Enemy):
+class OldAnkleBiter(OldEnemy):
     def __init__(self, engineRef, sprite):
-        Enemy.__init__(self, engineRef, sprite, _ankleBiterAnim)
+        OldEnemy.__init__(self, engineRef, sprite, _ankleBiterAnim)
 
         # Test code:
         # Equal probability of attacking or doing nothing.

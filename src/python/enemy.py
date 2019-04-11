@@ -2,7 +2,7 @@ from browser import window
 import sound
 from entity import OldEntity
 
-class Enemy(OldEntity):
+class OldEnemy(OldEntity):
     '''
     Enemy baseclass.  Enemies are entities that die.
 
@@ -22,7 +22,7 @@ class Enemy(OldEntity):
         self._moods = []
 
     def isKind(self, kind):
-        return kind == 'Enemy' or super(Enemy, self).isKind(kind)
+        return kind == 'Enemy' or super(OldEnemy, self).isKind(kind)
 
     def setMood(self, gen):
         if gen is None:
@@ -102,4 +102,4 @@ class Enemy(OldEntity):
 
     def hurt(self, *args, **kwargs):
         sound.monsterHit.Play()
-        super(Enemy,self).hurt(*args, **kwargs)
+        super(OldEnemy,self).hurt(*args, **kwargs)

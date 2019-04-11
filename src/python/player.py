@@ -7,7 +7,7 @@ from caption import Caption
 from gameover import GameLoseException
 
 from entity import OldEntity
-from enemy import Enemy
+from enemy import OldEnemy
 from obstacle import IceWall, IceChunks, Gap
 
 

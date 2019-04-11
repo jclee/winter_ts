@@ -1,6 +1,6 @@
 from browser import window
 
-from enemy import Enemy
+from enemy import OldEnemy
 from player import Player
 import ika
 import sound
@@ -96,9 +96,9 @@ _attackRange = (
     (32, 0, 24, 32),
 )
 
-class Yeti(Enemy):
+class Yeti(OldEnemy):
     def __init__(self, engineRef, sprite):
-        Enemy.__init__(self, engineRef, sprite, _anim)
+        OldEnemy.__init__(self, engineRef, sprite, _anim)
         self.sprite.speed = 80
 
         self.addMoods([self.attackMood, self.passiveMood])

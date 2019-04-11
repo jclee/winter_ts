@@ -4,7 +4,7 @@ import ika
 
 from anklebiter import OldAnkleBiter
 from carnivore import Carnivore
-from enemy import Enemy
+from enemy import OldEnemy
 from gameover import GameWinException
 
 # arbitrary :D
@@ -35,9 +35,9 @@ _biteRange = (
     (0, 41, 30, 0),
 )
 
-class Serpent(Enemy):
+class Serpent(OldEnemy):
     def __init__(self, engineRef, sprite):
-        Enemy.__init__(self, engineRef, sprite, _anim)
+        OldEnemy.__init__(self, engineRef, sprite, _anim)
 
         self.addMoods([self.watchMood])
 
@@ -56,7 +56,7 @@ class Serpent(Enemy):
         self.setState(next(self.bleh))
 
     def hurt(self, amount, speed = 0, dir = None):
-        Enemy.hurt(self, amount, 0, dir)
+        OldEnemy.hurt(self, amount, 0, dir)
 
     def hurtState(self, *args):
         self.startAnimation('hurt')
