@@ -617,7 +617,7 @@ export class StatWindow extends SubScreenWindow {
     }
 
     createContents(): Widget[] {
-        const stats = this.engineRef.player.stats.js
+        const stats = this.engineRef.player.js.stats
         const padStr = (n: number, s: string): string => s.length >= n ? s : padStr(n - 1, '0' + s)
         const pad = (n: number, v: number): string => padStr(n, "" + v)
         return [
@@ -656,7 +656,7 @@ export class AttribWindow extends SubScreenWindow {
     createContents(): Widget[] {
         const padStr = (n: number, s: string): string => s.length >= n ? s : padStr(n - 1, '0' + s)
         const pad = (n: number, v: number): string => padStr(n, "" + v)
-        const stats = this.engineRef.player.stats.js
+        const stats = this.engineRef.player.js.stats
         return [
             this.icons['att'], new StaticText(this.engineRef, ['...' + pad(3, stats.att)]),
             this.icons['mag'], new StaticText(this.engineRef, ['...' + pad(3, stats.mag)]),

@@ -50,14 +50,13 @@ import { Field } from "./field.js"
 ;(window as any).field = { Field }
 
 import { introTask, menuTask } from "./intro.js"
-;(window as any).intro = {
-    introTask, menuTask
-}
+;(window as any).intro = { introTask, menuTask }
+
+import { Player, PLAYER_SPRITE } from "./player.js"
+;(window as any).player = { Player, PLAYER_SPRITE }
 
 import { loadGame, SaveData, saveGame } from "./saveload.js"
-;(window as any).saveload = {
-    loadGame, SaveData, saveGame
-}
+;(window as any).saveload = { loadGame, SaveData, saveGame }
 
 import { StatSet } from "./statset.js"
 ;(window as any).statset = { StatSet }
@@ -1324,14 +1323,20 @@ class VideoClass {
 (window as any).VideoClass = VideoClass
 
 export interface PyEngine {
+    addThing: (thing: any)=>void
+    getCameraLocked: ()=>boolean
     getEngine: ()=>{js: Engine}
     getEntityForSpriteName: (name: string)=>{js: Entity}
     getPlayerEntity: ()=>{js: Entity}
+    getSaveFlag: (s: string) => string | undefined
     pyDestroyEntity: (entity: Entity)=>void
     pyGivePlayerXP: (xp: number)=>void
     font: {js: FontClass}
-    player: {stats: {js: StatSet}}
+    player: {js: {stats: StatSet}}
     saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}
+    setCameraLocked: (locked: boolean)=>void
+    setSaveFlag: (s: string, v: string) => void
+    triggerGameLose: ()=>void
 }
 
 export interface Controls {

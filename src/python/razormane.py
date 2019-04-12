@@ -2,7 +2,6 @@ from browser import window
 import ika
 
 from enemy import OldEnemy
-import player
 import sound
 
 _razorManeAnim = {

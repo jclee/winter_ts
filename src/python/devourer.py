@@ -1,6 +1,5 @@
 
 from anklebiter import OldAnkleBiter, _attackRange
-import player
 
 class Devourer(OldAnkleBiter):
     def __init__(self, *args):

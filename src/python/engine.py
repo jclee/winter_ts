@@ -3,7 +3,6 @@ from browser import window
 
 import saveloadmenu
 
-from player import OldPlayer, PLAYER_SPRITE
 from anklebiter import OldAnkleBiter
 from carnivore import Carnivore
 from devourer import Devourer
@@ -101,6 +100,18 @@ class Engine(object):
         self.saveFlags = {}
         self.showSaveMenuAtEndOfTick = False
 
+        def getCameraLocked():
+            return self.camera.locked
+        self.getCameraLocked = getCameraLocked
+
+        def setCameraLocked(v):
+            self.camera.locked = v
+        self.setCameraLocked = setCameraLocked
+
+        def addThing(thing):
+            self.things.append(thing)
+        self.addThing = addThing
+
         def getEngine():
             return self._engine
         self.getEngine = getEngine
@@ -120,6 +131,18 @@ class Engine(object):
         def getPlayerEntity():
             return self.player
         self.getPlayerEntity = getPlayerEntity
+
+        def triggerGameLose():
+            raise GameLoseException()
+        self.triggerGameLose = triggerGameLose
+
+        def getSaveFlag(s):
+            return self.saveFlags[s]
+        self.getSaveFlag = getSaveFlag
+
+        def setSaveFlag(s, v):
+            self.saveFlags[s] = v
+        self.setSaveFlag = setSaveFlag
 
     def delayTask(self, time):
         yield from ika.asTask(window.delayTask(time))
@@ -145,7 +168,7 @@ class Engine(object):
             yield from self.mapSwitchTask(START_MAP, None, fade=False)
 
         if not self.player:
-            self.player = OldPlayer(self)
+            self.player = window.player.Player.new(self)
         self.addEntity(self.player)
 
         if saveData:
@@ -446,15 +469,16 @@ class Engine(object):
 
         # making a gamble here: assuming all entities except the player are tied to the map
         if self.player:
-            self.killList= self.entities[:]
-            self.killList.remove(self.player)
+            for e in self.entities:
+                if e is not self.player:
+                    self.killList.append(e)
             self.clearKillQueue()
 
         for spriteKey in self.map.sprites:
             sprite = self.map.sprites[spriteKey]
             if sprite.spritename in spawnMap:
                 self.addEntity(spawnMap[sprite.spritename](self, sprite))
-            elif sprite.spritename != PLAYER_SPRITE:
+            elif sprite.spritename != window.player.PLAYER_SPRITE:
                 print('Unknown entity sprite %s.  Ignoring.' % sprite.spritename)
 
     def clearKillQueue(self):
