@@ -198,7 +198,7 @@ galeRange = (
 
 backSlashRange = [x[::-1] for x in slashRange]
 
-class Player(OldEntity):
+class OldPlayer(OldEntity):
     def __init__(self, engineRef, x=0, y=0, layer=0):
         OldEntity.__init__(self, engineRef, engineRef.map.addSprite(x, y, layer, PLAYER_SPRITE), _playerAnim)
         self.setState(self.standState())
@@ -217,7 +217,7 @@ class Player(OldEntity):
         self.stats.mp = 40
 
     def isKind(self, kind):
-        return kind == 'Player' or super(Player, self).isKind(kind)
+        return kind == 'Player' or super(OldPlayer, self).isKind(kind)
 
     def giveXP(self, amount):
         self.stats.exp += amount

@@ -1,7 +1,6 @@
 from browser import window
 
 from enemy import OldEnemy
-from player import Player
 import ika
 import sound
 

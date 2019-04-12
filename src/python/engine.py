@@ -3,7 +3,7 @@ from browser import window
 
 import saveloadmenu
 
-from player import Player, PLAYER_SPRITE
+from player import OldPlayer, PLAYER_SPRITE
 from anklebiter import OldAnkleBiter
 from carnivore import Carnivore
 from devourer import Devourer
@@ -146,7 +146,7 @@ class Engine(object):
             yield from self.mapSwitchTask(START_MAP, None, fade=False)
 
         if not self.player:
-            self.player = Player(self)
+            self.player = OldPlayer(self)
         self.addEntity(self.player)
 
         if saveData:
