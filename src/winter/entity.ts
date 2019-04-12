@@ -17,7 +17,7 @@ export class Entity {
     public interruptable: boolean
     public invincible: boolean
     protected _state: IterableIterator<any> | null
-    private _onStateExit: (()=>void) | null
+    protected _onStateExit: (()=>void) | null
 
     constructor(
         protected engineRef: PyEngine,

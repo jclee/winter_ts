@@ -1,11 +1,12 @@
-export function makeAnim(strand: number[], delay: number) {
+export function makeAnim(strand: number[], delay: number): [number, number][] {
     // Quicky function to make a proper strand, given a
     // list of frames, and a delay between each.
 
-    return strand.map(f => [f, delay])
+    const fn: (f: number)=>[number, number] = f => [f, delay]
+    return strand.map(fn)
 }
 
-export function makeAnimRange(start: number, end: number, delay: number) {
+export function makeAnimRange(start: number, end: number, delay: number): [number, number][] {
     const strand = []
     for (let i = start; i < end; ++i) {
         strand.push(i)

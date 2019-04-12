@@ -1323,6 +1323,7 @@ class VideoClass {
 export interface PyEngine {
     getEngine: ()=>{js: Engine}
     getEntityForSpriteName: (name: string)=>{js: Entity}
+    getPlayerEntity: ()=>{js: Entity}
     pyDestroyEntity: (entity: Entity)=>void
     pyGivePlayerXP: (xp: number)=>void
     font: {js: FontClass}

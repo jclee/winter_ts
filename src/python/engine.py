@@ -118,6 +118,10 @@ class Engine(object):
             self.player.giveXP(xp)
         self.pyGivePlayerXP = pyGivePlayerXP
 
+        def getPlayerEntity():
+            return self.player
+        self.getPlayerEntity = getPlayerEntity
+
     def delayTask(self, time):
         yield from ika.asTask(window.delayTask(time))
 
