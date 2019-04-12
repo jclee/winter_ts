@@ -19,7 +19,7 @@ from obstacle import IceWall, Gap, IceChunks, Boulder
 from rune import WaterRune, FireRune, WindRune, CowardRune, StrengthRune, PowerRune, GuardRune
 
 from hud import HPBar, MPBar, EXPBar
-from caption import Caption
+from caption import OldCaption
 from camera import Camera
 from gameover import GameLoseException, GameQuitException, GameWinException
 
@@ -487,7 +487,7 @@ class Engine(object):
         self.nextFrameTime = self.getTime()
 
     def gameOverTask(self):
-        c = Caption(self, self.font, 'G A M E   O V E R', duration=1000000, y=(self.video.yres - self.font.height) // 2)
+        c = OldCaption(self, self.font, 'G A M E   O V E R', duration=1000000, y=(self.video.yres - self.font.height) // 2)
         t = 80
         i = 0
         self.fields = []

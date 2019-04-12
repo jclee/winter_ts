@@ -3,7 +3,7 @@ import ika
 
 import sound
 
-from caption import Caption
+from caption import OldCaption
 from gameover import GameLoseException
 
 from entity import OldEntity
@@ -247,7 +247,7 @@ class OldPlayer(OldEntity):
             self.stats.exp -= self.stats.next
             self.stats.next = self.stats.level * (self.stats.level + 1) * 5
 
-        self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, 'Level %i!' % self.stats.level))
+        self.engineRef.things.append(OldCaption(self.engineRef, self.engineRef.font, 'Level %i!' % self.stats.level))
 
     def defaultState(self):
         return self.standState()
@@ -551,7 +551,7 @@ class OldPlayer(OldEntity):
                     self.engineRef.saveFlags[e.flagName] = 'Broken'
 
                     self.engineRef.destroyEntity(e)
-                    self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, '~1The ice melted!'))
+                    self.engineRef.things.append(OldCaption(self.engineRef, self.engineRef.font, '~1The ice melted!'))
 
             yield None
 
@@ -667,7 +667,7 @@ class OldPlayer(OldEntity):
         for e in ents:
             if e.isKind('IceChunks'):
                 e.freeze()
-                self.engineRef.things.append(Caption(self.engineRef, self.engineRef.font, '~1The ice froze over!'))
+                self.engineRef.things.append(OldCaption(self.engineRef, self.engineRef.font, '~1The ice froze over!'))
                 self.engineRef.destroyEntity(e)
                 break
 

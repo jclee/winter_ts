@@ -1,5 +1,5 @@
 from entity import OldEntity
-from caption import Caption
+from caption import OldCaption
 
 class _Rune(OldEntity):
 
@@ -18,7 +18,7 @@ class _Rune(OldEntity):
     def update(self):
         if self.touches(self.engineRef.player):
             self.engineRef.destroyEntity(self)
-            self.engineRef.addThing(Caption(self.engineRef, self.engineRef.font, '~1You got the %s Rune!' % self.element))
+            self.engineRef.addThing(OldCaption(self.engineRef, self.engineRef.font, '~1You got the %s Rune!' % self.element))
             self.engineRef.saveFlags[self.name] = 'True'
             self.apply()
 

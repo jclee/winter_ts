@@ -1,7 +1,7 @@
 import ika
 from thing import Thing
 
-class Caption(Thing):
+class OldCaption(Thing):
 
     def __init__(self, engineRef, font, text, x = None, y = None, duration=200):
         self.engineRef = engineRef
