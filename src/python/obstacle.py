@@ -2,10 +2,10 @@
 Given the proper skill or item, the player can cross these.
 '''
 
+from browser import window
 import ika
 
 from entity import OldEntity
-from caption import OldCaption
 
 class _Obstacle(OldEntity):
     def __init__(self, engineRef, sprite, anim = None):
@@ -98,4 +98,4 @@ class Boulder(_Obstacle):
                 self.engineRef.saveFlags[tnt[0]] = 'False'
                 self.engineRef.saveFlags[self.flagName] = 'Broken'
                 self.engineRef.destroyEntity(self)
-                self.engineRef.things.append(OldCaption(self.engineRef, self.engineRef.font, 'Blew the rock apart!'))
+                self.engineRef.things.append(window.caption.Caption.new(self.engineRef, self.engineRef.font, 'Blew the rock apart!'))

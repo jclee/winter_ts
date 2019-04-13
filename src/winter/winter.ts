@@ -2,6 +2,9 @@
 import { Animator, makeAnim, makeAnimRange } from "./animator.js"
 ;(window as any).animator = { Animator, makeAnim, makeAnimRange }
 
+import { Caption } from "./caption.js"
+;(window as any).caption = { Caption }
+
 import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
 ;(window as any).Dir = {
     Left: Direction.Left,

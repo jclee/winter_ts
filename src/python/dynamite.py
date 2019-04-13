@@ -1,5 +1,5 @@
+from browser import window
 from entity import OldEntity
-from caption import OldCaption
 
 class Dynamite(OldEntity):
     def __init__(self, engineRef, sprite):
@@ -16,4 +16,4 @@ class Dynamite(OldEntity):
         if self.touches(self.engineRef.player):
             self.engineRef.saveFlags[self.flagName] = 'True'
             self.engineRef.destroyEntity(self)
-            self.engineRef.things.append(OldCaption(self.engineRef, self.engineRef.font, '~1Got a stick of dynamite!'))
+            self.engineRef.things.append(window.caption.Caption.new(self.engineRef, self.engineRef.font, '~1Got a stick of dynamite!'))
