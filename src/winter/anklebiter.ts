@@ -1,5 +1,3 @@
-// TODO DO NOT COMMIT - use
-
 import { makeAnimRange } from "./animator.js"
 import { Direction, fromDelta, invert } from "./Direction.js"
 import { Enemy } from "./enemy.js"
@@ -97,7 +95,8 @@ export class AnkleBiter extends Enemy {
         this.addMoods([this.attackMood.bind(this), this.passiveMood.bind(this)])
 
         this.setMood(this.passiveMood.bind(this))
-        this.stats.maxhp = this.stats.hp = 20
+        this.stats.maxhp = 20
+        this.stats.hp = this.stats.maxhp
         this.stats.att = 7
         this.stats.exp = 1
     }
@@ -174,7 +173,7 @@ export class AnkleBiter extends Enemy {
             yield this.idleState()
 
             if (dist < 150) {
-                this.engine.sounds.anklebiterStrike.play()
+                this.engine.sounds['anklebiterStrike'].play()
                 this.setMood(this.attackMood.bind(this))
                 yield this.idleState()
                 break
@@ -201,7 +200,7 @@ export class AnkleBiter extends Enemy {
     }
 
     *deathState() {
-        this.engine.sounds.anklebiterDie.play()
+        this.engine.sounds['anklebiterDie'].play()
         this.startAnimation('die')
         yield* super.deathState()
     }
@@ -215,7 +214,7 @@ export class AnkleBiter extends Enemy {
         this.startAnimation('windup')
         this.stop()
 
-        this.engine.sounds.anklebiterStrike.play()
+        this.engine.sounds['anklebiterStrike'].play()
 
         this.sprite.speed *= 2
 

@@ -2,7 +2,6 @@ from browser import window
 
 import ika
 
-from anklebiter import OldAnkleBiter
 from carnivore import Carnivore
 from enemy import OldEnemy
 from gameover import GameWinException
@@ -143,7 +142,7 @@ class Serpent(OldEnemy):
                 if window.random(0, 2):
                     e = Carnivore(self.engineRef, self.engineRef.map.addSprite(x, y, self.sprite.layer, 'carnivore.ika-sprite'))
                 else:
-                    e = OldAnkleBiter(self.engineRef, self.engineRef.map.addSprite(x, y, self.sprite.layer, 'anklebiter.ika-sprite'))
+                    e = window.anklebiter.AnkleBiter.new(self.engineRef, self.engineRef.map.addSprite(x, y, self.sprite.layer, 'anklebiter.ika-sprite'))
                 self.engineRef.addEntity(e)
                 e.setMood(e.attackMood)
 

@@ -2,6 +2,9 @@
 import { Animator, makeAnim, makeAnimRange } from "./animator.js"
 ;(window as any).animator = { Animator, makeAnim, makeAnimRange }
 
+import { AnkleBiter } from "./anklebiter.js"
+;(window as any).anklebiter = { AnkleBiter }
+
 import { Caption } from "./caption.js"
 ;(window as any).caption = { Caption }
 
