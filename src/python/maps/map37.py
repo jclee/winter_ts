@@ -1,8 +1,6 @@
 from browser import window
 import ika
 
-from carnivore import Carnivore
-
 spawned = 0
 
 def AutoExec(engineRef):
@@ -23,7 +21,7 @@ def releaseAnklebiters(engineRef):
                    (4,11), (14, 11))
 
         for i in indeces:
-            engineRef.addEntity(Carnivore(engineRef, self.engineRef.map.addSprite(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
+            engineRef.addEntity(window.anklebiter.Carnivore.new(engineRef, self.engineRef.map.addSprite(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
 
         spawned = 1
     if False:

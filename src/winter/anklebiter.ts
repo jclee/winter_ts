@@ -242,3 +242,103 @@ export class AnkleBiter extends Enemy {
         this.stop()
     }
 }
+
+export class Carnivore extends AnkleBiter {
+    constructor(
+        engineRef: PyEngine,
+        sprite: Sprite,
+    ) {
+        super(engineRef, sprite)
+        this.sprite.speed = 100
+        this.stats.maxhp = 50
+        this.stats.hp = 50
+        this.stats.att = 16
+        this.stats.exp = 10
+    }
+
+    *attackState(dir: Direction) {
+        const oldSpeed = this.sprite.speed
+        this._onStateExit = () => {
+            this.sprite.speed = oldSpeed
+        }
+
+        this.direction = dir
+        this.startAnimation('windup')
+        this.stop()
+        this.sprite.speed *= 2
+
+        // Winding up for the pounce.
+        for (let i = 0; i < 30; ++i) {
+            yield null
+        }
+
+        this.startAnimation('attack')
+        this.move(dir, 32)
+        while (this.isAnimating()) {
+            const ents = this.detectCollision(_attackRange[dir])
+
+            for (let e of ents) {
+                if (e.isKind('Player')) {
+                    const d = Math.max(1, this.stats.att - e.stats.pres)
+                    e.hurt(d, 150, this.direction)
+                    yield null
+                    return
+                }
+            }
+            // TODO: hit detection
+            yield null
+        }
+
+        this.stop()
+    }
+}
+
+export class Devourer extends AnkleBiter {
+    constructor(
+        engineRef: PyEngine,
+        sprite: Sprite,
+    ) {
+        super(engineRef, sprite)
+        this.sprite.speed = 100
+        this.stats.maxhp = 100
+        this.stats.hp = this.stats.maxhp
+        this.stats.att = 28
+        this.stats.exp = 40
+    }
+
+    *attackState(dir: Direction) {
+        const oldSpeed = this.sprite.speed
+        this._onStateExit = () => {
+            this.sprite.speed = oldSpeed
+        }
+
+        this.direction = dir
+        this.startAnimation('windup')
+        this.stop()
+        this.sprite.speed *= 2
+
+        // Winding up for the pounce.
+        for (let i = 0; i < 25; ++i) {
+            yield null
+        }
+
+        this.startAnimation('attack')
+        this.move(dir, 32)
+        while (this.isAnimating()) {
+            const ents = this.detectCollision(_attackRange[dir])
+
+            for (let e of ents) {
+                if (e.isKind('Player')) {
+                    const d = Math.max(1, this.stats.att - e.stats.pres)
+                    e.hurt(d, 150, this.direction)
+                    yield null
+                    return
+                }
+            }
+            // TODO: hit detection
+            yield null
+        }
+
+        this.stop()
+    }
+}

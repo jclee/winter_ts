@@ -3,8 +3,6 @@ from browser import window
 
 import saveloadmenu
 
-from carnivore import Carnivore
-from devourer import Devourer
 from razormane import RazorMane
 from dragonpup import DragonPup
 from hellhound import HellHound
@@ -34,8 +32,8 @@ START_POS = (34 * 16, 23  * 16)
 spawnMap = {
     # match each sprite name up with the associated class
     'anklebiter.ika-sprite': window.anklebiter.AnkleBiter.new,
-    'carnivore.ika-sprite': Carnivore,
-    'devourer.ika-sprite': Devourer,
+    'carnivore.ika-sprite': window.anklebiter.Carnivore.new,
+    'devourer.ika-sprite': window.anklebiter.Devourer.new,
     'razormane.ika-sprite': RazorMane,
     'dragonpup.ika-sprite': DragonPup,
     'hellhound.ika-sprite': HellHound,
