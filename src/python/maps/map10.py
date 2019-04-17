@@ -1,7 +1,6 @@
 import ika
 from soulreaver import SoulReaver
 from thing import Thing
-from rune import FireRune
 import sound
 
 def AutoExec(engineRef):
@@ -35,9 +34,7 @@ class DeathListener(Thing):
             if 'nearend' not in self.engineRef.saveFlags:
                 e = self.engineRef.map.addSprite(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
-                self.engineRef.addEntity(
-                    FireRune(e)
-                    )
+                self.engineRef.addEntity(window.rune.FireRune.new(e))
             else:
                 sound.playMusic("music/winter.ogg")
                 self.engineRef.saveFlags['fireguard'] = 'True'

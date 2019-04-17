@@ -1,6 +1,5 @@
+from browser import window
 import ika
-
-from rune import CowardRune
 
 def AutoExec(engineRef):
     if 'waterguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags:
@@ -19,7 +18,7 @@ class AddRune(object):
     def update(self):
         e = self.engineRef.map.addSprite(315, 320, 1, 'cowardrune.ika-sprite')
         e.name = 'cowardrune'
-        self.engineRef.addEntity(CowardRune(e))
+        self.engineRef.addEntity(window.rune.CowardRune.new(e))
         return True
 
     def draw(self):

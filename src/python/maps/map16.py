@@ -3,7 +3,6 @@ import sound
 from yeti import Yeti
 from soulreaver import SoulReaver
 from thing import Thing
-from rune import WindRune
 
 def AutoExec(engineRef):
     engineRef.background = engineRef.getImage('gfx/mountains.png')
@@ -127,9 +126,7 @@ class DeathListener(Thing):
             if 'windrune' not in self.engineRef.saveFlags:
                 e = self.engineRef.map.addSprite(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
-                self.engineRef.addEntity(
-                    WindRune(e)
-                    )
+                self.engineRef.addEntity(window.rune.WindRune.new(e))
             else:
                 self.engineRef.saveFlags['windguard'] = 'True'
 

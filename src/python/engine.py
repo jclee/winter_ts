@@ -11,7 +11,6 @@ from gorilla import Gorilla
 from soulreaver import SoulReaver
 from savepoint import SavePoint
 from obstacle import IceWall, Gap, IceChunks, Boulder
-from rune import WaterRune, FireRune, WindRune, CowardRune, StrengthRune, PowerRune, GuardRune
 
 from hud import HPBar, MPBar, EXPBar
 from camera import Camera
@@ -41,13 +40,13 @@ spawnMap = {
     'soulreaver.ika-sprite': SoulReaver,
 
     'dynamite.ika-sprite': window.dynamite.Dynamite.new,
-    'waterrune.ika-sprite': WaterRune,
-    'firerune.ika-sprite': FireRune,
-    'windrune.ika-sprite': WindRune,
-    'cowardrune.ika-sprite': CowardRune,
-    'strengthrune.ika-sprite': StrengthRune,
-    'powerrune.ika-sprite': PowerRune,
-    'guardrune.ika-sprite': GuardRune,
+    'waterrune.ika-sprite': window.rune.WaterRune.new,
+    'firerune.ika-sprite': window.rune.FireRune.new,
+    'windrune.ika-sprite': window.rune.WindRune.new,
+    'cowardrune.ika-sprite': window.rune.CowardRune.new,
+    'strengthrune.ika-sprite': window.rune.StrengthRune.new,
+    'powerrune.ika-sprite': window.rune.PowerRune.new,
+    'guardrune.ika-sprite': window.rune.GuardRune.new,
 
     'savepoint.ika-sprite': SavePoint,
 

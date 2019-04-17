@@ -61,6 +61,9 @@ import { introTask, menuTask } from "./intro.js"
 import { Player, PLAYER_SPRITE } from "./player.js"
 ;(window as any).player = { Player, PLAYER_SPRITE }
 
+import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune } from "./rune.js"
+;(window as any).rune = { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune }
+
 import { loadGame, SaveData, saveGame } from "./saveload.js"
 ;(window as any).saveload = { loadGame, SaveData, saveGame }
 
