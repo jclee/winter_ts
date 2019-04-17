@@ -73,7 +73,7 @@ class _Gauge(Thing):
 
     def drawRect(self, x, y, w, h, opacity):
         'Used to draw in the filled part of the gauge.'
-        self.engineRef.video.DrawRect(x, y, w, h, window.RGB(*(self.rgb + [opacity])))
+        self.engineRef.video.DrawRect(x, y, w, h, window.RGB(*(self.rgb + [opacity * 255])))
 
     curVal = property(lambda self: None) # ditto
     curMax = property(lambda self: None) # override.  Needs to be readable.
