@@ -8,20 +8,18 @@ def sgn(i):
     else: return 0
 
 class _Gauge(Thing):
-    def __init__(self, engineRef, imageName, x, y, justify = 'left'):
+    def __init__(self, engineRef, imageName):
         '''
         imageName - name of the image series to use.
          ie 'gfx/ui/barhp%i.png'
-        x,y are position
-        justify is either 'left' or 'right'
         '''
 
         self.engineRef = engineRef
         (self.span, self.left, self.middle, self.right) =\
             [engineRef.getImage(imageName % i) for i in range(4)]
         self.oldVal = self.oldMax = 0
-        self.x, self.y = x,y
-        self.justify = justify.lower()
+        self.x = 0
+        self.y = 0
         self.opacity = 0
         self.rgb = [255, 255, 255]
         self.width = None
@@ -54,10 +52,7 @@ class _Gauge(Thing):
         # (bad hack, I know)
         width = (self.width or self.oldMax) - 3
 
-        if self.justify == 'left':
-            x = self.x + 2
-        else:
-            x = self.engineRef.video.xres - width - self.left.width - self.right.width - self.x - 2
+        x = self.engineRef.video.xres - width - self.left.width - self.right.width - self.x - 2
 
         self.engineRef.video.TintBlit(self.left, x, self.y, o)
         self.engineRef.video.TintBlit(self.right, x + width + self.left.width, self.y, o)
@@ -74,10 +69,7 @@ class _Gauge(Thing):
             v = self.oldVal
 
         if self.oldVal:
-            if self.justify == 'left':
-                self.drawRect(x, self.y + 5, x + v, self.y + 6, o)
-            else:
-                self.drawRect(x + (self.width or self.oldMax) - v, self.y + 5, x + (self.width or self.oldMax), self.y + 6, o)
+            self.drawRect(x + (self.width or self.oldMax) - v, self.y + 5, x + (self.width or self.oldMax), self.y + 6, o)
 
     def drawRect(self, x, y, w, h, opacity):
         'Used to draw in the filled part of the gauge.'
@@ -88,7 +80,7 @@ class _Gauge(Thing):
 
 class HPBar(_Gauge):
     def __init__(self, engineRef):
-        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png')
         self.y = self.engineRef.video.yres - self.left.height - 1
         self.rgb = [255, 0, 0]
 
@@ -97,7 +89,7 @@ class HPBar(_Gauge):
 
 class MPBar(_Gauge):
     def __init__(self, engineRef):
-        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png', 0, 0, justify='right')
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barhp%i.png')
         self.y = self.engineRef.video.yres - self.left.height * 2 - 1
         self.rgb = [0, 0, 255]
         self.oldMax = self.curMax
@@ -108,7 +100,7 @@ class MPBar(_Gauge):
 
 class EXPBar(_Gauge):
     def __init__(self, engineRef):
-        _Gauge.__init__(self, engineRef, 'gfx/ui/barmp%i.png', 0, 0, justify='right')
+        _Gauge.__init__(self, engineRef, 'gfx/ui/barmp%i.png')
         #self.y = self.engineRef.video.yres - self.left.height * 2 - 1
         self.width = 100
         self.rgb = [0, 128, 128]
