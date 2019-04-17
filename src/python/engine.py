@@ -9,7 +9,6 @@ from hellhound import HellHound
 from yeti import Yeti
 from gorilla import Gorilla
 from soulreaver import SoulReaver
-from dynamite import Dynamite
 from savepoint import SavePoint
 from obstacle import IceWall, Gap, IceChunks, Boulder
 from rune import WaterRune, FireRune, WindRune, CowardRune, StrengthRune, PowerRune, GuardRune
@@ -41,7 +40,7 @@ spawnMap = {
     'gorilla.ika-sprite': Gorilla,
     'soulreaver.ika-sprite': SoulReaver,
 
-    'dynamite.ika-sprite': Dynamite,
+    'dynamite.ika-sprite': window.dynamite.Dynamite.new,
     'waterrune.ika-sprite': WaterRune,
     'firerune.ika-sprite': FireRune,
     'windrune.ika-sprite': WindRune,

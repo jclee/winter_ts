@@ -24,6 +24,9 @@ import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
     toDelta,
 }
 
+import { Dynamite } from "./dynamite.js"
+;(window as any).dynamite = { Dynamite }
+
 import {
     AttribWindow,
     MagicWindow,
