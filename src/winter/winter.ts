@@ -64,6 +64,9 @@ import { IceWall, Gap, IceChunks, Boulder } from "./obstacle.js"
 import { Player, PLAYER_SPRITE } from "./player.js"
 ;(window as any).player = { Player, PLAYER_SPRITE }
 
+import { DragonPup, HellHound, RazorMane } from "./razormane.js"
+;(window as any).razormane = { DragonPup, HellHound, RazorMane }
+
 import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune } from "./rune.js"
 ;(window as any).rune = { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune }
 

@@ -121,11 +121,11 @@ export class AnkleBiter extends Enemy {
         const ents = this.detectCollision([-50, -50, 100, 100])
         const allies = ents.filter(e => e.isKind('AnkleBiter') && e.stats.hp > 0)
 
-        allies.forEach(a => {
+        for (let a of allies) {
             if (!(a instanceof AnkleBiter)) { throw new Error("Expected AnkleBiter"); }
             a.setMood(a.fleeMood.bind(a))
             a.setState(a.idleState())
-        })
+        }
 
         super.die()
     }

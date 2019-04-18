@@ -3,9 +3,6 @@ from browser import window
 
 import saveloadmenu
 
-from razormane import RazorMane
-from dragonpup import DragonPup
-from hellhound import HellHound
 from yeti import Yeti
 from gorilla import Gorilla
 from soulreaver import SoulReaver
@@ -31,9 +28,9 @@ spawnMap = {
     'anklebiter.ika-sprite': window.anklebiter.AnkleBiter.new,
     'carnivore.ika-sprite': window.anklebiter.Carnivore.new,
     'devourer.ika-sprite': window.anklebiter.Devourer.new,
-    'razormane.ika-sprite': RazorMane,
-    'dragonpup.ika-sprite': DragonPup,
-    'hellhound.ika-sprite': HellHound,
+    'razormane.ika-sprite': window.razormane.RazorMane.new,
+    'dragonpup.ika-sprite': window.razormane.DragonPup.new,
+    'hellhound.ika-sprite': window.razormane.HellHound.new,
     'yeti.ika-sprite': Yeti,
     'gorilla.ika-sprite': Gorilla,
     'soulreaver.ika-sprite': SoulReaver,
