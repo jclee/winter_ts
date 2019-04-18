@@ -79,6 +79,9 @@ import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, Wi
 import { loadGame, SaveData, saveGame } from "./saveload.js"
 ;(window as any).saveload = { loadGame, SaveData, saveGame }
 
+import { SavePoint } from "./savepoint.js"
+;(window as any).savepoint = { SavePoint }
+
 import { Serpent } from "./serpent.js"
 ;(window as any).serpent = { Serpent }
 
@@ -1368,6 +1371,7 @@ export interface PyEngine {
     saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}
     setCameraLocked: (locked: boolean)=>void
     setSaveFlag: (s: string, v: string) => void
+    setShowSaveMenuAtEndOfTick: (v: boolean) => void
     triggerGameLose: ()=>void
     triggerGameWin: ()=>void
 }

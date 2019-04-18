@@ -3,8 +3,6 @@ from browser import window
 
 import saveloadmenu
 
-from savepoint import SavePoint
-
 from gameover import GameLoseException, GameQuitException, GameWinException
 
 import subscreen
@@ -39,7 +37,7 @@ spawnMap = {
     'powerrune.ika-sprite': window.rune.PowerRune.new,
     'guardrune.ika-sprite': window.rune.GuardRune.new,
 
-    'savepoint.ika-sprite': SavePoint,
+    'savepoint.ika-sprite': window.savepoint.SavePoint.new,
 
     'icecave.ika-sprite': window.obstacle.IceWall.new,
     'ice.ika-sprite': window.obstacle.IceWall.new,
@@ -146,6 +144,10 @@ class Engine(object):
         def setSaveFlag(s, v):
             self.saveFlags[s] = v
         self.setSaveFlag = setSaveFlag
+
+        def setShowSaveMenuAtEndOfTick(v):
+            self.showSaveMenuAtEndOfTick = v
+        self.setShowSaveMenuAtEndOfTick = setShowSaveMenuAtEndOfTick
 
     def delayTask(self, time):
         yield from ika.asTask(window.delayTask(time))
