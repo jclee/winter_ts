@@ -1,6 +1,5 @@
 from browser import window
 import ika
-from serpent import Serpent
 
 # essentially autoExec
 def finalBattle(engineRef):
@@ -38,7 +37,7 @@ def finalBattle(engineRef):
             engineRef.video.ShowPage()
             yield None
 
-        s = Serpent(
+        s = window.serpent.Serpent.new(
             engineRef,
             engineRef.map.addSprite(25 * 16, 24 * 16, p.sprite.layer, 'serpent.ika-sprite')
             )

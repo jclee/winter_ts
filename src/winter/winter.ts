@@ -79,6 +79,9 @@ import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, Wi
 import { loadGame, SaveData, saveGame } from "./saveload.js"
 ;(window as any).saveload = { loadGame, SaveData, saveGame }
 
+import { Serpent } from "./serpent.js"
+;(window as any).serpent = { Serpent }
+
 import { StatSet } from "./statset.js"
 ;(window as any).statset = { StatSet }
 
@@ -1353,9 +1356,11 @@ export interface PyEngine {
     addThing: (thing: Thing)=>void
     getCameraLocked: ()=>boolean
     getEngine: ()=>{js: Engine}
+    getEntities: ()=>{js: Entity}[]
     getEntityForSpriteName: (name: string)=>{js: Entity}
     getPlayerEntity: ()=>{js: Entity}
     getSaveFlag: (s: string) => string | undefined
+    pyAddEntity: (entity: Entity)=>void
     pyDestroyEntity: (entity: Entity)=>void
     pyGivePlayerXP: (xp: number)=>void
     font: {js: FontClass}
@@ -1364,6 +1369,7 @@ export interface PyEngine {
     setCameraLocked: (locked: boolean)=>void
     setSaveFlag: (s: string, v: string) => void
     triggerGameLose: ()=>void
+    triggerGameWin: ()=>void
 }
 
 export interface Controls {

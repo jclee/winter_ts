@@ -102,9 +102,20 @@ class Engine(object):
             return self._engine
         self.getEngine = getEngine
 
+        def getEntities():
+            ents = []
+            for e in self.nameToEntityMap.values():
+                ents.append(e)
+            return e
+        self.getEntities = getEntities
+
         def getEntityForSpriteName(name):
             return self.nameToEntityMap[name]
         self.getEntityForSpriteName = getEntityForSpriteName
+
+        def pyAddEntity(ent):
+            self.addEntity(ent)
+        self.pyAddEntity = pyAddEntity
 
         def pyDestroyEntity(ent):
             self.destroyEntity(ent)
@@ -121,6 +132,10 @@ class Engine(object):
         def triggerGameLose():
             raise GameLoseException()
         self.triggerGameLose = triggerGameLose
+
+        def triggerGameWin():
+            raise GameWinException()
+        self.triggerGameWin = triggerGameWin
 
         def getSaveFlag(s):
             if s in self.saveFlags:
