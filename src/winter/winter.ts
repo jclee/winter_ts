@@ -5,6 +5,9 @@ import { Animator, makeAnim, makeAnimRange } from "./animator.js"
 import { AnkleBiter, Carnivore, Devourer } from "./anklebiter.js"
 ;(window as any).anklebiter = { AnkleBiter, Carnivore, Devourer }
 
+import { Camera } from "./camera.js"
+;(window as any).camera = { Camera }
+
 import { Caption } from "./caption.js"
 ;(window as any).caption = { Caption }
 

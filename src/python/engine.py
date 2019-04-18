@@ -5,7 +5,6 @@ import saveloadmenu
 
 from savepoint import SavePoint
 
-from camera import Camera
 from gameover import GameLoseException, GameQuitException, GameWinException
 
 import subscreen
@@ -175,7 +174,7 @@ class Engine(object):
         self.things.append(window.hud.MPBar.new(self))
         self.things.append(window.hud.EXPBar.new(self))
 
-        self.camera = Camera(self)
+        self.camera = window.camera.Camera.new(self)
         self.camera.center()
         self.things.append(self.camera)
 
