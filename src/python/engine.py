@@ -10,7 +10,6 @@ from yeti import Yeti
 from gorilla import Gorilla
 from soulreaver import SoulReaver
 from savepoint import SavePoint
-from obstacle import IceWall, Gap, IceChunks, Boulder
 
 from hud import HPBar, MPBar, EXPBar
 from camera import Camera
@@ -50,12 +49,12 @@ spawnMap = {
 
     'savepoint.ika-sprite': SavePoint,
 
-    'icecave.ika-sprite': IceWall,
-    'ice.ika-sprite': IceWall,
-    'icechunks.ika-sprite': IceChunks,
-    'boulder.ika-sprite': Boulder,
-    'vgap.ika-sprite': Gap,
-    'hgap.ika-sprite': Gap,
+    'icecave.ika-sprite': window.obstacle.IceWall.new,
+    'ice.ika-sprite': window.obstacle.IceWall.new,
+    'icechunks.ika-sprite': window.obstacle.IceChunks.new,
+    'boulder.ika-sprite': window.obstacle.Boulder.new,
+    'vgap.ika-sprite': window.obstacle.Gap.new,
+    'hgap.ika-sprite': window.obstacle.Gap.new,
 }
 
 class Engine(object):
@@ -132,7 +131,9 @@ class Engine(object):
         self.triggerGameLose = triggerGameLose
 
         def getSaveFlag(s):
-            return self.saveFlags[s]
+            if s in self.saveFlags:
+                return self.saveFlags[s]
+            return ''
         self.getSaveFlag = getSaveFlag
 
         def setSaveFlag(s, v):
@@ -438,7 +439,8 @@ class Engine(object):
         self.nameToEntityMap[ent.sprite.name] = ent
 
     def destroyEntity(self, ent):
-        ent.sprite.x = ent.sprite.y = -1000
+        ent.sprite.x = -1000
+        ent.sprite.y = -1000
         ent.stop()
         self.killList.append(ent)
 
@@ -464,6 +466,7 @@ class Engine(object):
 
         # making a gamble here: assuming all entities except the player are tied to the map
         if self.player:
+            self.clearKillQueue()
             for e in self.entities:
                 if e is not self.player:
                     self.killList.append(e)
@@ -489,7 +492,7 @@ class Engine(object):
             # brython workaround?
             #self.entities.remove(ent)
             for i, e in enumerate(self.entities):
-                if e is ent:
+                if e.sprite.name == ent.sprite.name:
                     del self.entities[i]
                     break
 

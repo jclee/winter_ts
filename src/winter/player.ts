@@ -2,6 +2,7 @@ import { makeAnimRange } from "./animator.js"
 import { Caption } from "./caption.js"
 import { Direction, fromDelta, invert, toDelta } from "./Direction.js"
 import { Entity } from "./entity.js"
+import { IceChunks } from "./obstacle.js"
 import { PyEngine, random } from "./winter.js"
 
 export const PLAYER_SPRITE = 'protagonist.ika-sprite'
@@ -717,9 +718,9 @@ export class Player extends Entity {
         const ents = this.detectCollision([-16, -16, 32, 32])
 
         for (let e of ents) {
-            if (e.isKind('IceChunks')) {
-                // TODO DO NOT COMMIT - fix
-                (e as any).freeze()
+            // TODO: Tidy
+            if (e.isKind('IceChunks') && (e instanceof IceChunks)) {
+                e.freeze()
                 this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, '~1The ice froze over!'))
                 this.engineRef.pyDestroyEntity(e)
                 break

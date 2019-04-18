@@ -58,6 +58,9 @@ import { Field } from "./field.js"
 import { introTask, menuTask } from "./intro.js"
 ;(window as any).intro = { introTask, menuTask }
 
+import { IceWall, Gap, IceChunks, Boulder } from "./obstacle.js"
+;(window as any).obstacle = { IceWall, Gap, IceChunks, Boulder }
+
 import { Player, PLAYER_SPRITE } from "./player.js"
 ;(window as any).player = { Player, PLAYER_SPRITE }
 
