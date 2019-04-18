@@ -2,7 +2,7 @@ import { makeAnimRange } from "./animator.js"
 import { Caption } from "./caption.js"
 import { Direction, fromDelta, invert, toDelta } from "./Direction.js"
 import { Entity } from "./entity.js"
-import { IceChunks } from "./obstacle.js"
+import { IceChunks, IceWall } from "./obstacle.js"
 import { PyEngine, random } from "./winter.js"
 
 export const PLAYER_SPRITE = 'protagonist.ika-sprite'
@@ -579,8 +579,7 @@ export class Player extends Entity {
                     e.hurt(Math.floor(this.stats.att + this.stats.mag) * 2, 300, this.direction)
                 } else if (e.isKind('IceWall')) {
                     // TODO: some sort of nice animation.
-                    // TODO DO NOT COMMIT - fix:
-                    this.engineRef.setSaveFlag((e as any).flagName as string, 'Broken')
+                    this.engineRef.setSaveFlag((e as IceWall).flagName as string, 'Broken')
 
                     this.engineRef.pyDestroyEntity(e)
                     this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, '~1The ice melted!'))

@@ -3,7 +3,7 @@ import { Entity } from "./entity.js"
 import { PyEngine, Sprite } from "./winter.js"
 
 class Obstacle extends Entity {
-    protected flagName: string
+    public flagName: string
 
     constructor(
         engineRef: PyEngine,
