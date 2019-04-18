@@ -48,7 +48,8 @@ export class Caption extends Thing {
     }
 
     update() {
-        this.updateGen.next()
+        const { value } = this.updateGen.next()
+        return value
     }
 
     draw() {

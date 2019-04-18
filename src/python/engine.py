@@ -8,7 +8,6 @@ from gorilla import Gorilla
 from soulreaver import SoulReaver
 from savepoint import SavePoint
 
-from hud import HPBar, MPBar, EXPBar
 from camera import Camera
 from gameover import GameLoseException, GameQuitException, GameWinException
 
@@ -175,9 +174,9 @@ class Engine(object):
             lay = self.map.GetMetaData()['entityLayer']
             self.player.sprite.layer = self.map.FindLayerByName(lay)
 
-        self.things.append(HPBar(self))
-        self.things.append(MPBar(self))
-        self.things.append(EXPBar(self))
+        self.things.append(window.hud.HPBar.new(self))
+        self.things.append(window.hud.MPBar.new(self))
+        self.things.append(window.hud.EXPBar.new(self))
 
         self.camera = Camera(self)
         self.camera.center()

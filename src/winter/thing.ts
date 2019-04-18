@@ -1,4 +1,4 @@
 export class Thing {
-    update() {}
+    update() { return false }
     draw() {}
 }

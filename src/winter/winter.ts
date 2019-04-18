@@ -55,6 +55,9 @@ import { Entity } from "./entity.js"
 import { Field } from "./field.js"
 ;(window as any).field = { Field }
 
+import { EXPBar, HPBar, MPBar } from "./hud.js"
+;(window as any).hud = { EXPBar, HPBar, MPBar }
+
 import { introTask, menuTask } from "./intro.js"
 ;(window as any).intro = { introTask, menuTask }
 
