@@ -1,6 +1,7 @@
+import { Thing } from "./thing.js"
 import { Engine, FontClass, PyEngine } from "./winter.js"
 
-export class Caption {
+export class Caption extends Thing {
     private x: number
     private y: number
     private opacity: number
@@ -14,6 +15,7 @@ export class Caption {
         y: number | null = null,
         private duration: number = 200,
     ) {
+        super()
         const engine: Engine = engineRef.getEngine().js
 
         const width = this.font.StringWidth(text)

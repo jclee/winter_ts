@@ -70,6 +70,9 @@ import { loadGame, SaveData, saveGame } from "./saveload.js"
 import { StatSet } from "./statset.js"
 ;(window as any).statset = { StatSet }
 
+import { Thing } from "./thing.js"
+;(window as any).thing = { Thing }
+
 import { wrapText } from "./wraptext.js"
 ;(window as any).wraptext = { wrapText }
 
@@ -1332,7 +1335,7 @@ class VideoClass {
 (window as any).VideoClass = VideoClass
 
 export interface PyEngine {
-    addThing: (thing: any)=>void
+    addThing: (thing: Thing)=>void
     getCameraLocked: ()=>boolean
     getEngine: ()=>{js: Engine}
     getEntityForSpriteName: (name: string)=>{js: Entity}
