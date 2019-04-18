@@ -5,8 +5,6 @@ import saveloadmenu
 
 from gameover import GameLoseException, GameQuitException, GameWinException
 
-import subscreen
-
 import cabin
 import ending
 import sound
@@ -130,6 +128,10 @@ class Engine(object):
         def triggerGameLose():
             raise GameLoseException()
         self.triggerGameLose = triggerGameLose
+
+        def triggerGameQuit():
+            raise GameQuitException()
+        self.triggerGameQuit = triggerGameQuit
 
         def triggerGameWin():
             raise GameWinException()
@@ -540,8 +542,8 @@ class Engine(object):
 
     def pauseTask(self):
         self.draw()
-        s = subscreen.PauseScreen(self)
-        yield from s.runTask()
+        s = window.subscreen.PauseScreen.new(self)
+        yield from ika.asTask(s.runTask())
 
         self.synchTime()
 

@@ -24,7 +24,7 @@ class ImageCursor {
     }
 }
 
-class Widget {
+export class Widget {
     // Basic GUI element class.  By itself, the Widget is an invisible container.
     // While this may be useful in and of itself, widgets probably won't see much
     // direct use.  Subclasses are where the action usually is.
@@ -68,8 +68,8 @@ class Widget {
     getBottom() { return this.y + this.height }
     setBottom(value: number) { this.y = value - this.height }
 
-    getPosition() { return [this.x, this.y] }
-    setPosition(value: number[]) {
+    getPosition(): [number, number] { return [this.x, this.y] }
+    setPosition(value: [number, number]) {
         this.setX(value[0])
         this.setY(value[1])
     }

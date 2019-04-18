@@ -88,6 +88,9 @@ import { Serpent } from "./serpent.js"
 import { StatSet } from "./statset.js"
 ;(window as any).statset = { StatSet }
 
+import { PauseScreen } from "./subscreen.js"
+;(window as any).subscreen = { PauseScreen }
+
 import { Thing } from "./thing.js"
 ;(window as any).thing = { Thing }
 
@@ -1373,6 +1376,7 @@ export interface PyEngine {
     setSaveFlag: (s: string, v: string) => void
     setShowSaveMenuAtEndOfTick: (v: boolean) => void
     triggerGameLose: ()=>void
+    triggerGameQuit: ()=>void
     triggerGameWin: ()=>void
 }
 
