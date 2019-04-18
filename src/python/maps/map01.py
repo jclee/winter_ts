@@ -1,9 +1,6 @@
 from browser import window
 import ika
 
-from yeti import Yeti
-
-
 def AutoExec(engineRef):
     engineRef.mapThings.append(window.Snow.new(engineRef))
     if 'cowardrune' not in engineRef.saveFlags:
@@ -25,7 +22,7 @@ class RuneListener(object):
     def update(self):
         if 'waterguard' in self.engineRef.saveFlags and 'fireguard' in self.engineRef.saveFlags and 'windguard' in self.engineRef.saveFlags:
             self.engineRef.addEntity(
-                Yeti(self.engineRef, self.engineRef.map.addSprite(35 * 16, 19 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite')))
+                window.yeti.Yeti.new(self.engineRef, self.engineRef.map.addSprite(35 * 16, 19 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite')))
             return True
 
     def draw(self):

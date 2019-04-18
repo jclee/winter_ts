@@ -1,5 +1,5 @@
+from browser import window
 import ika
-from soulreaver import SoulReaver
 from thing import Thing
 import sound
 
@@ -51,7 +51,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
+            y = window.yeti.SoulReaver.new(self.engineRef, self.engineRef.map.addSprite(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True

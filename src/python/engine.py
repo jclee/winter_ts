@@ -3,9 +3,6 @@ from browser import window
 
 import saveloadmenu
 
-from yeti import Yeti
-from gorilla import Gorilla
-from soulreaver import SoulReaver
 from savepoint import SavePoint
 
 from camera import Camera
@@ -30,9 +27,9 @@ spawnMap = {
     'razormane.ika-sprite': window.razormane.RazorMane.new,
     'dragonpup.ika-sprite': window.razormane.DragonPup.new,
     'hellhound.ika-sprite': window.razormane.HellHound.new,
-    'yeti.ika-sprite': Yeti,
-    'gorilla.ika-sprite': Gorilla,
-    'soulreaver.ika-sprite': SoulReaver,
+    'yeti.ika-sprite': window.yeti.Yeti.new,
+    'gorilla.ika-sprite': window.yeti.Gorilla.new,
+    'soulreaver.ika-sprite': window.yeti.SoulReaver.new,
 
     'dynamite.ika-sprite': window.dynamite.Dynamite.new,
     'waterrune.ika-sprite': window.rune.WaterRune.new,

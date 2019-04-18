@@ -2,8 +2,6 @@ from browser import window
 import ika
 import sound
 from thing import Thing
-from yeti import Yeti
-from soulreaver import SoulReaver
 
 def AutoExec(engineRef):
     engineRef.mapThings.append(window.Snow.new(engineRef, 8000, [-.2, 3]))
@@ -43,13 +41,13 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags and 'waterguard' not in self.engineRef.saveFlags:
             sound.playMusic("music/resurrection.it")
-            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(15* 16, 17 * 16, self.engineRef.player.sprite.layer, 'soulreaver.ika-sprite'))
+            y = window.yeti.SoulReaver.new(self.engineRef, self.engineRef.map.addSprite(15* 16, 17 * 16, self.engineRef.player.sprite.layer, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True
         elif 'waterrune' in self.engineRef.saveFlags and 'nearend' not in self.engineRef.saveFlags:
             self.engineRef.addEntity(
-                Yeti(self.engineRef, self.engineRef.map.addSprite(15* 16, 32 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite'))
+                window.yeti.Yeti.new(self.engineRef, self.engineRef.map.addSprite(15* 16, 32 * 16, self.engineRef.player.sprite.layer, 'yeti.ika-sprite'))
             )
             return True
 

@@ -1,7 +1,6 @@
+from browser import window
 import ika
 import sound
-from yeti import Yeti
-from soulreaver import SoulReaver
 from thing import Thing
 
 def AutoExec(engineRef):
@@ -77,7 +76,7 @@ def bridge_break(engineRef):
 
         p.setState(p.standState())
 
-        y = Yeti(engineRef, engineRef.map.addSprite(304, 64, 1, 'yeti.ika-sprite'))
+        y = window.yeti.Yeti.new(engineRef, engineRef.map.addSprite(304, 64, 1, 'yeti.ika-sprite'))
         # UBER-YETI
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp
@@ -143,7 +142,7 @@ class RuneListener(object):
     def update(self):
         if 'nearend' in self.engineRef.saveFlags:
             sound.playMusic('music/resurrection.it')
-            y = SoulReaver(self.engineRef, self.engineRef.map.addSprite(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
+            y = window.yeti.SoulReaver.new(self.engineRef, self.engineRef.map.addSprite(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
             self.engineRef.addEntity(y)
             self.engineRef.mapThings.append(DeathListener(self.engineRef, y))
             return True

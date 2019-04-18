@@ -85,6 +85,9 @@ import { Thing } from "./thing.js"
 import { wrapText } from "./wraptext.js"
 ;(window as any).wraptext = { wrapText }
 
+import { Gorilla, SoulReaver, Yeti } from "./yeti.js"
+;(window as any).yeti = { Gorilla, SoulReaver, Yeti }
+
 ;(window as any).hasProperty = (obj: any, name: string) => {
     return obj.hasOwnProperty(name) && obj[name] !== undefined
 }
