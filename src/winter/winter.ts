@@ -79,6 +79,9 @@ import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, Wi
 import { loadGame, SaveData, saveGame } from "./saveload.js"
 ;(window as any).saveload = { loadGame, SaveData, saveGame }
 
+import { loadMenuTask, saveMenuTask } from "./saveloadmenu.js"
+;(window as any).saveloadmenu = { loadMenuTask, saveMenuTask }
+
 import { SavePoint } from "./savepoint.js"
 ;(window as any).savepoint = { SavePoint }
 
@@ -1369,6 +1372,8 @@ export interface PyEngine {
     pyAddEntity: (entity: Entity)=>void
     pyDestroyEntity: (entity: Entity)=>void
     pyGivePlayerXP: (xp: number)=>void
+    pyReadSaves: ()=>[{js: SaveData}]
+    pyWriteSave: (i: number)=>void
     font: {js: FontClass}
     player: {js: {stats: StatSet}}
     saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}

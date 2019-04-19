@@ -1,8 +1,6 @@
 import ika
 from browser import window
 
-import saveloadmenu
-
 from gameover import GameLoseException, GameQuitException, GameWinException
 
 import cabin
@@ -121,6 +119,14 @@ class Engine(object):
             self.player.giveXP(xp)
         self.pyGivePlayerXP = pyGivePlayerXP
 
+        def pyReadSaves():
+            return self.readSaves()
+        self.pyReadSaves = pyReadSaves
+
+        def pyWriteSave(index):
+            self.writeSave(index)
+        self.pyWriteSave = pyWriteSave
+
         def getPlayerEntity():
             return self.player
         self.getPlayerEntity = getPlayerEntity
@@ -237,7 +243,9 @@ class Engine(object):
 
     def loadGameTask(self):
         resultRef = [None]
-        yield from saveloadmenu.loadMenuTask(self, resultRef, fadeOut=False)
+        def setResult(s):
+            resultRef[0] = s
+        yield from ika.asTask(window.saveloadmenu.loadMenuTask(self, setResult))
         [result] = resultRef
         if result:
             startImages = window.effects.createBlurImages(self)
@@ -439,7 +447,7 @@ class Engine(object):
 
             yield from ika.asTask(window.effects.fadeOutTask(self, 50, self.draw))
             self.draw()
-            yield from saveloadmenu.saveMenuTask(self)
+            yield from ika.asTask(window.saveloadmenu.saveMenuTask(self))
             yield from ika.asTask(window.effects.fadeInTask(self, 50, self.draw))
             self.synchTime()
 
