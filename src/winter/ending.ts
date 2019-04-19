@@ -1,7 +1,6 @@
-from browser import window
-import ika
+import { PyEngine, RGB, Snow } from "./winter.js"
 
-_text = '''\
+const _text = `
 Winter
 
 
@@ -157,49 +156,56 @@ secret spell in the game.  Thrasher
 went to great lengths to make it
 obscenely difficult to obtain!
 
-'''.split('\n')
+`.split('\n')
 
-def creditsTask(engineRef):
-    m = engineRef.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
-    m.loop = True
-    engineRef.fader.kill()
-    engineRef.fader.reset(m)
+export function *creditsTask(engineRef: PyEngine) {
+    const engine = engineRef.getEngine().js
+    // TODO - make audio work
+    //const m = engine.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
+    //m.loop = true
+    //engineRef.fader.kill()
+    //engineRef.fader.reset(m)
 
-    vignette = engineRef.getImage('gfx/credits_vignette.png')
-    bg = engineRef.getImage('gfx/mountains.png')
-    snowObj = window.Snow.new(engineRef, 100, [0, 1])
-    y = -engineRef.video.yres
-    font = engineRef.font
+    const vignette = engine.getImage('gfx/credits_vignette.png')
+    const bg = engine.getImage('gfx/mountains.png')
+    const snowObj = new Snow(engineRef, 100, [0, 1])
+    let y = -engine.video.yres
+    const font = engineRef.font.js
 
-    def draw():
-        engineRef.video.Blit(bg, 0, 0)
-        engineRef.video.DrawRect(0, 0, engineRef.video.xres, engineRef.video.yres, window.RGB(0, 0, 0, 128))
+    const draw = () => {
+        engine.video.Blit(bg, 0, 0)
+        engine.video.DrawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, 128))
 
-        firstLine = int(y) // font.height
-        adjust = int(y) % font.height
-        length = (engineRef.video.yres // font.height) + 1
+        let firstLine = Math.floor(y / font.height)
+        const adjust = Math.floor(y) % font.height
+        //const length = Math.floor(engine.video.yres / font.height) + 1
 
-        #print(firstLine)
+        //print(firstLine)
 
-        Y = -adjust
-        while Y < engineRef.video.yres and firstLine < len(_text):
-            if firstLine >= 0:
+        let Y = -adjust
+        while (Y < engine.video.yres && firstLine < _text.length) {
+            if (firstLine >= 0) {
                 font.CenterPrint(160, Y, _text[firstLine])
+            }
             Y += font.height
             firstLine += 1
+        }
 
-        engineRef.video.Blit(vignette, 0, 0)
+        engine.video.Blit(vignette, 0, 0)
 
         snowObj.draw()
+    }
 
-    now = engineRef.getTime()
-    while True:
-        t = engineRef.getTime()
-        delta = (t - now) / 10.0
+    let now = engine.getTime()
+    while (true) {
+        const t = engine.getTime()
+        const delta = (t - now) / 10.0
         y += delta
         now = t
         snowObj.update()
 
         draw()
-        engineRef.video.ShowPage()
-        yield None
+        engine.video.ShowPage()
+        yield null
+    }
+}

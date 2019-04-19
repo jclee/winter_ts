@@ -52,6 +52,9 @@ import {
 import { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages } from "./effects.js"
 ;(window as any).effects = { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages }
 
+import { creditsTask } from "./ending.js"
+;(window as any).ending = { creditsTask }
+
 import { Entity } from "./entity.js"
 ;(window as any).entity = { Entity }
 

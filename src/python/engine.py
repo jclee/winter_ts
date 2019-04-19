@@ -4,7 +4,6 @@ from browser import window
 from gameover import GameLoseException, GameQuitException, GameWinException
 
 import cabin
-import ending
 import sound
 
 FRAME_RATE = 100
@@ -386,7 +385,7 @@ class Engine(object):
             yield from ika.asTask(window.effects.fadeOutTask(self, 200, self.draw))
             self.killList = self.entities[:]
             self.clearKillQueue()
-            yield from ending.creditsTask(self)
+            yield from ika.asTask(window.ending.creditsTask(self))
 
         except GameQuitException:
             self.killList = self.entities[:]
