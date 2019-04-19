@@ -3,7 +3,6 @@ from browser import window
 
 from gameover import GameLoseException, GameQuitException, GameWinException
 
-import cabin
 import sound
 
 FRAME_RATE = 100
@@ -99,12 +98,16 @@ class Engine(object):
             ents = []
             for e in self.nameToEntityMap.values():
                 ents.append(e)
-            return e
+            return ents
         self.getEntities = getEntities
 
         def getEntityForSpriteName(name):
             return self.nameToEntityMap[name]
         self.getEntityForSpriteName = getEntityForSpriteName
+
+        def getMapName():
+            return self.mapName
+        self.getMapName = getMapName
 
         def pyAddEntity(ent):
             self.addEntity(ent)
@@ -204,7 +207,7 @@ class Engine(object):
 
     def beginNewGameTask(self):
         self.saveFlags = {}
-        yield from cabin.sceneTask(self, 'intro')
+        yield from ika.asTask(window.cabin.sceneTask(self, 'intro'))
 
         yield from self.mapSwitchTask(START_MAP, START_POS, fade = False)
         lay = self.map.GetMetaData()['entityLayer']

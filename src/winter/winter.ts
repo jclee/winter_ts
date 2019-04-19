@@ -5,6 +5,9 @@ import { Animator, makeAnim, makeAnimRange } from "./animator.js"
 import { AnkleBiter, Carnivore, Devourer } from "./anklebiter.js"
 ;(window as any).anklebiter = { AnkleBiter, Carnivore, Devourer }
 
+import { sceneTask } from "./cabin.js"
+;(window as any).cabin = { sceneTask }
+
 import { Camera } from "./camera.js"
 ;(window as any).camera = { Camera }
 
@@ -1371,6 +1374,7 @@ export interface PyEngine {
     getEntities: ()=>{js: Entity}[]
     getEntityForSpriteName: (name: string)=>{js: Entity}
     getPlayerEntity: ()=>{js: Entity}
+    getMapName: () => string
     getSaveFlag: (s: string) => string | undefined
     pyAddEntity: (entity: Entity)=>void
     pyDestroyEntity: (entity: Entity)=>void

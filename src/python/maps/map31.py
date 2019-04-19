@@ -1,10 +1,11 @@
-import cabin
+from browser import window
+import ika
 
 def to30(engineRef):
     x = engineRef.player.sprite.x - 160
     yield from engineRef.mapSwitchTask('map30.ika-map', (6 * 16 + x, 16))
     if 'nearend' not in engineRef.saveFlags:
-        yield from cabin.sceneTask(engineRef, 'nearend')
+        yield from ika.asTask(window.cabin.sceneTask(engineRef, 'nearend'))
 
 def to32(engineRef):
     # no adjustment here on purpose
