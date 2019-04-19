@@ -1,8 +1,6 @@
 import ika
 from browser import window
 
-from gameover import GameLoseException, GameQuitException, GameWinException
-
 import sound
 
 FRAME_RATE = 100
@@ -40,6 +38,18 @@ spawnMap = {
     'vgap.ika-sprite': window.obstacle.Gap.new,
     'hgap.ika-sprite': window.obstacle.Gap.new,
 }
+
+class EndGameException(Exception):
+    pass
+
+class GameLoseException(EndGameException):
+    pass
+
+class GameQuitException(EndGameException):
+    pass
+
+class GameWinException(EndGameException):
+    pass
 
 class Engine(object):
     '''Core engine thingie.  bleh.'''
