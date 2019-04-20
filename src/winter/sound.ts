@@ -6,16 +6,16 @@ export class SoundBase {
     public loop = false
     public volume = 1.0
 
-    Play() {}
-    Pause() {}
+    play() {}
+    pause() {}
 }
 
 export class Sound extends SoundBase {
     constructor(_fileName: string) { super() }
 
     // TODO DO NOT COMMIT - make work
-    Play() {}
-    Pause() {}
+    play() {}
+    pause() {}
 }
 
 export class NullSound extends SoundBase {
@@ -30,17 +30,17 @@ export class RepeatableSound extends SoundBase {
         this.sounds[0].loop = false
     }
 
-    Play() {
+    play() {
         for (let s of this.sounds) {
             if (s.position === 0) {
-                s.Play()
+                s.play()
                 return
             }
         }
 
         const s = new Sound(this.fileName)
         s.loop = false
-        s.Play()
+        s.play()
         this.sounds.push(s)
     }
 }
@@ -112,13 +112,13 @@ export class Crossfader extends Thing {
             this.music = newMusic
             if (this.music !== null) {
                 this.music.volume = 0.0
-                this.music.Play()
+                this.music.play()
             }
         } else {
             this.music = newMusic
             if (this.music !== null) {
                 this.music.volume = 1.0
-                this.music.Play()
+                this.music.play()
             }
         }
     }
@@ -126,7 +126,7 @@ export class Crossfader extends Thing {
     kill() {
         if (this.music) {
             this.music.volume = 0.0
-            this.music.Pause()
+            this.music.pause()
             this.music = null
             for (let m of this.oldMusic) {
                 m.volume = 0
@@ -140,7 +140,7 @@ export class Crossfader extends Thing {
         for (let m of this.oldMusic) {
             m.volume -= this.inc
             if (m.volume <= 0) {
-                m.Pause()
+                m.pause()
             } else {
                 newOldMusic.push(m)
             }

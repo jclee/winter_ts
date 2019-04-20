@@ -117,7 +117,7 @@ export class Yeti extends Enemy {
     *attackMood() {
         // if we want to be uber, we can remove this hack.
         // for now fuckit.  Attack the player!!
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         for (let q = 0; q < 5; ++q) {
             // compensate for the yeti's gigantic sprite:
             const sx = this.sprite.x + 16
@@ -134,7 +134,7 @@ export class Yeti extends Enemy {
     }
 
     *passiveMood() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         this.stopAnimation()
         while (true) {
             // compensate for the yeti's gigantic sprite:

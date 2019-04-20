@@ -10,7 +10,7 @@ class ImageCursor {
         engineRef: PyEngine,
         imageKey: string,
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.image = this.engine.getImage(imageKey)
     }
 
@@ -40,7 +40,7 @@ export class Widget {
         protected width: number = 0,
         protected height: number = 0,
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.children = []
         this.border = 0
     }
@@ -330,7 +330,7 @@ class StaticText extends Widget {
         height: number = 0,
     ) {
         super(engineRef, x, y, width, height)
-        this.font = engineRef.font.js
+        this.font = engineRef.font
         this.autoSize()
     }
 
@@ -519,7 +519,7 @@ export class SaveLoadMenu {
         saves: SaveData[],
         saving: boolean = false,
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
 
         const icons: {[key: string]: Picture} = {}
         ;['att', 'mag', 'pres', 'mres'].forEach(s => {
@@ -617,7 +617,7 @@ export class StatWindow extends SubScreenWindow {
     }
 
     createContents(): Widget[] {
-        const stats = this.engineRef.player.js.stats
+        const stats = this.engineRef.getPlayerEntity().stats
         const padStr = (n: number, s: string): string => s.length >= n ? s : padStr(n - 1, '0' + s)
         const pad = (n: number, v: number): string => padStr(n, "" + v)
         return [
@@ -656,7 +656,7 @@ export class AttribWindow extends SubScreenWindow {
     createContents(): Widget[] {
         const padStr = (n: number, s: string): string => s.length >= n ? s : padStr(n - 1, '0' + s)
         const pad = (n: number, v: number): string => padStr(n, "" + v)
-        const stats = this.engineRef.player.js.stats
+        const stats = this.engineRef.getPlayerEntity().stats
         return [
             this.icons['att'], new StaticText(this.engineRef, ['...' + pad(3, stats.att)]),
             this.icons['mag'], new StaticText(this.engineRef, ['...' + pad(3, stats.mag)]),
@@ -680,9 +680,7 @@ export class MagicWindow extends SubScreenWindow {
     createContents(): Widget[] {
         const txt = ['Magic:']
         const addIfFlag = (name: string, text: string) => {
-            if (this.engineRef.saveFlags !== undefined
-                && this.engineRef.saveFlags.$jsobj !== undefined
-                && this.engineRef.saveFlags.$jsobj[name] !== undefined) {
+            if (this.engineRef.hasSaveFlag(name)) {
                 txt.push(text)
             }
         }

@@ -99,7 +99,7 @@ export class IceChunks extends Obstacle {
 
 export class Boulder extends Obstacle {
     update() {
-        if (this.touches(this.engineRef.getPlayerEntity().js)) {
+        if (this.touches(this.engineRef.getPlayerEntity())) {
             // find a stick of TNT
             for (let key of ['dynamite0', 'dynamite1', 'dynamite2', 'dynamite3']) {
                 if (this.engineRef.getSaveFlag(key) !== 'True') {
@@ -110,7 +110,7 @@ export class Boulder extends Obstacle {
                 this.engineRef.setSaveFlag(key, 'False')
                 this.engineRef.setSaveFlag(this.flagName, 'Broken')
                 this.engineRef.pyDestroyEntity(this)
-                this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, 'Blew the rock apart!'))
+                this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, 'Blew the rock apart!'))
             }
         }
     }

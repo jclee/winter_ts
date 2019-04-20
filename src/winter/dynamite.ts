@@ -20,10 +20,10 @@ export class Dynamite extends Entity {
     }
 
     update() {
-        if (this.touches(this.engineRef.getPlayerEntity().js)) {
+        if (this.touches(this.engineRef.getPlayerEntity())) {
             this.engineRef.setSaveFlag(this.flagName, 'True')
             this.engineRef.pyDestroyEntity(this)
-            this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, '~1Got a stick of dynamite!'))
+            this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, '~1Got a stick of dynamite!'))
         }
     }
 }

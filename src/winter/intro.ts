@@ -17,7 +17,7 @@ function *showTask(engine: Engine, draw: ()=>void, count: number, snowObj: Snow)
 }
 
 export function *introTask(engineRef: PyEngine) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const snowObj = new Snow(engineRef, 100, [0, 0.5])
     const gba = engine.getImage('gfx/gba.png')
     const yourmom = engine.getImage('gfx/yourmother.png')
@@ -57,7 +57,7 @@ export function *introTask(engineRef: PyEngine) {
 }
 
 export function *menuTask(engineRef: PyEngine, setResult: (r: number)=>void) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const bg = engine.getImage('gfx/title.png')
     const cursor = engine.getImage('gfx/ui/pointer.png')
     const snowObj = new Snow(engineRef, 100, [0, 0.5])

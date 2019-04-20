@@ -7,10 +7,10 @@ export function *loadMenuTask(
     engineRef: PyEngine,
     setResult: (s: SaveData | null) => void
 ) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const title = new TextFrame(engineRef, ['Load Game'])
     title.setPosition([16, 16])
-    const saves = engineRef.pyReadSaves().map(x => x.js)
+    const saves = engineRef.pyReadSaves()
     const m = new SaveLoadMenu(engineRef, saves, false)
 
     const draw = () => {
@@ -41,10 +41,10 @@ export function *loadMenuTask(
 }
 
 export function *saveMenuTask(engineRef: PyEngine) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const title = new TextFrame(engineRef, ['Save Game'])
     title.setPosition([16, 16])
-    const saves = engineRef.pyReadSaves().map(x => x.js)
+    const saves = engineRef.pyReadSaves()
     const m = new SaveLoadMenu(engineRef, saves, true)
 
     const draw = () => {

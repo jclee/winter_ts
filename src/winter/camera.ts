@@ -9,13 +9,13 @@ export class Camera extends Thing {
         private engineRef: PyEngine,
     ) {
         super()
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.locked = false
     }
 
     update() {
         if (!this.locked) {
-            const p = this.engineRef.getPlayerEntity().js
+            const p = this.engineRef.getPlayerEntity()
             const x = p.sprite.x - Math.floor(this.engine.video.xres / 2)
             const y = p.sprite.y - Math.floor(this.engine.video.yres / 2)
 
@@ -34,7 +34,7 @@ export class Camera extends Thing {
     }
 
     center() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         this.engine.map.xwin = p.sprite.x - Math.floor(this.engine.video.xres / 2)
         this.engine.map.ywin = p.sprite.y - Math.floor(this.engine.video.yres / 2)
     }

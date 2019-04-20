@@ -76,6 +76,10 @@ import { IceWall, Gap, IceChunks, Boulder } from "./obstacle.js"
 import { Player, PLAYER_SPRITE } from "./player.js"
 ;(window as any).player = { Player, PLAYER_SPRITE }
 
+import { MapScript } from "./maps/mapscript.js"
+
+import { mapScripts } from "./maps/mapscripts.js"
+
 import { DragonPup, HellHound, RazorMane } from "./razormane.js"
 ;(window as any).razormane = { DragonPup, HellHound, RazorMane }
 
@@ -93,6 +97,9 @@ import { SavePoint } from "./savepoint.js"
 
 import { Serpent } from "./serpent.js"
 ;(window as any).serpent = { Serpent }
+
+import { Crossfader, NullSound, Sound } from "./sound.js"
+;(window as any).sound = { Crossfader, NullSound, Sound }
 
 import { StatSet } from "./statset.js"
 ;(window as any).statset = { StatSet }
@@ -886,8 +893,8 @@ class MapClass {
         return mapData.information.meta
     }
 
-    GetZones(layerIndex: number) {
-        let zoneTuples = []
+    GetZones(layerIndex: number): [number, number, number, number, string][] {
+        let zoneTuples: [number, number, number, number, string][] = []
         const mapData = this._engine.getMapData(this._currentMapName)
 
         for (let zone of mapData.layers[layerIndex].zones) {
@@ -897,6 +904,9 @@ class MapClass {
                     scriptName = zoneMetadata.script
                     break
                 }
+            }
+            if (scriptName === null) {
+                throw new Error("Unrecognized script name")
             }
             zoneTuples.push([
                 zone.x,
@@ -985,19 +995,6 @@ interface SpriteData {
     hotspotY: number
     hotspotWidth: number
     hotspotHeight: number
-}
-
-class Sound {
-    position: number = 0.0
-    volume: number = 1.0
-    loop: boolean = false
-
-    constructor(
-        _name: string
-    ) {}
-
-    play() {}
-    pause() {}
 }
 
 interface ShaderSpec {
@@ -1367,31 +1364,6 @@ class VideoClass {
 }
 (window as any).VideoClass = VideoClass
 
-export interface PyEngine {
-    addThing: (thing: Thing)=>void
-    getCameraLocked: ()=>boolean
-    getEngine: ()=>{js: Engine}
-    getEntities: ()=>{js: Entity}[]
-    getEntityForSpriteName: (name: string)=>{js: Entity}
-    getPlayerEntity: ()=>{js: Entity}
-    getMapName: () => string
-    getSaveFlag: (s: string) => string | undefined
-    pyAddEntity: (entity: Entity)=>void
-    pyDestroyEntity: (entity: Entity)=>void
-    pyGivePlayerXP: (xp: number)=>void
-    pyReadSaves: ()=>[{js: SaveData}]
-    pyWriteSave: (i: number)=>void
-    font: {js: FontClass}
-    player: {js: {stats: StatSet}}
-    saveFlags: undefined | {$jsobj: undefined | {[key: string]: string}}
-    setCameraLocked: (locked: boolean)=>void
-    setSaveFlag: (s: string, v: string) => void
-    setShowSaveMenuAtEndOfTick: (v: boolean) => void
-    triggerGameLose: ()=>void
-    triggerGameQuit: ()=>void
-    triggerGameWin: ()=>void
-}
-
 export interface Controls {
     up: ()=>boolean
     down: ()=>boolean
@@ -1420,7 +1392,7 @@ export class Snow {
         velocity=[0, 0.5],
         color=[255, 255, 255],
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.time = 0.0
         this.vx = velocity[0]
         this.vy = velocity[1]
@@ -2095,6 +2067,678 @@ export class Engine {
     }
 }
 (window as any).Engine = Engine
+
+const FRAME_RATE = 100
+const MAX_SKIP_COUNT = 10
+const START_MAP = 'map01.ika-map'
+const START_POS = [34 * 16, 23 * 16]
+
+const spawnMap: {[key: string]: (e: PyEngine, s: Sprite) => Entity} = {
+    // match each sprite name up with the associated class
+    'anklebiter.ika-sprite': (e: PyEngine, s: Sprite) => new AnkleBiter(e, s),
+    'carnivore.ika-sprite': (e: PyEngine, s: Sprite) => new Carnivore(e, s),
+    'devourer.ika-sprite': (e: PyEngine, s: Sprite) => new Devourer(e, s),
+    'razormane.ika-sprite': (e: PyEngine, s: Sprite) => new RazorMane(e, s),
+    'dragonpup.ika-sprite': (e: PyEngine, s: Sprite) => new DragonPup(e, s),
+    'hellhound.ika-sprite': (e: PyEngine, s: Sprite) => new HellHound(e, s),
+    'yeti.ika-sprite': (e: PyEngine, s: Sprite) => new Yeti(e, s),
+    'gorilla.ika-sprite': (e: PyEngine, s: Sprite) => new Gorilla(e, s),
+    'soulreaver.ika-sprite': (e: PyEngine, s: Sprite) => new SoulReaver(e, s),
+
+    'dynamite.ika-sprite': (e: PyEngine, s: Sprite) => new Dynamite(e, s),
+    'waterrune.ika-sprite': (e: PyEngine, s: Sprite) => new WaterRune(e, s),
+    'firerune.ika-sprite': (e: PyEngine, s: Sprite) => new FireRune(e, s),
+    'windrune.ika-sprite': (e: PyEngine, s: Sprite) => new WindRune(e, s),
+    'cowardrune.ika-sprite': (e: PyEngine, s: Sprite) => new CowardRune(e, s),
+    'strengthrune.ika-sprite': (e: PyEngine, s: Sprite) => new StrengthRune(e, s),
+    'powerrune.ika-sprite': (e: PyEngine, s: Sprite) => new PowerRune(e, s),
+    'guardrune.ika-sprite': (e: PyEngine, s: Sprite) => new GuardRune(e, s),
+
+    'savepoint.ika-sprite': (e: PyEngine, s: Sprite) => new SavePoint(e, s),
+
+    'icecave.ika-sprite': (e: PyEngine, s: Sprite) => new IceWall(e, s),
+    'ice.ika-sprite': (e: PyEngine, s: Sprite) => new IceWall(e, s),
+    'icechunks.ika-sprite': (e: PyEngine, s: Sprite) => new IceChunks(e, s),
+    'boulder.ika-sprite': (e: PyEngine, s: Sprite) => new Boulder(e, s),
+    'vgap.ika-sprite': (e: PyEngine, s: Sprite) => new Gap(e, s),
+    'hgap.ika-sprite': (e: PyEngine, s: Sprite) => new Gap(e, s),
+}
+
+class EndGameException {}
+
+class GameLoseException extends EndGameException {}
+class GameQuitException extends EndGameException {}
+class GameWinException extends EndGameException {}
+
+export class PyEngine {
+    // Core engine thingie.  bleh.
+    private entities: Entity[]
+    private killList: Entity[]
+    private things: Thing[]
+    private mapThings: Thing[]
+    private fields: Field[]
+    private nameToEntityMap: {[key: string]: Entity}
+    public player: Player | null
+    private background: Image | null
+    private ticksPerFrame: number
+    private nextFrameTime: number
+    private _engine: Engine
+    //private map = this._engine.map
+    public font: FontClass
+    private mapName: string
+    private fader: Crossfader
+    private music: {[key: string]: Sound}
+    private saveFlags: {[key: string]: string}
+    private showSaveMenuAtEndOfTick: boolean
+    private camera: Camera
+
+    constructor(engine: Engine) {
+        this.entities = []
+        this.killList = []
+        this.things = []
+        this.mapThings = [] // same as this.things, but is cleared every mapSwitch
+        this.fields = []
+
+        // ika sprite "name" : Entity
+        this.nameToEntityMap = {}
+
+        this.player = null
+        this.background = null
+
+        // framerate regulating stuff:
+        this.ticksPerFrame = 100.0 / FRAME_RATE
+        this.nextFrameTime = 0
+
+        this._engine = engine
+        this.font = new FontClass(this._engine)
+        this.mapName = ''
+
+        this.fader = new Crossfader()
+        // all music.  Never ever let go. (because I'm lazy)
+        this.music = {
+            'music/silence': new NullSound(),
+        }
+        this.saveFlags = {}
+        this.showSaveMenuAtEndOfTick = false
+    }
+
+    // TODO DO NOT COMMIT - remove most of these.
+    getCameraLocked() {
+        return this.camera.locked
+    }
+
+    setCameraLocked(v: boolean) {
+        this.camera.locked = v
+    }
+
+    getEngine() {
+        return this._engine
+    }
+
+    getEntities() {
+        return Object.values(this.nameToEntityMap)
+    }
+
+    getEntityForSpriteName(name: string) {
+        return this.nameToEntityMap[name]
+    }
+
+    getMapName() {
+        return this.mapName
+    }
+
+    hasSaveFlag(s: string) {
+        return this.saveFlags.hasOwnProperty(s)
+    }
+
+    pyAddEntity(ent: Entity) {
+        this.addEntity(ent)
+    }
+
+    pyDestroyEntity(ent: Entity) {
+        this.destroyEntity(ent)
+    }
+
+    pyDraw() {
+        this.draw()
+    }
+
+    pyGivePlayerXP(xp: number) {
+        this.getPlayerEntity().giveXP(xp)
+    }
+
+    pyPlayMusic(s: string) {
+        return this.playMusic(s)
+    }
+
+    pyReadSaves() {
+        return this.readSaves()
+    }
+
+    pySetBackground(img: Image) {
+        this.background = img
+    }
+
+    pySynchTime() {
+        this.synchTime()
+    }
+
+    pyUpdateCamera() {
+        this.camera.update()
+    }
+
+    pyWriteSave(index: number) {
+        this.writeSave(index)
+    }
+
+    getPlayerEntity(): Player {
+        if (this.player === null) {
+            throw new Error("Expected player")
+        }
+        return this.player
+    }
+
+    triggerGameLose() {
+        throw new GameLoseException()
+    }
+
+    triggerGameQuit() {
+        throw new GameQuitException()
+    }
+
+    triggerGameWin() {
+        throw new GameWinException()
+    }
+
+    getSaveFlag(s: string) {
+        if (this.saveFlags.hasOwnProperty(s)) {
+            return this.saveFlags[s]
+        }
+        return ''
+    }
+
+    setSaveFlag(s: string, v: string) {
+        this.saveFlags[s] = v
+    }
+
+    setShowSaveMenuAtEndOfTick(v: boolean) {
+        this.showSaveMenuAtEndOfTick = v
+    }
+
+    // TODO DO NOT COMMIT - remove
+    *delayTask(time: number) {
+        yield* delayTask(time)
+    }
+
+    *initTask(saveData: SaveData | null = null) {
+        // barf
+
+        // clean everything
+        this.killList = [...this.entities]
+        this.clearKillQueue()
+        this.things = []
+        this.mapThings = []
+        this.fields = []
+
+        // ika sprite "name" : Entity
+        this.nameToEntityMap = {}
+
+        // TODO - redundant with map switches in beginNewGameTask/loadGameTask? (pos parameter differs...)
+        if (saveData !== null) {
+            // evil
+            yield* this.mapSwitchTask(saveData.mapName, null, false)
+        } else {
+            yield* this.mapSwitchTask(START_MAP, null, false)
+        }
+
+        if (this.player === null) {
+            this.player = new Player(this)
+        }
+        this.addEntity(this.player)
+
+        if (saveData !== null) {
+            this.player.sprite.x = saveData.playerX
+            this.player.sprite.y = saveData.playerY
+            this.player.sprite.layer = saveData.playerLayer
+            this.player.stats = saveData.stats.clone()
+            this.saveFlags = {...saveData.flags}
+        } else {
+            [this.player.sprite.x, this.player.sprite.y] = START_POS
+            const name = this._engine.map.GetMetaData()['entityLayer']
+            const layer = this._engine.map.FindLayerByName(name)
+            if (layer === null) {
+                throw new Error("Unrecognized layer name")
+            }
+            this.player.sprite.layer = layer
+        }
+
+        this.things.push(new HPBar(this))
+        this.things.push(new MPBar(this))
+        this.things.push(new EXPBar(this))
+
+        this.camera = new Camera(this)
+        this.camera.center()
+        this.things.push(this.camera)
+    }
+
+    *beginNewGameTask() {
+        this.saveFlags = {}
+        yield* sceneTask(this, 'intro')
+        yield* this.mapSwitchTask(START_MAP, START_POS, false)
+        yield* this.initTask()
+
+        // insanely inefficient:
+        const startImages = createBlurImages(this)
+        this.draw()
+        const endImages = createBlurImages(this)
+        yield* blurFadeTask(this, 50, startImages, endImages)
+        freeBlurImages(this, startImages)
+        freeBlurImages(this, endImages)
+        yield* this.runTask()
+    }
+
+    readSaves() {
+        const saves = []
+        let index = 0
+        while (true) {
+            const save = loadGame(index)
+            if (save === null) {
+                return saves
+            }
+            saves.push(save)
+            index += 1
+        }
+    }
+
+    writeSave(index: number) {
+        saveGame(index, new SaveData(
+            this.getPlayerEntity().stats.clone(),
+            {...this.saveFlags},
+            this.mapName,
+            this.getPlayerEntity().sprite.x,
+            this.getPlayerEntity().sprite.y,
+            this.getPlayerEntity().sprite.layer
+        ))
+    }
+
+    *loadGameTask() {
+        let result: SaveData[] = []
+        const setResult = (s: SaveData) => {
+            result = [s]
+        }
+        yield* loadMenuTask(this, setResult)
+        if (result.length > 0) {
+            const startImages = createBlurImages(this)
+            this.saveFlags = {}
+            const pos = [result[0].playerX, result[0].playerY, result[0].playerLayer]
+            yield* this.mapSwitchTask(result[0].mapName, pos, false)
+            yield* this.initTask(result[0])
+            this.draw()
+            const endImages = createBlurImages(this)
+            yield* blurFadeTask(this, 50, startImages, endImages)
+            freeBlurImages(this, startImages)
+            freeBlurImages(this, endImages)
+            yield* this.runTask()
+        }
+    }
+
+    getImage(key: string) {
+        return this._engine.getImage(key)
+    }
+
+    *mapSwitchTask(mapName: string, dest: number[] | null = null, fade: boolean = true) {
+        console.log("switching to map " + mapName)
+        let startImages: Image[] | null = null
+        if (fade) {
+            this.draw()
+            startImages = createBlurImages(this)
+        }
+
+        this.mapName = mapName
+
+        this.background = null
+        this.mapThings = []
+        this.fields = []
+        // TODO: Already called in this.map.Switch() below?
+        this._engine.map.clearSprites()
+
+        // drop the extension, convert slashes to dots, and prepend the maps package
+        // ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
+        const currentMapName = mapName.replace('maps/', '').replace('.ika-map', '')
+        const mapScript = mapScripts[currentMapName]
+        this._engine.map.Switch(currentMapName)
+
+        mapScript.autoexec(this)
+
+        const metaData = this._engine.map.GetMetaData()
+
+        this.readZones(mapScript)
+        this.readEnts()
+        if (this.player) {
+            this.player.setState(this.player.defaultState())
+        }
+        if (dest && this.player) {
+            if (dest.length === 2) {
+                [this.player.sprite.x, this.player.sprite.y] = dest
+                const lay = this._engine.map.FindLayerByName(metaData['entityLayer'])
+                if (lay === null) {
+                    throw new Error("Unrecognized layer name")
+                }
+                this.player.sprite.layer = lay
+            } else if (dest.length === 3) {
+                [this.player.sprite.x, this.player.sprite.y, this.player.sprite.layer] = dest
+            }
+
+            this.camera.center()
+        }
+
+        if (metaData.hasOwnProperty('music')) {
+            this.playMusic('music/' + metaData['music'])
+        }
+
+        if (fade) {
+            if (startImages === null) {
+                throw new Error("Unexpected null startImages")
+            }
+            this.draw()
+            const endImages = createBlurImages(this)
+            yield* blurFadeTask(this, 50, startImages, endImages)
+            freeBlurImages(this, startImages)
+            freeBlurImages(this, endImages)
+        }
+
+        this.synchTime()
+    }
+
+    *warpTask(dest: [number, number]) {
+        this.draw()
+        const startImage = this._engine.video.GrabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
+
+        const p = this.getPlayerEntity()
+        p.direction = Direction.Down
+        p.setState(p.defaultState())
+        p.startAnimation('stand')
+        p.animate()
+
+        p.sprite.x = dest[0]
+        p.sprite.y = dest[1]
+        this.camera.center()
+
+        this.draw()
+        const endImage = this._engine.video.GrabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
+
+        const time = 50
+        const endTime = this.getTime() + time
+        let now = this.getTime()
+        while (now < endTime) {
+            const opacity = (endTime - now) / time
+            this._engine.video.Blit(endImage, 0, 0)
+            this._engine.video.TintBlit(startImage, 0, 0, opacity)
+            this._engine.video.ShowPage()
+            yield null
+            now = this.getTime()
+        }
+
+        this._engine.video.FreeImage(startImage)
+        this._engine.video.FreeImage(endImage)
+        this.synchTime()
+    }
+
+    *runTask() {
+        try {
+            let skipCount = 0
+            this.nextFrameTime = this.getTime() + this.ticksPerFrame
+            while (1) {
+                const t = this.getTime()
+
+                // if we're ahead, delay
+                if (t < this.nextFrameTime) {
+                    yield* this.delayTask(Math.floor(this.nextFrameTime - t))
+                }
+
+                if (this._engine.controls.cancel()) {
+                    yield* this.pauseTask()
+                }
+
+                // Do some thinking
+                yield* this.tickTask()
+
+                // if we're behind, and can, skip the frame.  else draw
+                if (t > this.nextFrameTime && skipCount < MAX_SKIP_COUNT) {
+                    skipCount += 1
+                } else {
+                    skipCount = 0
+                    this.draw()
+                    this._engine.video.ShowPage()
+                    yield null
+                }
+
+                this.nextFrameTime += this.ticksPerFrame
+            }
+        } catch (e) {
+            if (e instanceof GameLoseException) {
+                yield* this.gameOverTask()
+                this.killList = [...this.entities]
+                this.clearKillQueue()
+            } else if (e instanceof GameWinException) {
+                yield* fadeOutTask(this, 200, this.draw.bind(this))
+                this.killList = [...this.entities]
+                this.clearKillQueue()
+                yield* creditsTask(this)
+            } else if (e instanceof GameQuitException) {
+                this.killList = [...this.entities]
+                this.clearKillQueue()
+            } else {
+                throw e
+            }
+        }
+    }
+
+    draw() {
+        if (this.background) {
+            this._engine.video.ScaleBlit(this.background, 0, 0, this._engine.video.xres, this._engine.video.yres)
+        }
+        this._engine.map.Render()
+
+        for (let t of this.things) {
+            t.draw()
+        }
+        for (let t of this.mapThings) {
+            t.draw()
+        }
+    }
+
+    *tickTask() {
+        // We let ika do most of the work concerning sprite movement.
+        // (in particular, collision detection)
+        this._engine.map.processSprites()
+
+        // update entities
+        for (let ent of this.entities) {
+            ent.update()
+        }
+        this.clearKillQueue()
+
+        // check fields
+        const p = this.getPlayerEntity()
+        const rlayer = p.sprite.layer
+        const rx = p.sprite.x
+        const ry = p.sprite.y
+        const rw = p.sprite.hotwidth
+        const rh = p.sprite.hotheight
+        for (let f of this.fields) {
+            if (f.test(rlayer, rx, ry, rw, rh)) {
+                const scriptTask = f.scriptTask
+                yield* scriptTask(this)
+                break
+            }
+        }
+
+        // update Things.
+        // for each thing in each thing list, we update.
+        // If the result is true, we delete the thing, else
+        // move on.
+        for (let t of [this.things, this.mapThings]) {
+            let i = 0
+            while (i < t.length) {
+                const result = t[i].update()
+
+                if (result) {
+                    t.splice(i, 1)
+                } else {
+                    i += 1
+                }
+            }
+        }
+
+        if (this.showSaveMenuAtEndOfTick) {
+            this.showSaveMenuAtEndOfTick = false
+
+            yield* fadeOutTask(this, 50, this.draw.bind(this))
+            this.draw()
+            yield* saveMenuTask(this)
+            yield* fadeInTask(this, 50, this.draw.bind(this))
+            this.synchTime()
+        }
+    }
+
+    addEntity(ent: Entity) {
+        this.entities.push(ent)
+        this.nameToEntityMap[ent.sprite.name] = ent
+    }
+
+    destroyEntity(ent: Entity) {
+        ent.sprite.x = -1000
+        ent.sprite.y = -1000
+        ent.stop()
+        this.killList.push(ent)
+    }
+
+    addField(field: Field) {
+        this.fields.push(field)
+    }
+
+    addThing(thing: Thing) {
+        this.things.push(thing)
+    }
+
+    readZones(mapScript: MapScript) {
+        // Read all the zones on the map, and create fields.
+        this.fields = []
+
+        for (let i = 0; i < this._engine.map.layercount; ++i) {
+            const zones = this._engine.map.GetZones(i)
+            for (let [x, y, w, h, scriptTaskName] of zones) {
+                const scriptTask = mapScript.fns[scriptTaskName]
+                this.addField(new Field([x,y,w,h], i, scriptTask))
+            }
+        }
+    }
+
+    readEnts() {
+        // Grabs all entities from the map, and adds them to the engine.
+
+        // making a gamble here: assuming all entities except the player are tied to the map
+        if (this.player) {
+            this.clearKillQueue()
+            for (let e of this.entities) {
+                if (e !== this.player) {
+                    this.killList.push(e)
+                }
+            }
+            this.clearKillQueue()
+        }
+
+        for (let sprite of Object.values(this._engine.map.sprites)) {
+            const spawnFn = spawnMap[sprite.spritename]
+            if (spawnFn !== undefined) {
+                this.addEntity(spawnFn(this, sprite))
+            } else if (sprite.spritename !== PLAYER_SPRITE) {
+                console.log(`Unknown entity sprite {sprite.spritename}  Ignoring.`)
+            }
+        }
+    }
+
+    clearKillQueue() {
+        // it's a bad idea to tweak the entity list in the middle of an iteration,
+        // so we queue them up, and nuke them here.
+        for (let ent of this.killList) {
+            if (ent === this.player) {
+                this.player = null
+            }
+            ent.sprite.x = -100
+            ent.sprite.y = 0
+            ent.sprite.Stop()
+            delete this.nameToEntityMap[ent.sprite.name]
+            this._engine.map.removeSprite(ent.sprite)
+            // brython workaround?
+            this.entities = this.entities.filter(e => e.sprite.name !== ent.sprite.name)
+        }
+
+        this.killList = []
+    }
+
+    getTime() {
+        return this._engine.getTime()
+    }
+
+    synchTime() {
+        // Used to keep the engine from thinking it has to catch up er
+        // executing an event or something.
+
+        this.nextFrameTime = this.getTime()
+    }
+
+    *gameOverTask() {
+        const c = new Caption(this, this.font, 'G A M E   O V E R', null, Math.floor((this._engine.video.yres - this.font.height) / 2), 1000000)
+        const t = 80
+        let i = 0
+        this.fields = []
+        while (true) {
+            i = Math.min(i + 1, t)
+            c.update()
+            yield* this.tickTask()
+            this.draw()
+
+            // darken the screen, draw the game over message:
+            const o = Math.floor(i * 255 / t)
+            this._engine.video.DrawRect(0, 0, this._engine.video.xres, this._engine.video.yres, RGB(0, 0, 0, o))
+            c.draw()
+
+            this._engine.video.ShowPage()
+            yield* this.delayTask(4)
+
+            if (i === t && this._engine.controls.attack()) {
+                break
+            }
+        }
+    }
+
+    *pauseTask() {
+        this.draw()
+        const s = new PauseScreen(this)
+        yield* s.runTask()
+
+        this.synchTime()
+    }
+
+    playMusic(fname: string) {
+        let m: Sound
+        if (this.music.hasOwnProperty(fname)) {
+            m = this.music[fname]
+        } else {
+            m = new Sound(fname)
+            m.loop = true
+            this.music[fname] = m
+        }
+
+        this.fader.reset(m)
+        if (!this.things.includes(this.fader)) {
+            this.things.push(this.fader)
+        }
+    }
+}
+(window as any).PyEngine = PyEngine
 
 // loading code:
 

@@ -24,7 +24,7 @@ export class Entity {
         public sprite: Sprite,
         anim: {[key: string]: [[number, number][][], boolean]},
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
 
         this.stats = new StatSet()
         this.stats.hp = 1
@@ -135,7 +135,7 @@ export class Entity {
 
         const entities: Entity[] = []
         this.engine.map.spritesAt(x, y, w, h, layer).forEach(s => {
-            const ent = this.engineRef.getEntityForSpriteName(s.name).js
+            const ent = this.engineRef.getEntityForSpriteName(s.name)
             if (ent) {
                 entities.push(ent)
             }

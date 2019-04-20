@@ -9,7 +9,7 @@ class Tinter {
     public tint = 0
 
     draw(engineRef: PyEngine) {
-        const engine = engineRef.getEngine().js
+        const engine = engineRef.getEngine()
 
         this.curTint += (this.curTint < this.tint) ? 1 : 0
         this.curTint -= (this.curTint > this.tint) ? 1 : 0
@@ -25,7 +25,7 @@ const tint = new Tinter()
 let crap: ScrollableTextFrame[] = [] // crap to draw along with the map
 
 function draw(engineRef: PyEngine) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     engine.map.Render()
     tint.draw(engineRef)
     for (let c of crap) {
@@ -36,10 +36,10 @@ function draw(engineRef: PyEngine) {
 //------------------------------------------------------------------------------
 
 function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const WIDTH = 200
     let width = WIDTH
-    const font = engineRef.font.js
+    const font = engineRef.font
     let text = wrapText(txt, width, font)
     width = Math.max(...text.map(s => font.StringWidth(s)))
     let height = text.length * font.height
@@ -76,7 +76,7 @@ function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
 
 function *speech(engineRef: PyEngine, where: Sprite, txt: string) {
     // Displays a text frame.
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const frame = textBox(engineRef, where, txt)
 
     while (!engine.controls.attack()) {
@@ -90,7 +90,7 @@ function *speech(engineRef: PyEngine, where: Sprite, txt: string) {
 //------------------------------------------------------------------------------
 
 function *animateHelper(engineRef: PyEngine, sprite: Sprite, frames: number[], delay: number, loop: boolean) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     while (true) {
         for (let frame of frames) {
             sprite.specframe = frame
@@ -136,8 +136,8 @@ let kid3: Sprite
 
 // TODO: transitions
 export function *sceneTask(engineRef: PyEngine, name: string) {
-    const engine = engineRef.getEngine().js
-    const entities = engineRef.getEntities().map(je => je.js)
+    const engine = engineRef.getEngine()
+    const entities = engineRef.getEntities()
     const getSpritePos: (e: Entity) => [number, number] = e => [e.sprite.x, e.sprite.y]
     const savedPos: [number, number][] = entities.map(getSpritePos)
     // hide 'em all
@@ -167,7 +167,7 @@ export function *sceneTask(engineRef: PyEngine, name: string) {
     //kid3 = null
 
     if (engineRef.getMapName()) {
-        // We now only call AutoExec in engine.mapSwitchTask, not
+        // We now only call autoexec in engine.mapSwitchTask, not
         // engineRef.map.Switch, so this should be an OK way to restore the map.
         engine.map.Switch('maps/' + engineRef.getMapName())
         for (let i = 0; i < entities.length; ++i) {
@@ -233,7 +233,7 @@ A sharp whistle signifies the hunt's end.  The hunters will not bother
 to claim their prize, for it is far too cold--his fate is come.`.replace('\n', ''))
 }
 
-function* nearend(engineRef: PyEngine) {
+function *nearend(engineRef: PyEngine) {
     tint.tint = 200
     
     yield* narration(engineRef, `

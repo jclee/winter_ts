@@ -159,7 +159,7 @@ obscenely difficult to obtain!
 `.split('\n')
 
 export function *creditsTask(engineRef: PyEngine) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     // TODO - make audio work
     //const m = engine.music.get('music/Existing.s3m', ika.Sound('music/Existing.s3m'))
     //m.loop = true
@@ -170,7 +170,7 @@ export function *creditsTask(engineRef: PyEngine) {
     const bg = engine.getImage('gfx/mountains.png')
     const snowObj = new Snow(engineRef, 100, [0, 1])
     let y = -engine.video.yres
-    const font = engineRef.font.js
+    const font = engineRef.font
 
     const draw = () => {
         engine.video.Blit(bg, 0, 0)

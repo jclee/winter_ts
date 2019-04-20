@@ -30,7 +30,7 @@ class Gauge extends Thing {
         // imageName - name of the image series to use.
         //  ie 'gfx/ui/barhp%i.png'
 
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.engineRef = engineRef
         const images = imageNames.map(n => this.engine.getImage(n))
         ;[this.span, this.left, this.middle, this.right] = images
@@ -117,8 +117,8 @@ export class HPBar extends Gauge {
         this.rgb = [255, 0, 0]
     }
 
-    curVal() { return this.engineRef.getPlayerEntity().js.stats.hp }
-    curMax() { return this.engineRef.getPlayerEntity().js.stats.maxhp }
+    curVal() { return this.engineRef.getPlayerEntity().stats.hp }
+    curMax() { return this.engineRef.getPlayerEntity().stats.maxhp }
 }
 
 export class MPBar extends Gauge {
@@ -137,8 +137,8 @@ export class MPBar extends Gauge {
         this.oldVal = this.curVal()
     }
 
-    curVal() { return this.engineRef.getPlayerEntity().js.stats.mp }
-    curMax() { return this.engineRef.getPlayerEntity().js.stats.maxmp }
+    curVal() { return this.engineRef.getPlayerEntity().stats.mp }
+    curMax() { return this.engineRef.getPlayerEntity().stats.maxmp }
 }
 
 export class EXPBar extends Gauge {
@@ -161,6 +161,6 @@ export class EXPBar extends Gauge {
         super.drawRect(x, y, w, h - 1, opacity)
     }
 
-    curVal() { return Math.floor(this.engineRef.getPlayerEntity().js.stats.exp * 100 / this.engineRef.getPlayerEntity().js.stats.next) }
+    curVal() { return Math.floor(this.engineRef.getPlayerEntity().stats.exp * 100 / this.engineRef.getPlayerEntity().stats.next) }
     curMax() { return 100 }
 }

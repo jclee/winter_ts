@@ -92,7 +92,7 @@ export class PauseScreen {
     constructor(
         private engineRef: PyEngine,
     ) {
-        this.engine = engineRef.getEngine().js
+        this.engine = engineRef.getEngine()
         this.statWnd = new StatWindow(engineRef)
         this.attribWnd = new AttribWindow(engineRef)
         this.magWnd = new MagicWindow(engineRef)

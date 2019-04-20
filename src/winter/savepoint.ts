@@ -13,7 +13,7 @@ export class SavePoint extends Entity {
     }
 
     update() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         if (this.touches(p)) {
             p.stats.hp = 999
             p.stats.mp = 999

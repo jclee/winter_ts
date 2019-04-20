@@ -128,12 +128,12 @@ export class RazorMane extends Enemy {
     }
 
     playerDir() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         return fromDelta(p.sprite.x - this.sprite.x - 10, p.sprite.y - this.sprite.y - 7)
     }
 
     playerDist() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         return hypot(p.sprite.x - this.sprite.x - 10, p.sprite.y - this.sprite.y - 7)
     }
 

@@ -16,7 +16,7 @@ export class Caption extends Thing {
         private duration: number = 200,
     ) {
         super()
-        const engine: Engine = engineRef.getEngine().js
+        const engine: Engine = engineRef.getEngine()
 
         const width = this.font.StringWidth(text)
         const height = this.font.height

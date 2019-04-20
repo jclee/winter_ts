@@ -79,7 +79,7 @@ export class Serpent extends Enemy {
         // Go left to right, try to vertically align with the player,
         // then try to bite.
         // Roar every now and again.
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
 
         while (true) {
             // why is this necessary? O_o
@@ -118,7 +118,7 @@ export class Serpent extends Enemy {
 
         while (this.isAnimating()) {
             for (let e of this.detectCollision(_biteRange[this.getAnimationIndex()])) {
-                const d = Math.max(1, this.stats.att - this.engineRef.getPlayerEntity().js.stats.pres)
+                const d = Math.max(1, this.stats.att - this.engineRef.getPlayerEntity().stats.pres)
                 e.hurt(d, 350, Direction.Down)
             }
             yield null
@@ -168,8 +168,7 @@ export class Serpent extends Enemy {
         }
 
         // need to destroy old corpses (a first!)
-        for (let pyEnt of this.engineRef.getEntities()) {
-            const e = pyEnt.js
+        for (let e of this.engineRef.getEntities()) {
             if (e.stats.hp === 0 && e.isKind('Enemy')) {
                 this.engineRef.pyDestroyEntity(e)
             }

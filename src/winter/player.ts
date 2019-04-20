@@ -182,7 +182,7 @@ export class Player extends Entity {
         y: number = 0,
         layer: number = 0
     ) {
-        const engine = engineRef.getEngine().js
+        const engine = engineRef.getEngine()
         const sprite = engine.map.addSprite(x, y, layer, PLAYER_SPRITE)
         super(engineRef, sprite, _playerAnim)
         this.setState(this.standState())
@@ -245,7 +245,7 @@ export class Player extends Entity {
             this.stats.next = this.stats.level * (this.stats.level + 1) * 5
         }
 
-        this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, `Level ${this.stats.level}!`))
+        this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, `Level ${this.stats.level}!`))
     }
 
     defaultState() {
@@ -582,7 +582,7 @@ export class Player extends Entity {
                     this.engineRef.setSaveFlag((e as IceWall).flagName as string, 'Broken')
 
                     this.engineRef.pyDestroyEntity(e)
-                    this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, '~1The ice melted!'))
+                    this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, '~1The ice melted!'))
                 }
             }
 
@@ -720,7 +720,7 @@ export class Player extends Entity {
             // TODO: Tidy
             if (e.isKind('IceChunks') && (e instanceof IceChunks)) {
                 e.freeze()
-                this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, '~1The ice froze over!'))
+                this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, '~1The ice froze over!'))
                 this.engineRef.pyDestroyEntity(e)
                 break
             }

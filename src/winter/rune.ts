@@ -23,9 +23,9 @@ class Rune extends Entity {
     apply() {}
 
     update() {
-        if (this.touches(this.engineRef.getPlayerEntity().js)) {
+        if (this.touches(this.engineRef.getPlayerEntity())) {
             this.engineRef.pyDestroyEntity(this)
-            this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font.js, `~1You got the {this.getElement()} Rune!`))
+            this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, `~1You got the {this.getElement()} Rune!`))
             this.engineRef.setSaveFlag(this.name, 'True')
             this.apply()
         }
@@ -54,22 +54,22 @@ export class BindingRune extends Rune {
 
 export class StrengthRune extends Rune {
     apply() {
-        this.engineRef.getPlayerEntity().js.stats.att += 2
+        this.engineRef.getPlayerEntity().stats.att += 2
     }
     getElement() { return 'Strength' }
 }
 
 export class GuardRune extends Rune {
     apply() {
-        this.engineRef.getPlayerEntity().js.stats.pres += 2
-        this.engineRef.getPlayerEntity().js.stats.mres += 2
+        this.engineRef.getPlayerEntity().stats.pres += 2
+        this.engineRef.getPlayerEntity().stats.mres += 2
     }
     getElement() { return 'Guard' }
 }
 
 export class PowerRune extends Rune {
     apply() {
-        this.engineRef.getPlayerEntity().js.stats.mag += 2
+        this.engineRef.getPlayerEntity().stats.mag += 2
     }
     getElement() { return 'Power' }
 }

@@ -133,7 +133,7 @@ export class AnkleBiter extends Enemy {
     *attackMood() {
         // if we want to be uber, we can remove this hack.
         // for now fuckit.  Attack the player!!
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         for (let q = 0; q < 5; ++q) {
             const d = fromDelta(p.sprite.x - this.sprite.x, p.sprite.y - this.sprite.y)
             const dist = hypot(p.sprite.x - this.sprite.x, p.sprite.y - this.sprite.y)
@@ -148,7 +148,7 @@ export class AnkleBiter extends Enemy {
 
     *fleeMood() {
         const MIN_DIST = 150
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         for (let q = 0; q < 5; ++q) {
             const d = fromDelta(p.sprite.x - this.sprite.x, p.sprite.y - this.sprite.y)
             const dist = hypot(p.sprite.x - this.sprite.x, p.sprite.y - this.sprite.y)
@@ -165,7 +165,7 @@ export class AnkleBiter extends Enemy {
     }
 
     *passiveMood() {
-        const p = this.engineRef.getPlayerEntity().js
+        const p = this.engineRef.getPlayerEntity()
         this.stopAnimation()
         while (true) {
             const dist = hypot(p.sprite.x - this.sprite.x, p.sprite.y - this.sprite.y)

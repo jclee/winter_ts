@@ -18,7 +18,7 @@ function _blurScreen(engine: Engine, factor: number) {
 }
 
 export function createBlurImages(engineRef: PyEngine) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const BLEH = 1
     const images = []
     let i = 1.0
@@ -34,14 +34,14 @@ export function createBlurImages(engineRef: PyEngine) {
 }
 
 export function freeBlurImages(engineRef: PyEngine, images: Image[]) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     images.forEach(img => {
         engine.video.FreeImage(img)
     })
 }
 
 export function *blurFadeTask(engineRef: PyEngine, time: number, startImages: Image[], endImages: Image[]) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     let now = engine.getTime()
     const startTime = now
     const endTime = now + time
@@ -59,7 +59,7 @@ export function *blurFadeTask(engineRef: PyEngine, time: number, startImages: Im
 }
 
 function *_fadeTask(engineRef: PyEngine, time: number, startAlpha: number, endAlpha: number, draw: ()=>void) {
-    const engine = engineRef.getEngine().js
+    const engine = engineRef.getEngine()
     const deltaAlpha = endAlpha - startAlpha
 
     let now = engine.getTime()
