@@ -1,8 +1,6 @@
 import ika
 from browser import window
 
-import sound
-
 FRAME_RATE = 100
 MAX_SKIP_COUNT = 10
 START_MAP = 'map01.ika-map'
@@ -80,10 +78,10 @@ class Engine(object):
         self.video = self._engine.video
         self.mapName = ''
 
-        self.fader = sound.Crossfader()
+        self.fader = window.sound.Crossfader.new()
         # all music.  Never ever let go. (because I'm lazy)
         self.music = {
-            'music/silence': sound.NullSound(),
+            'music/silence': window.sound.NullSoundnew(),
         }
         self.saveFlags = {}
         self.showSaveMenuAtEndOfTick = False
@@ -571,7 +569,7 @@ class Engine(object):
         if fname in self.music:
             m = self.music[fname]
         else:
-            m = ika.Sound(fname)
+            m = window.sound.Sound.new(fname)
             m.loop = True
             self.music[fname] = m
 

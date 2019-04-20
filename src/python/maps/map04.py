@@ -27,7 +27,7 @@ class DeathListener(Thing):
 
     def update(self):
         if self.yeti.stats.hp == 0:
-            sound.playMusic("music/winter.ogg")
+            self.engineRef.playMusic("music/winter.ogg")
             self.engineRef.saveFlags['waterguard'] = 'True'
             return True
 
