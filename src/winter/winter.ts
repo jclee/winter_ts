@@ -2783,29 +2783,17 @@ const removeChildren = (node : HTMLElement) => {
     }
 }
 
-const addPythonScript = (path : string) => {
-    const s = document.createElement('script')
-    s.type = 'text/python'
-    s.src = path
-    document.body.appendChild(s)
-}
-
-const enum BrythonDebugLevel {
-    None = 0,
-    ShowErrors = 1,
-    Translate = 2,
-    TranslateAll = 10,
-}
-
-interface BrythonOptions {
-    debug: BrythonDebugLevel
-}
-
-declare var brython: (options: BrythonOptions) => void
-
 removeChildren(document.body)
 
-addPythonScript('system.py')
-brython({
-    debug: BrythonDebugLevel.ShowErrors,
-})
+function main() {
+    const engine = new Engine()
+    const task = mainTask(engine)
+    const taskFn = () => {
+        // TODO: May be able to use yielded generator as a goto.
+        const {done} = task.next()
+        return !done
+    }
+    engine.run(taskFn)
+}
+
+main()
