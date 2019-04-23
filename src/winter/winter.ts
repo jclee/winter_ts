@@ -126,8 +126,8 @@ interface Size {
 }
 
 export class Point {
-    x: number
-    y: number
+    x: number = 0
+    y: number = 0
 }
 
 interface MapData {
@@ -663,17 +663,17 @@ export class FontClass {
 (window as any).FontClass = FontClass
 
 class MapClass {
-    private _xwin: number
-    private _ywin: number
-    private _localLayerDatas: number[][]
+    private _xwin: number = 0
+    private _ywin: number = 0
+    private _localLayerDatas: number[][] = []
     // TODO: Make private?
-    _localLayerObstructions: number[][]
-    _currentMapName: string
+    _localLayerObstructions: number[][] = []
+    _currentMapName: string = ''
     private _spriteID: number
     // TODO: make private and provide different accessor?
     sprites: {[key: string]: Sprite}
     mapSpriteNames_: string[]
-    layercount: number
+    layercount: number = 0
 
     constructor(
         private _engine: Engine,
@@ -805,8 +805,9 @@ class MapClass {
                 }
             }
 
-            for (let [_, sprite] of layerSprites[i]) {
+            for (let kvPair of layerSprites[i]) {
                 // This game doesn't seem to use custom renderscripts
+                const sprite: Sprite = kvPair[1]
 
                 const spritePath = 'sprite/' + sprite.spritename.replace('.ika-sprite', '.png')
                 const spriteImage = this._engine.getImage(spritePath)
@@ -1436,8 +1437,8 @@ export class Engine {
     images: {[key: string]: Image}
     sprites: {[key: string]: SpriteData}
     sounds: {[key: string]: Sound}
-    width: number
-    height: number
+    width = 320
+    height = 240
     startMsec: number
     gl: WebGLRenderingContext
     private enabledAttributeLocations: number[]
@@ -1486,6 +1487,63 @@ export class Engine {
             heal: pressControl('C'),
             shiver: pressControl('V'),
         }
+
+        this.startMsec = Date.now()
+
+        const displayCanvasEl = window.document.createElement('canvas')
+        displayCanvasEl.width = this.width
+        displayCanvasEl.height = this.height
+
+        const style = displayCanvasEl.style
+        style.border = "1px solid"
+        // Typescript doesn't know about imageRendering yet.
+        ;(style as any).imageRendering = "optimizeSpeed"
+        ;(style as any).imageRendering = "-moz-crisp-edges"
+        ;(style as any).imageRendering = "pixelated"
+        style.width = "" + this.width * 2
+        style.height = "" + this.height * 2
+        style.display = "block"
+        style.marginLeft = "auto"
+        style.marginRight = "auto"
+        window.document.body.appendChild(displayCanvasEl)
+        window.document.body.style.backgroundColor = "#dddddd"
+
+        const gl = displayCanvasEl.getContext('webgl', {alpha: false})
+        if (gl === null) {
+            throw new Error("Couldn't get WebGL context")
+        }
+        this.gl = gl
+
+        this.pageImage = {
+            _texture: _makeEmptyTexture(gl, this.width, this.height),
+            width: this.width,
+            height: this.height,
+            yScale: -1.0,
+        }
+        this.pageBuffer = _makeFramebuffer(gl, this.pageImage._texture)
+
+        this.textureProgram = _makeProgram(gl, _textureShaderSpec)
+        this.flatProgram = _makeProgram(gl, _flatShaderSpec)
+        this.snowProgram = _makeProgram(gl, _snowShaderSpec)
+
+        this.quadPositionBuffer = _makeBuffer(gl, [
+            0, 0,
+            0, 1,
+            1, 0,
+            1, 0,
+            0, 1,
+            1, 1,
+        ])
+        this.quadTexCoordBuffer = _makeBuffer(gl, [
+            0, 0,
+            0, 1,
+            1, 0,
+            1, 0,
+            0, 1,
+            1, 1,
+        ])
+        this.viewWidth = this.width
+        this.viewHeight = this.height
     }
 
     getTime() {
@@ -1689,62 +1747,6 @@ export class Engine {
     }
 
     run(taskFn: ()=>boolean) {
-        this.startMsec = Date.now()
-        this.width = 320
-        this.height = 240
-
-        const displayCanvasEl = window.document.createElement('canvas')
-        displayCanvasEl.width = this.width
-        displayCanvasEl.height = this.height
-
-        const style = displayCanvasEl.style
-        style.border = "1px solid"
-        // Typescript doesn't know about imageRendering yet.
-        ;(style as any).imageRendering = "optimizeSpeed"
-        ;(style as any).imageRendering = "-moz-crisp-edges"
-        ;(style as any).imageRendering = "pixelated"
-        style.width = "" + this.width * 2
-        style.height = "" + this.height * 2
-        style.display = "block"
-        style.marginLeft = "auto"
-        style.marginRight = "auto"
-        window.document.body.appendChild(displayCanvasEl)
-        window.document.body.style.backgroundColor = "#dddddd"
-
-        const gl = displayCanvasEl.getContext('webgl', {alpha: false})
-        if (gl === null) {
-            throw new Error("Couldn't get WebGL context")
-        }
-        this.gl = gl
-
-        this.pageImage = {
-            _texture: _makeEmptyTexture(gl, this.width, this.height),
-            width: this.width,
-            height: this.height,
-            yScale: -1.0,
-        }
-        this.pageBuffer = _makeFramebuffer(gl, this.pageImage._texture)
-
-        this.textureProgram = _makeProgram(gl, _textureShaderSpec)
-        this.flatProgram = _makeProgram(gl, _flatShaderSpec)
-        this.snowProgram = _makeProgram(gl, _snowShaderSpec)
-
-        this.quadPositionBuffer = _makeBuffer(gl, [
-            0, 0,
-            0, 1,
-            1, 0,
-            1, 0,
-            0, 1,
-            1, 1,
-        ])
-        this.quadTexCoordBuffer = _makeBuffer(gl, [
-            0, 0,
-            0, 1,
-            1, 0,
-            1, 0,
-            0, 1,
-            1, 1,
-        ])
 
         const imagePaths = [
             'winter/gfx/credits_vignette.png',
@@ -1874,7 +1876,7 @@ export class Engine {
                 // TODO: Handle image load failure?
                 imageEl.addEventListener('load', () => {
                     this.images[path] = {
-                        _texture: _makeImageTexture(gl, imageEl),
+                        _texture: _makeImageTexture(this.gl, imageEl),
                         width: imageEl.width,
                         height: imageEl.height,
                         yScale: 1.0,
@@ -2160,6 +2162,7 @@ export class PyEngine {
         }
         this.saveFlags = {}
         this.showSaveMenuAtEndOfTick = false
+        this.camera = new Camera(this)
     }
 
     // TODO DO NOT COMMIT - remove most of these.
@@ -2363,7 +2366,10 @@ export class PyEngine {
 
     *loadGameTask() {
         let result: SaveData[] = []
-        const setResult = (s: SaveData) => {
+        const setResult = (s: SaveData | null) => {
+            if (s === null) {
+                return
+            }
             result = [s]
         }
         yield* loadMenuTask(this, setResult)

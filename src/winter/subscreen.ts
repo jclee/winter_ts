@@ -87,7 +87,7 @@ export class PauseScreen {
     private attribWnd: AttribWindow
     private magWnd: MagicWindow
     private menu: MenuWindow
-    private images: Image[]
+    private images: Image[] = []
 
     constructor(
         private engineRef: PyEngine,

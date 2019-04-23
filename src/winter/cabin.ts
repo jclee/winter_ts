@@ -42,7 +42,6 @@ function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
     const font = engineRef.font
     let text = wrapText(txt, width, font)
     width = Math.max(...text.map(s => font.StringWidth(s)))
-    let height = text.length * font.height
 
     let x = sprite.x + Math.floor(sprite.hotwidth / 2) - engine.map.xwin
     let y = sprite.y - engine.map.ywin
@@ -55,7 +54,6 @@ function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
     if (x + width + 16 > engine.video.xres) {
         text = wrapText(txt, engine.video.xres - x - 16, font)
         width = Math.max(...text.map(s => font.StringWidth(s)))
-        height = text.length * font.height
     }
 
     const frame = new ScrollableTextFrame(engineRef)

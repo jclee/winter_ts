@@ -10,13 +10,13 @@
   },
   "author": "Joe Lee",
   "devDependencies": {
-    "nodemon": "~1.11.0",
-    "opn": "~5.1.0",
-    "reload": "~2.0.0",
-    "typescript": "~2.4.1",
-    "watch": "~1.0.2"
+    "nodemon": "^1.18.11",
+    "opn": "^5.5.0",
+    "reload": "^2.4.0",
+    "typescript": "^2.9.2",
+    "watch": "^1.0.2"
   },
   "dependencies": {
-    "express": "~4.15.3"
+    "express": "^4.16.4"
   }
 }
