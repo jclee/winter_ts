@@ -2126,7 +2126,7 @@ export class PyEngine {
     //private map = this._engine.map
     public font: FontClass
     private mapName: string
-    private fader: Crossfader
+    public fader: Crossfader
     private music: {[key: string]: Sound}
     private saveFlags: {[key: string]: string}
     private showSaveMenuAtEndOfTick: boolean
@@ -2739,6 +2739,41 @@ export class PyEngine {
     }
 }
 (window as any).PyEngine = PyEngine
+
+export function *mainTask(engine: Engine) {
+    const introMusic = new Sound('music/Existing.s3m')
+
+    // TODO: clean up... :|
+    const engineObj = new PyEngine(engine)
+
+    // TODO: Reenable
+    //yield* introTask(engineObj)
+
+    while (true) {
+        engineObj.fader.kill()
+        introMusic.position = 0
+        introMusic.play()
+        // TODO: use return value instead.
+        let resultRef: [number | null] = [null]
+        const setResult = (r: number) => { resultRef[0] = r }
+        yield* menuTask(engineObj, setResult)
+
+        if (resultRef[0] === 0) {
+            introMusic.pause()
+            yield* engineObj.beginNewGameTask()
+        } else if (resultRef[0] === 1) {
+            introMusic.pause()
+            yield* engineObj.loadGameTask()
+        } else if (resultRef[0] === 2) {
+            break
+        } else {
+            throw new Error("Unexpected intro menu result")
+        }
+    }
+
+    console.log("Exiting.") // TODO
+}
+(window as any).mainTask = mainTask
 
 // loading code:
 
