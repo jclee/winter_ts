@@ -7,13 +7,11 @@ This project ports "Winter" -- an action role-playing game -- to run in a web br
 
 Winter is a action role-playing game written using the ika game system, which
 is authored in C++ and scripted in Python and runs on Windows.  For the port,
-we provide appropriate TypeScript replacements for the scripting interface, and
-use brython to interpret the Python scripts.
+this has all been rewritten in Typescript.
 
 This port is a work-in-progress.  Still to do:
 
 * Determine if the game can even be completed in its current state
-* Port more of the game from Python to TypeScript to improve performance, maybe remove Python entirely
 * Framerate is sometimes inconsistent
 * Sound
 * Music
@@ -22,7 +20,6 @@ This port is a work-in-progress.  Still to do:
 
 - Original game: https://rpgmaker.net/games/6888/?post=793577
 - ika game engine: https://github.com/andyfriesen/ika
-- Brython: https://www.brython.info/
 
 Original Winter documentation
 ===

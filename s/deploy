@@ -11,8 +11,6 @@ fi
 s/build
 find "$WINTER_TS_BUILD_TARGET" -name .git -a -type d -prune -o -type f -print0 | xargs -0 rm
 cp -r build/winter "$WINTER_TS_BUILD_TARGET"
-cp -r src/python/* "$WINTER_TS_BUILD_TARGET"
-cp node_modules/brython/brython.js "$WINTER_TS_BUILD_TARGET"
 cp src/index.html "$WINTER_TS_BUILD_TARGET"
 
 
