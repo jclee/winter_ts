@@ -547,7 +547,7 @@ export class Player extends Entity {
         this.startAnimation('rend')
         const r = rendRange[this.direction]
 
-        if (this.stats.mp < 10 || !this.engineRef.getSaveFlag('firerune')) {
+        if (this.stats.mp < 10 || !this.engineRef.hasSaveFlag('firerune')) {
             this.engine.sounds.menuBuzz.play()
             return
         }
@@ -618,7 +618,7 @@ export class Player extends Entity {
         this.stop()
         this.startAnimation('stand')
 
-        if (this.stats.mp < 15 || !this.engineRef.getSaveFlag('windrune')) {
+        if (this.stats.mp < 15 || !this.engineRef.hasSaveFlag('windrune')) {
             this.engine.sounds.menuBuzz.play()
             return
         }
@@ -691,7 +691,7 @@ export class Player extends Entity {
 
         this.startAnimation('magic')
 
-        if (this.stats.mp < 20 || this.engineRef.getSaveFlag('waterrune')) {
+        if (this.stats.mp < 20 || !this.engineRef.hasSaveFlag('waterrune')) {
             this.engine.sounds.menuBuzz.play()
             return
         }
@@ -735,7 +735,7 @@ export class Player extends Entity {
         this.stop()
         this.startAnimation('thrust')
 
-        if (this.stats.mp < 45 || this.engineRef.getSaveFlag('cowardrune')) {
+        if (this.stats.mp < 45 || !this.engineRef.hasSaveFlag('cowardrune')) {
             this.engine.sounds.menuBuzz.play()
             return
         }
