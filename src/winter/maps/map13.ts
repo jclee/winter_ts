@@ -5,7 +5,7 @@ export default new MapScript(autoexec, { to7, to14, to16 })
 
 export function autoexec(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
-    engineRef.addThing(new Snow(engineRef, 4000, [-1, 1.5]))
+    engineRef.addMapThing(new Snow(engineRef, 4000, [-1, 1.5]))
     engineRef.pySetBackground(engine.getImage('gfx/mountains.png'))
 }
 

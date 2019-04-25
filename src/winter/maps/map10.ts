@@ -9,13 +9,13 @@ export default new MapScript(autoexec, { to9 })
 export function autoexec(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
     if (!engineRef.hasSaveFlag('fireguard')) {
-        engineRef.addThing(new RuneListener(engineRef))
+        engineRef.addMapThing(new RuneListener(engineRef))
     }
 
     if (engineRef.hasSaveFlag('firerune')) {
         engine.map.removeSprite(engine.map.sprites['demiyeti'])
     } else {
-        engineRef.addThing(new DeathListener(engineRef))
+        engineRef.addMapThing(new DeathListener(engineRef))
     }
 }
 
@@ -62,7 +62,7 @@ class RuneListener extends Thing {
             this.engineRef.pyPlayMusic('music/resurrection.it')
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
             this.engineRef.pyAddEntity(y)
-            this.engineRef.addThing(new DeathListener(this.engineRef, y))
+            this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         }
         return false

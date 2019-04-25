@@ -23,9 +23,9 @@ class RuneListener extends Thing {
 }
 
 function autoexec(engineRef: PyEngine) {
-    engineRef.addThing(new Snow(engineRef))
+    engineRef.addMapThing(new Snow(engineRef))
     if (engineRef.getSaveFlag('cowardrune') === '') {
-        engineRef.addThing(new RuneListener(engineRef))
+        engineRef.addMapThing(new RuneListener(engineRef))
     }
 }
 

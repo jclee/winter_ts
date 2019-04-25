@@ -9,7 +9,7 @@ let spawned = false
 export function autoexec(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
     spawned = false
-    engineRef.addThing(new Snow(engineRef, 100, [.4, 1], [255,192,255]))
+    engineRef.addMapThing(new Snow(engineRef, 100, [.4, 1], [255,192,255]))
     engineRef.pySetBackground(engine.getImage('gfx/mountains.png'))
 }
 

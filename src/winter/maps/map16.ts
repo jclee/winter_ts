@@ -20,7 +20,7 @@ export function autoexec(engineRef: PyEngine) {
     }
 
     if (!engineRef.hasSaveFlag('windguard') && engineRef.hasSaveFlag('nearend')) {
-        engineRef.addThing(new RuneListener(engineRef))
+        engineRef.addMapThing(new RuneListener(engineRef))
     }
 }
 
@@ -92,7 +92,7 @@ export function *bridge_break(engineRef: PyEngine) {
         y.stats.hp = y.stats.maxhp
         y.stats.att += 10
         engineRef.pyAddEntity(y)
-        engineRef.addThing(new DeathListener(engineRef, y))
+        engineRef.addMapThing(new DeathListener(engineRef, y))
 
         engineRef.pySynchTime()
     }
@@ -164,7 +164,7 @@ class RuneListener extends Thing {
             this.engineRef.pyPlayMusic('music/resurrection.it')
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
             this.engineRef.pyAddEntity(y)
-            this.engineRef.addThing(new DeathListener(this.engineRef, y))
+            this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         }
         return false

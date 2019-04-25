@@ -6,12 +6,12 @@ import { SoulReaver, Yeti } from "./../yeti.js"
 export default new MapScript(autoexec, { to3, to5 })
 
 export function autoexec(engineRef: PyEngine) {
-    engineRef.addThing(new Snow(engineRef, 8000, [-.2, 3]))
+    engineRef.addMapThing(new Snow(engineRef, 8000, [-.2, 3]))
     if (!engineRef.hasSaveFlag('waterrune')) {
-        engineRef.addThing(new RuneListener(engineRef))
+        engineRef.addMapThing(new RuneListener(engineRef))
     }
     if (engineRef.hasSaveFlag('nearend')) {
-        engineRef.addThing(new RuneListener(engineRef))
+        engineRef.addMapThing(new RuneListener(engineRef))
     }
 }
 
@@ -53,7 +53,7 @@ class RuneListener extends Thing {
             const p = this.engineRef.getPlayerEntity()
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(15* 16, 17 * 16, p.sprite.layer, 'soulreaver.ika-sprite'))
             this.engineRef.pyAddEntity(y)
-            this.engineRef.addThing(new DeathListener(this.engineRef, y))
+            this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         } else if (this.engineRef.hasSaveFlag('waterrune') && !this.engineRef.hasSaveFlag('nearend')) {
             const p = this.engineRef.getPlayerEntity()

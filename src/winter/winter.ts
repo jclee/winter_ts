@@ -2624,6 +2624,10 @@ export class PyEngine {
         this.fields.push(field)
     }
 
+    addMapThing(thing: Thing) {
+        this.mapThings.push(thing)
+    }
+
     addThing(thing: Thing) {
         this.things.push(thing)
     }

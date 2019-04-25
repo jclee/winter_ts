@@ -4,7 +4,7 @@ import { PyEngine, Snow } from "./../winter.js"
 export default new MapScript(autoexec, {to1, to3, to6, to43})
 
 export function autoexec(engineRef: PyEngine) {
-    engineRef.addThing(new Snow(engineRef, 3000, [-1, 1.5]))
+    engineRef.addMapThing(new Snow(engineRef, 3000, [-1, 1.5]))
 }
 
 export function *to1(engineRef: PyEngine) {

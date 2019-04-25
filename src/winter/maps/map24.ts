@@ -10,7 +10,7 @@ export function autoexec(engineRef: PyEngine) {
         && engineRef.hasSaveFlag('windguard')
         && engineRef.hasSaveFlag('fireguard')
     ) {
-        engineRef.addThing(new AddRune(engineRef))
+        engineRef.addMapThing(new AddRune(engineRef))
     }
 }
 
