@@ -14,7 +14,8 @@ export class Dynamite extends Entity {
         this.invincible = true
 
         if (this.engineRef.getSaveFlag(this.flagName)) {
-            sprite.x = sprite.y = -100
+            sprite.x = -100
+            sprite.y = -100
             this.engineRef.pyDestroyEntity(this)
         }
     }

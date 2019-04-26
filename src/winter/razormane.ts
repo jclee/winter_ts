@@ -93,7 +93,8 @@ export class RazorMane extends Enemy {
 
         this.setMood(this.passiveMood.bind(this))
         this.sprite.speed = 150
-        this.stats.maxhp = this.stats.hp = 60
+        this.stats.maxhp = 60
+        this.stats.hp = this.stats.maxhp
         this.stats.att = 20
         this.stats.exp = 13
     }
