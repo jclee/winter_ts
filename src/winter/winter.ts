@@ -1818,6 +1818,7 @@ export class Engine {
             'winter/sprite/anklebiter.png',
             'winter/sprite/boulder.png',
             'winter/sprite/carnivore.png',
+            'winter/sprite/cowardrune.png',
             'winter/sprite/devourer.png',
             'winter/sprite/dragonpup.png',
             'winter/sprite/dynamite.png',
