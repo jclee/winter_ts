@@ -120,6 +120,9 @@ import { Gorilla, SoulReaver, Yeti } from "./yeti.js"
     return obj.hasOwnProperty(name) && obj[name] !== undefined
 }
 
+// Can be useful to disable when trying to conserve power...
+let drawFancySnow = true
+
 interface Size {
     width: number
     height: number
@@ -1408,7 +1411,9 @@ export class Snow {
     }
 
     draw() {
-        this.engine.drawSnow(this.time, this.count, this.vx, this.vy, this.r, this.g, this.b)
+        if (drawFancySnow) {
+            this.engine.drawSnow(this.time, this.count, this.vx, this.vy, this.r, this.g, this.b)
+        }
     }
 }
 ;(window as any).Snow = Snow
