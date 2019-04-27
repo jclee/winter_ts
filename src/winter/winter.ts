@@ -2589,10 +2589,6 @@ export class PyEngine {
         this.killList.push(ent)
     }
 
-    addField(field: Field) {
-        this.fields.push(field)
-    }
-
     addMapThing(thing: Thing) {
         this.mapThings.push(thing)
     }
@@ -2609,7 +2605,7 @@ export class PyEngine {
             const zones = this._engine.map.GetZones(i)
             for (let [x, y, w, h, scriptTaskName] of zones) {
                 const scriptTask = mapScript.fns[scriptTaskName]
-                this.addField(new Field([x,y,w,h], i, scriptTask))
+                this.fields.push(new Field([x,y,w,h], i, scriptTask))
             }
         }
     }
