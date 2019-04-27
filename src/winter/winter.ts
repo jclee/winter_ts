@@ -34,7 +34,7 @@ interface Size {
     height: number
 }
 
-export class Point {
+class Point {
     x: number = 0
     y: number = 0
 }
@@ -124,7 +124,7 @@ class Control {
     }
 }
 
-export class Input {
+class Input {
     private keys: {[key:string]: Control}
 
     constructor() {
@@ -143,8 +143,7 @@ class Canvas {
     constructor(
         public _image: Image,
         public _framebuffer: WebGLFramebuffer,
-    ) {
-    }
+    ) {}
 }
 
 export const RGB = (r: number, g: number, b: number, a: number): number => {
@@ -1270,7 +1269,7 @@ class VideoClass {
     // TODO other members...
 }
 
-export interface Controls {
+interface Controls {
     up: ()=>boolean
     down: ()=>boolean
     left: ()=>boolean
