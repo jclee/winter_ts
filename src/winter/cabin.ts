@@ -15,7 +15,7 @@ class Tinter {
         this.curTint -= (this.curTint > this.tint) ? 1 : 0
 
         if (this.curTint) {
-            engine.video.DrawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, this.curTint))
+            engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, this.curTint))
         }
     }
 }
@@ -26,7 +26,7 @@ let crap: ScrollableTextFrame[] = [] // crap to draw along with the map
 
 function draw(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
-    engine.map.Render()
+    engine.map.render()
     tint.draw(engineRef)
     for (let c of crap) {
         c.draw()
@@ -41,7 +41,7 @@ function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
     let width = WIDTH
     const font = engineRef.font
     let text = wrapText(txt, width, font)
-    width = Math.max(...text.map(s => font.StringWidth(s)))
+    width = Math.max(...text.map(s => font.stringWidth(s)))
 
     let x = sprite.x + Math.floor(sprite.hotwidth / 2) - engine.map.xwin
     let y = sprite.y - engine.map.ywin
@@ -53,7 +53,7 @@ function textBox(engineRef: PyEngine, sprite: Sprite, txt: string) {
     width = WIDTH
     if (x + width + 16 > engine.video.xres) {
         text = wrapText(txt, engine.video.xres - x - 16, font)
-        width = Math.max(...text.map(s => font.StringWidth(s)))
+        width = Math.max(...text.map(s => font.stringWidth(s)))
     }
 
     const frame = new ScrollableTextFrame(engineRef)
@@ -80,7 +80,7 @@ function *speech(engineRef: PyEngine, where: Sprite, txt: string) {
     while (!engine.controls.attack()) {
         draw(engineRef)
         frame.draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
     }
 }
@@ -96,7 +96,7 @@ function *animateHelper(engineRef: PyEngine, sprite: Sprite, frames: number[], d
             while (d > 0) {
                 d -= 1
                 draw(engineRef)
-                engine.video.ShowPage()
+                engine.video.showPage()
                 yield* delayTask(1)
                 if (engine.controls.attack()) {
                     return
@@ -143,14 +143,14 @@ export function *sceneTask(engineRef: PyEngine, name: string) {
         ;[e.sprite.x, e.sprite.y] = [-100, -100]
     }
 
-    engine.map.Switch('maps/cabinmap.ika-map')
+    engine.map.load('maps/cabinmap.ika-map')
     grandpa = engine.map.sprites['grandpa']
     kid1 = engine.map.sprites['kid1']
     kid2 = engine.map.sprites['kid2']
     kid3 = engine.map.sprites['kid3']
 
     const draw = () => {
-        engine.map.Render()
+        engine.map.render()
     }
     yield* fadeInTask(engineRef, 100, draw)
 
@@ -166,8 +166,8 @@ export function *sceneTask(engineRef: PyEngine, name: string) {
 
     if (engineRef.getMapName()) {
         // We now only call autoexec in engine.mapSwitchTask, not
-        // engineRef.map.Switch, so this should be an OK way to restore the map.
-        engine.map.Switch('maps/' + engineRef.getMapName())
+        // engineRef.map.load, so this should be an OK way to restore the map.
+        engine.map.load('maps/' + engineRef.getMapName())
         for (let i = 0; i < entities.length; ++i) {
             const e = entities[i]
             ;[e.sprite.x, e.sprite.y] = savedPos[i]

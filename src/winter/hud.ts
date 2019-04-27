@@ -81,12 +81,12 @@ class Gauge extends Thing {
 
         let x = this.engine.video.xres - width - this.left.width - this.right.width - this.x - 2
 
-        this.engine.video.TintBlit(this.left, x, this.y, o)
-        this.engine.video.TintBlit(this.right, x + width + this.left.width, this.y, o)
+        this.engine.video.tintBlit(this.left, x, this.y, o)
+        this.engine.video.tintBlit(this.right, x + width + this.left.width, this.y, o)
 
         x += this.left.width
 
-        this.engine.video.TintScaleBlit(this.span, x, this.y, width, this.span.height, o)
+        this.engine.video.tintScaleBlit(this.span, x, this.y, width, this.span.height, o)
 
         x -= 2
 
@@ -99,7 +99,7 @@ class Gauge extends Thing {
 
     drawRect(x: number, y: number, w: number, h: number, opacity: number) {
         // Used to draw in the filled part of the gauge.
-        this.engine.video.DrawRect(x, y, w, h, RGB(this.rgb[0], this.rgb[1], this.rgb[2], opacity * 255))
+        this.engine.video.drawRect(x, y, w, h, RGB(this.rgb[0], this.rgb[1], this.rgb[2], opacity * 255))
     }
 }
 

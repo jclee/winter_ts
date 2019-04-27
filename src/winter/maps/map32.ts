@@ -31,7 +31,7 @@ export function *finalBattle(engineRef: PyEngine) {
         for (let n = 0; n < 128; ++n) {
             yield* engineRef.tickTask()
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield null
         }
 
@@ -44,7 +44,7 @@ export function *finalBattle(engineRef: PyEngine) {
             engine.map.ywin += random(-4, 5)
             yield* engineRef.tickTask()
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield null
         }
 
@@ -57,12 +57,12 @@ export function *finalBattle(engineRef: PyEngine) {
 
         for (let n = 19; n < 32; ++n) {
             // close off the way back
-            engine.map.SetTile(n, 38, p.sprite.layer, 26)
-            engine.map.SetTile(n, 39, p.sprite.layer, 32)
-            engine.map.SetObs(n, 38, p.sprite.layer, 1)
+            engine.map.setTile(n, 38, p.sprite.layer, 26)
+            engine.map.setTile(n, 39, p.sprite.layer, 32)
+            engine.map.setObs(n, 38, p.sprite.layer, 1)
             yield* engineRef.tickTask()
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield null
         }
 

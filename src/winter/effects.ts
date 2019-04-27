@@ -11,10 +11,10 @@ function _blurScreen(engine: Engine, factor: number) {
     const w = Math.floor(engine.video.xres * factor)
     const h = Math.floor(engine.video.yres * factor)
 
-    const bleh = engine.video.GrabImage(0, 0, engine.video.xres, engine.video.yres)
-    engine.video.ScaleBlit(bleh, 0, 0, w, h)
-    engine.video.FreeImage(bleh)
-    return engine.video.GrabImage(0, 0, w, h)
+    const bleh = engine.video.grabImage(0, 0, engine.video.xres, engine.video.yres)
+    engine.video.scaleBlit(bleh, 0, 0, w, h)
+    engine.video.freeImage(bleh)
+    return engine.video.grabImage(0, 0, w, h)
 }
 
 export function createBlurImages(engineRef: PyEngine) {
@@ -25,7 +25,7 @@ export function createBlurImages(engineRef: PyEngine) {
     while (i < 2) {
         const img = _blurScreen(engine, 1.0 / i)
         images.push(img)
-        engine.video.ScaleBlit(img, -BLEH, -BLEH, engine.video.xres + BLEH * 2, engine.video.yres + BLEH * 2)
+        engine.video.scaleBlit(img, -BLEH, -BLEH, engine.video.xres + BLEH * 2, engine.video.yres + BLEH * 2)
 
         i += 0.1
     }
@@ -36,7 +36,7 @@ export function createBlurImages(engineRef: PyEngine) {
 export function freeBlurImages(engineRef: PyEngine, images: Image[]) {
     const engine = engineRef.getEngine()
     images.forEach(img => {
-        engine.video.FreeImage(img)
+        engine.video.freeImage(img)
     })
 }
 
@@ -49,10 +49,10 @@ export function *blurFadeTask(engineRef: PyEngine, time: number, startImages: Im
         const imageIndex = Math.floor((now - startTime) * startImages.length / time)
         const opacity = (now - startTime) / time
 
-        engine.video.ScaleBlit(startImages[imageIndex], 0, 0, engine.video.xres, engine.video.yres)
-        engine.video.TintScaleBlit(endImages[endImages.length - (imageIndex + 1)], 0, 0, engine.video.xres, engine.video.yres, opacity)
+        engine.video.scaleBlit(startImages[imageIndex], 0, 0, engine.video.xres, engine.video.yres)
+        engine.video.tintScaleBlit(endImages[endImages.length - (imageIndex + 1)], 0, 0, engine.video.xres, engine.video.yres, opacity)
 
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
         now = engine.getTime()
     }
@@ -69,9 +69,9 @@ function *_fadeTask(engineRef: PyEngine, time: number, startAlpha: number, endAl
     while (now < endtime) {
         draw()
         const alpha = startAlpha + deltaAlpha * (now - startTime) / time
-        engine.video.DrawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(alpha * 255)))
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(alpha * 255)))
 
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
         now = engine.getTime()
     }

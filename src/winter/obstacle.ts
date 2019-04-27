@@ -88,8 +88,8 @@ export class IceChunks extends Obstacle {
         const ty = Math.floor(this.sprite.y / 16)
         for (let y = 0; y < 3; ++y) {
             for (let x = 0; x < 3; ++x) {
-                this.engine.map.SetTile(x + tx, y + ty, lay, _frozenTiles[y][x])
-                this.engine.map.SetObs(x + tx, y + ty, lay, 0)
+                this.engine.map.setTile(x + tx, y + ty, lay, _frozenTiles[y][x])
+                this.engine.map.setObs(x + tx, y + ty, lay, 0)
             }
         }
 

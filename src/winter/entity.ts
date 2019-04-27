@@ -118,7 +118,7 @@ export class Entity {
         }
 
         this.direction = invert(this.direction)
-        this.sprite.Stop()
+        this.sprite.stop()
         yield null
     }
 
@@ -170,7 +170,7 @@ export class Entity {
         return this.sprite.isMoving
     }
     stop() {
-        this.sprite.Stop()
+        this.sprite.stop()
     }
 
     animate() {

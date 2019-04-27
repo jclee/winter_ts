@@ -7,7 +7,7 @@ function *showTask(engine: Engine, draw: ()=>void, count: number, snowObj: Snow)
         draw()
         snowObj.update()
         snowObj.draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield* delayTask(1)
 
         if (engine.controls.attack()) {
@@ -29,8 +29,8 @@ export function *introTask(engineRef: PyEngine) {
     const d = 40
 
     const showGba = () => {
-        v.ClearScreen()
-        v.Blit(
+        v.clearScreen()
+        v.blit(
             gba,
             Math.floor((v.xres - gba.width) / 2),
             Math.floor((v.yres - gba.height) / 2)
@@ -40,15 +40,15 @@ export function *introTask(engineRef: PyEngine) {
     try {
         yield *showTask(engine, showGba, 300, snowObj)
 
-        yield *showTask(engine, ()=>{v.ClearScreen()}, d, snowObj)
+        yield *showTask(engine, ()=>{v.clearScreen()}, d, snowObj)
 
         for (let i = 0; i < 3; ++i) {
-            yield *showTask(engine, ()=>{v.Blit(yourmom, 0, 0)}, d, snowObj)
-            yield *showTask(engine, ()=>{v.ClearScreen()}, d, snowObj)
+            yield *showTask(engine, ()=>{v.blit(yourmom, 0, 0)}, d, snowObj)
+            yield *showTask(engine, ()=>{v.clearScreen()}, d, snowObj)
         }
 
-        yield *showTask(engine, ()=>{v.Blit(isabitch, 0, 0)}, Math.floor(d / 2), snowObj)
-        yield *showTask(engine, ()=>{v.ClearScreen()}, d, snowObj)
+        yield *showTask(engine, ()=>{v.blit(isabitch, 0, 0)}, Math.floor(d / 2), snowObj)
+        yield *showTask(engine, ()=>{v.clearScreen()}, d, snowObj)
     } catch (e) {
         if (!(e instanceof DoneException)) {
             throw e;
@@ -67,16 +67,16 @@ export function *menuTask(engineRef: PyEngine, setResult: (r: number)=>void) {
     const FADE_TIME = 60
 
     function draw() {
-        engine.video.Blit(bg, 0, 0)
-        engine.video.Blit(cursor, 68, 128 + cursorPos * 26)
+        engine.video.blit(bg, 0, 0)
+        engine.video.blit(cursor, 68, 128 + cursorPos * 26)
     }
 
     for (let i = FADE_TIME - 1; i > -1; --i) {
         draw()
-        engine.video.DrawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(i * 255 / FADE_TIME)))
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(i * 255 / FADE_TIME)))
         snowObj.update()
         snowObj.draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield* delayTask(1)
     }
 
@@ -86,7 +86,7 @@ export function *menuTask(engineRef: PyEngine, setResult: (r: number)=>void) {
         draw()
         snowObj.update()
         snowObj.draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield* delayTask(1)
 
         if (engine.controls.up() && cursorPos > 0) {

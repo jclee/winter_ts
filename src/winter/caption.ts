@@ -18,7 +18,7 @@ export class Caption extends Thing {
         super()
         const engine: Engine = engineRef.getEngine()
 
-        const width = this.font.StringWidth(text)
+        const width = this.font.stringWidth(text)
         const height = this.font.height
 
         this.x = (x !== null) ? x : Math.floor((engine.video.xres - width) / 2)
@@ -54,6 +54,6 @@ export class Caption extends Thing {
 
     draw() {
         const o = Math.min(255, this.opacity)
-        this.font.PrintWithOpacity(this.x, this.y, this.text, o)
+        this.font.printWithOpacity(this.x, this.y, this.text, o)
     }
 }

@@ -12,9 +12,9 @@ export function autoexec(engineRef: PyEngine) {
 
     if (!engineRef.hasSaveFlag('bridge_broken')) {
         for (let x = 19; x < 22; ++x) {
-            engine.map.SetTile(x, 28, 3, 152)
-            engine.map.SetTile(x, 29, 3, 158)
-            engine.map.SetTile(x, 30, 3, 164)
+            engine.map.setTile(x, 28, 3, 152)
+            engine.map.setTile(x, 29, 3, 158)
+            engine.map.setTile(x, 30, 3, 164)
             engine.map.sprites['break_gap'].x = -100
         }
     }
@@ -37,9 +37,9 @@ export function *bridge_break(engineRef: PyEngine) {
         ]
 
         for (let x = 0; x < 3; ++x) {
-            engine.map.SetTile(x + 19, 28, 3, bridge[0][x])
-            engine.map.SetTile(x + 19, 29, 3, bridge[1][x])
-            engine.map.SetTile(x + 19, 30, 3, bridge[2][x])
+            engine.map.setTile(x + 19, 28, 3, bridge[0][x])
+            engine.map.setTile(x + 19, 29, 3, bridge[1][x])
+            engine.map.setTile(x + 19, 30, 3, bridge[2][x])
             engine.map.sprites['break_gap'].x = 320
         }
 
@@ -53,7 +53,7 @@ export function *bridge_break(engineRef: PyEngine) {
         p.setState(p.noOpState()) // keep the player from moving
 
         engineRef.draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield* delayTask(8)
 
         for (let y = 0; y < 32; ++y) {
@@ -61,7 +61,7 @@ export function *bridge_break(engineRef: PyEngine) {
             engine.map.processSprites()
             engineRef.pyUpdateCamera()
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield* delayTask(1)
         }
 
@@ -72,7 +72,7 @@ export function *bridge_break(engineRef: PyEngine) {
             engine.map.processSprites()
             engineRef.pyUpdateCamera()
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield* delayTask(1)
         }
 
@@ -80,7 +80,7 @@ export function *bridge_break(engineRef: PyEngine) {
         const t = engine.getTime() + 80
         while (t > engine.getTime()) {
             engineRef.draw()
-            engine.video.ShowPage()
+            engine.video.showPage()
             yield null
         }
 

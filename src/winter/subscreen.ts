@@ -135,10 +135,10 @@ export class PauseScreen {
                 const o = Math.floor(time * 128 / TIME) // tint intensity for this frame
                 const f = Math.floor(time * this.images.length / TIME) // blur image to draw
 
-                this.engine.video.ScaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
-                this.engine.video.DrawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, o))
+                this.engine.video.scaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
+                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, o))
                 this.draw()
-                this.engine.video.ShowPage()
+                this.engine.video.showPage()
             }
             yield null
             now = this.engine.getTime()
@@ -169,10 +169,10 @@ export class PauseScreen {
                 const o = Math.floor((TIME - time) * 255 / TIME) // menu opacity for this frame
                 const f = Math.floor((TIME - time) * this.images.length / TIME) // blur image to draw
 
-                this.engine.video.ScaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
-                this.engine.video.DrawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, Math.floor(o / 2)))
+                this.engine.video.scaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
+                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, Math.floor(o / 2)))
                 this.draw()
-                this.engine.video.ShowPage()
+                this.engine.video.showPage()
             }
             yield null
             now = this.engine.getTime()
@@ -192,10 +192,10 @@ export class PauseScreen {
     *runTask() {
         yield* this.showTask()
         while (true) {
-            this.engine.video.ScaleBlit(this.images[this.images.length - 1], 0, 0, this.engine.video.xres, this.engine.video.yres)
-            this.engine.video.DrawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, 128))
+            this.engine.video.scaleBlit(this.images[this.images.length - 1], 0, 0, this.engine.video.xres, this.engine.video.yres)
+            this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, 128))
             this.draw()
-            this.engine.video.ShowPage()
+            this.engine.video.showPage()
             yield null
 
             const result = this.menu.update()

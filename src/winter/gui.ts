@@ -20,7 +20,7 @@ class ImageCursor {
     draw(x: number, y: number) {
         const hotspotX = this.image.width
         const hotspotY = (this.image.height / 2) | 0
-        this.engine.video.Blit(this.image, x - hotspotX, y - hotspotY)
+        this.engine.video.blit(this.image, x - hotspotX, y - hotspotY)
     }
 }
 
@@ -280,18 +280,18 @@ class Frame extends Widget {
         const x2 = x + this.width
         const y2 = y + this.height
 
-        this.engine.video.Blit(this.iTopleft,  x - this.iTopleft.width, y - this.iTopleft.height)
-        this.engine.video.Blit(this.iTopright, x2, y - this.iTopright.height)
-        this.engine.video.Blit(this.iBottomleft, x - this.iBottomleft.width, y2)
-        this.engine.video.Blit(this.iBottomright, x2, y2)
+        this.engine.video.blit(this.iTopleft,  x - this.iTopleft.width, y - this.iTopleft.height)
+        this.engine.video.blit(this.iTopright, x2, y - this.iTopright.height)
+        this.engine.video.blit(this.iBottomleft, x - this.iBottomleft.width, y2)
+        this.engine.video.blit(this.iBottomright, x2, y2)
 
-        this.engine.video.ScaleBlit(this.iLeft, x - this.iLeft.width, y, this.iLeft.width, y2 - y)
-        this.engine.video.ScaleBlit(this.iRight, x2, y, this.iRight.width, y2 - y)
+        this.engine.video.scaleBlit(this.iLeft, x - this.iLeft.width, y, this.iLeft.width, y2 - y)
+        this.engine.video.scaleBlit(this.iRight, x2, y, this.iRight.width, y2 - y)
 
-        this.engine.video.ScaleBlit(this.iTop, x, y - this.iTop.height, x2 - x, this.iTop.height)
-        this.engine.video.ScaleBlit(this.iBottom, x, y2, x2 - x, this.iBottom.height)
+        this.engine.video.scaleBlit(this.iTop, x, y - this.iTop.height, x2 - x, this.iTop.height)
+        this.engine.video.scaleBlit(this.iBottom, x, y2, x2 - x, this.iBottom.height)
 
-        this.engine.video.ScaleBlit(this.iCentre, x, y, x2 - x, y2 - y)
+        this.engine.video.scaleBlit(this.iCentre, x, y, x2 - x, y2 - y)
 
         super.draw(xofs, yofs)
     }
@@ -311,7 +311,7 @@ class Picture extends Widget {
     }
 
     draw(xofs = 0, yofs = 0) {
-        this.engine.video.ScaleBlit(this.image, this.x + xofs, this.y + yofs, this.width, this.height)
+        this.engine.video.scaleBlit(this.image, this.x + xofs, this.y + yofs, this.width, this.height)
     }
 }
 
@@ -342,7 +342,7 @@ class StaticText extends Widget {
 
     autoSize() {
         if (this.text.length) {
-            const widths = this.text.map(s => this.font.StringWidth(s))
+            const widths = this.text.map(s => this.font.stringWidth(s))
             this.setWidth(Math.max(...widths))
             this.setHeight(this.text.length * this.font.height)
         } else {
@@ -355,7 +355,7 @@ class StaticText extends Widget {
         const x = this.x + xofs
         let y = this.y + yofs
         this.text.forEach(s => {
-            this.font.Print(x, y, s)
+            this.font.print(x, y, s)
             y += this.font.height
         })
         super.draw(xofs, yofs)
@@ -406,7 +406,7 @@ class ScrollableTextLabel extends StaticText {
         let curY = y - this.ywin % this.font.height
         for (let i = firstLine; i < lastLine; ++i) {
             const line = this.text[i]
-            this.font.Print(x, curY, line)
+            this.font.print(x, curY, line)
             curY += this.font.height
         }
     }

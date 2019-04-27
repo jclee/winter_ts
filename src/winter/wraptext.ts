@@ -42,7 +42,7 @@ export function wrapText(text: string, maxWidth: number, font: Font) {
             continue
         }
 
-        const l = font.StringWidth(text.slice(0, pos))
+        const l = font.stringWidth(text.slice(0, pos))
 
         if (l >= maxWidth) {        // too wide.  Go back to the last whitespace character, and chop
             if (lastSpace > 0) {

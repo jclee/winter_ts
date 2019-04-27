@@ -14,7 +14,7 @@ export function *loadMenuTask(
     const m = new SaveLoadMenu(engineRef, saves, false)
 
     const draw = () => {
-        engine.video.ClearScreen() // fix this
+        engine.video.clearScreen() // fix this
         m.draw()
         title.draw()
     }
@@ -25,7 +25,7 @@ export function *loadMenuTask(
     while (i === null) {
         i = m.update()
         draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
     }
 
@@ -48,7 +48,7 @@ export function *saveMenuTask(engineRef: PyEngine) {
     const m = new SaveLoadMenu(engineRef, saves, true)
 
     const draw = () => {
-        engine.video.ClearScreen() // fix this
+        engine.video.clearScreen() // fix this
         m.draw()
         title.draw()
     }
@@ -59,7 +59,7 @@ export function *saveMenuTask(engineRef: PyEngine) {
     while (i === null) {
         i = m.update()
         draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
     }
 

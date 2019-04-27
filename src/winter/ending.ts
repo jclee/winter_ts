@@ -173,25 +173,23 @@ export function *creditsTask(engineRef: PyEngine) {
     const font = engineRef.font
 
     const draw = () => {
-        engine.video.Blit(bg, 0, 0)
-        engine.video.DrawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, 128))
+        engine.video.blit(bg, 0, 0)
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, 128))
 
         let firstLine = Math.floor(y / font.height)
         const adjust = Math.floor(y) % font.height
         //const length = Math.floor(engine.video.yres / font.height) + 1
 
-        //print(firstLine)
-
         let Y = -adjust
         while (Y < engine.video.yres && firstLine < _text.length) {
             if (firstLine >= 0) {
-                font.CenterPrint(160, Y, _text[firstLine])
+                font.centerPrint(160, Y, _text[firstLine])
             }
             Y += font.height
             firstLine += 1
         }
 
-        engine.video.Blit(vignette, 0, 0)
+        engine.video.blit(vignette, 0, 0)
 
         snowObj.draw()
     }
@@ -205,7 +203,7 @@ export function *creditsTask(engineRef: PyEngine) {
         snowObj.update()
 
         draw()
-        engine.video.ShowPage()
+        engine.video.showPage()
         yield null
     }
 }

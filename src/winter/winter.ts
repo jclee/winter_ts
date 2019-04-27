@@ -228,7 +228,7 @@ export class Sprite {
         this.isMoving = this.destVector.x != 0 || this.destVector.y != 0
     }
 
-    Stop() {
+    stop() {
         this.destLocation.x = this.x
         this.destLocation.y = this.y
         this.destVector.x = 0
@@ -308,7 +308,7 @@ export class Sprite {
             }
         }
         if (newDir == '') {
-            this.Stop()
+            this.stop()
         } else {
             this._move(newDir)
         }
@@ -384,7 +384,7 @@ export class Sprite {
             newX += 1
         }
         if (this._isObstructedAt(newX, newY)) {
-            this.Stop()
+            this.stop()
             return
         }
         this.x = newX
@@ -500,11 +500,11 @@ export class Font {
 
     // TODO: Other members?
 
-    CenterPrint(x: number, y: number, text: string) {
-        this.Print(x - this.StringWidth(text) / 2 , y, text)
+    centerPrint(x: number, y: number, text: string) {
+        this.print(x - this.stringWidth(text) / 2 , y, text)
     }
 
-    StringWidth(s: string): number {
+    stringWidth(s: string): number {
         let w = 0
         for (let glyph of this._genGlyphs(s)) {
             w += glyph.width
@@ -512,7 +512,7 @@ export class Font {
         return w
     }
 
-    PrintWithOpacity(x: number, y: number, text: string, opacity: number) {
+    printWithOpacity(x: number, y: number, text: string, opacity: number) {
         this._engine.targetPageFramebuffer()
         const image = this._engine.getImage('system_font.png')
         let cursorX = Math.floor(x)
@@ -533,8 +533,8 @@ export class Font {
         }
     }
 
-    Print(x: number, y: number, text: string) {
-        this.PrintWithOpacity(x, y, text, 1.0)
+    print(x: number, y: number, text: string) {
+        this.printWithOpacity(x, y, text, 1.0)
     }
 
     *_genGlyphs(text:string) {
@@ -620,7 +620,7 @@ class MapClass {
         }
     }
 
-    Render() {
+    render() {
         const mapData = this._engine.getMapData(this._currentMapName)
 
         // This game only uses the single tile map with this fixed size:
@@ -740,7 +740,7 @@ class MapClass {
         // This game doesn't use hookretrace.
     }
 
-    SetTile(x: number, y: number, layerIndex: number, tileIndex: number) {
+    setTile(x: number, y: number, layerIndex: number, tileIndex: number) {
         const mapData = this._engine.getMapData(this._currentMapName)
         const layer = mapData.layers[layerIndex]
         const localLayerData = this._localLayerDatas[layerIndex]
@@ -748,7 +748,7 @@ class MapClass {
         localLayerData[index] = tileIndex
     }
 
-    SetObs(x: number, y: number, layerIndex: number, obs: number) {
+    setObs(x: number, y: number, layerIndex: number, obs: number) {
         const mapData = this._engine.getMapData(this._currentMapName)
         const layer = mapData.layers[layerIndex]
         const localLayerObstructions = this._localLayerObstructions[layerIndex]
@@ -756,7 +756,7 @@ class MapClass {
         localLayerObstructions[index] = obs
     }
 
-    Switch(path: string) {
+    load(path: string) {
         this.clearSprites()
 
         this._currentMapName = path.replace('maps/', '').replace('.ika-map', '')
@@ -795,12 +795,12 @@ class MapClass {
         }
     }
 
-    GetMetaData() {
+    getMetaData() {
         const mapData = this._engine.getMapData(this._currentMapName)
         return mapData.information.meta
     }
 
-    GetZones(layerIndex: number): [number, number, number, number, string][] {
+    getZones(layerIndex: number): [number, number, number, number, string][] {
         let zoneTuples: [number, number, number, number, string][] = []
         const mapData = this._engine.getMapData(this._currentMapName)
 
@@ -826,7 +826,7 @@ class MapClass {
         return zoneTuples
     }
 
-    FindLayerByName(name: string): number | null {
+    findLayerByName(name: string): number | null {
         const mapData = this._engine.getMapData(this._currentMapName)
         for (let i = 0; i < mapData.layers.length; ++i) {
             const layer = mapData.layers[i]
@@ -1172,11 +1172,11 @@ class Video {
         this._getEngine = ()=>engine
     }
 
-    Blit(image: Image, x: number, y: number) {
-        this.TintScaleBlit(image, x, y, image.width, image.height, 1.0)
+    blit(image: Image, x: number, y: number) {
+        this.tintScaleBlit(image, x, y, image.width, image.height, 1.0)
     }
 
-    ClearScreen() {
+    clearScreen() {
         const engine = this._getEngine()
         const gl = engine.gl
         engine.targetPageFramebuffer()
@@ -1184,7 +1184,7 @@ class Video {
         gl.clear(gl.COLOR_BUFFER_BIT)
     }
 
-    DrawRect(x1: number, y1: number, x2: number, y2: number, color: number) {
+    drawRect(x1: number, y1: number, x2: number, y2: number, color: number) {
         const engine = this._getEngine()
         engine.targetPageFramebuffer()
         const r = (color & 0xff) / 255.0
@@ -1194,7 +1194,7 @@ class Video {
         engine.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1, r, g, b, a)
     }
 
-    GrabImage(x1: number, y1: number, x2: number, y2: number) {
+    grabImage(x1: number, y1: number, x2: number, y2: number) {
         const engine = this._getEngine()
         const gl = engine.gl
 
@@ -1220,7 +1220,7 @@ class Video {
         return canvas._image
     }
 
-    FreeImage(image: Image) {
+    freeImage(image: Image) {
         const engine = this._getEngine()
         const gl = engine.gl
 
@@ -1243,24 +1243,24 @@ class Video {
         }
     }
 
-    ScaleBlit(image: Image, x: number, y: number, width: number, height: number) {
-        this.TintScaleBlit(image, x, y, width, height, 1.0)
+    scaleBlit(image: Image, x: number, y: number, width: number, height: number) {
+        this.tintScaleBlit(image, x, y, width, height, 1.0)
     }
 
-    ShowPage() {
+    showPage() {
         const engine = this._getEngine()
         engine.targetCanvasFramebuffer()
         engine.drawImage(engine.pageImage, 0, 0, engine.pageImage.width, engine.pageImage.height, 0, 0, engine.pageImage.width, engine.pageImage.height, 1.0)
 
         // Makes compositing more reliable.  Some maps don't draw the whole screen.
-        this.ClearScreen()
+        this.clearScreen()
     }
 
-    TintBlit(image: Image, x: number, y: number, alpha: number) {
-        this.TintScaleBlit(image, x, y, image.width, image.height, alpha)
+    tintBlit(image: Image, x: number, y: number, alpha: number) {
+        this.tintScaleBlit(image, x, y, image.width, image.height, alpha)
     }
 
-    TintScaleBlit(image: Image, x: number, y: number, width: number, height: number, alpha: number) {
+    tintScaleBlit(image: Image, x: number, y: number, width: number, height: number, alpha: number) {
         const engine = this._getEngine()
         engine.targetPageFramebuffer()
         engine.drawImage(image, 0, 0, image.width, image.height, x, y, width, height, alpha)
@@ -1900,7 +1900,7 @@ export class Engine {
 
         const startEngine = () => {
             console.log("Starting engine...")
-            this.video.ClearScreen()
+            this.video.clearScreen()
             window.requestAnimationFrame(runFrame)
         }
 
@@ -2208,8 +2208,8 @@ export class PyEngine {
             this.saveFlags = {...saveData.flags}
         } else {
             [this.player.sprite.x, this.player.sprite.y] = START_POS
-            const name = this._engine.map.GetMetaData()['entityLayer']
-            const layer = this._engine.map.FindLayerByName(name)
+            const name = this._engine.map.getMetaData()['entityLayer']
+            const layer = this._engine.map.findLayerByName(name)
             if (layer === null) {
                 throw new Error("Unrecognized layer name")
             }
@@ -2306,18 +2306,18 @@ export class PyEngine {
         this.background = null
         this.mapThings = []
         this.fields = []
-        // TODO: Already called in this.map.Switch() below?
+        // TODO: Already called in this.map.load() below?
         this._engine.map.clearSprites()
 
         // drop the extension, convert slashes to dots, and prepend the maps package
         // ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
         const currentMapName = mapName.replace('maps/', '').replace('.ika-map', '')
         const mapScript = mapScripts[currentMapName]
-        this._engine.map.Switch(currentMapName)
+        this._engine.map.load(currentMapName)
 
         mapScript.autoexec(this)
 
-        const metaData = this._engine.map.GetMetaData()
+        const metaData = this._engine.map.getMetaData()
 
         this.readZones(mapScript)
         this.readEnts()
@@ -2327,7 +2327,7 @@ export class PyEngine {
         if (dest && this.player) {
             if (dest.length === 2) {
                 [this.player.sprite.x, this.player.sprite.y] = dest
-                const lay = this._engine.map.FindLayerByName(metaData['entityLayer'])
+                const lay = this._engine.map.findLayerByName(metaData['entityLayer'])
                 if (lay === null) {
                     throw new Error("Unrecognized layer name")
                 }
@@ -2359,7 +2359,7 @@ export class PyEngine {
 
     *warpTask(dest: [number, number]) {
         this.draw()
-        const startImage = this._engine.video.GrabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
+        const startImage = this._engine.video.grabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
 
         const p = this.getPlayerEntity()
         p.direction = Direction.Down
@@ -2372,22 +2372,22 @@ export class PyEngine {
         this.camera.center()
 
         this.draw()
-        const endImage = this._engine.video.GrabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
+        const endImage = this._engine.video.grabImage(0, 0, this._engine.video.xres, this._engine.video.yres)
 
         const time = 50
         const endTime = this.getTime() + time
         let now = this.getTime()
         while (now < endTime) {
             const opacity = (endTime - now) / time
-            this._engine.video.Blit(endImage, 0, 0)
-            this._engine.video.TintBlit(startImage, 0, 0, opacity)
-            this._engine.video.ShowPage()
+            this._engine.video.blit(endImage, 0, 0)
+            this._engine.video.tintBlit(startImage, 0, 0, opacity)
+            this._engine.video.showPage()
             yield null
             now = this.getTime()
         }
 
-        this._engine.video.FreeImage(startImage)
-        this._engine.video.FreeImage(endImage)
+        this._engine.video.freeImage(startImage)
+        this._engine.video.freeImage(endImage)
         this.synchTime()
     }
 
@@ -2416,7 +2416,7 @@ export class PyEngine {
                 } else {
                     skipCount = 0
                     this.draw()
-                    this._engine.video.ShowPage()
+                    this._engine.video.showPage()
                     yield null
                 }
 
@@ -2443,9 +2443,9 @@ export class PyEngine {
 
     draw() {
         if (this.background) {
-            this._engine.video.ScaleBlit(this.background, 0, 0, this._engine.video.xres, this._engine.video.yres)
+            this._engine.video.scaleBlit(this.background, 0, 0, this._engine.video.xres, this._engine.video.yres)
         }
-        this._engine.map.Render()
+        this._engine.map.render()
 
         for (let t of this.things) {
             t.draw()
@@ -2534,7 +2534,7 @@ export class PyEngine {
         this.fields = []
 
         for (let i = 0; i < this._engine.map.layercount; ++i) {
-            const zones = this._engine.map.GetZones(i)
+            const zones = this._engine.map.getZones(i)
             for (let [x, y, w, h, scriptTaskName] of zones) {
                 const scriptTask = mapScript.fns[scriptTaskName]
                 this.fields.push(new Field([x,y,w,h], i, scriptTask))
@@ -2575,7 +2575,7 @@ export class PyEngine {
             }
             ent.sprite.x = -100
             ent.sprite.y = 0
-            ent.sprite.Stop()
+            ent.sprite.stop()
             delete this.nameToEntityMap[ent.sprite.name]
             this._engine.map.removeSprite(ent.sprite)
             // brython workaround?
@@ -2609,10 +2609,10 @@ export class PyEngine {
 
             // darken the screen, draw the game over message:
             const o = Math.floor(i * 255 / t)
-            this._engine.video.DrawRect(0, 0, this._engine.video.xres, this._engine.video.yres, RGB(0, 0, 0, o))
+            this._engine.video.drawRect(0, 0, this._engine.video.xres, this._engine.video.yres, RGB(0, 0, 0, o))
             c.draw()
 
-            this._engine.video.ShowPage()
+            this._engine.video.showPage()
             yield* delayTask(4)
 
             if (i === t && this._engine.controls.attack()) {
