@@ -2081,35 +2081,38 @@ const MAX_SKIP_COUNT = 10
 const START_MAP = 'map01.ika-map'
 const START_POS = [34 * 16, 23 * 16]
 
-const spawnMap: {[key: string]: (e: PyEngine, s: Sprite) => Entity} = {
+interface Spawnable {
+    new (e: PyEngine, s: Sprite): Entity
+}
+const spawnMap: {[key: string]: Spawnable} = {
     // match each sprite name up with the associated class
-    'anklebiter.ika-sprite': (e: PyEngine, s: Sprite) => new AnkleBiter(e, s),
-    'carnivore.ika-sprite': (e: PyEngine, s: Sprite) => new Carnivore(e, s),
-    'devourer.ika-sprite': (e: PyEngine, s: Sprite) => new Devourer(e, s),
-    'razormane.ika-sprite': (e: PyEngine, s: Sprite) => new RazorMane(e, s),
-    'dragonpup.ika-sprite': (e: PyEngine, s: Sprite) => new DragonPup(e, s),
-    'hellhound.ika-sprite': (e: PyEngine, s: Sprite) => new HellHound(e, s),
-    'yeti.ika-sprite': (e: PyEngine, s: Sprite) => new Yeti(e, s),
-    'gorilla.ika-sprite': (e: PyEngine, s: Sprite) => new Gorilla(e, s),
-    'soulreaver.ika-sprite': (e: PyEngine, s: Sprite) => new SoulReaver(e, s),
+    'anklebiter.ika-sprite': AnkleBiter,
+    'carnivore.ika-sprite': Carnivore,
+    'devourer.ika-sprite': Devourer,
+    'razormane.ika-sprite': RazorMane,
+    'dragonpup.ika-sprite': DragonPup,
+    'hellhound.ika-sprite': HellHound,
+    'yeti.ika-sprite': Yeti,
+    'gorilla.ika-sprite': Gorilla,
+    'soulreaver.ika-sprite': SoulReaver,
 
-    'dynamite.ika-sprite': (e: PyEngine, s: Sprite) => new Dynamite(e, s),
-    'waterrune.ika-sprite': (e: PyEngine, s: Sprite) => new WaterRune(e, s),
-    'firerune.ika-sprite': (e: PyEngine, s: Sprite) => new FireRune(e, s),
-    'windrune.ika-sprite': (e: PyEngine, s: Sprite) => new WindRune(e, s),
-    'cowardrune.ika-sprite': (e: PyEngine, s: Sprite) => new CowardRune(e, s),
-    'strengthrune.ika-sprite': (e: PyEngine, s: Sprite) => new StrengthRune(e, s),
-    'powerrune.ika-sprite': (e: PyEngine, s: Sprite) => new PowerRune(e, s),
-    'guardrune.ika-sprite': (e: PyEngine, s: Sprite) => new GuardRune(e, s),
+    'dynamite.ika-sprite': Dynamite,
+    'waterrune.ika-sprite': WaterRune,
+    'firerune.ika-sprite': FireRune,
+    'windrune.ika-sprite': WindRune,
+    'cowardrune.ika-sprite': CowardRune,
+    'strengthrune.ika-sprite': StrengthRune,
+    'powerrune.ika-sprite': PowerRune,
+    'guardrune.ika-sprite': GuardRune,
 
-    'savepoint.ika-sprite': (e: PyEngine, s: Sprite) => new SavePoint(e, s),
+    'savepoint.ika-sprite': SavePoint,
 
-    'icecave.ika-sprite': (e: PyEngine, s: Sprite) => new IceWall(e, s),
-    'ice.ika-sprite': (e: PyEngine, s: Sprite) => new IceWall(e, s),
-    'icechunks.ika-sprite': (e: PyEngine, s: Sprite) => new IceChunks(e, s),
-    'boulder.ika-sprite': (e: PyEngine, s: Sprite) => new Boulder(e, s),
-    'vgap.ika-sprite': (e: PyEngine, s: Sprite) => new Gap(e, s),
-    'hgap.ika-sprite': (e: PyEngine, s: Sprite) => new Gap(e, s),
+    'icecave.ika-sprite': IceWall,
+    'ice.ika-sprite': IceWall,
+    'icechunks.ika-sprite': IceChunks,
+    'boulder.ika-sprite': Boulder,
+    'vgap.ika-sprite': Gap,
+    'hgap.ika-sprite': Gap,
 }
 
 class EndGameException {}
@@ -2626,9 +2629,9 @@ export class PyEngine {
         }
 
         for (let sprite of Object.values(this._engine.map.sprites)) {
-            const spawnFn = spawnMap[sprite.spritename]
-            if (spawnFn !== undefined) {
-                this.addEntity(spawnFn(this, sprite))
+            const spawnable = spawnMap[sprite.spritename]
+            if (spawnable !== undefined) {
+                this.addEntity(new spawnable(this, sprite))
             } else if (sprite.spritename !== PLAYER_SPRITE) {
                 console.log(`Unknown entity sprite {sprite.spritename}  Ignoring.`)
             }
