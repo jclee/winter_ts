@@ -1648,8 +1648,7 @@ export class Engine {
         gl.drawArrays(gl.TRIANGLES, 0, 6)
     }
 
-    run(taskFn: ()=>boolean) {
-
+    run() {
         const imagePaths = [
             'winter/gfx/credits_vignette.png',
             'winter/gfx/gba.png',
@@ -1887,8 +1886,12 @@ export class Engine {
         window.addEventListener('keydown', onKeyDown, true)
         window.addEventListener('keyup', onKeyUp, true)
 
+        const engineRef = new PyEngine(this)
+        const mainTask = engineRef.mainTask()
+
         const runFrame = (_timestamp: any) => {
-            if (taskFn()) {
+            const {done} = mainTask.next()
+            if (!done) {
                 window.requestAnimationFrame(runFrame)
             } else {
                 console.log("Engine done.")
@@ -2138,6 +2141,39 @@ export class PyEngine {
 
     setShowSaveMenuAtEndOfTick(v: boolean) {
         this.showSaveMenuAtEndOfTick = v
+    }
+
+    *mainTask() {
+        const introMusic = new Sound('music/Existing.s3m')
+
+        // TODO: Reenable
+        if (showIntroLogos) {
+            yield* introTask(this)
+        }
+
+        while (true) {
+            this.fader.kill()
+            introMusic.position = 0
+            introMusic.play()
+            // TODO: use return value instead.
+            let resultRef: [number | null] = [null]
+            const setResult = (r: number) => { resultRef[0] = r }
+            yield* menuTask(this, setResult)
+
+            if (resultRef[0] === 0) {
+                introMusic.pause()
+                yield* this.beginNewGameTask()
+            } else if (resultRef[0] === 1) {
+                introMusic.pause()
+                yield* this.loadGameTask()
+            } else if (resultRef[0] === 2) {
+                break
+            } else {
+                throw new Error("Unexpected intro menu result")
+            }
+        }
+
+        console.log("Exiting.") // TODO
     }
 
     *initTask(saveData: SaveData | null = null) {
@@ -2610,61 +2646,18 @@ export class PyEngine {
     }
 }
 
-export function *mainTask(engine: Engine) {
-    const introMusic = new Sound('music/Existing.s3m')
-
-    // TODO: clean up... :|
-    const engineObj = new PyEngine(engine)
-
-    // TODO: Reenable
-    if (showIntroLogos) {
-        yield* introTask(engineObj)
-    }
-
-    while (true) {
-        engineObj.fader.kill()
-        introMusic.position = 0
-        introMusic.play()
-        // TODO: use return value instead.
-        let resultRef: [number | null] = [null]
-        const setResult = (r: number) => { resultRef[0] = r }
-        yield* menuTask(engineObj, setResult)
-
-        if (resultRef[0] === 0) {
-            introMusic.pause()
-            yield* engineObj.beginNewGameTask()
-        } else if (resultRef[0] === 1) {
-            introMusic.pause()
-            yield* engineObj.loadGameTask()
-        } else if (resultRef[0] === 2) {
-            break
-        } else {
-            throw new Error("Unexpected intro menu result")
-        }
-    }
-
-    console.log("Exiting.") // TODO
-}
-
 // loading code:
 
-const removeChildren = (node : HTMLElement) => {
-    while (node.firstChild) {
-        node.removeChild(node.firstChild)
-    }
-}
-
-removeChildren(document.body)
-
 function main() {
-    const engine = new Engine()
-    const task = mainTask(engine)
-    const taskFn = () => {
-        // TODO: May be able to use yielded generator as a goto.
-        const {done} = task.next()
-        return !done
+    const removeChildren = (node : HTMLElement) => {
+        while (node.firstChild) {
+            node.removeChild(node.firstChild)
+        }
     }
-    engine.run(taskFn)
+    removeChildren(document.body)
+
+    const engine = new Engine()
+    engine.run()
 }
 
 main()
