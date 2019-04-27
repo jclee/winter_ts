@@ -757,7 +757,11 @@ class MapClass {
     }
 
     load(path: string) {
-        this.clearSprites()
+        // Clear old map-associated sprites, keeping dynamically added sprites.
+        for (let name of this.mapSpriteNames_) {
+            delete this.sprites[name]
+        }
+        this.mapSpriteNames_ = []
 
         this._currentMapName = path.replace('maps/', '').replace('.ika-map', '')
         this._xwin = 0
@@ -847,12 +851,6 @@ class MapClass {
     }
     removeSprite(sprite: Sprite) {
         delete this.sprites[sprite.name]
-    }
-    clearSprites() {
-        for (let name of this.mapSpriteNames_) {
-            delete this.sprites[name]
-        }
-        this.mapSpriteNames_ = []
     }
     spritesAt(x: number, y: number, width: number, height: number, layer: number) {
         const x2 = x + width
@@ -2274,15 +2272,13 @@ export class PyEngine {
         this.background = null
         this.mapThings = []
         this.fields = []
-        // TODO: Already called in this.map.load() below?
-        this._engine.map.clearSprites()
 
         // drop the extension, convert slashes to dots, and prepend the maps package
         // ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
         const currentMapName = mapName.replace('maps/', '').replace('.ika-map', '')
-        const mapScript = mapScripts[currentMapName]
         this._engine.map.load(currentMapName)
 
+        const mapScript = mapScripts[currentMapName]
         mapScript.autoexec(this)
 
         const metaData = this._engine.map.getMetaData()
