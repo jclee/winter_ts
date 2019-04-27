@@ -1,5 +1,5 @@
 import { Thing } from "./thing.js"
-import { Engine, FontClass, PyEngine } from "./winter.js"
+import { Engine, Font, PyEngine } from "./winter.js"
 
 export class Caption extends Thing {
     private x: number
@@ -9,7 +9,7 @@ export class Caption extends Thing {
 
     constructor(
         engineRef: PyEngine,
-        private font: FontClass,
+        private font: Font,
         private text: string,
         x: number | null = null,
         y: number | null = null,

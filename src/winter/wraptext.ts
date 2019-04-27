@@ -1,4 +1,4 @@
-import { FontClass } from "./winter.js";
+import { Font } from "./winter.js";
 
 // Miscillany
 // coded by Andy Friesen
@@ -13,7 +13,7 @@ import { FontClass } from "./winter.js";
 // wraps the text to the given pixel width, using the font specified.
 // returns a list of strings
 
-export function wrapText(text: string, maxWidth: number, font: FontClass) {
+export function wrapText(text: string, maxWidth: number, font: Font) {
     const result: string[] = []
     let pos = 0
     let lastSpace = 0

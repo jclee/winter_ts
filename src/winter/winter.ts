@@ -489,7 +489,7 @@ const _fontData : FontData = {
     ],
 }
 
-export class FontClass {
+export class Font {
     height: number
 
     constructor(
@@ -583,7 +583,7 @@ class MapClass {
 
     constructor(
         private _engine: Engine,
-        private _video: VideoClass
+        private _video: Video
     ) {
         this._spriteID = 0
         this.sprites = {}
@@ -1159,7 +1159,7 @@ const _snowShaderSpec = {
 
 let _canvases: Canvas[] = []
 
-class VideoClass {
+class Video {
     // Resolution used in this game...
     readonly xres = 320
     readonly yres = 240
@@ -1356,7 +1356,7 @@ export class Engine {
     map: MapClass
     private input: Input
     controls: Controls
-    video: VideoClass
+    video: Video
 
     constructor() {
         this.images = {}
@@ -1364,7 +1364,7 @@ export class Engine {
         this.sprites = {}
         this.sounds = {}
         this.input = new Input()
-        this.video = new VideoClass(this)
+        this.video = new Video(this)
         this.map = new MapClass(this, this.video)
         this.enabledAttributeLocations = []
 
@@ -2033,7 +2033,7 @@ export class PyEngine {
     private ticksPerFrame: number
     private nextFrameTime: number
     private _engine: Engine
-    public font: FontClass
+    public font: Font
     private mapName: string
     public fader: Crossfader
     private music: {[key: string]: Sound}
@@ -2059,7 +2059,7 @@ export class PyEngine {
         this.nextFrameTime = 0
 
         this._engine = engine
-        this.font = new FontClass(this._engine)
+        this.font = new Font(this._engine)
         this.mapName = ''
 
         this.fader = new Crossfader()

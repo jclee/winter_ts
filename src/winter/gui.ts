@@ -1,4 +1,4 @@
-import { Engine, FontClass, Image, PyEngine } from "./winter.js";
+import { Engine, Font, Image, PyEngine } from "./winter.js";
 
 import { SaveData } from "./saveload.js";
 
@@ -319,7 +319,7 @@ class StaticText extends Widget {
     // A widget that appears as some lines of text.
     // No frame is drawn.
 
-    public font: FontClass
+    public font: Font
 
     constructor(
         engineRef: PyEngine,
@@ -447,7 +447,7 @@ export class ScrollableTextFrame extends Frame {
     // a Frame at the same time.
 
     private text: ScrollableTextLabel
-    public font: FontClass
+    public font: Font
 
     constructor(
         engineRef: PyEngine,
