@@ -754,7 +754,7 @@ class MapClass {
         }
         this.mapSpriteNames_ = []
 
-        this._currentMapName = path.replace('maps/', '').replace('.ika-map', '')
+        this._currentMapName = path.replace('.ika-map', '')
         this._xwin = 0
         this._ywin = 0
 
@@ -2260,9 +2260,7 @@ export class PyEngine {
         this.mapThings = []
         this.fields = []
 
-        // drop the extension, convert slashes to dots, and prepend the maps package
-        // ie 'blah/map42.ika-map' becomes 'maps.blah.map42'
-        const currentMapName = mapName.replace('maps/', '').replace('.ika-map', '')
+        const currentMapName = mapName.replace('.ika-map', '')
         this._engine.map.load(currentMapName)
 
         const mapScript = mapScripts[currentMapName]

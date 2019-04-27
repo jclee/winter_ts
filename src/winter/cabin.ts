@@ -143,7 +143,7 @@ export function *sceneTask(engineRef: PyEngine, name: string) {
         ;[e.sprite.x, e.sprite.y] = [-100, -100]
     }
 
-    engine.map.load('maps/cabinmap.ika-map')
+    engine.map.load('cabinmap.ika-map')
     grandpa = engine.map.sprites['grandpa']
     kid1 = engine.map.sprites['kid1']
     kid2 = engine.map.sprites['kid2']
@@ -167,7 +167,7 @@ export function *sceneTask(engineRef: PyEngine, name: string) {
     if (engineRef.getMapName()) {
         // We now only call autoexec in engine.mapSwitchTask, not
         // engineRef.map.load, so this should be an OK way to restore the map.
-        engine.map.load('maps/' + engineRef.getMapName())
+        engine.map.load(engineRef.getMapName())
         for (let i = 0; i < entities.length; ++i) {
             const e = entities[i]
             ;[e.sprite.x, e.sprite.y] = savedPos[i]
