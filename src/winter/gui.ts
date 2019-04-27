@@ -687,7 +687,7 @@ export class MagicWindow extends SubScreenWindow {
         addIfFlag('firerune', 'Z...Hearth Rend')
         addIfFlag('windrune', 'X...Crushing Gale')
         addIfFlag('waterrune', 'C...Healing Rain')
-        addIfFlag('cowardrune', 'B...Shiver')
+        addIfFlag('cowardrune', 'V...Shiver')
         return [new StaticText(this.engineRef, txt)]
     }
 }
