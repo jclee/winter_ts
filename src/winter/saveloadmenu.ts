@@ -10,7 +10,7 @@ export function *loadMenuTask(
     const engine = engineRef.getEngine()
     const title = new TextFrame(engineRef, ['Load Game'])
     title.setPosition([16, 16])
-    const saves = engineRef.pyReadSaves()
+    const saves = engineRef.readSaves()
     const m = new SaveLoadMenu(engineRef, saves, false)
 
     const draw = () => {
@@ -44,7 +44,7 @@ export function *saveMenuTask(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
     const title = new TextFrame(engineRef, ['Save Game'])
     title.setPosition([16, 16])
-    const saves = engineRef.pyReadSaves()
+    const saves = engineRef.readSaves()
     const m = new SaveLoadMenu(engineRef, saves, true)
 
     const draw = () => {
@@ -65,7 +65,7 @@ export function *saveMenuTask(engineRef: PyEngine) {
 
     if (i !== 'cancel') {
         // TODO: Better way?
-        engineRef.pyWriteSave((i as number))
+        engineRef.writeSave((i as number))
     }
 
     yield* fadeOutTask(engineRef, 50, draw)

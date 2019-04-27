@@ -15,7 +15,7 @@ class Rune extends Entity {
 
         if (engineRef.getSaveFlag(this.name)) {
             this.sprite.x = -100
-            this.engineRef.pyDestroyEntity(this)
+            this.engineRef.destroyEntity(this)
         }
     }
 
@@ -24,7 +24,7 @@ class Rune extends Entity {
 
     update() {
         if (this.touches(this.engineRef.getPlayerEntity())) {
-            this.engineRef.pyDestroyEntity(this)
+            this.engineRef.destroyEntity(this)
             this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, `~1You got the ${this.getElement()} Rune!`))
             this.engineRef.setSaveFlag(this.name, 'True')
             this.apply()

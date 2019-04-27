@@ -33,7 +33,7 @@ class DeathListener extends Thing {
 
     update() {
         if (this.yeti.stats.hp === 0) {
-            this.engineRef.pyPlayMusic("music/winter.ogg")
+            this.engineRef.playMusic("music/winter.ogg")
             this.engineRef.setSaveFlag('waterguard', 'True')
             return true
         }
@@ -49,15 +49,15 @@ class RuneListener extends Thing {
         if (this.engineRef.hasSaveFlag('nearend')
             && !this.engineRef.hasSaveFlag('waterguard')
         ) {
-            this.engineRef.pyPlayMusic("music/resurrection.it")
+            this.engineRef.playMusic("music/resurrection.it")
             const p = this.engineRef.getPlayerEntity()
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(15* 16, 17 * 16, p.sprite.layer, 'soulreaver.ika-sprite'))
-            this.engineRef.pyAddEntity(y)
+            this.engineRef.addEntity(y)
             this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         } else if (this.engineRef.hasSaveFlag('waterrune') && !this.engineRef.hasSaveFlag('nearend')) {
             const p = this.engineRef.getPlayerEntity()
-            this.engineRef.pyAddEntity(
+            this.engineRef.addEntity(
                 new Yeti(this.engineRef, engine.map.addSprite(15* 16, 32 * 16, p.sprite.layer, 'yeti.ika-sprite'))
             )
             return true

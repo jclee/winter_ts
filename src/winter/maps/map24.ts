@@ -29,7 +29,7 @@ class AddRune extends Thing {
         const engine = this.engineRef.getEngine()
         const e = engine.map.addSprite(315, 320, 1, 'cowardrune.ika-sprite')
         e.name = 'cowardrune'
-        this.engineRef.pyAddEntity(new CowardRune(this.engineRef, e))
+        this.engineRef.addEntity(new CowardRune(this.engineRef, e))
         return true
     }
 }

@@ -27,7 +27,7 @@ export function autoexec(engineRef: PyEngine) {
 export function *bridge_break(engineRef: PyEngine) {
     const engine = engineRef.getEngine()
     if (!engineRef.hasSaveFlag('bridge_broken')) {
-        engineRef.pyPlayMusic('music/Competative.xm')
+        engineRef.playMusic('music/Competative.xm')
         engineRef.setSaveFlag('bridge_broken', 'True')
 
         const bridge = [
@@ -52,7 +52,7 @@ export function *bridge_break(engineRef: PyEngine) {
         p.sprite.specframe = 91
         p.setState(p.noOpState()) // keep the player from moving
 
-        engineRef.pyDraw()
+        engineRef.draw()
         engine.video.ShowPage()
         yield* delayTask(8)
 
@@ -60,7 +60,7 @@ export function *bridge_break(engineRef: PyEngine) {
             p.sprite.y += 1
             engine.map.processSprites()
             engineRef.pyUpdateCamera()
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield* delayTask(1)
         }
@@ -71,7 +71,7 @@ export function *bridge_break(engineRef: PyEngine) {
             p.sprite.y += 1
             engine.map.processSprites()
             engineRef.pyUpdateCamera()
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield* delayTask(1)
         }
@@ -79,7 +79,7 @@ export function *bridge_break(engineRef: PyEngine) {
         p.sprite.specframe = 92
         const t = engine.getTime() + 80
         while (t > engine.getTime()) {
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield null
         }
@@ -91,10 +91,10 @@ export function *bridge_break(engineRef: PyEngine) {
         y.stats.maxhp = 400
         y.stats.hp = y.stats.maxhp
         y.stats.att += 10
-        engineRef.pyAddEntity(y)
+        engineRef.addEntity(y)
         engineRef.addMapThing(new DeathListener(engineRef, y))
 
-        engineRef.pySynchTime()
+        engineRef.synchTime()
     }
 }
 
@@ -143,12 +143,12 @@ class DeathListener extends Thing {
             if (!this.engineRef.hasSaveFlag('windrune')) {
                 const e = engine.map.addSprite(304, 304, 1, 'windrune.ika-sprite')
                 e.name = 'windrune'
-                this.engineRef.pyAddEntity(new WindRune(this.engineRef, e))
+                this.engineRef.addEntity(new WindRune(this.engineRef, e))
             } else {
                 this.engineRef.setSaveFlag('windguard', 'True')
             }
 
-            this.engineRef.pyPlayMusic('music/winter.ogg')
+            this.engineRef.playMusic('music/winter.ogg')
             return true
         }
         return false
@@ -161,9 +161,9 @@ class RuneListener extends Thing {
     update() {
         const engine = this.engineRef.getEngine()
         if (this.engineRef.hasSaveFlag('nearend')) {
-            this.engineRef.pyPlayMusic('music/resurrection.it')
+            this.engineRef.playMusic('music/resurrection.it')
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(19*16, 20*16, 1, 'soulreaver.ika-sprite'))
-            this.engineRef.pyAddEntity(y)
+            this.engineRef.addEntity(y)
             this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         }

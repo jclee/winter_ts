@@ -22,7 +22,7 @@ class Obstacle extends Entity {
     remove() {
         this.sprite.x = -100
         this.sprite.y = -100
-        this.engineRef.pyDestroyEntity(this)
+        this.engineRef.destroyEntity(this)
     }
 
     update() {}
@@ -109,7 +109,7 @@ export class Boulder extends Obstacle {
                 // TODO: explode animation here
                 this.engineRef.setSaveFlag(key, 'False')
                 this.engineRef.setSaveFlag(this.flagName, 'Broken')
-                this.engineRef.pyDestroyEntity(this)
+                this.engineRef.destroyEntity(this)
                 this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, 'Blew the rock apart!'))
             }
         }

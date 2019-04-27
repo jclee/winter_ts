@@ -26,7 +26,7 @@ export function *releaseAnklebiters(engineRef: PyEngine): IterableIterator<null>
         const indeces = [[6,6], [9,6], [12,6], [4, 8], [14, 8], [2, 10], [6, 10], [12, 10], [16, 10], [4,11], [14, 11]]
 
         for (let i of indeces) {
-            engineRef.pyAddEntity(new Carnivore(engineRef, engine.map.addSprite(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
+            engineRef.addEntity(new Carnivore(engineRef, engine.map.addSprite(i[0]*16+8, i[1]*16, 1, "carnivore.ika-sprite")))
         }
 
         spawned = true

@@ -34,7 +34,7 @@ class DeathListener extends Thing {
             // have to get the entity here, since it hasn't been created yet
             // in AutoExec. (if we had more time, I'd fix that problem instead of
             // doing this)
-            this.engineRef.pyPlayMusic("music/Competative.xm")
+            this.engineRef.playMusic("music/Competative.xm")
             const y = this.engineRef.getEntityForSpriteName(engine.map.sprites['demiyeti'].name)
             if (!(y instanceof Yeti)) { throw new Error("Expected Yeti") }
             this.yeti = y
@@ -42,9 +42,9 @@ class DeathListener extends Thing {
             if (!this.engineRef.hasSaveFlag('nearend')) {
                 const e = engine.map.addSprite(71, 132, 2, 'firerune.ika-sprite')
                 e.name = 'firerune'
-                this.engineRef.pyAddEntity(new FireRune(this.engineRef, e))
+                this.engineRef.addEntity(new FireRune(this.engineRef, e))
             } else {
-                this.engineRef.pyPlayMusic("music/winter.ogg")
+                this.engineRef.playMusic("music/winter.ogg")
                 this.engineRef.setSaveFlag('fireguard', 'True')
             }
             return true
@@ -59,9 +59,9 @@ class RuneListener extends Thing {
     update() {
         const engine = this.engineRef.getEngine()
         if (this.engineRef.hasSaveFlag('nearend')) {
-            this.engineRef.pyPlayMusic('music/resurrection.it')
+            this.engineRef.playMusic('music/resurrection.it')
             const y = new SoulReaver(this.engineRef, engine.map.addSprite(21*16, 13*16, 2, 'soulreaver.ika-sprite'))
-            this.engineRef.pyAddEntity(y)
+            this.engineRef.addEntity(y)
             this.engineRef.addMapThing(new DeathListener(this.engineRef, y))
             return true
         }

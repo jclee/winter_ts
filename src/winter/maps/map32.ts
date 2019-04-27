@@ -30,7 +30,7 @@ export function *finalBattle(engineRef: PyEngine) {
 
         for (let n = 0; n < 128; ++n) {
             yield* engineRef.tickTask()
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield null
         }
@@ -43,7 +43,7 @@ export function *finalBattle(engineRef: PyEngine) {
             engine.map.xwin += random(-4, 5)
             engine.map.ywin += random(-4, 5)
             yield* engineRef.tickTask()
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield null
         }
@@ -53,7 +53,7 @@ export function *finalBattle(engineRef: PyEngine) {
             engine.map.addSprite(25 * 16, 24 * 16, p.sprite.layer, 'serpent.ika-sprite')
             )
         s.startAnimation('appear')
-        engineRef.pyAddEntity(s)
+        engineRef.addEntity(s)
 
         for (let n = 19; n < 32; ++n) {
             // close off the way back
@@ -61,7 +61,7 @@ export function *finalBattle(engineRef: PyEngine) {
             engine.map.SetTile(n, 39, p.sprite.layer, 32)
             engine.map.SetObs(n, 38, p.sprite.layer, 1)
             yield* engineRef.tickTask()
-            engineRef.pyDraw()
+            engineRef.draw()
             engine.video.ShowPage()
             yield null
         }
@@ -69,7 +69,7 @@ export function *finalBattle(engineRef: PyEngine) {
         p.setState(p.defaultState())
 
         s.setState(s.roarState())
-        engineRef.pySynchTime()
+        engineRef.synchTime()
     }
 }
 

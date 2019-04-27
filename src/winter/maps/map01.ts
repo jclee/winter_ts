@@ -15,7 +15,7 @@ class RuneListener extends Thing {
 
         const engine = this.engineRef.getEngine()
         const p = this.engineRef.getPlayerEntity()
-        this.engineRef.pyAddEntity(
+        this.engineRef.addEntity(
             new Yeti(this.engineRef, engine.map.addSprite(35 * 16, 19 * 16, p.sprite.layer, 'yeti.ika-sprite'))
         )
         return true

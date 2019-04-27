@@ -8,7 +8,7 @@ function *showTask(engine: Engine, draw: ()=>void, count: number, snowObj: Snow)
         snowObj.update()
         snowObj.draw()
         engine.video.ShowPage()
-        yield *delayTask(1)
+        yield* delayTask(1)
 
         if (engine.controls.attack()) {
             throw new DoneException()

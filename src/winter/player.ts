@@ -581,7 +581,7 @@ export class Player extends Entity {
                     // TODO: some sort of nice animation.
                     this.engineRef.setSaveFlag((e as IceWall).flagName as string, 'Broken')
 
-                    this.engineRef.pyDestroyEntity(e)
+                    this.engineRef.destroyEntity(e)
                     this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, '~1The ice melted!'))
                 }
             }
@@ -721,7 +721,7 @@ export class Player extends Entity {
             if (e.isKind('IceChunks') && (e instanceof IceChunks)) {
                 e.freeze()
                 this.engineRef.addThing(new Caption(this.engineRef, this.engineRef.font, '~1The ice froze over!'))
-                this.engineRef.pyDestroyEntity(e)
+                this.engineRef.destroyEntity(e)
                 break
             }
         }

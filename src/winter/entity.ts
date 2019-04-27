@@ -58,7 +58,7 @@ export class Entity {
     }
 
     die() {
-        this.engineRef.pyDestroyEntity(this)
+        this.engineRef.destroyEntity(this)
     }
 
     // if recoil is nonzero, the enemy is blown backwards in a direction,

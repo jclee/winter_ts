@@ -68,8 +68,9 @@ export class Enemy extends Entity {
         this._mood = null
         this.interruptable = true
         this.setState(this.deathState())
-        this.engineRef.pyGivePlayerXP(this.stats.exp)
-        //this.engineRef.player.stats.mp += this.stats.exp // MP Regen for the player.
+        const p = this.engineRef.getPlayerEntity()
+        p.giveXP(this.stats.exp)
+        //p.stats.mp += this.stats.exp // MP Regen for the player.
     }
 
     *deathState() {

@@ -2131,7 +2131,6 @@ export class PyEngine {
     private ticksPerFrame: number
     private nextFrameTime: number
     private _engine: Engine
-    //private map = this._engine.map
     public font: FontClass
     private mapName: string
     public fader: Crossfader
@@ -2200,44 +2199,12 @@ export class PyEngine {
         return this.saveFlags.hasOwnProperty(s)
     }
 
-    pyAddEntity(ent: Entity) {
-        this.addEntity(ent)
-    }
-
-    pyDestroyEntity(ent: Entity) {
-        this.destroyEntity(ent)
-    }
-
-    pyDraw() {
-        this.draw()
-    }
-
-    pyGivePlayerXP(xp: number) {
-        this.getPlayerEntity().giveXP(xp)
-    }
-
-    pyPlayMusic(s: string) {
-        return this.playMusic(s)
-    }
-
-    pyReadSaves() {
-        return this.readSaves()
-    }
-
     pySetBackground(img: Image) {
         this.background = img
     }
 
-    pySynchTime() {
-        this.synchTime()
-    }
-
     pyUpdateCamera() {
         this.camera.update()
-    }
-
-    pyWriteSave(index: number) {
-        this.writeSave(index)
     }
 
     getPlayerEntity(): Player {
@@ -2274,14 +2241,7 @@ export class PyEngine {
         this.showSaveMenuAtEndOfTick = v
     }
 
-    // TODO DO NOT COMMIT - remove
-    *delayTask(time: number) {
-        yield* delayTask(time)
-    }
-
     *initTask(saveData: SaveData | null = null) {
-        // barf
-
         // clean everything
         this.killList = [...this.entities]
         this.clearKillQueue()
@@ -2505,7 +2465,7 @@ export class PyEngine {
 
                 // if we're ahead, delay
                 if (t < this.nextFrameTime) {
-                    yield* this.delayTask(Math.floor(this.nextFrameTime - t))
+                    yield* delayTask(Math.floor(this.nextFrameTime - t))
                 }
 
                 if (this._engine.controls.cancel()) {
@@ -2722,7 +2682,7 @@ export class PyEngine {
             c.draw()
 
             this._engine.video.ShowPage()
-            yield* this.delayTask(4)
+            yield* delayTask(4)
 
             if (i === t && this._engine.controls.attack()) {
                 break

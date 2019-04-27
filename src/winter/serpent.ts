@@ -162,7 +162,7 @@ export class Serpent extends Enemy {
                 } else {
                     e = new AnkleBiter(this.engineRef, this.engine.map.addSprite(x, y, this.sprite.layer, 'anklebiter.ika-sprite'))
                 }
-                this.engineRef.pyAddEntity(e)
+                this.engineRef.addEntity(e)
                 e.setMood(e.attackMood.bind(e))
             }
         }
@@ -170,7 +170,7 @@ export class Serpent extends Enemy {
         // need to destroy old corpses (a first!)
         for (let e of this.engineRef.getEntities()) {
             if (e.stats.hp === 0 && e.isKind('Enemy')) {
-                this.engineRef.pyDestroyEntity(e)
+                this.engineRef.destroyEntity(e)
             }
         }
     }
