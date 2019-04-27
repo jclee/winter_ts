@@ -1,127 +1,33 @@
 
-import { Animator, makeAnim, makeAnimRange } from "./animator.js"
-;(window as any).animator = { Animator, makeAnim, makeAnimRange }
-
 import { AnkleBiter, Carnivore, Devourer } from "./anklebiter.js"
-;(window as any).anklebiter = { AnkleBiter, Carnivore, Devourer }
-
 import { sceneTask } from "./cabin.js"
-;(window as any).cabin = { sceneTask }
-
 import { Camera } from "./camera.js"
-;(window as any).camera = { Camera }
-
 import { Caption } from "./caption.js"
-;(window as any).caption = { Caption }
-
-import { Direction, invert, fromDelta, toDelta } from "./Direction.js"
-;(window as any).Dir = {
-    Left: Direction.Left,
-    Right: Direction.Right,
-    Up: Direction.Up,
-    Down: Direction.Down,
-    UpLeft: Direction.UpLeft,
-    UpRight: Direction.UpRight,
-    DownLeft: Direction.DownLeft,
-    DownRight: Direction.DownRight,
-
-    fromDelta,
-    invert,
-    toDelta,
-}
-
+import { Direction } from "./Direction.js"
 import { Dynamite } from "./dynamite.js"
-;(window as any).dynamite = { Dynamite }
-
-import {
-    AttribWindow,
-    MagicWindow,
-    MenuWindow,
-    SaveLoadMenu,
-    ScrollableTextFrame,
-    StatWindow,
-    TextFrame,
-} from "./gui.js"
-;(window as any).gui = {
-    AttribWindow,
-    MagicWindow,
-    MenuWindow,
-    SaveLoadMenu,
-    ScrollableTextFrame,
-    StatWindow,
-    TextFrame,
-}
-
 import { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages } from "./effects.js"
-;(window as any).effects = { blurFadeTask, createBlurImages, fadeInTask, fadeOutTask, freeBlurImages }
-
 import { creditsTask } from "./ending.js"
-;(window as any).ending = { creditsTask }
-
 import { Entity } from "./entity.js"
-;(window as any).entity = { Entity }
-
 import { Field } from "./field.js"
-;(window as any).field = { Field }
-
 import { EXPBar, HPBar, MPBar } from "./hud.js"
-;(window as any).hud = { EXPBar, HPBar, MPBar }
-
 import { introTask, menuTask } from "./intro.js"
-;(window as any).intro = { introTask, menuTask }
-
 import { IceWall, Gap, IceChunks, Boulder } from "./obstacle.js"
-;(window as any).obstacle = { IceWall, Gap, IceChunks, Boulder }
-
 import { Player, PLAYER_SPRITE } from "./player.js"
-;(window as any).player = { Player, PLAYER_SPRITE }
-
 import { MapScript } from "./maps/mapscript.js"
-
 import { mapScripts } from "./maps/mapscripts.js"
-
 import { DragonPup, HellHound, RazorMane } from "./razormane.js"
-;(window as any).razormane = { DragonPup, HellHound, RazorMane }
-
 import { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune } from "./rune.js"
-;(window as any).rune = { CowardRune, FireRune, GuardRune, PowerRune, StrengthRune, WaterRune, WindRune }
-
 import { loadGame, SaveData, saveGame } from "./saveload.js"
-;(window as any).saveload = { loadGame, SaveData, saveGame }
-
 import { loadMenuTask, saveMenuTask } from "./saveloadmenu.js"
-;(window as any).saveloadmenu = { loadMenuTask, saveMenuTask }
-
 import { SavePoint } from "./savepoint.js"
-;(window as any).savepoint = { SavePoint }
-
-import { Serpent } from "./serpent.js"
-;(window as any).serpent = { Serpent }
-
 import { Crossfader, NullSound, Sound } from "./sound.js"
-;(window as any).sound = { Crossfader, NullSound, Sound }
-
-import { StatSet } from "./statset.js"
-;(window as any).statset = { StatSet }
-
 import { PauseScreen } from "./subscreen.js"
-;(window as any).subscreen = { PauseScreen }
-
 import { Thing } from "./thing.js"
-;(window as any).thing = { Thing }
-
-import { wrapText } from "./wraptext.js"
-;(window as any).wraptext = { wrapText }
-
 import { Gorilla, SoulReaver, Yeti } from "./yeti.js"
-;(window as any).yeti = { Gorilla, SoulReaver, Yeti }
-
-;(window as any).hasProperty = (obj: any, name: string) => {
-    return obj.hasOwnProperty(name) && obj[name] !== undefined
-}
 
 // Can be useful to disable when trying to conserve power...
 let drawFancySnow = true
+let showIntroLogos = false
 
 interface Size {
     width: number
@@ -249,7 +155,6 @@ export const RGB = (r: number, g: number, b: number, a: number): number => {
         | (((a | 0) & 0xff) << 24)
     ) >>> 0)
 }
-(window as any).RGB = RGB
 
 export class Sprite {
     // TODO: Probably a bunch of these members can be private, as the game does
@@ -663,7 +568,6 @@ export class FontClass {
         }
     }
 }
-(window as any).FontClass = FontClass
 
 class MapClass {
     private _xwin: number = 0
@@ -989,7 +893,6 @@ class MapClass {
         }
     }
 }
-(window as any).MapClass = MapClass
 
 interface SpriteData {
     width: number
@@ -1366,7 +1269,6 @@ class VideoClass {
 
     // TODO other members...
 }
-(window as any).VideoClass = VideoClass
 
 export interface Controls {
     up: ()=>boolean
@@ -1416,7 +1318,6 @@ export class Snow {
         }
     }
 }
-;(window as any).Snow = Snow
 
 export function *delayTask(time: number) {
     const targetEnd = Date.now() + (time * 10)
@@ -1425,17 +1326,14 @@ export function *delayTask(time: number) {
         yield null
     }
 }
-;(window as any).delayTask = delayTask
 
 export function random(low: number, high: number) {
     return Math.floor(Math.random() * (high - low)) + low
 }
-;(window as any).random = random
 
 export function hypot(x: number, y: number) {
     return Math.sqrt(x * x + y * y)
 }
-;(window as any).hypot = hypot
 
 export class Engine {
     maps: {[key: string]: MapData}
@@ -2074,7 +1972,6 @@ export class Engine {
         return false
     }
 }
-(window as any).Engine = Engine
 
 const FRAME_RATE = 100
 const MAX_SKIP_COUNT = 10
@@ -2713,7 +2610,6 @@ export class PyEngine {
         }
     }
 }
-(window as any).PyEngine = PyEngine
 
 export function *mainTask(engine: Engine) {
     const introMusic = new Sound('music/Existing.s3m')
@@ -2722,7 +2618,9 @@ export function *mainTask(engine: Engine) {
     const engineObj = new PyEngine(engine)
 
     // TODO: Reenable
-    //yield* introTask(engineObj)
+    if (showIntroLogos) {
+        yield* introTask(engineObj)
+    }
 
     while (true) {
         engineObj.fader.kill()
@@ -2748,7 +2646,6 @@ export function *mainTask(engine: Engine) {
 
     console.log("Exiting.") // TODO
 }
-(window as any).mainTask = mainTask
 
 // loading code:
 
