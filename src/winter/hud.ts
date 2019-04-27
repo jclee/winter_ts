@@ -1,5 +1,5 @@
 import { Thing } from "./thing.js"
-import { Engine, Image, PyEngine, RGB } from "./winter.js"
+import { Engine, Image, PyEngine } from "./winter.js"
 
 const sgn = (i: number) => {
     if (i > 0) { return 1 }
@@ -99,7 +99,7 @@ class Gauge extends Thing {
 
     drawRect(x: number, y: number, w: number, h: number, opacity: number) {
         // Used to draw in the filled part of the gauge.
-        this.engine.video.drawRect(x, y, w, h, RGB(this.rgb[0], this.rgb[1], this.rgb[2], opacity * 255))
+        this.engine.video.drawRect(x, y, w, h, this.rgb[0], this.rgb[1], this.rgb[2], opacity)
     }
 }
 
@@ -114,7 +114,7 @@ export class HPBar extends Gauge {
             'gfx/ui/barhp3.png',
         ])
         this.y = this.engine.video.yres - this.left.height - 1
-        this.rgb = [255, 0, 0]
+        this.rgb = [1, 0, 0]
     }
 
     curVal() { return this.engineRef.getPlayerEntity().stats.hp }
@@ -132,7 +132,7 @@ export class MPBar extends Gauge {
             'gfx/ui/barhp3.png',
         ])
         this.y = this.engine.video.yres - this.left.height * 2 - 1
-        this.rgb = [0, 0, 255]
+        this.rgb = [0, 0, 1]
         this.oldMax = this.curMax()
         this.oldVal = this.curVal()
     }
@@ -152,7 +152,7 @@ export class EXPBar extends Gauge {
             'gfx/ui/barmp3.png',
         ])
         //this.y = this.engine.video.yres - this.left.height * 2 - 1
-        this.rgb = [0, 128, 128]
+        this.rgb = [0, 0.5, 0.5]
         this.oldMax = this.curMax()
         this.oldVal = this.curVal()
     }

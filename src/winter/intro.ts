@@ -1,4 +1,4 @@
-import { delayTask, Engine, PyEngine, RGB, Snow } from "./winter.js";
+import { delayTask, Engine, PyEngine, Snow } from "./winter.js";
 
 class DoneException {}
 
@@ -73,7 +73,7 @@ export function *menuTask(engineRef: PyEngine, setResult: (r: number)=>void) {
 
     for (let i = FADE_TIME - 1; i > -1; --i) {
         draw()
-        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(i * 255 / FADE_TIME)))
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, 0, 0, 0, i / FADE_TIME)
         snowObj.update()
         snowObj.draw()
         engine.video.showPage()

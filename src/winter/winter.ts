@@ -146,15 +146,6 @@ class Canvas {
     ) {}
 }
 
-export const RGB = (r: number, g: number, b: number, a: number): number => {
-    return ((
-        ((r | 0) & 0xff)
-        | (((g | 0) & 0xff) << 8)
-        | (((b | 0) & 0xff) << 16)
-        | (((a | 0) & 0xff) << 24)
-    ) >>> 0)
-}
-
 export class Sprite {
     // TODO: Probably a bunch of these members can be private, as the game does
     // not access them.
@@ -1182,14 +1173,10 @@ class Video {
         gl.clear(gl.COLOR_BUFFER_BIT)
     }
 
-    drawRect(x1: number, y1: number, x2: number, y2: number, color: number) {
+    drawRect(x1: number, y1: number, x2: number, y2: number, r: number, g: number, b: number, opacity: number) {
         const engine = this._getEngine()
         engine.targetPageFramebuffer()
-        const r = (color & 0xff) / 255.0
-        const g = ((color >> 8) & 0xff) / 255.0
-        const b = ((color >> 16) & 0xff) / 255.0
-        const a = ((color >> 24) & 0xff) / 255.0
-        engine.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1, r, g, b, a)
+        engine.drawRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1, r, g, b, opacity)
     }
 
     grabImage(x1: number, y1: number, x2: number, y2: number) {
@@ -2572,8 +2559,8 @@ export class PyEngine {
             this.draw()
 
             // darken the screen, draw the game over message:
-            const o = Math.floor(i * 255 / t)
-            this._engine.video.drawRect(0, 0, this._engine.video.xres, this._engine.video.yres, RGB(0, 0, 0, o))
+            const o = i / t
+            this._engine.video.drawRect(0, 0, this._engine.video.xres, this._engine.video.yres, 0, 0, 0, o)
             c.draw()
 
             this._engine.video.showPage()

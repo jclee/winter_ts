@@ -1,6 +1,6 @@
 import { createBlurImages, freeBlurImages } from "./effects.js";
 import { AttribWindow, MagicWindow, MenuWindow, StatWindow, Widget } from "./gui.js";
-import { Engine, Image, PyEngine, RGB } from "./winter.js";
+import { Engine, Image, PyEngine } from "./winter.js";
 
 class Transition {
     private children: WindowMover[] = []
@@ -132,11 +132,11 @@ export class PauseScreen {
             prevTime = time
             if (deltaTime > 0) {
                 t.update(deltaTime)
-                const o = Math.floor(time * 128 / TIME) // tint intensity for this frame
+                const o = time * 0.5 / TIME // tint intensity for this frame
                 const f = Math.floor(time * this.images.length / TIME) // blur image to draw
 
                 this.engine.video.scaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
-                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, o))
+                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, 0, 0, 0, o)
                 this.draw()
                 this.engine.video.showPage()
             }
@@ -166,11 +166,11 @@ export class PauseScreen {
             prevTime = time
             if (deltaTime > 0) {
                 t.update(deltaTime)
-                const o = Math.floor((TIME - time) * 255 / TIME) // menu opacity for this frame
+                const o = (TIME - time) / TIME // menu opacity for this frame
                 const f = Math.floor((TIME - time) * this.images.length / TIME) // blur image to draw
 
                 this.engine.video.scaleBlit(this.images[f], 0, 0, this.engine.video.xres, this.engine.video.yres)
-                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, Math.floor(o / 2)))
+                this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, 0, 0, 0, o / 2)
                 this.draw()
                 this.engine.video.showPage()
             }
@@ -193,7 +193,7 @@ export class PauseScreen {
         yield* this.showTask()
         while (true) {
             this.engine.video.scaleBlit(this.images[this.images.length - 1], 0, 0, this.engine.video.xres, this.engine.video.yres)
-            this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, RGB(0, 0, 0, 128))
+            this.engine.video.drawRect(0, 0, this.engine.video.xres, this.engine.video.yres, 0, 0, 0, 0.5)
             this.draw()
             this.engine.video.showPage()
             yield null

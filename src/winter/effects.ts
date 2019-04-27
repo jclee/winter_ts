@@ -1,4 +1,4 @@
-import { Engine, Image, RGB, PyEngine } from "./winter.js";
+import { Engine, Image, PyEngine } from "./winter.js";
 
 // Some neat-O special effects
 
@@ -69,7 +69,7 @@ function *_fadeTask(engineRef: PyEngine, time: number, startAlpha: number, endAl
     while (now < endtime) {
         draw()
         const alpha = startAlpha + deltaAlpha * (now - startTime) / time
-        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, Math.floor(alpha * 255)))
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, 0, 0, 0, alpha)
 
         engine.video.showPage()
         yield null

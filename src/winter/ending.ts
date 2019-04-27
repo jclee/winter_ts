@@ -1,4 +1,4 @@
-import { PyEngine, RGB, Snow } from "./winter.js"
+import { PyEngine, Snow } from "./winter.js"
 
 const _text = `
 Winter
@@ -174,7 +174,7 @@ export function *creditsTask(engineRef: PyEngine) {
 
     const draw = () => {
         engine.video.blit(bg, 0, 0)
-        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, 128))
+        engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, 0, 0, 0, 0.5)
 
         let firstLine = Math.floor(y / font.height)
         const adjust = Math.floor(y) % font.height

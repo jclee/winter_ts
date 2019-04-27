@@ -1,7 +1,7 @@
 import { fadeInTask, fadeOutTask } from "./effects.js"
 import { Entity } from "./entity.js"
 import { ScrollableTextFrame } from "./gui.js"
-import { delayTask, PyEngine, RGB, Sprite } from "./winter.js"
+import { delayTask, PyEngine, Sprite } from "./winter.js"
 import { wrapText } from "./wraptext.js"
 
 class Tinter {
@@ -15,7 +15,7 @@ class Tinter {
         this.curTint -= (this.curTint > this.tint) ? 1 : 0
 
         if (this.curTint) {
-            engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, RGB(0, 0, 0, this.curTint))
+            engine.video.drawRect(0, 0, engine.video.xres, engine.video.yres, 0, 0, 0, this.curTint / 255.0)
         }
     }
 }
